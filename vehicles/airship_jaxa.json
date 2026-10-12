@@ -1,0 +1,41 @@
+{
+  "name": "airship_jaxa",
+  "title": "JAXA 14 m LTA Test Vehicle",
+  "body_title": "JAXA 14 m airship",
+  "decade": 2550,
+  "hull": {
+    "hull_length": 14.0,
+    "hull_diameter": 4.0,
+    "hull_z": 3.0,
+    "gondola": [
+      2.0,
+      1.0,
+      1.0
+    ],
+    "gondola_z": 0.5,
+    "gondola_mass": 108.47,
+    "pods_mass": 14.0,
+    "pod_y": 1.2,
+    "pod_z": 0.8,
+    "fin_areal": 0.35714285714285715,
+    "fin_thick": 0.04,
+    "flap_thick": 0.05,
+    "chord": 1.5,
+    "te_margin": 0.38,
+    "ground_margin": 0.05,
+    "flap_fraction": 0.3,
+    "stability_target": 1.2,
+    "stall_margin_deg": 2.0,
+    "pod_yaw": 192.0
+  },
+  "pods": {
+    "link_mass": 6.0,
+    "prop_mass": 1.0,
+    "thrust_n": 80.0,
+    "max_rot_velocity": 300.0,
+    "tilt_deg": 180.0,
+    "tilt_rate_deg_s": 60.0
+  },
+  "docs_note": "Its hull is that of the 14 m LTA flying test bed of the Japan Aerospace Exploration Agency (Kohno, Nakadate, Okuyama, [AIAA 2009-2860](https://doi.org/10.2514/6.2009-2860): 14 m, 4.0 m maximum diameter, 117 m³, two tilting ducted propellers, rudders and elevators on a cruciform tail); the pods, fins and masses follow this family's rules, not that vehicle.",
+  "notes": "Kohno, Nakadate, Okuyama 2009, AIAA 2009-2860: 14 m, max diameter 4.0 m (width 4.8 m), 117 m^3, net mass 117.5 kg, max 14 m/s, cruise 10 m/s, two ducted propellers (7.5 HP two-stroke each) tilting -90..+120 deg with differential tilt for heading at low speed, two vertical fins with rudders and two horizontal with elevators (cruciform, Fig. 3); hovering within a 30 m radius, waypoints, simulated automatic take-off and landing; the paper borrows a 60 m airship's aerodynamic coefficients and gives no fin dimensions. ASSUMED: fins by the stability rule, thrust 80 N per pod (max about 16.5 m/s on the drag set), masses (gondola 108.47 kg keeps the envelope at 0.1312 kg/m^2; 146 kg includes the lifting gas, the paper's 117.5 kg net does not), tilt rate 60 deg/s."
+}

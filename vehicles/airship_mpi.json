@@ -1,0 +1,41 @@
+{
+  "name": "airship_mpi",
+  "title": "MPI 5 m Outdoor Blimp",
+  "body_title": "MPI 5 m blimp",
+  "decade": 2560,
+  "hull": {
+    "hull_length": 5.0,
+    "hull_diameter": 2.0,
+    "hull_z": 1.25,
+    "gondola": [
+      0.42,
+      0.16,
+      0.2
+    ],
+    "gondola_z": 0.1,
+    "gondola_mass": 7.74,
+    "pods_mass": 0.3,
+    "pod_y": 0.375,
+    "pod_z": 0.13,
+    "fin_areal": 0.35714285714285715,
+    "fin_thick": 0.02,
+    "flap_thick": 0.02,
+    "chord": 0.85,
+    "te_margin": 0.14,
+    "ground_margin": 0.05,
+    "flap_fraction": 0.35,
+    "stability_target": 1.2,
+    "stall_margin_deg": 2.0,
+    "pod_yaw": 4.5
+  },
+  "pods": {
+    "link_mass": 0.12,
+    "prop_mass": 0.03,
+    "thrust_n": 6.0,
+    "max_rot_velocity": 300.0,
+    "tilt_deg": 180.0,
+    "tilt_rate_deg_s": 120.0
+  },
+  "docs_note": "Its envelope is that of the 5 m outdoor blimp of Price et al. ([Simulation and Control of Deformable Autonomous Airships in Turbulent Wind](https://doi.org/10.1007/978-3-030-95892-3_46), 2022) as its open simulation model gives it (5.0 m x 2.0 m, 10.47 m³); the pods, fins and masses follow this family's rules, not that vehicle.",
+  "notes": "Price, Liu, Black, Ahmad 2022 (IAS 2021, DOI 10.1007/978-3-030-95892-3_46) and Liu et al. IROS 2022 (DOI 10.1109/IROS47612.2022.9981182): 5 m, 10 kg, two thrust-vectoring motors on one axis, four fins with servo rudders/elevators, a tail motor on the lower fin. Read from the open model robot-perception-group/airship_simulation blimp_description/urdf/description_property.xacro (2026-10-08 clone): radius_blimp_body 1.00, length_blimp_body 5.00, volume 10.472, motor stick 0.75 m (motors at +-0.375 m), fin 0.55 + rudder 0.30 m chord x 0.48 m, gondola 0.42 x 0.16 x 0.20 m, body mass 4.622 kg with gas; its motor constant 3.7e-3 at 879 rad/s (2.9 kN) is not a thrust and is not used. ASSUMED: thrust 6 N per pod, pods independent (the vehicle tilts both motors on one axis), fins by the stability rule at the model's 0.85 m chord and 0.35 flap fraction, masses (gondola 7.74 kg keeps the envelope at 0.1312 kg/m^2). No tail motor here."
+}

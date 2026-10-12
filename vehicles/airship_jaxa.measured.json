@@ -1,0 +1,36 @@
+{
+ "k": 832.7643820530058,
+ "k_over_N": 4.337313947695161,
+ "legs": [
+  {
+   "summary": "forward_airship_jaxa_am_fin_drag_20261007_141212_summary.json",
+   "leg": 1,
+   "u": 2.4370544101005946,
+   "r_deg_s": 1.4368655181318042,
+   "k": 820.2358006550427
+  },
+  {
+   "summary": "forward_airship_jaxa_am_fin_drag_20261007_141212_summary.json",
+   "leg": 2,
+   "u": 5.135078108402342,
+   "r_deg_s": 2.1374774596660533,
+   "k": 842.5468341025106
+  },
+  {
+   "summary": "forward_airship_jaxa_am_fin_drag_20261007_141212_summary.json",
+   "leg": 3,
+   "u": 4.98205011038286,
+   "r_deg_s": 0.9907397075811815,
+   "k": 835.5105114014642
+  }
+ ],
+ "summaries": [
+  "forward_airship_jaxa_am_fin_drag_20261007_141212_summary.json"
+ ],
+ "plant": {
+  "mass": 146.1255,
+  "m_x": 14.14916,
+  "x_bar": 5.499611378917438,
+  "N": 192.000024
+ }
+}

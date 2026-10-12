@@ -1,0 +1,47 @@
+{
+  "name": "airship_indoor",
+  "title": "Indoor Airship",
+  "body_title": "Indoor airship",
+  "decade": 2530,
+  "hull": {
+    "hull_length": 2.0,
+    "hull_diameter": 0.8,
+    "hull_z": 0.44,
+    "gondola": [
+      0.1,
+      0.06,
+      0.05
+    ],
+    "gondola_z": 0.025,
+    "gondola_mass": 0.2,
+    "pods_mass": 0.025,
+    "pod_y": 0.075,
+    "pod_z": 0.05,
+    "fin_areal": 0.1,
+    "fin_thick": 0.005,
+    "flap_thick": 0.006,
+    "chord": 0.22,
+    "te_margin": 0.05,
+    "ground_margin": 0.02,
+    "flap_fraction": 0.3,
+    "stability_target": 1.2,
+    "stall_margin_deg": 2.0,
+    "pod_yaw": 0.0375
+  },
+  "pods": {
+    "link_mass": 0.01,
+    "prop_mass": 0.0025,
+    "thrust_n": 0.25,
+    "max_rot_velocity": 300.0,
+    "tilt_deg": 180.0,
+    "tilt_rate_deg_s": 120.0
+  },
+  "notes": {
+    "status": "ASSUMED where marked; replace with the built vehicle's numbers and rerun airship_family_gen.py",
+    "hull": "ASSUMED 2.0 x 0.8 m spheroid; the envelope is not chosen yet. hull_z: the gondola stands on the ground and its top sits 1 cm inside the hull's underside (0.4 radius + 0.05 box - 0.01)",
+    "gondola": "ASSUMED box and 0.20 kg: printed parts 0.094 kg (DOC-300), listed equipment 0.036 kg, a 2S 450 mAh pack, hardware and wiring",
+    "pods": "From the gondola CAD: tilt axes 150 mm apart, 50 mm above the floor, propeller plane 15 mm off the axis; output bounded +-180 deg (propulsion_wiring.py). ASSUMED thrust 0.25 N per pod (RS1102 10000KV, 40 mm Gemfan 1610, 2S), pod link 10 g (motor 2.8 + carrier), prop 2.5 g (0.24 g blade plus hub allowance); pod_yaw = 2 x 0.25 N x 0.075 m",
+    "fins": "Fixed fins the vehicle may carry for the forward-flight tests: sized here by the family's stability rule (R1 1.2 x Munk); chord ASSUMED 0.22 m (the generic family's chord-to-length ratio), foam/film at 0.10 kg/m^2",
+    "speed_source": "optical flow (AS_SPD_SRC 2, AS_SPD_WMAX 0): indoors, no wind, no pitot"
+  }
+}

@@ -1,0 +1,36 @@
+{
+ "k": 21.324607784069382,
+ "k_over_N": 4.738799360393516,
+ "legs": [
+  {
+   "summary": "forward_airship_mpi_am_fin_drag_20261007_145400_summary.json",
+   "leg": 1,
+   "u": 1.3621874574047246,
+   "r_deg_s": 1.4830398229224295,
+   "k": 20.979933252375396
+  },
+  {
+   "summary": "forward_airship_mpi_am_fin_drag_20261007_145400_summary.json",
+   "leg": 2,
+   "u": 2.881145690019604,
+   "r_deg_s": 3.528916805184808,
+   "k": 21.360843769198187
+  },
+  {
+   "summary": "forward_airship_mpi_am_fin_drag_20261007_145400_summary.json",
+   "leg": 3,
+   "u": 2.9532710436154086,
+   "r_deg_s": 1.5202246143643041,
+   "k": 21.633046330634556
+  }
+ ],
+ "summaries": [
+  "forward_airship_mpi_am_fin_drag_20261007_145400_summary.json"
+ ],
+ "plant": {
+  "mass": 12.844599999999998,
+  "m_x": 2.00459,
+  "x_bar": 1.7229883219407378,
+  "N": 4.50000225
+ }
+}

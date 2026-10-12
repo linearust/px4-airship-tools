@@ -1,0 +1,17 @@
+{
+  "name": "airship_vectored_independent",
+  "title": "Generic Airship (Independent Vectoring)",
+  "body_title": "Generic airship",
+  "decade": 2520,
+  "hull": {
+    "hull_length": 7.0, "hull_diameter": 2.0, "hull_z": 1.30,
+    "gondola": [0.5, 0.3, 0.3], "gondola_z": 0.15, "gondola_mass": 11.37,
+    "pods_mass": 0.6, "pod_y": 0.5, "pod_z": 0.25,
+    "fin_areal": 0.35714285714285715, "fin_thick": 0.02, "flap_thick": 0.025,
+    "chord": 0.75, "te_margin": 0.19, "ground_margin": 0.05, "flap_fraction": 0.30,
+    "stability_target": 1.2, "stall_margin_deg": 2.0, "pod_yaw": 10.0
+  },
+  "pods": {"link_mass": 0.25, "prop_mass": 0.05, "thrust_n": 10.0, "max_rot_velocity": 300.0,
+           "tilt_deg": 180.0, "tilt_rate_deg_s": 120.0},
+  "notes": "The committed generic family, as a spec: airship_family_gen.py --check regenerates it from this file and diffs the result against the tree. Since 2026-10-08 a 7 m outdoor hull of the Aero Drum Ltd 7 m RC blimp class (7 x 2 m, 14 m^3, polyurethane 100 um, lift capacity 2-2.5 kg; that vehicle has one collective tilt axis, four fixed foam fins and a lower-fin yaw motor), drawn as the 7.0 x 2.0 m spheroid, 14.66 m^3, 18.0 kg neutrally buoyant. Actuation is this project's: two independently tilting pods, four fins. ASSUMED: pod thrust 10 N, pod masses and station, gondola box; the gondola mass 11.37 kg is what neutral buoyancy leaves after the envelope at the earlier hulls' 0.1312 kg/m^2 and the fins. The pods' radii of gyration follow the 10.97 m reference scaled by length."
+}

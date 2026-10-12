@@ -1,0 +1,12 @@
+# airship_indoor: the yaw loop values of its complete member (airship_gains.py); the hardware preset supplies the rest
+AS_YAWRATE_P=0.778
+AS_YAWRATE_I=0.1
+AS_YR_INT_LIM=0.3
+AS_YAWRATE_MAX=15.0
+AS_YAWRATE_FF=0.591
+AS_SPD_SRC=2
+AS_SPD_WMAX=0
+AS_SPD_LO=0.4
+AS_SPD_HI=0.8
+AS_YR_FF_SLP=15.4
+AS_YR_RESTORE=1

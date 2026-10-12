@@ -1,0 +1,36 @@
+{
+ "k": 0.5767921381721809,
+ "k_over_N": 15.381111379702388,
+ "legs": [
+  {
+   "summary": "forward_airship_indoor_am_fin_drag_20261007_085837_summary.json",
+   "leg": 1,
+   "u": 0.6123981466928029,
+   "r_deg_s": 1.539922735856318,
+   "k": 0.5627831300707113
+  },
+  {
+   "summary": "forward_airship_indoor_am_fin_drag_20261007_085837_summary.json",
+   "leg": 2,
+   "u": 1.2711718547021031,
+   "r_deg_s": 2.4261347602629892,
+   "k": 0.587828793646787
+  },
+  {
+   "summary": "forward_airship_indoor_am_fin_drag_20261007_085837_summary.json",
+   "leg": 3,
+   "u": 1.2537057641608513,
+   "r_deg_s": 1.1103381068963463,
+   "k": 0.5797644907990444
+  }
+ ],
+ "summaries": [
+  "forward_airship_indoor_am_fin_drag_20261007_085837_summary.json"
+ ],
+ "plant": {
+  "mass": 0.8213999999999999,
+  "m_x": 0.12829,
+  "x_bar": 0.7850969564158753,
+  "N": 0.03750003
+ }
+}

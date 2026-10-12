@@ -1,0 +1,43 @@
+{
+  "name": "airship_aurora",
+  "title": "AURORA Airship (AS800 class)",
+  "body_title": "AURORA airship",
+  "decade": 2540,
+  "hull": {
+    "hull_volume": 34.0,
+    "fineness": 3.5,
+    "hull_z": 2.05,
+    "gondola": [
+      1.25,
+      0.8,
+      0.8
+    ],
+    "gondola_z": 0.4,
+    "gondola_mass": 30.9,
+    "pods_mass": 1.0,
+    "pod_y": 1.5,
+    "pod_z": 0.8125,
+    "fin_areal": 0.35714285714285715,
+    "fin_thick": 0.03,
+    "flap_thick": 0.04,
+    "chord": 1.2,
+    "te_margin": 0.3,
+    "ground_margin": 0.05,
+    "flap_fraction": 0.3,
+    "stability_target": 1.2,
+    "stall_margin_deg": 2.0,
+    "pod_yaw": 75.0
+  },
+  "pods": {
+    "link_mass": 0.4,
+    "prop_mass": 0.1,
+    "thrust_n": 25.0,
+    "max_rot_velocity": 300.0,
+    "tilt_deg": 180.0,
+    "tilt_rate_deg_s": 120.0,
+    "gyration_m": 0.05,
+    "prop_gyration_m": 0.1
+  },
+  "docs_note": "Its envelope is that of the AURORA robotic airship, an Airspeed Airships AS800 (de Paiva et al., [Project AURORA](https://doi.org/10.1002/rob.20111), Journal of Field Robotics 23, 2006: 10.5 m x 3.0 m, 34 m³), drawn as the spheroid of the same volume and fineness; the pods, fins and masses follow this family's rules, not that vehicle.",
+  "notes": "de Paiva, Azinheira, Ramos, Moutinho, Bueno 2006, J. Field Robotics 23(3/4):201-222, DOI 10.1002/rob.20111: 10.5 x 3.0 m, 34 m^3, payload about 10 kg, max about 14 m/s (50 km/h), two vectored propellers (-30..+120 deg, one group), X tail (+-30 deg), stern thruster; Moutinho et al. 2016 (Control Eng. Practice, DOI 10.1016/j.conengprac.2016.02.009) the same vehicle. Here the spheroid of the same volume and fineness (9.27 x 2.65 m), independent +-180 deg pods, '+' fins by the stability rule (no fin data published). ASSUMED: thrust 25 N per pod (max about 13.9 m/s on the drag set), masses (gondola 30.9 kg keeps the envelope at 0.1312 kg/m^2)."
+}
