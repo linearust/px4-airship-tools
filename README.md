@@ -36,7 +36,9 @@ generators, the gates and the records.
   branch, with `Tools/simulation/gz` on the models branch and
   `make px4_sitl_default` built once.
 - gz sim 8 (Harmonic) for the SITL checks.
-- Python 3.12 with `numpy`, `pyyaml`, `pyulog`, `pymavlink`.
+- Python 3.12 with `numpy`, `pyyaml`, `pyulog`, `pymavlink`, and for the SITL
+  gates the gz Python bindings (`python3-gz-transport13`, `python3-gz-msgs10`):
+  wrenches are published from a live transport node, never from `gz topic -p`.
 
 ## Running
 

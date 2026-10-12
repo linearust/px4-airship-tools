@@ -6,10 +6,11 @@
 #
 # rcS resolves PX4_SIM_MODEL and SYS_AUTOSTART by listing
 # build/px4_sitl_default/etc/init.d-posix/airframes, so a file copied there is
-# a working airframe without a CMake entry; gz resolves a model by name on
-# GZ_SIM_RESOURCE_PATH, and PX4's gz_env.sh appends its own directories after
-# whatever the path already holds, so a directory exported before the launch
-# wins. Re-run after every `make px4_sitl` that rebuilds the etc tree.
+# a working airframe without a CMake entry. The ROMFS regeneration of every
+# `make px4_sitl` deletes the copies, so this runs after the build and before
+# the launch (gz_run.sh does both). The printed GZ_SIM_RESOURCE_PATH line is
+# for the gz server gz_run.sh starts; names never collide between the overlay
+# and the tree (overlay/README.md), so the order of the two is immaterial.
 set -eu
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="${1:-${PX4_ROOT:-$HOME/dev/PX4-Autopilot}}"
