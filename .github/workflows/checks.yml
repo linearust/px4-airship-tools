@@ -1,0 +1,42 @@
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tree-checks:
+    # The checks that need only the PX4 source tree: generator round trip,
+    # variant scheme, forward-flight analysis, the yaw model's controller
+    # reading. gz and the SITL gates stay local.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the pinned PX4 commits
+        run: grep -v '^#' pins.env >> "$GITHUB_ENV"
+
+      - name: PX4-Autopilot at the pin
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PX4_REPO }}
+          ref: ${{ env.PX4_COMMIT }}
+          path: px4
+          fetch-depth: 1
+
+      - name: PX4-gazebo-models at the pin
+        # The submodule URL in .gitmodules is upstream's; the pinned commit is
+        # on the fork, so fetch it by hash from there.
+        run: |
+          git init -q px4/Tools/simulation/gz
+          git -C px4/Tools/simulation/gz fetch -q --depth 1 "https://github.com/${GZ_MODELS_REPO}.git" "${GZ_MODELS_COMMIT}"
+          git -C px4/Tools/simulation/gz checkout -q FETCH_HEAD
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install numpy pyyaml pyulog pymavlink
+
+      - name: Run the tree checks
+        run: PX4_ROOT="$GITHUB_WORKSPACE/px4" ./run_tests.sh
