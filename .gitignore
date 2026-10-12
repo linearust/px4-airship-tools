@@ -1,0 +1,22 @@
+# Outputs. Every directory below is produced by a script in this repository
+# from the PX4 tree named in pins.env; the records worth keeping are the
+# summaries in docs/ and the fixtures under yaw_model/.
+__pycache__/
+*.pyc
+*.ulg
+*.tgz
+sitl_out/
+fw_*/
+head_*/
+baseline/
+preset2500/
+ground_out/
+pass*_bench/*
+!pass*_bench/README.md
+identity/dump_*.txt
+yaw_model/forward_out/
+yaw_model/replay_out/
+yaw_model/gate_out/
+yaw_model/step0c_runs_*
+yaw_model/d1_runs_*
+yaw_model/options/**/fw/
