@@ -116,3 +116,33 @@ upstream 사용자가 날리는 것은 완전 플랜트여야 한다. 그러면 
   `grep -rnE "\b25(0[1-9]|1[1-8]|2[1-9]|[3-6][0-9])\b|_am_fin|_am_drag" src ROMFS docs/en` 이 비어야 한다. vehicles.md 항목은 upstream 모양 (≤ 3 문장, make 명령, 스크린샷).
 - **비용 재추정.** 2·3 단계 (한 증분): 2~3 일 + gz 시간, 순서는 (1) gz_model 두 집 + rigid 토큰 → (2) variant_check 두 집 (뒤의 모든 것의 게이트) → (3) 생성기 오버레이 모드
   + 시험 → (4) 플랜트 레지스트리 (S3) → (5) gz_run.sh 실행 경로 (S4) → (6) 트림 커밋 → (7) SITL 재기준선. (2) 와 (5) 가 통과하기 전에 SITL 을 돌리지 않는다.
+
+## 7. 실행 기록과 다음 단계의 구체 목록 (2026-10-13 00:05)
+
+**(1) 끝남 — 브랜치 `split/step1` (worktree `~/dev/px4-airship-tools-split`, 푸시됨; 체인이 끝나면 main 에 병합).**
+`gz_model`: `OVERLAY`(env `AIRSHIP_OVERLAY`, 기본 `<repo>/overlay`), `MODEL_HOMES`/`AIRFRAME_HOMES` = [오버레이, 트리], `model_dir`/`has_model`/`model_names`/
+`airframe_files`/`airframe_path`/`sourced_path`(`${R}etc/init.d-posix/airframes/<f>` 는 두 집에서, 나머지는 트리 ROMFS), `RIGID` 토큰 (`family_tokens` 가 `['rigid']`,
+물리 토큰 옆에서는 거부; `vehicle()` 이 벗김; `bare(vehicle)` = `_rigid` 가 있으면 그것, 없으면 평범한 이름). 변환한 자리: sitl_link, added_mass_check, aero_moment_check
+(`GZ_SIM_RESOURCE_PATH` 는 두 집을 모두), forward_yaw_check (ALLOWED), 그 시험 (MODEL_HOMES 패치), hover_ff (bare_airframe), controller (airframe_file/airframe_walk/
+airframe_for_model), variant_check (목록·경로 16곳; decades() 와 사실 7/11/13 은 아직 트리 기준). 검증: 오버레이가 비어 있으므로 동작 동일 — run_tests.sh exit 0
+(115 PASS + 253 통과, SKIP 1), 스크래치 트리의 variant_check 16/16. 덤: test_controller 가 `yaw_model/records` 의 기록도 재생한다 (CI 에서도 115).
+`gz_link`: 렌치·해제를 `gz.transport13` 의 살아 있는 노드에서 발행 (구독자 연결 뒤; 월드 없으면 10 s 뒤 False). `gz topic -p` 의 유실이 오늘 밤 2520 rigid 게이트의 "I 켬" 사례를
+적분기 2× (0.0370 vs 0.0185, 각속도 0.05 deg/s) 로 만들었다 — 루프는 렌치 둘을 잡고 있었다. 게이트를 다시 돌려 확인한다.
+
+**(3) 생성기 오버레이·upstream 모드 — 읽은 구조에서 나온 변경 목록 (다음 세션).**
+- `apply_generic_hull.Family`/`vectored_family(name, title, surfaces, rigid=False)`: rigid 가족은 `bare = name + '_rigid'`, `base = name + '_base_rigid'`, `base_am` 그대로,
+  나머지 그대로. `GENERIC` 도 두 판 (트리용 지금 것, 오버레이용 rigid). `copy_family` 의 renames 는 긴 이름부터 (이미 그렇다) — `_base_am` 이 `_base_rigid` 로 잘못 바뀌지 않게
+  base 앞에 base_am 을 둔다 (지금 정렬 규칙 `-len` 이 보장).
+- `write_models(vehicle, root, template_root)`: 템플릿을 `gz_model.GZ_MODELS` 가 아니라 인자로 (오버레이 모드는 오버레이에 커밋된 generic rigid 가족을 템플릿으로).
+  `A.plan(..., root)` 과 `write_family` 는 root 아래 역할 이름으로 쓰므로 Family 이름만 바꾸면 따라온다 (확인 필요: write_body 등이 `fam.base` 를 쓰는지 grep).
+- `write_airframes(vehicle, p, airframes, decade)`: 번호는 인자 (`vehicle.decade + 100` 오버레이), bare 템플릿은 오버레이 모드에서 `<2620>_gz_airship_vectored_independent_rigid`
+  (오버레이에 커밋), 멤버는 `. ${R}etc/init.d-posix/airframes/<bare 파일>` 로 bare 를 source — rcS 는 빌드 etc 에 복사된 파일을 같은 디렉터리에서 찾으므로 그대로 통한다.
+- `write_world(path, fam)`: 오버레이는 `overlay/worlds/lta_lab.sdf` (없으면 트리 `lta.sdf` 사본, `<world name="lta_lab">`); 트리 모드는 upstream 셋의 entry 만.
+- `write_cmake` → 오버레이 모드에서는 `overlay/airframes/decades` (`<decade> <bare 모델>` 한 줄씩) 에 쓰고 트리 CMake 는 건드리지 않음; `write_docs` → `overlay/vehicles.md`
+  (같은 표 모양). variant_check 의 `decades()` 는 두 원천 (오버레이 파일 / 트리 CMake 주석) 을 모드로 읽는다.
+- `--upstream` (트리 기본): 완전 멤버만 — `<body>_base` (= base_am 내용, 이름만), `<vehicle>` (= am_fin_drag 의 merged 결과를 base include 하나 + 제 블록으로: 즉 오늘의
+  `_am_fin_drag` 가 `_am_fin` 을, 그것이 `_am` 을, 그것이 `_base_am` 을 merge 하는 체인을 **두 단으로 접는다**: `<vehicle>` 은 `<body>_base` 를 merge 하고 추진·핀·항력
+  블록을 직접 가진다), 에어프레임 `<decade>0_gz_<vehicle>` (완전 값, 출처 한 줄), 월드 entry 5, docs 항목 1. cloudship 은 자체 완결 (cloudship_am + 핀·항력).
+- 검사: `check --overlay` = 오버레이 디렉터리 사본에서 멱등성; `check` (트리) = 쌍둥이 검사 호출 (variant_check 에 추가: 오버레이 `_am_fin_drag` merged == 트리 `<vehicle>` merged,
+  원소 단위; 에어프레임은 resolved 기본값). 시험: `airship_family_gen_test` 에 **트림된 스크래치 트리** (25xx 가족 멤버와 가족 모델을 지운 사본) 에서의 오버레이 생성 + 쌍둥이.
+- 오버레이 내용은 트림 커밋과 같은 증분에서 채운다 (그 전에는 두 집에 같은 이름이 있어 model_names() 가 거부한다 — 의도된 안전장치).
