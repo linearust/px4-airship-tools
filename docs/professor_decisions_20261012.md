@@ -153,3 +153,14 @@ hover 10/10. 펌웨어 fw_b1cb5a7e70 (v6x, 메타데이터 통과) + micoair 빌
   (모델이 10.97 m 선체에 앵커, 플랜트는 트리에서 읽음). test_controller 는 그 한 재생을 SKIP 으로 보이게 하고 (115 검사는 돈다), 나머지 넷은 run_tests.sh 밖에 두고 이유를 적었다.
   바른 수리는 "기록이 제 플랜트를 지닌다" (재앵커링, 열린 항목).
 - **공개 여부:** 사업 맥락 검색 (icarus/사업/회사/고객/메일/토큰) — 포크 이름 `icarus-lta` 와 @maintainer 메일 (PX4 트리에 이미 있는 것) 뿐. 공개 (BSD-3) 로 만든다.
+
+## 22:40~23:05 증분 A 실행 (파라미터 둘), 설계 `upstream_split_design_20261012.md` 0절·6절
+
+- PX4 로컬 커밋 셋 (서명 없음): `cbf8f5fc77` test — 오늘 오후 3f6b6d5038 의 반 스틱 케이스가 **HEAD 에서 실패하고 있었다** (첫 닫힌 사이클의 dt 20 ms 클램프로 I·e·dt = 4.7e-4 가
+  둘째 사이클 토크에 실림; stash 로 옛 코드에서 재현). 오후의 "8/8" 은 틀렸다. 피드포워드 검사이므로 I 0 으로 격리. `ec89e6bd84` AS_YR_RESTORE 삭제·복원 항상,
+  `a9e7c3c16b` AS_SPD_LO 삭제·램프 시작 = AS_SPD_HI/2 (kRampStart). 두 커밋을 분리 적용한 트리가 검증한 작업 트리와 **동일** (git diff stash 비어 있음).
+- 검증: gtest 8/8 (스케줄 핀 2.142 → 2.677 °/s, 파이썬 독립 계산 2.6774 와 일치), check_format 통과, 도구 `run_tests.sh` exit 0 (115 PASS + 255 통과, 1 SKIP).
+  에어프레임 diff 는 정확히 `AS_SPD_LO` 10줄과 `AS_YR_RESTORE` 11줄 삭제뿐. `.params` 재생성 (두 이름 없음).
+- 도구: `airship_gains.py` (stall_ramp 는 HI 만, 블록·params 에서 두 줄 제거, REF_RAMP 삭제), `forward_yaw_check.py` (leg_speeds lo = hi/2, SCHEDULE_PARAMS 둘 제거), 시험 픽스처,
+  `hover_ff_family` (복원 항상), `d1_sitl_compare` (옛 로그의 LO 는 그대로, 없으면 hi/2), 벤치 절차 7번 (놓음 단차 검사, 첫 부팅 경고).
+- 실행 중 (chainA.sh, 백그라운드): fmu-v6x 빌드·스테이징, MicoAir 빌드, 호버 게이트 2517/2520/2521, 전진 2527/2512. 결과는 다음 기록에.

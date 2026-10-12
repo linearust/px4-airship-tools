@@ -44,13 +44,13 @@ from the vehicle's model files through gz_model.
                0.645, its complete plant 0.583 vs 0.566 (the rotational damping would say 230 and 0.511).
                A seed at or below zero means the Munk moment outruns the fins in a turn (the Cloudship,
                -4.7): no schedule can be seeded, the fins are too small for a turn
-  AS_SPD_LO/HI   the ramp's end is where the cap the schedule allows past it, the yaw rate r whose turn
+  AS_SPD_HI      the ramp's end is where the cap the schedule allows past it, the yaw rate r whose turn
                takes the authority less the integrator's reserve, FF0 r^2 / r_max + (k u / N) r = A - rho
                (airship_yaw_schedule::rateCap), meets STALL_MARGIN of the yaw rate at which a fin stalls in
                a turn, alpha_stall u / x_eff with x_eff = s + arm the fin's incidence per r / u (its sideslip
-               plus its own rotation; the measured incidences sit 0 to 16 % above this, D4); the ramp
-               starts at half that. Below the ramp the reserve term keeps the cap well under the stall
-  AS_SPD_SRC 2, AS_SPD_WMAX 0, AS_YR_RESTORE 1 on the fin members, as the generic family's
+               plus its own rotation; the measured incidences sit 0 to 16 % above this, D4); the firmware
+               starts the ramp at half that. Below the ramp the reserve term keeps the cap well under the stall
+  AS_SPD_SRC 2, AS_SPD_WMAX 0 on the fin members, as the generic family's
 
 The written block sits between two markers in each airframe file, so a rerun
 replaces it; the bare airframe gets P and I, the _fin and the complete member
@@ -73,7 +73,6 @@ REF_PLANT = {'vehicle': 'airship_vectored_independent (10.97 m, until 2026-10-07
              'rr': 192.24415, 'k': 228.708906, 'length': 10.9714}
 REF_GAINS = {'AS_YAWRATE_P': 0.7, 'AS_YAWRATE_I': 0.09, 'AS_YR_INT_LIM': 0.3, 'AS_YAWRATE_MAX': 15.0, 'MAN_DEADZONE': 0.1}
 REF_FF_FIN = 0.3            # the generic _fin member's AS_YAWRATE_FF (2522)
-REF_RAMP = (1.5, 2.5)       # AS_SPD_LO, AS_SPD_HI on the generic family
 STALL_MARGIN = 0.8          # the cap at the ramp's end, as a share of the stalling yaw rate there
 RESERVE = 0.5               # airship_yaw_schedule::kIntegratorReserve, the share of the integrator left to the loop
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -118,13 +117,12 @@ def budget_rate(ff0, ff_speed):
 
 
 def stall_ramp(p, ff0, slope):
-    """(LO, HI): HI where the cap past the ramp, budget_rate(ff0, slope u), equals
-    STALL_MARGIN times the stalling yaw rate alpha_stall u / x_fin = g u; LO
-    half of it. With r = g u the budget rule reads (ff0 g^2 / r_max + slope g)
-    u^2 = 1 - rho."""
+    """AS_SPD_HI: where the cap past the ramp, budget_rate(ff0, slope u), equals
+    STALL_MARGIN times the stalling yaw rate alpha_stall u / x_fin = g u (the
+    firmware starts the ramp at half of it). With r = g u the budget rule reads
+    (ff0 g^2 / r_max + slope g) u^2 = 1 - rho."""
     g = STALL_MARGIN * p['stall_per_speed']
-    hi = math.sqrt((1.0 - reserve()) / (g * (ff0 * g / math.radians(REF_GAINS['AS_YAWRATE_MAX']) + slope)))
-    return 0.5 * hi, hi
+    return math.sqrt((1.0 - reserve()) / (g * (ff0 * g / math.radians(REF_GAINS['AS_YAWRATE_MAX']) + slope)))
 
 
 def gains(p, ref, measured_slope=None):
@@ -140,13 +138,13 @@ def gains(p, ref, measured_slope=None):
 
     slope = (measured_slope if measured_slope is not None else p['k']) / p['N']
     ff_drag = p['nRabsR'] * r_max / p['N']
-    lo, hi = stall_ramp(p, ff_drag, slope)
+    hi = stall_ramp(p, ff_drag, slope)
     out = dict(REF_GAINS)
     out.update({'AS_YAWRATE_P': P, 'AS_YAWRATE_I': I,
                 'FF_drag': ff_drag,
                 'FF_fin': REF_FF_FIN * slope / (ref['k'] / ref['N']),
                 'AS_YR_FF_SLP': slope, 'slope_source': 'measured' if measured_slope is not None else 'files',
-                'AS_SPD_LO': lo, 'AS_SPD_HI': hi,
+                'AS_SPD_HI': hi,
                 'bandwidth': w_ref, 'integral_time': t_ref, 'length_scale': scale,
                 # the yaw rate the fins allow at the ramp's end before stalling in a turn: alpha = r arm / u
                 'r_stall_at_hi': math.degrees(p['stall_per_speed'] * hi),
@@ -239,7 +237,7 @@ def comment(text):
 def blocks(vehicle, p, v, ref):
     """{member suffix: text} of the parameter lines each airframe carries."""
     ff_fin, ff_drag, slp = rnd(v['FF_fin']), rnd(v['FF_drag']), rnd(v['AS_YR_FF_SLP'])
-    lo, hi = rnd(v['AS_SPD_LO'], 2), rnd(v['AS_SPD_HI'], 2)
+    hi = rnd(v['AS_SPD_HI'], 2)
     source = ('measured in held turns in the simulator: the torque that holds the turn over u r, less the hull\'s rotational drag'
               if v['slope_source'] == 'measured' else
               'seeded from the files: the centripetal force on the fin arm less the Munk moment on the sideslip, to be replaced by a held-turn measurement')
@@ -251,10 +249,8 @@ def blocks(vehicle, p, v, ref):
                        % (slp, p['N'], source, STALL_MARGIN, v['r_stall_at_hi'], hi)) + '''
 param set-default AS_SPD_SRC 2
 param set-default AS_SPD_WMAX 0
-param set-default AS_SPD_LO %s
 param set-default AS_SPD_HI %s
-param set-default AS_YR_FF_SLP %s
-param set-default AS_YR_RESTORE 1''' % (lo, hi, slp)
+param set-default AS_YR_FF_SLP %s''' % (hi, slp)
     return {
         '': '''# The generic family's loop bandwidth N P / I and integral time P / I on this
 # hull: N %.4g N m, yaw inertia %.4g + %.4g (added) kg m^2
@@ -300,8 +296,8 @@ def params_file(vehicle, p, v, path):
     lines = ['# %s: the yaw loop values of its complete member (airship_gains.py); the hardware preset supplies the rest' % vehicle,
              'AS_YAWRATE_P=%s' % rnd(v['AS_YAWRATE_P']), 'AS_YAWRATE_I=%s' % rnd(v['AS_YAWRATE_I']),
              'AS_YR_INT_LIM=%s' % v['AS_YR_INT_LIM'], 'AS_YAWRATE_MAX=%s' % v['AS_YAWRATE_MAX'],
-             'AS_YAWRATE_FF=%s' % rnd(v['FF_drag']), 'AS_SPD_SRC=2', 'AS_SPD_WMAX=0', 'AS_SPD_LO=%s' % rnd(v['AS_SPD_LO'], 2),
-             'AS_SPD_HI=%s' % rnd(v['AS_SPD_HI'], 2), 'AS_YR_FF_SLP=%s' % rnd(v['AS_YR_FF_SLP']), 'AS_YR_RESTORE=1']
+             'AS_YAWRATE_FF=%s' % rnd(v['FF_drag']), 'AS_SPD_SRC=2', 'AS_SPD_WMAX=0',
+             'AS_SPD_HI=%s' % rnd(v['AS_SPD_HI'], 2), 'AS_YR_FF_SLP=%s' % rnd(v['AS_YR_FF_SLP'])]
     open(path, 'w').write('\n'.join(lines) + '\n')
     return path
 
@@ -313,7 +309,7 @@ def report(p, v):
           % (p['x_bar'], p['slip'], p['k'], p['k_rot']))
     print('  loop bandwidth %.4f rad/s, integral time %.2f s (the anchor plant\'s), length scale %.3f'
           % (v['bandwidth'], v['integral_time'], v['length_scale']))
-    for k in ('AS_YAWRATE_P', 'AS_YAWRATE_I', 'AS_YR_INT_LIM', 'AS_YAWRATE_MAX', 'FF_drag', 'FF_fin', 'AS_YR_FF_SLP', 'AS_SPD_LO', 'AS_SPD_HI'):
+    for k in ('AS_YAWRATE_P', 'AS_YAWRATE_I', 'AS_YR_INT_LIM', 'AS_YAWRATE_MAX', 'FF_drag', 'FF_fin', 'AS_YR_FF_SLP', 'AS_SPD_HI'):
         print('  %-14s %s' % (k, rnd(v[k], 4)))
     print('  slope %s; at AS_SPD_HI %.2f m/s the cap is %.2f deg/s against the %.2f deg/s that stalls the fins in a turn; AS_YAWRATE_MAX %g'
           % (v['slope_source'], v['AS_SPD_HI'], v['cap_at_hi'], v['r_stall_at_hi'], v['AS_YAWRATE_MAX']))

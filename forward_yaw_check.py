@@ -199,8 +199,9 @@ def leg_speeds(model):
     if model in LEG_SPEEDS:
         return LEG_SPEEDS[model]
 
-    chain = gz_model.airframe_defaults(model)     # the airframe's ramp, or the firmware's default one
-    lo, hi = (float(chain[n]) if n in chain else firmware_default(n) for n in ('AS_SPD_LO', 'AS_SPD_HI'))
+    chain = gz_model.airframe_defaults(model)     # the airframe's ramp end, or the firmware's default one
+    hi = float(chain['AS_SPD_HI']) if 'AS_SPD_HI' in chain else firmware_default('AS_SPD_HI')
+    lo = 0.5 * hi                                 # the firmware starts the ramp at half AS_SPD_HI (2026-10-12)
     return tuple(round(round(u / 0.05) * 0.05, 2) for u in (lo + LEG_RAMP_MIDDLE * (hi - lo), LEG_PAST_RAMP * hi))
 STICK_FULL = 1.0
 STICK_HALF = 0.5
@@ -340,8 +341,7 @@ RESOLUTION = {
 # such parameters: its legs carry schedule.logged False and no schedule
 # verdict, and NEEDED_MS leaves the topic out so its logs still pass.
 SPEED_TOPIC = 'airship_speed'
-SCHEDULE_PARAMS = ('AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_LO', 'AS_SPD_HI', 'AS_YR_FF_SLP',
-                   'AS_YR_RESTORE')
+SCHEDULE_PARAMS = ('AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_HI', 'AS_YR_FF_SLP')
 SPEED_SOURCES = {0: 'none', 1: 'airspeed', 2: 'ground', 3: 'both'}      # AirshipSpeed.msg SOURCE_*
 # The rate setpoint against the stick's share of the cap the firmware
 # published beside it, each setpoint sample against the cap sample at or

@@ -3,7 +3,7 @@
 replayed for any vehicle-file family, with the yaw model's actuation path (allocator, AirshipPod
 steer/slew, gz tilt joints and rotors: vectored_actuation.VectoredActuation) read
 from the family's own bare airframe and model, and the restore rule where the
-airframe sets AS_YR_RESTORE 1. Plant: (I + rr) r_dot = N_pods - c_hull r|r| - c_fin r|r|."""
+firmware restores the integrator after every stick input. Plant: (I + rr) r_dot = N_pods - c_hull r|r| - c_fin r|r|."""
 import math, os, sys
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS); sys.path.insert(0, os.path.join(TOOLS, 'yaw_model'))
@@ -53,10 +53,7 @@ def run(vehicle, member, quadratic, push_s=35.0, release_s=12.0, wind=0.0, i_off
     # firmware since 2026-10-12, 'linear' the one before
     ctl.FF_LAW = 'quadratic' if quadratic else 'linear'
     c = ctl.GateController('vectored', params, filter_gyro=False, other_params={'THR_MDL_FAC': params['THR_MDL_FAC']})
-    restore = defaults.get('AS_YR_RESTORE', 0.0)
-    restore = restore[0] if isinstance(restore, (tuple, list)) else restore
-    if float(restore) == 1.0:
-        c.ctrl.set_restore('zero_or_sign')
+    c.ctrl.set_restore('zero_or_sign')      # the firmware restores after every stick input (2026-10-12)
     if i_off:
         c.set_param('AS_YAWRATE_I', 0.0)
     loop = gate.compose(c, Act(vehicle, model), Plant(model, member))

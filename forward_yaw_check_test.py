@@ -2183,8 +2183,8 @@ def with_speed(log, cap_deg, source=2, upper_held=False, after_us=None, after=No
                                  'yaw_rate_ff': np.full(len(t), 17.0), 'yaw_authority': np.ones(len(t)),
                                  'yaw_rate_cap': np.full(len(t), math.radians(cap_deg)),
                                  'source': src.astype(float), 'upper_held': held.astype(float)}
-    log.params.update({'AS_SPD_SRC': 2.0, 'AS_YR_FF_SLP': 4.01, 'AS_SPD_LO': 1.5, 'AS_SPD_HI': 2.5,
-                       'AS_SPD_WMAX': 0.0, 'AS_SPD_DP_TOL': 1.05, 'AS_YR_RESTORE': 1.0})
+    log.params.update({'AS_SPD_SRC': 2.0, 'AS_YR_FF_SLP': 4.01, 'AS_SPD_HI': 2.5, 'AS_SPD_WMAX': 0.0,
+                       'AS_SPD_DP_TOL': 1.05})
     return log
 
 

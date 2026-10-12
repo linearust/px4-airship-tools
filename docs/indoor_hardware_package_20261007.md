@@ -23,6 +23,10 @@ Independent Vectoring) 에 이 기체의 값을 얹은 것이다. 시뮬레이�
    의 thrust_n 과 다르면 그 값을 고치고 생성기를 다시 돌린다.
 5. **지문.** `bench_fingerprint.py` 로 Manual 출력을 기록해 두고, 펌웨어를 바꿀 때마다 0.000 µs 를 확인한다.
 6. **CPU.** `fmu_shell.py 'perf'` 에서 airship_att_control 과 control_allocator 의 평균을 적는다 (2026-10-07: 8.8 µs, 29.6 µs).
+7. **놓음 단차 (2026-10-12 증분 A 뒤).** 복원 규칙이 항상 켜져 있으므로 (파라미터 AS_YR_RESTORE 삭제; AS_SPD_LO 도 삭제, 램프는 AS_SPD_HI 의 절반에서 시작)
+   Stabilized 에서 요 풀스틱을 4 s 걸었다 놓으면 적분기가 모은 만큼 (최대 AS_YR_INT_LIM 0.3) 의 토크 단차와 포드 스윙이 핀에 보인다. 로직 애널라이저로 포드
+   서보 펄스가 CA_AIRSHIP_TLT_R 안에서 움직이는지 적는다. Manual 지문은 이 변화를 보지 못한다. 옛 펌웨어의 파라미터 세트를 가진 FMU 는 첫 부팅에 두 이름에 대해
+   "unrecognised parameter" 경고를 내고 무시한다; `vehicles/airship_indoor.params` 는 이미 두 이름이 없다.
 
 ## 2. 비행 카드, 실내, 바람 없음
 
