@@ -1,0 +1,66 @@
+stick up at ['31.17', '76.17', '139.37']
+nav states: [0, 4, 10, 15]
+
+== Manual (nav 0), 3.2 s long, log t 31.17
+   t+  0.0  u +0.0082  v(FLU) +0.0013  |V| 0.0083  roll  -0.01  pitch  +0.00
+   t+  2.0  u +0.1889  v(FLU) +0.0376  |V| 0.1927  roll  -0.25  pitch  +0.10
+   t+  4.0  u +0.1803  v(FLU) +0.0080  |V| 0.1805  roll  -0.59  pitch  -0.01
+   t+  6.0  u +0.1699  v(FLU) -0.0008  |V| 0.1699  roll  -0.27  pitch  +0.08
+   t+  8.0  u +0.1606  v(FLU) +0.0069  |V| 0.1608  roll  +0.10  pitch  -0.04
+   t+ 10.0  u +0.1563  v(FLU) +0.0254  |V| 0.1583  roll  +0.32  pitch  +0.02
+   t+ 12.0  u +0.1502  v(FLU) +0.0448  |V| 0.1568  roll  +0.31  pitch  +0.01
+   t+ 14.0  u +0.1507  v(FLU) +0.0556  |V| 0.1607  roll  +0.14  pitch  -0.04
+
+== Acro push (nav 10), 35.0 s long, log t 76.17
+   t+  0.0  u +0.1657  v(FLU) +0.0076  |V| 0.1658  roll  -0.02  pitch  +0.02
+   t+  2.0  u +0.1651  v(FLU) +0.0077  |V| 0.1653  roll  +0.04  pitch  -0.00
+   t+  4.0  u +0.1647  v(FLU) +0.0100  |V| 0.1650  roll  +0.05  pitch  +0.01
+   t+  6.0  u +0.1624  v(FLU) +0.0152  |V| 0.1631  roll  +0.05  pitch  +0.01
+   t+  8.0  u +0.1584  v(FLU) +0.0217  |V| 0.1599  roll  +0.06  pitch  +0.01
+   t+ 10.0  u +0.1510  v(FLU) +0.0284  |V| 0.1537  roll  +0.06  pitch  +0.03
+   t+ 12.0  u +0.1408  v(FLU) +0.0345  |V| 0.1449  roll  +0.07  pitch  +0.02
+   t+ 14.0  u +0.1279  v(FLU) +0.0392  |V| 0.1338  roll  +0.07  pitch  +0.04
+   t+ 16.0  u +0.1128  v(FLU) +0.0423  |V| 0.1205  roll  +0.08  pitch  +0.04
+   t+ 18.0  u +0.0972  v(FLU) +0.0433  |V| 0.1064  roll  +0.08  pitch  +0.04
+   t+ 20.0  u +0.0809  v(FLU) +0.0422  |V| 0.0913  roll  +0.07  pitch  +0.05
+   t+ 22.0  u +0.0657  v(FLU) +0.0391  |V| 0.0765  roll  +0.07  pitch  +0.03
+   t+ 24.0  u +0.0519  v(FLU) +0.0340  |V| 0.0621  roll  +0.06  pitch  +0.04
+   t+ 26.0  u +0.0400  v(FLU) +0.0275  |V| 0.0486  roll  +0.06  pitch  +0.03
+   t+ 28.0  u +0.0311  v(FLU) +0.0199  |V| 0.0369  roll  +0.06  pitch  +0.03
+   t+ 30.0  u +0.0247  v(FLU) +0.0115  |V| 0.0273  roll  +0.06  pitch  +0.03
+   t+ 32.0  u +0.0219  v(FLU) +0.0028  |V| 0.0221  roll  +0.06  pitch  +0.02
+   t+ 34.0  u +0.0222  v(FLU) -0.0059  |V| 0.0230  roll  +0.06  pitch  +0.03
+   t+ 36.0  u +0.0254  v(FLU) -0.0143  |V| 0.0291  roll  +0.01  pitch  +0.01
+   t+ 38.0  u +0.0306  v(FLU) -0.0196  |V| 0.0363  roll  +0.02  pitch  +0.01
+   t+ 40.0  u +0.0359  v(FLU) -0.0220  |V| 0.0421  roll  +0.02  pitch  +0.01
+   t+ 42.0  u +0.0410  v(FLU) -0.0224  |V| 0.0467  roll  +0.02  pitch  -0.00
+   t+ 44.0  u +0.0456  v(FLU) -0.0217  |V| 0.0505  roll  +0.02  pitch  +0.00
+   t+ 46.0  u +0.0493  v(FLU) -0.0206  |V| 0.0534  roll  +0.01  pitch  -0.00
+
+== Stab push (nav 15), 35.0 s long, log t 139.37
+   t+  0.0  u +0.0614  v(FLU) -0.0123  |V| 0.0627  roll  -0.00  pitch  +0.00
+   t+  2.0  u +0.0615  v(FLU) -0.0116  |V| 0.0626  roll  +0.04  pitch  -0.00
+   t+  4.0  u +0.0624  v(FLU) -0.0101  |V| 0.0632  roll  +0.03  pitch  -0.00
+   t+  6.0  u +0.0635  v(FLU) -0.0086  |V| 0.0641  roll  +0.03  pitch  +0.01
+   t+  8.0  u +0.0647  v(FLU) -0.0075  |V| 0.0652  roll  +0.03  pitch  +0.00
+   t+ 10.0  u +0.0660  v(FLU) -0.0068  |V| 0.0664  roll  +0.04  pitch  +0.01
+   t+ 12.0  u +0.0670  v(FLU) -0.0065  |V| 0.0673  roll  +0.05  pitch  +0.01
+   t+ 14.0  u +0.0683  v(FLU) -0.0063  |V| 0.0686  roll  +0.06  pitch  +0.01
+   t+ 16.0  u +0.0694  v(FLU) -0.0064  |V| 0.0697  roll  +0.06  pitch  +0.02
+   t+ 18.0  u +0.0708  v(FLU) -0.0067  |V| 0.0711  roll  +0.06  pitch  +0.01
+   t+ 20.0  u +0.0724  v(FLU) -0.0073  |V| 0.0728  roll  +0.06  pitch  +0.02
+   t+ 22.0  u +0.0741  v(FLU) -0.0079  |V| 0.0746  roll  +0.06  pitch  +0.02
+   t+ 24.0  u +0.0763  v(FLU) -0.0085  |V| 0.0768  roll  +0.06  pitch  +0.02
+   t+ 26.0  u +0.0783  v(FLU) -0.0089  |V| 0.0788  roll  +0.06  pitch  +0.02
+   t+ 28.0  u +0.0806  v(FLU) -0.0091  |V| 0.0811  roll  +0.07  pitch  +0.02
+   t+ 30.0  u +0.0829  v(FLU) -0.0090  |V| 0.0834  roll  +0.07  pitch  +0.02
+   t+ 32.0  u +0.0851  v(FLU) -0.0087  |V| 0.0855  roll  +0.07  pitch  +0.02
+   t+ 34.0  u +0.0873  v(FLU) -0.0085  |V| 0.0877  roll  +0.07  pitch  +0.02
+   t+ 36.0  u +0.0889  v(FLU) -0.0082  |V| 0.0893  roll  +0.02  pitch  +0.02
+   t+ 38.0  u +0.0901  v(FLU) -0.0067  |V| 0.0903  roll  +0.02  pitch  +0.01
+   t+ 40.0  u +0.0905  v(FLU) -0.0039  |V| 0.0906  roll  +0.03  pitch  +0.01
+   t+ 42.0  u +0.0900  v(FLU) -0.0005  |V| 0.0900  roll  +0.03  pitch  +0.01
+   t+ 44.0  u +0.0893  v(FLU) +0.0030  |V| 0.0894  roll  +0.02  pitch  +0.00
+   t+ 46.0  u +0.0879  v(FLU) +0.0061  |V| 0.0881  roll  +0.02  pitch  +0.01
+
+attitude ~12 s before the Manual step: roll +0.000 pitch -0.001 deg

@@ -1,0 +1,118 @@
+
+== gust  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    peak_rate 6.97|6.98 -> 5.26|5.26; heading_peak 22.19|22.21 -> 19.07|19.06; heading_at_off 22.19|22.21 -> 19.07|19.06; heading_final 11.04|10.69 -> -2.04|-2.14; integ_at_off -0.03|-0.03 -> -0.05|-0.05; recover_0.2 -|- -> -|-; kick_after_off 3.16|3.16 -> 3.24|3.24; law_deg 63.66|63.66 -> 28.65|28.65
+  vec complete peak_rate 3.44|3.44 -> 3.07|3.07; heading_peak 10.05|10.06 -> 9.47|9.48; heading_at_off 10.05|10.06 -> 9.47|9.48; heading_final -0.35|-0.25 -> 4.36|4.62; integ_at_off -0.01|-0.01 -> -0.02|-0.02; recover_0.2 -|- -> -|-; kick_after_off 1.31|1.31 -> 1.51|1.51; law_deg 63.66|63.66 -> 28.65|28.65
+  vec fin      peak_rate 5.48|5.48 -> 4.53|4.54; heading_peak 19.35|19.33 -> 17.01|17.02; heading_at_off 19.35|19.33 -> 17.01|17.02; heading_final 12.56|12.41 -> -2.15|-2.16; integ_at_off -0.02|-0.02 -> -0.04|-0.04; recover_0.2 -|- -> -|-; kick_after_off 2.09|2.10 -> 2.46|2.46; law_deg 63.66|63.66 -> 28.65|28.65
+  cs rigid     peak_rate 7.50|7.50 -> 5.21|5.22; heading_peak 28.11|28.12 -> 20.60|20.60; heading_at_off 28.11|28.12 -> 20.60|20.60; heading_final -0.05|-0.00626 -> -0.06|-0.01; integ_at_off -0.04|-0.04 -> -0.07|-0.07; recover_0.2 -|- -> -|-; kick_after_off 4.12|4.12 -> 4.08|4.08; law_deg 63.66|63.66 -> 28.65|28.65
+  cs complete  peak_rate 5.91|5.91 -> 4.35|4.35; heading_peak 20.18|20.18 -> 16.56|16.56; heading_at_off 20.18|20.18 -> 16.56|16.56; heading_final 1.20|1.25 -> 0.46|0.42; integ_at_off -0.03|-0.03 -> -0.06|-0.06; recover_0.2 -|- -> -|-; kick_after_off 2.80|2.80 -> 3.02|3.02; law_deg 63.66|63.66 -> 28.65|28.65
+
+== noise  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    tq_std 0.000251|0.000251 -> 0.000352|0.000352; tq_max 0.000963|0.000937 -> 0.00134|0.00131; pod_mode_changes 0|0 -> 0|0
+  vec complete tq_std 0.000251|0.000251 -> 0.000352|0.000352; tq_max 0.000936|0.00096 -> 0.00133|0.00137; pod_mode_changes 0|0 -> 0|0
+  vec fin      tq_std 0.000251|0.000251 -> 0.000352|0.000352; tq_max 0.000963|0.000937 -> 0.00131|0.00134; pod_mode_changes 0|0 -> 0|0
+  cs rigid     tq_std 0.000252|0.000251 -> 0.000352|0.000352; tq_max 0.000938|0.000947 -> 0.00131|0.00132; tail_rev_per_s 54.07|54.51 -> 54.25|54.62; esc_std 0.01|0.01 -> 0.02|0.02
+  cs complete  tq_std 0.000251|0.000251 -> 0.000352|0.000352; tq_max 0.000938|0.000952 -> 0.00133|0.00132; tail_rev_per_s 53.89|54.55 -> 54.69|54.00; esc_std 0.01|0.01 -> 0.02|0.02
+
+== noise10  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    tq_std 0.00251|0.00251 -> 0.00352|0.00352; tq_max 0.00937|0.00965 -> 0.01|0.01; pod_mode_changes 0|0 -> 0|0
+  vec complete tq_std 0.00251|0.00251 -> 0.00352|0.00352; tq_max 0.00936|0.00959 -> 0.01|0.01; pod_mode_changes 0|0 -> 0|0
+  vec fin      tq_std 0.00251|0.00251 -> 0.00352|0.00352; tq_max 0.00935|0.0096 -> 0.01|0.01; pod_mode_changes 0|0 -> 0|0
+  cs rigid     tq_std 0.00252|0.00251 -> 0.00352|0.00352; tq_max 0.00938|0.00947 -> 0.01|0.01; tail_rev_per_s 54.07|54.51 -> 54.25|54.62; esc_std 0.04|0.04 -> 0.05|0.05
+  cs complete  tq_std 0.00251|0.00251 -> 0.00352|0.00352; tq_max 0.00938|0.00952 -> 0.01|0.01; tail_rev_per_s 53.89|54.55 -> 54.69|54.00; esc_std 0.04|0.04 -> 0.05|0.05
+
+== step02  act ["servo", 60.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 38.29 -> 43.89; settle10 45.06 -> inf; mean_last5 1.66 -> 1.66; stop_1 3.74 -> 0.12; undershoot_after_release 0.62 -> 0.75; integ_at_release 0.000821 -> -0.01
+  vec complete overshoot_pct 20.65 -> 23.69; settle10 34.22 -> 23.94; mean_last5 1.64 -> 1.67; stop_1 9.42 -> 5.16; undershoot_after_release 0.73 -> 0.64; integ_at_release 0.00633 -> 0.00641
+  vec fin      overshoot_pct 13.66 -> 18.30; settle10 inf -> 14.32; mean_last5 1.35 -> 1.66; stop_1 2.42 -> 3.44; undershoot_after_release 0.08 -> 0.64; integ_at_release 0.02 -> 0.00235
+
+== step02  act ["slew", 240.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 38.29 -> 35.91; settle10 45.06 -> inf; mean_last5 1.66 -> 1.10; stop_1 3.74 -> 0.18; undershoot_after_release 0.62 -> 0.61; integ_at_release 0.000821 -> -0.00259
+  vec complete overshoot_pct 20.22 -> 23.26; settle10 33.62 -> 23.22; mean_last5 1.65 -> 1.67; stop_1 8.12 -> 4.08; undershoot_after_release 0.69 -> 0.60; integ_at_release 0.00622 -> 0.00625
+  vec fin      overshoot_pct 13.66 -> 17.41; settle10 59.22 -> 13.50; mean_last5 1.40 -> 1.66; stop_1 3.22 -> 2.20; undershoot_after_release 0.09 -> 0.57; integ_at_release 0.02 -> 0.00203
+
+== step02  act ["slew", 60.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 38.29 -> 32.88; settle10 45.06 -> inf; mean_last5 1.66 -> 2.20; stop_1 3.74 -> 4.04; undershoot_after_release 0.62 -> 0.71; integ_at_release 0.000821 -> -0.00693
+  vec complete overshoot_pct 16.94 -> 19.21; settle10 33.78 -> 24.48; mean_last5 1.65 -> 1.67; stop_1 9.62 -> 5.72; undershoot_after_release 0.64 -> 0.52; integ_at_release 0.00636 -> 0.00643
+  vec fin      overshoot_pct 13.66 -> 11.17; settle10 inf -> 13.26; mean_last5 1.36 -> 1.66; stop_1 1.96 -> 3.86; undershoot_after_release 0.37 -> 0.33; integ_at_release 0.02 -> 0.00234
+
+== step02  act ["tail_tau", 0.05]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  cs rigid     overshoot_pct 20.52 -> 22.31; settle10 13.82 -> 9.44; mean_last5 1.67 -> 1.66; stop_1 1.22 -> 0.88; undershoot_after_release 0.34 -> 0.37; integ_at_release -1.41e-05 -> -5.93e-06
+  cs complete  overshoot_pct 21.81 -> 25.35; settle10 18.42 -> 12.84; mean_last5 1.67 -> 1.67; stop_1 1.96 -> 1.38; undershoot_after_release 0.37 -> 0.43; integ_at_release 0.00116 -> 0.00116
+
+== step02  act ["tail_tau", 0.1]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  cs rigid     overshoot_pct 21.06 -> 23.33; settle10 13.82 -> 9.42; mean_last5 1.67 -> 1.66; stop_1 1.28 -> 0.92; undershoot_after_release 0.35 -> 0.39; integ_at_release -1.49e-05 -> -9.26e-06
+  cs complete  overshoot_pct 22.26 -> 26.12; settle10 18.44 -> 12.82; mean_last5 1.67 -> 1.67; stop_1 2.02 -> 1.44; undershoot_after_release 0.38 -> 0.44; integ_at_release 0.00116 -> 0.00116
+
+== step02  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 38.29|38.39 -> 36.12|36.36; settle10 45.06|45.00 -> inf|inf; mean_last5 1.66|1.66 -> 1.74|1.78; stop_1 3.74|3.74 -> 0.30|0.32; undershoot_after_release 0.62|0.62 -> 0.71|0.73; integ_at_release 0.000821|0.000843 -> -0.01|-0.01
+  vec complete overshoot_pct 19.04|18.94 -> 21.87|21.93; settle10 33.64|33.62 -> 23.64|23.66; mean_last5 1.65|1.65 -> 1.67|1.67; stop_1 8.66|8.72 -> 4.64|4.64; undershoot_after_release 0.67|0.68 -> 0.57|0.57; integ_at_release 0.00627|0.00629 -> 0.00631|0.00637
+  vec fin      overshoot_pct 13.72|13.66 -> 15.80|15.68; settle10 59.56|59.80 -> 13.82|13.84; mean_last5 1.39|1.38 -> 1.66|1.67; stop_1 3.16|3.10 -> 2.76|2.76; undershoot_after_release 0.09|0.09 -> 0.44|0.45; integ_at_release 0.02|0.02 -> 0.00214|0.00218
+  cs rigid     overshoot_pct 20.14|20.04 -> 21.49|21.37; settle10 13.76|13.80 -> 9.42|9.40; mean_last5 1.66|1.67 -> 1.66|1.67; stop_1 1.18|1.18 -> 0.82|0.84; undershoot_after_release 0.33|0.33 -> 0.36|0.36; integ_at_release -5.16e-07|1.35e-05 -> 5.56e-06|3.02e-05
+  cs complete  overshoot_pct 21.38|21.38 -> 24.64|24.57; settle10 18.58|18.50 -> 12.82|12.86; mean_last5 1.67|1.67 -> 1.67|1.67; stop_1 1.92|1.92 -> 1.34|1.34; undershoot_after_release 0.37|0.37 -> 0.42|0.42; integ_at_release 0.00117|0.00115 -> 0.00113|0.00117
+
+== step05  act ["servo", 60.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 27.43 -> 27.83; settle10 inf -> inf; mean_last5 7.47 -> 5.98; stop_1 7.12 -> 3.26; undershoot_after_release 2.21 -> 1.83; integ_at_release 0.00761 -> 0.000986
+  vec complete overshoot_pct -2.48 -> 0.67; settle10 23.52 -> 11.18; mean_last5 6.49 -> 6.64; stop_1 22.90 -> 12.06; undershoot_after_release 0.70 -> 0.89; integ_at_release 0.10 -> 0.11
+  vec fin      overshoot_pct 0.94 -> 3.94; settle10 10.36 -> 6.46; mean_last5 6.60 -> 6.71; stop_1 10.66 -> 6.68; undershoot_after_release 0.35 -> 0.60; integ_at_release 0.05 -> 0.05
+
+== step05  act ["slew", 240.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 25.73 -> 26.57; settle10 inf -> 47.96; mean_last5 7.55 -> 6.09; stop_1 6.08 -> 3.38; undershoot_after_release 1.86 -> 1.77; integ_at_release 0.00588 -> 0.00472
+  vec complete overshoot_pct -2.74 -> 0.85; settle10 22.16 -> 10.36; mean_last5 6.46 -> 6.64; stop_1 22.06 -> 11.38; undershoot_after_release 0.69 -> 0.93; integ_at_release 0.10 -> 0.11
+  vec fin      overshoot_pct 2.10 -> 5.44; settle10 9.42 -> 5.62; mean_last5 6.65 -> 6.78; stop_1 10.12 -> 5.98; undershoot_after_release 0.36 -> 0.64; integ_at_release 0.05 -> 0.05
+
+== step05  act ["slew", 60.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 19.67 -> 18.25; settle10 57.16 -> 56.40; mean_last5 6.29 -> 6.97; stop_1 8.86 -> 2.98; undershoot_after_release 1.34 -> 2.28; integ_at_release 0.01 -> -0.01
+  vec complete overshoot_pct -2.80 -> -0.07; settle10 27.02 -> 13.62; mean_last5 6.46 -> 6.64; stop_1 23.40 -> 13.50; undershoot_after_release 0.59 -> 0.76; integ_at_release 0.10 -> 0.11
+  vec fin      overshoot_pct -0.31 -> 1.95; settle10 13.20 -> 8.46; mean_last5 6.56 -> 6.69; stop_1 12.10 -> 8.46; undershoot_after_release 0.31 -> 0.40; integ_at_release 0.05 -> 0.05
+
+== step05  act ["tail_tau", 0.05]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  cs rigid     overshoot_pct 20.62 -> 22.49; settle10 13.78 -> 9.40; mean_last5 6.66 -> 6.66; stop_1 3.10 -> 2.14; undershoot_after_release 1.37 -> 1.49; integ_at_release -2.01e-05 -> 7.73e-06
+  cs complete  overshoot_pct 8.07 -> 14.95; settle10 5.56 -> 10.80; mean_last5 6.62 -> 6.71; stop_1 5.74 -> 3.60; undershoot_after_release 0.97 -> 1.32; integ_at_release 0.02 -> 0.02
+
+== step05  act ["tail_tau", 0.1]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  cs rigid     overshoot_pct 21.19 -> 23.52; settle10 13.78 -> 9.38; mean_last5 6.67 -> 6.66; stop_1 3.10 -> 2.14; undershoot_after_release 1.41 -> 1.56; integ_at_release -2.85e-05 -> 4.77e-06
+  cs complete  overshoot_pct 8.35 -> 15.50; settle10 5.54 -> 10.90; mean_last5 6.62 -> 6.71; stop_1 5.72 -> 3.58; undershoot_after_release 0.99 -> 1.37; integ_at_release 0.02 -> 0.02
+
+== step05  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    overshoot_pct 24.07|24.09 -> 24.26|24.22; settle10 inf|inf -> 50.48|50.52; mean_last5 7.24|7.24 -> 6.14|6.14; stop_1 7.16|7.14 -> 3.24|3.24; undershoot_after_release 1.70|1.70 -> 1.91|1.91; integ_at_release 0.00989|0.00986 -> -0.00133|-0.00132
+  vec complete overshoot_pct -2.78|-2.74 -> 0.38|0.39; settle10 23.88|23.88 -> 11.36|11.36; mean_last5 6.46|6.47 -> 6.64|6.64; stop_1 22.50|22.52 -> 12.10|12.10; undershoot_after_release 0.66|0.66 -> 0.86|0.86; integ_at_release 0.10|0.10 -> 0.11|0.11
+  vec fin      overshoot_pct 1.17|1.16 -> 4.19|4.19; settle10 10.96|10.96 -> 6.50|6.50; mean_last5 6.61|6.61 -> 6.75|6.75; stop_1 10.82|10.82 -> 6.82|6.82; undershoot_after_release 0.30|0.30 -> 0.53|0.53; integ_at_release 0.05|0.05 -> 0.05|0.05
+  cs rigid     overshoot_pct 20.10|20.07 -> 21.53|21.50; settle10 13.78|13.78 -> 9.42|9.40; mean_last5 6.66|6.67 -> 6.66|6.67; stop_1 3.12|3.12 -> 2.16|2.16; undershoot_after_release 1.33|1.34 -> 1.43|1.43; integ_at_release 1.01e-06|1.5e-05 -> 1.13e-05|3.59e-05
+  cs complete  overshoot_pct 7.81|7.80 -> 14.43|14.41; settle10 5.58|5.58 -> 10.72|10.72; mean_last5 6.62|6.62 -> 6.71|6.71; stop_1 5.76|5.76 -> 3.60|3.60; undershoot_after_release 0.95|0.95 -> 1.28|1.28; integ_at_release 0.02|0.02 -> 0.02|0.02
+
+== wind10  act ["servo", 60.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    peak_rate 7.39 -> 5.72; heading_peak 78.66 -> 38.77; heading_at_off 69.08 -> 32.97; heading_final 2.52 -> -4.77; integ_at_off -0.10 -> -0.10; recover_0.2 34.92 -> 23.04; kick_after_off 6.59 -> 4.60; law_deg 63.66 -> 28.65
+  vec complete peak_rate 3.94 -> 3.25; heading_peak 74.33 -> 37.47; heading_at_off 65.22 -> 31.81; heading_final -1.48 -> 3.45; integ_at_off -0.10 -> -0.10; recover_0.2 32.10 -> 35.36; kick_after_off 3.61 -> 2.95; law_deg 63.66 -> 28.65
+  vec fin      peak_rate 5.67 -> 4.84; heading_peak 71.82 -> 35.69; heading_at_off 68.96 -> 32.85; heading_final 6.62 -> -1.78; integ_at_off -0.10 -> -0.10; recover_0.2 23.34 -> 23.24; kick_after_off 5.07 -> 3.96; law_deg 63.66 -> 28.65
+
+== wind10  act ["slew", 240.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    peak_rate 6.75 -> 4.82; heading_peak 74.62 -> 35.14; heading_at_off 65.80 -> 30.20; heading_final 2.59 -> -3.54; integ_at_off -0.10 -> -0.10; recover_0.2 34.84 -> 22.92; kick_after_off 6.60 -> 4.57; law_deg 63.66 -> 28.65
+  vec complete peak_rate 3.79 -> 3.02; heading_peak 72.37 -> 35.64; heading_at_off 63.16 -> 30.21; heading_final -1.58 -> 1.80; integ_at_off -0.10 -> -0.10; recover_0.2 31.98 -> 18.90; kick_after_off 3.59 -> 2.94; law_deg 63.66 -> 28.65
+  vec fin      peak_rate 5.28 -> 4.17; heading_peak 69.07 -> 32.92; heading_at_off 65.82 -> 30.18; heading_final 5.00 -> -3.27; integ_at_off -0.10 -> -0.10; recover_0.2 23.36 -> 23.16; kick_after_off 4.98 -> 3.91; law_deg 63.66 -> 28.65
+
+== wind10  act ["slew", 60.0]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    peak_rate 8.11 -> 6.40; heading_peak 88.78 -> 47.43; heading_at_off 78.29 -> 40.92; heading_final 5.46 -> -3.45; integ_at_off -0.10 -> -0.10; recover_0.2 35.98 -> 23.82; kick_after_off 6.63 -> 4.59; law_deg 63.66 -> 28.65
+  vec complete peak_rate 4.11 -> 3.49; heading_peak 79.24 -> 41.90; heading_at_off 70.11 -> 36.03; heading_final 0.63 -> 6.01; integ_at_off -0.10 -> -0.10; recover_0.2 32.94 -> 36.30; kick_after_off 3.61 -> 2.95; law_deg 63.66 -> 28.65
+  vec fin      peak_rate 6.06 -> 5.21; heading_peak 79.80 -> 42.86; heading_at_off 76.94 -> 39.90; heading_final 10.31 -> 8.65; integ_at_off -0.10 -> -0.10; recover_0.2 24.22 -> 24.20; kick_after_off 5.07 -> 3.97; law_deg 63.66 -> 28.65
+
+== wind10  act ["tail_tau", 0.05]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  cs rigid     peak_rate 7.57 -> 5.29; heading_peak 65.70 -> 30.06; heading_at_off 63.51 -> 28.54; heading_final -0.05 -> -0.05; integ_at_off -0.10 -> -0.10; recover_0.2 16.28 -> 15.98; kick_after_off 7.57 -> 5.29; law_deg 63.66 -> 28.65
+  cs complete  peak_rate 5.95 -> 4.39; heading_peak 60.40 -> 30.69; heading_at_off 52.99 -> 27.40; heading_final 10.87 -> 3.48; integ_at_off -0.08 -> -0.10; recover_0.2 28.96 -> 20.00; kick_after_off 5.00 -> 4.05; law_deg 63.66 -> 28.65
+
+== wind10  act ["tail_tau", 0.1]   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  cs rigid     peak_rate 7.65 -> 5.37; heading_peak 65.69 -> 30.07; heading_at_off 63.51 -> 28.54; heading_final -0.05 -> -0.05; integ_at_off -0.10 -> -0.10; recover_0.2 16.08 -> 15.88; kick_after_off 7.64 -> 5.37; law_deg 63.66 -> 28.65
+  cs complete  peak_rate 5.99 -> 4.43; heading_peak 60.50 -> 30.77; heading_at_off 53.10 -> 27.46; heading_final 11.02 -> 3.53; integ_at_off -0.08 -> -0.10; recover_0.2 28.80 -> 19.86; kick_after_off 5.03 -> 4.09; law_deg 63.66 -> 28.65
+
+== wind10  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    peak_rate 7.16|7.16 -> 5.26|5.26; heading_peak 78.31|78.34 -> 38.29|38.24; heading_at_off 69.01|69.08 -> 32.91|32.93; heading_final 2.51|2.68 -> -4.47|-4.52; integ_at_off -0.10|-0.10 -> -0.10|-0.10; recover_0.2 36.06|34.88 -> 23.00|23.00; kick_after_off 6.60|6.59 -> 4.59|4.58; law_deg 63.66|63.66 -> 28.65|28.65
+  vec complete peak_rate 3.89|3.89 -> 3.15|3.15; heading_peak 74.37|74.36 -> 37.40|37.39; heading_at_off 65.21|65.15 -> 31.88|31.82; heading_final -1.14|-1.19 -> 2.92|3.01; integ_at_off -0.10|-0.10 -> -0.10|-0.10; recover_0.2 32.24|32.24 -> 19.10|19.10; kick_after_off 3.59|3.59 -> 2.94|2.94; law_deg 63.66|63.66 -> 28.65|28.65
+  vec fin      peak_rate 5.53|5.54 -> 4.54|4.53; heading_peak 72.02|72.08 -> 35.58|35.56; heading_at_off 68.84|68.95 -> 32.74|32.78; heading_final 6.17|6.40 -> -0.98|-0.94; integ_at_off -0.10|-0.10 -> -0.10|-0.10; recover_0.2 23.74|23.76 -> 23.14|23.14; kick_after_off 5.00|5.00 -> 3.93|3.93; law_deg 63.66|63.66 -> 28.65|28.65
+  cs rigid     peak_rate 7.50|7.50 -> 5.21|5.22; heading_peak 65.71|65.71 -> 30.05|30.04; heading_at_off 63.51|63.57 -> 28.54|28.60; heading_final -0.06|-0.00224 -> -0.05|-0.00166; integ_at_off -0.10|-0.10 -> -0.10|-0.10; recover_0.2 16.42|16.44 -> 16.06|16.04; kick_after_off 7.50|7.50 -> 5.22|5.22; law_deg 63.66|63.66 -> 28.65|28.65
+  cs complete  peak_rate 5.92|5.92 -> 4.35|4.35; heading_peak 60.31|60.30 -> 30.63|30.62; heading_at_off 52.92|52.88 -> 27.35|27.39; heading_final 10.75|10.73 -> 3.42|3.46; integ_at_off -0.08|-0.08 -> -0.10|-0.10; recover_0.2 29.10|29.10 -> 20.14|20.16; kick_after_off 4.96|4.97 -> 4.01|4.00; law_deg 63.66|63.66 -> 28.65|28.65
+
+== windgate  act null   (current 0.5/0.09 -> recommended 0.7/0.2; seeds joined by |)
+  vec rigid    peak_rate 1.75|1.75 -> 1.27|1.27; heading_peak 16.54|16.53 -> 8.31|8.31; heading_at_off 14.16|14.21 -> 6.95|7.01; heading_final 10.10|10.19 -> -3.22|-3.16; integ_at_off -0.02|-0.02 -> -0.02|-0.02; recover_0.2 16.10|16.08 -> 10.82|10.82; kick_after_off 1.22|1.22 -> 0.85|0.84; law_deg 11.79|11.79 -> 5.31|5.31
+  vec complete peak_rate 1.18|1.18 -> 0.87|0.87; heading_peak 17.32|17.35 -> 8.77|8.75; heading_at_off 12.58|12.63 -> 6.58|6.62; heading_final -2.81|-3.00 -> 4.92|4.92; integ_at_off -0.02|-0.02 -> -0.02|-0.02; recover_0.2 23.68|23.68 -> 15.56|15.56; kick_after_off 0.81|0.80 -> 0.63|0.63; law_deg 11.79|11.79 -> 5.31|5.31
+  vec fin      peak_rate 1.63|1.63 -> 1.21|1.21; heading_peak 15.71|15.68 -> 8.05|8.03; heading_at_off 14.06|13.99 -> 6.90|6.94; heading_final 8.70|8.61 -> -2.74|-2.70; integ_at_off -0.02|-0.02 -> -0.02|-0.02; recover_0.2 16.48|16.46 -> 10.90|10.92; kick_after_off 1.14|1.14 -> 0.82|0.81; law_deg 11.79|11.79 -> 5.31|5.31
+  cs rigid     peak_rate 1.39|1.39 -> 0.96|0.97; heading_peak 12.17|12.16 -> 5.56|5.56; heading_at_off 11.76|11.71 -> 5.23|5.29; heading_final -0.00246|-0.06 -> -0.05|-0.00159; integ_at_off -0.02|-0.02 -> -0.02|-0.02; recover_0.2 13.74|13.72 -> 8.42|8.40; kick_after_off 1.39|1.39 -> 0.97|0.97; law_deg 11.79|11.79 -> 5.31|5.31
+  cs complete  peak_rate 1.20|1.20 -> 0.85|0.84; heading_peak 12.92|12.91 -> 5.99|6.00; heading_at_off 12.03|11.98 -> 5.53|5.47; heading_final 0.95|0.90 -> 0.22|0.17; integ_at_off -0.02|-0.02 -> -0.02|-0.02; recover_0.2 16.12|16.10 -> 10.06|10.08; kick_after_off 1.19|1.19 -> 0.86|0.86; law_deg 11.79|11.79 -> 5.31|5.31

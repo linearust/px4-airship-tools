@@ -1,0 +1,500 @@
+
+gz_airship_vectored_independent  P 0.35 I 0.05  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    ALL FAIL     end -7.20..-7.00
+  Acro track    all pass     peak 8.89..8.98  mean 6.75..7.20
+  Acro release  all pass     settle 5.00..6.00  end -2.50..-1.90
+  Stab track    all pass     peak 8.79..8.89  mean 6.81..7.27
+  Stab release  all pass     settle 5.40..6.00  end -2.50..-2.10
+  wind I on     all pass     rate 0.28..0.39
+  wind I off    all pass     rate 2.86..2.91
+  wind weak     all pass     rate 0.06..0.08
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 0.35 I 0.09  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    ALL FAIL     end -10.70..-10.30
+  Acro track    ALL FAIL     peak 9.51..9.58  mean 5.50..5.53
+  Acro release  all pass     settle 5.00..5.40  end -2.50..-1.90
+  Stab track    SPLIT 6/9    peak 9.29..9.43  mean 5.51..5.64
+  Stab release  all pass     settle 5.10..5.70  end -2.40..-1.80
+  wind I on     all pass     rate 0.23..0.28
+  wind I off    all pass     rate 2.86..2.91
+  wind weak     all pass     rate 0.06..0.08
+  => split verdicts: Stab track
+
+gz_airship_vectored_independent  P 0.50 I 0.03  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    all pass     end -3.40..-3.00
+  Acro track    all pass     peak 7.98..8.05  mean 7.71..7.74
+  Acro release  all pass     settle 7.60..9.20  end -0.70..-0.20
+  Stab track    all pass     peak 7.82..7.93  mean 7.64..7.70
+  Stab release  all pass     settle 7.90..8.50  end -0.50..-0.30
+  wind I on     all pass     rate 0.19..0.25
+  wind I off    all pass     rate 2.07..2.12
+  wind weak     all pass     rate 0.04..0.05
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 0.50 I 0.09  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    ALL FAIL     end -7.70..-7.30
+  Acro track    all pass     peak 8.80..8.86  mean 5.98..6.12
+  Acro release  all pass     settle 4.40..5.00  end -2.00..-1.50
+  Stab track    all pass     peak 8.72..8.77  mean 5.98..6.12
+  Stab release  all pass     settle 4.70..5.10  end -2.00..-1.70
+  wind I on     all pass     rate 0.09..0.11
+  wind I off    all pass     rate 2.09..2.12
+  wind weak     all pass     rate 0.03..0.07
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 0.50 I 0.20  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    ALL FAIL     end -8.10..-6.70
+  Acro track    ALL FAIL     peak 9.62..9.67  mean 6.63..7.07
+  Acro release  SPLIT 8/9    settle 5.40..5.70  end -2.80..-2.30
+  Stab track    ALL FAIL     peak 9.37..9.45  mean 7.07..7.26
+  Stab release  SPLIT 3/9    settle 5.70..5.70  end -2.80..-2.60
+  wind I on     all pass     rate 0.08..0.13
+  wind I off    all pass     rate 2.11..2.20
+  wind weak     all pass     rate 0.03..0.05
+  => split verdicts: Acro release, Stab release
+
+gz_airship_vectored_independent  P 0.70 I 0.05  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    all pass     end -3.80..-3.30
+  Acro track    all pass     peak 7.88..7.98  mean 7.33..7.58
+  Acro release  all pass     settle 4.40..5.10  end -1.50..-1.10
+  Stab track    all pass     peak 7.68..7.85  mean 7.57..7.60
+  Stab release  all pass     settle 5.40..6.30  end -1.30..-0.90
+  wind I on     all pass     rate 0.08..0.12
+  wind I off    all pass     rate 1.49..1.53
+  wind weak     all pass     rate 0.01..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 0.70 I 0.09  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    all pass     end -5.40..-4.90
+  Acro track    all pass     peak 8.27..8.36  mean 6.29..6.39
+  Acro release  all pass     settle 3.80..4.70  end -1.60..-1.10
+  Stab track    all pass     peak 8.09..8.21  mean 6.25..6.36
+  Stab release  all pass     settle 3.80..4.40  end -1.50..-1.20
+  wind I on     all pass     rate 0.04..0.10
+  wind I off    all pass     rate 1.50..1.54
+  wind weak     all pass     rate 0.01..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 0.70 I 0.20  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    all pass     end -5.50..-4.30
+  Acro track    all pass     peak 8.81..8.90  mean 6.23..6.48
+  Acro release  all pass     settle 5.00..5.70  end -1.90..-1.50
+  Stab track    all pass     peak 8.78..8.87  mean 6.21..6.38
+  Stab release  all pass     settle 4.70..5.40  end -1.80..-1.40
+  wind I on     all pass     rate 0.05..0.09
+  wind I off    all pass     rate 1.49..1.53
+  wind weak     all pass     rate 0.02..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 1.00 I 0.09  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    all pass     end -3.50..-2.90
+  Acro track    all pass     peak 7.83..7.96  mean 6.42..6.48
+  Acro release  all pass     settle 3.20..3.80  end -1.10..-0.60
+  Stab track    all pass     peak 7.58..7.79  mean 6.41..6.46
+  Stab release  all pass     settle 3.50..3.80  end -1.10..-0.70
+  wind I on     all pass     rate 0.03..0.08
+  wind I off    all pass     rate 1.05..1.07
+  wind weak     all pass     rate 0.00..0.05
+  => split verdicts: none
+
+gz_airship_vectored_independent  P 1.00 I 0.20  (9 members)
+  wind check    all pass     end -2.14..-2.05
+  Manual        all pass     end 22.90..24.20
+  Acro brake    all pass     end -3.50..-2.50
+  Acro track    all pass     peak 8.31..8.45  mean 6.38..6.46
+  Acro release  all pass     settle 3.20..3.80  end -1.40..-0.70
+  Stab track    all pass     peak 8.19..8.28  mean 6.45..6.50
+  Stab release  all pass     settle 3.20..3.50  end -1.40..-1.10
+  wind I on     all pass     rate 0.04..0.08
+  wind I off    all pass     rate 1.05..1.07
+  wind weak     all pass     rate 0.01..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.35 I 0.05  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -0.20..-0.10
+  Acro track    all pass     peak 5.59..6.34  mean 5.54..5.98
+  Acro release  ALL FAIL     settle -  end 3.30..4.00
+  Stab track    all pass     peak 5.57..5.70  mean 5.52..5.65
+  Stab release  ALL FAIL     settle -  end 3.10..3.30
+  wind I on     all pass     rate 0.44..0.49
+  wind I off    all pass     rate 1.58..1.60
+  wind weak     all pass     rate 0.10..0.14
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.35 I 0.09  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -1.10..-1.00
+  Acro track    all pass     peak 6.33..6.40  mean 6.29..6.35
+  Acro release  ALL FAIL     settle -  end 3.10..3.20
+  Stab track    all pass     peak 6.35..6.42  mean 6.32..6.35
+  Stab release  ALL FAIL     settle -  end 2.90..3.00
+  wind I on     ALL FAIL     rate 0.27..0.42
+  wind I off    all pass     rate 1.51..1.56
+  wind weak     all pass     rate 0.01..0.04
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.50 I 0.03  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end 0.20..0.30
+  Acro track    all pass     peak 5.74..5.86  mean 5.56..5.70
+  Acro release  ALL FAIL     settle -  end 3.00..3.10
+  Stab track    SPLIT 1/9    peak 5.00..5.04  mean 4.96..5.01
+  Stab release  ALL FAIL     settle -  end 2.40..2.50
+  wind I on     all pass     rate 0.20..0.21
+  wind I off    all pass     rate 1.32..1.34
+  wind weak     all pass     rate 0.02..0.03
+  => split verdicts: Stab track
+
+gz_airship_vectored_independent_am_fin_drag  P 0.50 I 0.09  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -1.10..-1.00
+  Acro track    all pass     peak 6.27..6.32  mean 6.22..6.26
+  Acro release  ALL FAIL     settle -  end 2.80..2.90
+  Stab track    all pass     peak 6.26..6.28  mean 6.23..6.26
+  Stab release  ALL FAIL     settle -  end 2.70..2.70
+  wind I on     all pass     rate 0.18..0.26
+  wind I off    all pass     rate 1.34..1.37
+  wind weak     all pass     rate 0.00..0.02
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.50 I 0.20  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -2.20..-2.20
+  Acro track    all pass     peak 6.79..6.84  mean 6.79..6.79
+  Acro release  ALL FAIL     settle -  end 1.10..1.40
+  Stab track    all pass     peak 6.80..6.83  mean 6.71..6.72
+  Stab release  ALL FAIL     settle -  end 1.10..1.30
+  wind I on     all pass     rate 0.05..0.14
+  wind I off    all pass     rate 1.41..1.42
+  wind weak     all pass     rate 0.01..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.70 I 0.05  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -0.40..-0.30
+  Acro track    all pass     peak 5.54..5.60  mean 5.48..5.54
+  Acro release  ALL FAIL     settle -  end 2.40..2.50
+  Stab track    all pass     peak 5.58..5.62  mean 5.54..5.58
+  Stab release  ALL FAIL     settle -  end 2.30..2.30
+  wind I on     all pass     rate 0.14..0.16
+  wind I off    all pass     rate 1.13..1.15
+  wind weak     all pass     rate 0.01..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.70 I 0.09  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -0.90..-0.90
+  Acro track    all pass     peak 6.21..6.26  mean 6.16..6.21
+  Acro release  ALL FAIL     settle -  end 2.50..2.60
+  Stab track    all pass     peak 6.17..6.21  mean 6.14..6.17
+  Stab release  ALL FAIL     settle -  end 2.40..2.40
+  wind I on     all pass     rate 0.08..0.14
+  wind I off    all pass     rate 1.13..1.15
+  wind weak     all pass     rate 0.01..0.03
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 0.70 I 0.20  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -1.90..-1.80
+  Acro track    all pass     peak 6.77..6.81  mean 6.76..6.77
+  Acro release  ALL FAIL     settle -  end 1.00..1.20
+  Stab track    all pass     peak 6.67..6.73  mean 6.67..6.67
+  Stab release  ALL FAIL     settle -  end 1.00..1.20
+  wind I on     all pass     rate 0.02..0.04
+  wind I off    all pass     rate 1.16..1.17
+  wind weak     all pass     rate 0.00..0.02
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 1.00 I 0.09  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -0.80..-0.70
+  Acro track    all pass     peak 6.15..6.20  mean 6.10..6.15
+  Acro release  ALL FAIL     settle -  end 2.20..2.30
+  Stab track    all pass     peak 6.10..6.15  mean 6.07..6.10
+  Stab release  ALL FAIL     settle -  end 2.00..2.10
+  wind I on     all pass     rate 0.00..0.03
+  wind I off    ALL FAIL     rate 0.88..0.90
+  wind weak     all pass     rate 0.00..0.02
+  => split verdicts: none
+
+gz_airship_vectored_independent_am_fin_drag  P 1.00 I 0.20  (9 members)
+  wind check    all pass     end -0.86..-0.81
+  Manual        all pass     end 8.40..8.70
+  Acro brake    all pass     end -1.40..-1.40
+  Acro track    all pass     peak 6.71..6.76  mean 6.69..6.74
+  Acro release  ALL FAIL     settle -  end 1.00..1.20
+  Stab track    all pass     peak 6.61..6.65  mean 6.61..6.62
+  Stab release  ALL FAIL     settle -  end 1.00..1.10
+  wind I on     all pass     rate 0.02..0.03
+  wind I off    ALL FAIL     rate 0.89..0.91
+  wind weak     all pass     rate 0.00..0.03
+  => split verdicts: none
+
+gz_cloudship  P 0.35 I 0.05  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -2.10..-1.90
+  Acro track    all pass     peak 8.16..8.21  mean 6.59..6.59
+  Acro release  all pass     settle 4.40..4.50  end -1.40..-1.40
+  Stab track    all pass     peak 8.17..8.22  mean 6.58..6.60
+  Stab release  all pass     settle 4.40..4.50  end -1.50..-1.40
+  wind I on     all pass     rate 0.01..0.05
+  wind I off    all pass     rate 3.02..3.03
+  => split verdicts: none
+
+gz_cloudship  P 0.35 I 0.09  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -1.40..-1.20
+  Acro track    all pass     peak 8.63..8.67  mean 6.67..6.69
+  Acro release  all pass     settle 3.80..3.80  end -1.70..-1.50
+  Stab track    all pass     peak 8.63..8.71  mean 6.67..6.70
+  Stab release  all pass     settle 3.80..3.80  end -1.70..-1.50
+  wind I on     all pass     rate 0.01..0.03
+  wind I off    all pass     rate 3.02..3.03
+  => split verdicts: none
+
+gz_cloudship  P 0.50 I 0.03  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -1.10..-1.00
+  Acro track    all pass     peak 7.37..7.41  mean 6.84..6.86
+  Acro release  all pass     settle 4.10..4.40  end -0.60..-0.60
+  Stab track    all pass     peak 7.36..7.41  mean 6.84..6.86
+  Stab release  all pass     settle 4.10..4.40  end -0.60..-0.50
+  wind I on     all pass     rate 0.21..0.23
+  wind I off    all pass     rate 2.11..2.12
+  => split verdicts: none
+
+gz_cloudship  P 0.50 I 0.09  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -1.00..-0.80
+  Acro track    all pass     peak 8.05..8.09  mean 6.65..6.66
+  Acro release  all pass     settle 3.20..3.50  end -1.10..-0.90
+  Stab track    all pass     peak 8.05..8.09  mean 6.65..6.66
+  Stab release  all pass     settle 3.10..3.50  end -1.10..-0.90
+  wind I on     all pass     rate 0.01..0.03
+  wind I off    all pass     rate 2.12..2.13
+  => split verdicts: none
+
+gz_cloudship  P 0.50 I 0.20  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end 0.50..0.60
+  Acro track    all pass     peak 8.60..8.63  mean 6.66..6.66
+  Acro release  all pass     settle 9.50..9.80  end -0.20..-0.10
+  Stab track    all pass     peak 8.61..8.69  mean 6.66..6.66
+  Stab release  all pass     settle 9.50..9.80  end -0.30..-0.10
+  wind I on     all pass     rate 0.01..0.02
+  wind I off    all pass     rate 2.11..2.13
+  => split verdicts: none
+
+gz_cloudship  P 0.70 I 0.05  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -0.80..-0.70
+  Acro track    all pass     peak 7.28..7.33  mean 6.76..6.77
+  Acro release  all pass     settle 3.10..3.20  end -0.50..-0.50
+  Stab track    all pass     peak 7.28..7.31  mean 6.76..6.77
+  Stab release  all pass     settle 3.10..3.20  end -0.50..-0.50
+  wind I on     all pass     rate 0.09..0.10
+  wind I off    all pass     rate 1.51..1.52
+  => split verdicts: none
+
+gz_cloudship  P 0.70 I 0.09  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -0.70..-0.60
+  Acro track    all pass     peak 7.59..7.64  mean 6.68..6.68
+  Acro release  all pass     settle 2.80..2.90  end -0.70..-0.60
+  Stab track    all pass     peak 7.59..7.62  mean 6.68..6.68
+  Stab release  all pass     settle 2.80..2.90  end -0.60..-0.60
+  wind I on     all pass     rate 0.01..0.03
+  wind I off    all pass     rate 1.51..1.52
+  => split verdicts: none
+
+gz_cloudship  P 0.70 I 0.20  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end 0.00..0.10
+  Acro track    all pass     peak 8.07..8.11  mean 6.67..6.67
+  Acro release  all pass     settle 2.20..2.20  end -0.20..-0.20
+  Stab track    all pass     peak 8.08..8.16  mean 6.66..6.67
+  Stab release  all pass     settle 2.20..2.20  end -0.30..-0.20
+  wind I on     all pass     rate 0.00..0.03
+  wind I off    all pass     rate 1.51..1.52
+  => split verdicts: none
+
+gz_cloudship  P 1.00 I 0.09  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -0.50..-0.40
+  Acro track    all pass     peak 7.22..7.28  mean 6.70..6.71
+  Acro release  all pass     settle 2.20..2.20  end -0.40..-0.30
+  Stab track    all pass     peak 7.22..7.28  mean 6.70..6.71
+  Stab release  all pass     settle 2.20..2.20  end -0.40..-0.30
+  wind I on     all pass     rate 0.02..0.03
+  wind I off    all pass     rate 1.05..1.07
+  => split verdicts: none
+
+gz_cloudship  P 1.00 I 0.20  (9 members)
+  wind check    all pass     end -47.90..-45.99
+  Manual        all pass     end 3.30..4.40
+  Acro brake    all pass     end -0.20..-0.10
+  Acro track    all pass     peak 7.59..7.66  mean 6.66..6.67
+  Acro release  all pass     settle 1.90..1.90  end -0.30..-0.20
+  Stab track    all pass     peak 7.62..7.69  mean 6.66..6.67
+  Stab release  all pass     settle 1.90..1.90  end -0.30..-0.20
+  wind I on     all pass     rate 0.00..0.03
+  wind I off    all pass     rate 1.05..1.07
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.35 I 0.05  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -5.20..-4.90
+  Acro track    ALL FAIL     peak 9.36..9.47  mean 7.73..8.26
+  Acro release  all pass     settle 6.00..6.30  end -1.20..-1.10
+  Stab track    all pass     peak 7.16..7.20  mean 6.84..6.99
+  Stab release  ALL FAIL     settle -  end 0.80..1.00
+  wind I on     all pass     rate 0.64..0.68
+  wind I off    all pass     rate 2.17..2.24
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.35 I 0.09  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -4.40..-4.30
+  Acro track    ALL FAIL     peak 9.74..9.90  mean 5.34..5.98
+  Acro release  all pass     settle 4.10..4.10  end -1.80..-1.40
+  Stab track    all pass     peak 7.87..7.96  mean 6.98..7.27
+  Stab release  all pass     settle 7.60..8.20  end -1.10..-0.70
+  wind I on     all pass     rate 0.49..0.52
+  wind I off    all pass     rate 2.37..2.44
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.50 I 0.03  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -3.80..-3.50
+  Acro track    all pass     peak 8.45..8.53  mean 7.83..8.09
+  Acro release  all pass     settle 6.60..7.60  end -0.20..-0.10
+  Stab track    all pass     peak 6.62..6.64  mean 6.34..6.39
+  Stab release  ALL FAIL     settle -  end 1.40..1.60
+  wind I on     ALL FAIL     rate 1.19..1.24
+  wind I off    all pass     rate 1.67..1.72
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.50 I 0.09  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -3.40..-3.30
+  Acro track    ALL FAIL     peak 9.34..9.48  mean 5.54..6.02
+  Acro release  all pass     settle 3.80..4.10  end -1.30..-1.00
+  Stab track    all pass     peak 7.54..7.61  mean 6.98..7.21
+  Stab release  all pass     settle 7.30..7.90  end -0.50..-0.20
+  wind I on     all pass     rate 0.41..0.44
+  wind I off    all pass     rate 2.03..2.11
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.50 I 0.20  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -0.30..-0.10
+  Acro track    all pass     peak 8.93..9.19  mean 5.23..5.57
+  Acro release  all pass     settle 4.40..4.50  end -1.10..-1.00
+  Stab track    all pass     peak 8.39..8.45  mean 7.25..7.38
+  Stab release  all pass     settle 4.40..4.70  end -1.40..-1.30
+  wind I on     all pass     rate 0.15..0.18
+  wind I off    all pass     rate 2.46..2.74
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.70 I 0.05  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -2.90..-2.60
+  Acro track    all pass     peak 8.49..8.61  mean 6.66..7.03
+  Acro release  all pass     settle 4.40..4.80  end -0.50..-0.30
+  Stab track    all pass     peak 6.83..6.89  mean 6.60..6.75
+  Stab release  ALL FAIL     settle -  end 0.90..1.00
+  wind I on     all pass     rate 0.71..0.77
+  wind I off    all pass     rate 1.57..1.61
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.70 I 0.09  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -2.50..-2.40
+  Acro track    all pass     peak 8.84..8.99  mean 5.77..6.11
+  Acro release  all pass     settle 3.80..3.80  end -0.80..-0.60
+  Stab track    all pass     peak 7.25..7.31  mean 6.92..7.11
+  Stab release  all pass     settle 7.30..7.60  end -0.00..0.10
+  wind I on     all pass     rate 0.38..0.41
+  wind I off    all pass     rate 1.73..1.80
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 0.70 I 0.20  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -0.50..-0.40
+  Acro track    all pass     peak 8.71..8.90  mean 5.32..5.46
+  Acro release  all pass     settle 3.50..3.80  end -0.70..-0.60
+  Stab track    all pass     peak 7.99..8.03  mean 7.09..7.25
+  Stab release  all pass     settle 4.10..4.40  end -0.90..-0.80
+  wind I on     all pass     rate 0.16..0.17
+  wind I off    all pass     rate 2.01..2.14
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 1.00 I 0.09  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -1.80..-1.60
+  Acro track    all pass     peak 8.31..8.43  mean 6.01..6.21
+  Acro release  all pass     settle 3.10..3.20  end -0.40..-0.30
+  Stab track    all pass     peak 6.97..7.11  mean 6.83..7.00
+  Stab release  all pass     settle 6.00..6.30  end 0.30..0.40
+  wind I on     all pass     rate 0.36..0.40
+  wind I off    all pass     rate 1.42..1.47
+  => split verdicts: none
+
+gz_cloudship_am_fin_drag  P 1.00 I 0.20  (9 members)
+  wind check    all pass     end -19.64..-19.29
+  Manual        all pass     end 16.30..17.30
+  Acro brake    all pass     end -0.70..-0.60
+  Acro track    all pass     peak 8.32..8.48  mean 5.69..5.75
+  Acro release  all pass     settle 2.80..2.90  end -0.40..-0.30
+  Stab track    all pass     peak 7.52..7.57  mean 7.00..7.14
+  Stab release  all pass     settle 3.80..4.10  end -0.50..-0.40
+  wind I on     all pass     rate 0.15..0.16
+  wind I off    all pass     rate 1.54..1.64
+  => split verdicts: none

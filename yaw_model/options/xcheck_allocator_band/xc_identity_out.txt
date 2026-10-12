@@ -1,0 +1,41 @@
+base vs shared  gz_airship_vectored_independent               seed None identical True
+base vs shared  gz_airship_vectored_independent               seed 3    identical True
+base vs shared  gz_airship_vectored_independent_am_fin_drag   seed None identical True
+base vs shared  gz_airship_vectored_independent_am_fin_drag   seed 3    identical True
+base vs shared  gz_airship_vectored_independent_fin           seed None identical True
+base vs shared  gz_airship_vectored_independent_fin           seed 3    identical True
+base vs shared  gz_cloudship                                  seed None identical True
+base vs shared  gz_cloudship                                  seed 3    identical True
+base vs shared  gz_cloudship_am_fin_drag                      seed None identical True
+base vs shared  gz_cloudship_am_fin_drag                      seed 3    identical True
+xc vs E  gz_airship_vectored_independent               report_hold    P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent               report_hold    P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent               report_band    P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent               report_band    P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent               report_all     P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent               report_all     P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent               deliver        P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent               deliver        P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent               deliver_report P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent               deliver_report P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   report_hold    P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   report_hold    P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   report_band    P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   report_band    P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   report_all     P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   report_all     P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   deliver        P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   deliver        P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   deliver_report P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_am_fin_drag   deliver_report P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_fin           report_hold    P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_fin           report_hold    P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_fin           report_band    P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_fin           report_band    P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_fin           report_all     P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_fin           report_all     P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_fin           deliver        P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_fin           deliver        P 0.7 seed 2    identical True
+xc vs E  gz_airship_vectored_independent_fin           deliver_report P 0.5 seed None identical True
+xc vs E  gz_airship_vectored_independent_fin           deliver_report P 0.7 seed 2    identical True
+ALL IDENTICAL

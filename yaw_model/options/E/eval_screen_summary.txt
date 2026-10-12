@@ -1,0 +1,468 @@
+
+vectored rigid [gz_airship_vectored_independent]  band base  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +0.700..+0.700
+  Acro track     1/1  pass      mean +1.300..+1.300; peak +1.023..+1.023
+  Acro release   1/1  pass      settle +6.200..+6.200  end -1.3..-1.3 deg/s
+  Stab track     1/1  pass      mean +1.320..+1.320; peak +1.133..+1.133
+  Stab release   1/1  pass      settle +6.200..+6.200  end -1.2..-1.2 deg/s
+  wind I on      1/1  pass      rate +0.900..+0.900; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.510..+0.510
+  wind weak      1/1  pass      rate +0.970..+0.970; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band base  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     0/1  FAIL      end -1.700..-1.700
+  Acro track     1/1  pass      mean +1.000..+1.000; peak +0.523..+0.523
+  Acro release   1/1  pass      settle +5.300..+5.300  end -2.0..-2.0 deg/s
+  Stab track     1/1  pass      mean +1.000..+1.000; peak +0.603..+0.603
+  Stab release   1/1  pass      settle +4.900..+4.900  end -1.8..-1.8 deg/s
+  wind I on      1/1  pass      rate +0.900..+0.900; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +1.110..+1.110
+  wind weak      1/1  pass      rate +0.950..+0.950; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band deliver  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 29..29
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +0.700..+0.700
+  Acro track     1/1  pass      mean +1.490..+1.490; peak +1.023..+1.023
+  Acro release   1/1  pass      settle +5.300..+5.300  end -1.3..-1.3 deg/s
+  Stab track     1/1  pass      mean +1.300..+1.300; peak +1.183..+1.183
+  Stab release   1/1  pass      settle +6.200..+6.200  end -1.3..-1.3 deg/s
+  wind I on      1/1  pass      rate +0.910..+0.910; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.510..+0.510
+  wind weak      1/1  pass      rate +0.970..+0.970; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band deliver  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 41..41
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     0/1  FAIL      end -1.700..-1.700
+  Acro track     1/1  pass      mean +1.020..+1.020; peak +0.563..+0.563
+  Acro release   1/1  pass      settle +5.300..+5.300  end -2.0..-2.0 deg/s
+  Stab track     1/1  pass      mean +0.980..+0.980; peak +0.633..+0.633
+  Stab release   1/1  pass      settle +5.300..+5.300  end -1.9..-1.9 deg/s
+  wind I on      1/1  pass      rate +0.910..+0.910; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +1.120..+1.120
+  wind weak      1/1  pass      rate +0.960..+0.960; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band deliver_report  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 29..29
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +0.700..+0.700
+  Acro track     1/1  pass      mean +1.580..+1.580; peak +1.023..+1.023
+  Acro release   1/1  pass      settle +5.300..+5.300  end -1.2..-1.2 deg/s
+  Stab track     1/1  pass      mean +1.143..+1.143; peak +1.153..+1.153
+  Stab release   1/1  pass      settle +5.300..+5.300  end -1.3..-1.3 deg/s
+  wind I on      1/1  pass      rate +0.900..+0.900; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.500..+0.500
+  wind weak      1/1  pass      rate +0.970..+0.970; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band deliver_report  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 41..41
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     0/1  FAIL      end -1.700..-1.700
+  Acro track     1/1  pass      mean +0.843..+0.843; peak +0.573..+0.573
+  Acro release   1/1  pass      settle +5.000..+5.000  end -2.2..-2.2 deg/s
+  Stab track     1/1  pass      mean +0.333..+0.333; peak +0.633..+0.633
+  Stab release   1/1  pass      settle +4.600..+4.600  end -2.0..-2.0 deg/s
+  wind I on      1/1  pass      rate +0.910..+0.910; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +1.110..+1.110
+  wind weak      1/1  pass      rate +0.950..+0.950; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band report_all  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +0.600..+0.600
+  Acro track     0/1  UNDECIDED mean -0.557..-0.557; peak +0.093..+0.093 [<0.4]
+  Acro release   1/1  pass      settle +2.100..+2.100  end -1.0..-1.0 deg/s
+  Stab track     0/1  FAIL      mean +0.233..+0.233; peak +0.963..+0.963
+  Stab release   1/1  pass      settle +3.400..+3.400  end -1.1..-1.1 deg/s
+  wind I on      1/1  pass      rate +0.900..+0.900; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.540..+0.540
+  wind weak      1/1  pass      rate +0.960..+0.960; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band report_all  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     0/1  FAIL      end -1.700..-1.700
+  Acro track     0/1  FAIL      mean -2.097..-2.097; peak -1.457..-1.457
+  Acro release   1/1  pass      settle +0.800..+0.800  end -1.4..-1.4 deg/s
+  Stab track     0/1  UNDECIDED mean -0.597..-0.597; peak +0.103..+0.103 [<0.4]
+  Stab release   1/1  pass      settle +2.100..+2.100  end -1.6..-1.6 deg/s
+  wind I on      1/1  pass      rate +0.870..+0.870; integ +0.008..+0.008
+  wind I off     1/1  pass      rate +1.130..+1.130
+  wind weak      1/1  pass      rate +0.930..+0.930; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band report_band  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +0.700..+0.700
+  Acro track     1/1  pass      mean +0.363..+0.363; peak +1.003..+1.003
+  Acro release   1/1  pass      settle +4.300..+4.300  end -1.2..-1.2 deg/s
+  Stab track     0/1  FAIL      mean +0.263..+0.263; peak +1.003..+1.003
+  Stab release   1/1  pass      settle +4.000..+4.000  end -1.1..-1.1 deg/s
+  wind I on      1/1  pass      rate +0.910..+0.910; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.500..+0.500
+  wind weak      1/1  pass      rate +0.970..+0.970; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band report_band  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     0/1  FAIL      end -1.700..-1.700
+  Acro track     0/1  FAIL      mean -2.087..-2.087; peak -1.447..-1.447
+  Acro release   1/1  pass      settle +2.100..+2.100  end -1.9..-1.9 deg/s
+  Stab track     0/1  UNDECIDED mean -0.727..-0.727; peak -0.007..-0.007 [<0.4]
+  Stab release   1/1  pass      settle +2.400..+2.400  end -2.0..-2.0 deg/s
+  wind I on      1/1  pass      rate +0.850..+0.850; integ +0.008..+0.008
+  wind I off     1/1  pass      rate +1.130..+1.130
+  wind weak      1/1  pass      rate +0.940..+0.940; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band report_hold  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +0.700..+0.700
+  Acro track     1/1  pass      mean +1.300..+1.300; peak +1.023..+1.023
+  Acro release   1/1  pass      settle +6.200..+6.200  end -1.3..-1.3 deg/s
+  Stab track     1/1  pass      mean +1.320..+1.320; peak +1.133..+1.133
+  Stab release   1/1  pass      settle +6.200..+6.200  end -1.2..-1.2 deg/s
+  wind I on      1/1  pass      rate +0.900..+0.900; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.510..+0.510
+  wind weak      1/1  pass      rate +0.970..+0.970; integ +0.004..+0.004
+
+vectored rigid [gz_airship_vectored_independent]  band report_hold  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.990..+0.990
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     0/1  FAIL      end -1.700..-1.700
+  Acro track     1/1  pass      mean +1.000..+1.000; peak +0.523..+0.523
+  Acro release   1/1  pass      settle +5.300..+5.300  end -2.0..-2.0 deg/s
+  Stab track     1/1  pass      mean +1.000..+1.000; peak +0.603..+0.603
+  Stab release   1/1  pass      settle +4.900..+4.900  end -1.8..-1.8 deg/s
+  wind I on      1/1  pass      rate +0.900..+0.900; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +1.110..+1.110
+  wind weak      1/1  pass      rate +0.950..+0.950; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band base  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 9..9
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.100..+5.100
+  Acro track     1/1  pass      mean +1.180..+1.180; peak +3.103..+3.103
+  Acro release   0/1  FAIL      settle never  end 2.5..2.5 deg/s
+  Stab track     1/1  pass      mean +1.160..+1.160; peak +3.143..+3.143
+  Stab release   0/1  FAIL      settle never  end 2.4..2.4 deg/s
+  wind I on      1/1  pass      rate +0.890..+0.890; integ +0.007..+0.007
+  wind I off     1/1  pass      rate +0.140..+0.140
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band base  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.000..+5.000
+  Acro track     1/1  pass      mean +1.240..+1.240; peak +3.043..+3.043
+  Acro release   0/1  FAIL      settle never  end 2.8..2.8 deg/s
+  Stab track     1/1  pass      mean +1.240..+1.240; peak +3.063..+3.063
+  Stab release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  wind I on      1/1  UNDECIDED rate +0.810..+0.810; integ +0.002..+0.002 [<0.0019]
+  wind I off     1/1  pass      rate +0.360..+0.360
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band deliver  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 329..329
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.100..+5.100
+  Acro track     1/1  pass      mean +1.180..+1.180; peak +3.103..+3.103
+  Acro release   0/1  FAIL      settle never  end 2.5..2.5 deg/s
+  Stab track     1/1  pass      mean +1.160..+1.160; peak +3.143..+3.143
+  Stab release   0/1  FAIL      settle never  end 2.4..2.4 deg/s
+  wind I on      1/1  pass      rate +0.940..+0.940; integ +0.007..+0.007
+  wind I off     1/1  pass      rate +0.140..+0.140
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band deliver  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 269..269
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.000..+5.000
+  Acro track     1/1  pass      mean +1.240..+1.240; peak +3.043..+3.043
+  Acro release   0/1  FAIL      settle never  end 2.8..2.8 deg/s
+  Stab track     1/1  pass      mean +1.240..+1.240; peak +3.063..+3.063
+  Stab release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  wind I on      1/1  pass      rate +0.880..+0.880; integ +0.003..+0.003
+  wind I off     1/1  pass      rate +0.360..+0.360
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band deliver_report  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 333..333
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.100..+5.100
+  Acro track     1/1  pass      mean +1.180..+1.180; peak +3.103..+3.103
+  Acro release   0/1  FAIL      settle never  end 2.5..2.5 deg/s
+  Stab track     1/1  pass      mean +1.190..+1.190; peak +3.113..+3.113
+  Stab release   0/1  FAIL      settle never  end 2.4..2.4 deg/s
+  wind I on      1/1  pass      rate +0.980..+0.980; integ +0.008..+0.008
+  wind I off     1/1  pass      rate +0.130..+0.130
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band deliver_report  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 285..285
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.000..+5.000
+  Acro track     1/1  pass      mean +1.240..+1.240; peak +3.043..+3.043
+  Acro release   0/1  FAIL      settle never  end 2.8..2.8 deg/s
+  Stab track     0/1  FAIL      mean +1.270..+1.270; peak +3.033..+3.033
+  Stab release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  wind I on      1/1  pass      rate +0.970..+0.970; integ +0.005..+0.005
+  wind I off     1/1  pass      rate +0.350..+0.350
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band report_all  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 5..5
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.100..+5.100
+  Acro track     1/1  pass      mean +1.170..+1.170; peak +3.103..+3.103
+  Acro release   0/1  FAIL      settle never  end 2.5..2.5 deg/s
+  Stab track     1/1  pass      mean +1.230..+1.230; peak +3.083..+3.083
+  Stab release   0/1  FAIL      settle never  end 2.4..2.4 deg/s
+  wind I on      1/1  pass      rate +0.920..+0.920; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.120..+0.120
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band report_all  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 5..5
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.000..+5.000
+  Acro track     1/1  pass      mean +1.230..+1.230; peak +3.043..+3.043
+  Acro release   0/1  FAIL      settle never  end 2.8..2.8 deg/s
+  Stab track     0/1  FAIL      mean +1.310..+1.310; peak +3.003..+3.003
+  Stab release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  wind I on      1/1  pass      rate +0.950..+0.950; integ +0.008..+0.008
+  wind I off     1/1  pass      rate +0.340..+0.340
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band report_band  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 5..5
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.100..+5.100
+  Acro track     1/1  pass      mean +1.180..+1.180; peak +3.103..+3.103
+  Acro release   0/1  FAIL      settle never  end 2.5..2.5 deg/s
+  Stab track     1/1  pass      mean +1.220..+1.220; peak +3.083..+3.083
+  Stab release   0/1  FAIL      settle never  end 2.4..2.4 deg/s
+  wind I on      1/1  pass      rate +0.940..+0.940; integ +0.008..+0.008
+  wind I off     1/1  pass      rate +0.130..+0.130
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band report_band  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 5..5
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.000..+5.000
+  Acro track     1/1  pass      mean +1.240..+1.240; peak +3.043..+3.043
+  Acro release   0/1  FAIL      settle never  end 2.8..2.8 deg/s
+  Stab track     0/1  FAIL      mean +1.300..+1.300; peak +3.003..+3.003
+  Stab release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  wind I on      1/1  pass      rate +0.960..+0.960; integ +0.005..+0.005
+  wind I off     1/1  pass      rate +0.350..+0.350
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band report_hold  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 9..9
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.100..+5.100
+  Acro track     1/1  pass      mean +1.180..+1.180; peak +3.103..+3.103
+  Acro release   0/1  FAIL      settle never  end 2.5..2.5 deg/s
+  Stab track     1/1  pass      mean +1.160..+1.160; peak +3.143..+3.143
+  Stab release   0/1  FAIL      settle never  end 2.4..2.4 deg/s
+  wind I on      1/1  pass      rate +0.890..+0.890; integ +0.007..+0.007
+  wind I off     1/1  pass      rate +0.140..+0.140
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.004..+0.004
+
+vectored complete [gz_airship_vectored_independent_am_fin_drag]  band report_hold  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.385..+0.385
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +5.000..+5.000
+  Acro track     1/1  pass      mean +1.240..+1.240; peak +3.043..+3.043
+  Acro release   0/1  FAIL      settle never  end 2.8..2.8 deg/s
+  Stab track     1/1  pass      mean +1.240..+1.240; peak +3.063..+3.063
+  Stab release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  wind I on      1/1  UNDECIDED rate +0.810..+0.810; integ +0.002..+0.002 [<0.0019]
+  wind I off     1/1  pass      rate +0.360..+0.360
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band base  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.900..+4.900
+  Acro track     1/1  pass      mean +1.503..+1.503; peak +2.433..+2.433
+  Acro release   0/1  FAIL      settle never  end 1.0..1.0 deg/s
+  Stab track     1/1  pass      mean +1.510..+1.510; peak +2.823..+2.823
+  Stab release   0/1  FAIL      settle never  end 0.7..0.7 deg/s
+  wind I on      1/1  pass      rate +1.000..+1.000; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.280..+0.280
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band base  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.400..+4.400
+  Acro track     1/1  pass      mean +1.443..+1.443; peak +2.373..+2.373
+  Acro release   0/1  FAIL      settle never  end 0.9..0.9 deg/s
+  Stab track     1/1  pass      mean +1.560..+1.560; peak +2.763..+2.763
+  Stab release   0/1  FAIL      settle never  end 0.6..0.6 deg/s
+  wind I on      1/1  pass      rate +0.980..+0.980; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.650..+0.650
+  wind weak      1/1  pass      rate +1.000..+1.000; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band deliver  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.900..+4.900
+  Acro track     1/1  pass      mean +1.503..+1.503; peak +2.433..+2.433
+  Acro release   0/1  FAIL      settle never  end 1.0..1.0 deg/s
+  Stab track     1/1  pass      mean +1.510..+1.510; peak +2.823..+2.823
+  Stab release   0/1  FAIL      settle never  end 0.7..0.7 deg/s
+  wind I on      1/1  pass      rate +0.990..+0.990; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.280..+0.280
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band deliver  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 237..237
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.400..+4.400
+  Acro track     1/1  pass      mean +1.443..+1.443; peak +2.373..+2.373
+  Acro release   0/1  FAIL      settle never  end 0.9..0.9 deg/s
+  Stab track     1/1  pass      mean +1.560..+1.560; peak +2.763..+2.763
+  Stab release   0/1  FAIL      settle never  end 0.6..0.6 deg/s
+  wind I on      1/1  pass      rate +0.980..+0.980; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.650..+0.650
+  wind weak      1/1  pass      rate +1.000..+1.000; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band deliver_report  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.900..+4.900
+  Acro track     1/1  pass      mean +1.503..+1.503; peak +2.433..+2.433
+  Acro release   0/1  FAIL      settle never  end 1.0..1.0 deg/s
+  Stab track     1/1  pass      mean +1.510..+1.510; peak +2.823..+2.823
+  Stab release   0/1  FAIL      settle never  end 0.7..0.7 deg/s
+  wind I on      1/1  pass      rate +0.990..+0.990; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.280..+0.280
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.003..+0.003
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band deliver_report  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 237..237
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.400..+4.400
+  Acro track     1/1  pass      mean +1.443..+1.443; peak +2.373..+2.373
+  Acro release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  Stab track     1/1  pass      mean +1.633..+1.633; peak +2.563..+2.563
+  Stab release   0/1  FAIL      settle never  end 1.3..1.3 deg/s
+  wind I on      1/1  pass      rate +0.990..+0.990; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.600..+0.600
+  wind weak      1/1  pass      rate +1.000..+1.000; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band report_all  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.900..+4.900
+  Acro track     1/1  pass      mean +1.503..+1.503; peak +2.443..+2.443
+  Acro release   0/1  FAIL      settle never  end 1.0..1.0 deg/s
+  Stab track     1/1  pass      mean +1.500..+1.500; peak +2.823..+2.823
+  Stab release   0/1  FAIL      settle never  end 0.7..0.7 deg/s
+  wind I on      1/1  pass      rate +1.000..+1.000; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.280..+0.280
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band report_all  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 5..5
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.400..+4.400
+  Acro track     1/1  pass      mean +1.443..+1.443; peak +2.373..+2.373
+  Acro release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  Stab track     1/1  pass      mean +1.643..+1.643; peak +2.543..+2.543
+  Stab release   0/1  FAIL      settle never  end 2.2..2.2 deg/s
+  wind I on      1/1  pass      rate +0.980..+0.980; integ +0.007..+0.007
+  wind I off     1/1  pass      rate +0.650..+0.650
+  wind weak      1/1  pass      rate +0.980..+0.980; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band report_band  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.900..+4.900
+  Acro track     1/1  pass      mean +1.503..+1.503; peak +2.433..+2.433
+  Acro release   0/1  FAIL      settle never  end 1.0..1.0 deg/s
+  Stab track     1/1  pass      mean +1.510..+1.510; peak +2.823..+2.823
+  Stab release   0/1  FAIL      settle never  end 0.7..0.7 deg/s
+  wind I on      1/1  pass      rate +1.000..+1.000; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.280..+0.280
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band report_band  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 5..5
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.400..+4.400
+  Acro track     1/1  pass      mean +1.443..+1.443; peak +2.373..+2.373
+  Acro release   0/1  FAIL      settle never  end 2.7..2.7 deg/s
+  Stab track     1/1  pass      mean +1.643..+1.643; peak +2.543..+2.543
+  Stab release   0/1  FAIL      settle never  end 2.2..2.2 deg/s
+  wind I on      1/1  pass      rate +0.990..+0.990; integ +0.008..+0.008
+  wind I off     1/1  pass      rate +0.640..+0.640
+  wind weak      1/1  pass      rate +0.980..+0.980; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band report_hold  gains A (P 0.70 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.900..+4.900
+  Acro track     1/1  pass      mean +1.503..+1.503; peak +2.433..+2.433
+  Acro release   0/1  FAIL      settle never  end 1.0..1.0 deg/s
+  Stab track     1/1  pass      mean +1.510..+1.510; peak +2.823..+2.823
+  Stab release   0/1  FAIL      settle never  end 0.7..0.7 deg/s
+  wind I on      1/1  pass      rate +1.000..+1.000; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.280..+0.280
+  wind weak      1/1  pass      rate +0.990..+0.990; integ +0.002..+0.002
+
+vectored _fin (2nd case) [gz_airship_vectored_independent_fin]  band report_hold  gains current (P 0.50 I 0.09)  1 noisy members + 0 noise-free
+  pod target swings (>90 deg) per gate run: 13..13
+  wind check     1/1  pass      |d|-exp/2 +0.880..+0.880
+  Manual         1/1  pass      torque +0.020..+0.020
+  Acro brake     1/1  pass      end +4.400..+4.400
+  Acro track     1/1  pass      mean +1.443..+1.443; peak +2.373..+2.373
+  Acro release   0/1  FAIL      settle never  end 0.9..0.9 deg/s
+  Stab track     1/1  pass      mean +1.560..+1.560; peak +2.763..+2.763
+  Stab release   0/1  FAIL      settle never  end 0.8..0.8 deg/s
+  wind I on      1/1  pass      rate +0.980..+0.980; integ +0.009..+0.009
+  wind I off     1/1  pass      rate +0.650..+0.650
+  wind weak      1/1  pass      rate +1.000..+1.000; integ +0.002..+0.002

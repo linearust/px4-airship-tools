@@ -1,0 +1,119 @@
+
+P 0.50 I 0.050
+  vec rigid    FF0.00 ok | FF0.10 ok(?Atr+Arel+Srel) | FF0.20 X:Atr+Str(?Arel+Srel)
+  vec complete FF0.60 X:Arel+Srel | FF0.80 X:Arel+Srel | FF1.00 X:Arel+Srel | FF1.20 ok
+  cs rigid     FF0.00 ok | FF0.10 ok | FF0.20 X:Arel+Srel(?Atr+Str)
+  cs complete  FF0.00 X:Srel | FF0.10 ok(?Atr) | FF0.20 X:Atr
+  vec fin      FF0.00 X:Arel+Srel | FF0.20 X:Arel | FF0.40 ok
+
+P 0.50 I 0.090
+  vec rigid    FF0.00 X:brk | FF0.10 X:brk(?Atr+Arel+Str+Srel) | FF0.20 X:brk+Atr+Str(?Arel+Srel)
+  vec complete FF0.60 X:Arel+Srel | FF0.80 X:Arel+Srel | FF1.00 ok | FF1.20 ok
+  cs rigid     FF0.00 ok | FF0.10 X:Srel(?Arel) | FF0.20 X:Atr+Arel+Str+Srel
+  cs complete  FF0.00 X:Atr | FF0.10 X:Atr | FF0.20 X:Atr
+  vec fin      FF0.00 X:Arel+Srel | FF0.20 ok | FF0.40 ok
+
+P 0.50 I 0.200
+  vec rigid    FF0.00 X:brk+Atr+Str+Srel(?Arel) | FF0.10 X:brk+Atr+Arel+Str+Srel | FF0.20 X:brk+Atr+Arel+Str+Srel
+  vec complete FF0.60 ok | FF0.80 ok | FF1.00 ok | FF1.20 ok
+  cs rigid     FF0.00 ok | FF0.10 ok | FF0.20 X:Atr+Str
+  cs complete  FF0.00 ok | FF0.10 ok(?Srel) | FF0.20 ok(?Srel)
+  vec fin      FF0.00 ok | FF0.20 ok | FF0.40 ok
+
+P 0.60 I 0.050
+  vec rigid    FF0.00 ok
+  vec complete FF1.00 ok(?Arel+Srel) | FF1.20 ok
+  cs rigid     FF0.00 ok
+  cs complete  FF0.10 ok
+  vec fin      FF0.30 ok
+
+P 0.60 I 0.070
+  vec rigid    FF0.00 ok(?Arel)
+  vec complete FF1.00 ok | FF1.20 ok
+  cs rigid     FF0.00 ok
+  cs complete  FF0.10 ok(?Atr)
+  vec fin      FF0.30 ok
+
+P 0.65 I 0.050
+  vec rigid    FF0.00 ok(?Arel)
+  vec complete FF1.00 ok(?Arel) | FF1.20 ok
+  cs rigid     FF0.00 ok
+  cs complete  FF0.10 ok
+  vec fin      FF0.30 ok
+
+P 0.65 I 0.070
+  vec rigid    FF0.00 ok
+  vec complete FF1.00 ok | FF1.20 ok
+  cs rigid     FF0.00 ok
+  cs complete  FF0.10 ok
+  vec fin      FF0.30 ok
+
+P 0.65 I 0.200
+  vec rigid    FF0.00 ok(?brk+Arel+Str+Srel) | FF0.10 X:Arel+Srel(?brk+Atr+Str) | FF0.20 X:Atr+Arel+Str+Srel(?brk) | FF0.30 X:Atr+Arel+Str+Srel(?brk)
+  vec complete FF0.00 X:Arel+Srel | FF0.10 X:Arel+Srel | FF0.20 X:Arel+Srel | FF0.30 X:Arel+Srel
+  cs rigid     FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 X:Atr+Str
+  cs complete  FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 ok(?Arel+Srel)
+  vec fin      FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 ok
+
+P 0.70 I 0.050
+  vec rigid    FF0.00 ok | FF0.10 ok | FF0.20 ok(?Atr+Arel+Str+Srel)
+  vec complete FF0.60 X:Arel+Srel | FF0.80 X:Arel+Srel | FF1.00 ok | FF1.20 ok
+  cs rigid     FF0.00 ok | FF0.10 ok | FF0.20 X:Arel+Srel
+  cs complete  FF0.00 X:Srel | FF0.10 ok | FF0.20 ok
+  vec fin      FF0.00 X:Arel+Srel | FF0.20 ok(?Arel) | FF0.40 ok
+
+P 0.70 I 0.090
+  vec rigid    FF0.00 ok | FF0.10 ok(?Arel+Srel) | FF0.20 ok(?Atr+Arel+Str+Srel) | FF0.30 X:Atr+Arel+Str(?Srel) | FF0.40 X:Atr+Arel+Str+Srel | FF0.50 X:Atr+Arel+Str+Srel | FF0.60 X:Atr+Arel+Str+Srel | FF0.80 X:Atr+Arel+Str+Srel | FF1.00 X:Atr+Arel+Str+Srel
+  vec complete FF0.00 X:Arel+Srel(?wOff) | FF0.10 X:Arel+Srel(?wOff) | FF0.20 X:Arel+Srel(?wOff) | FF0.30 X:Arel+Srel(?wOff) | FF0.40 X:Arel+Srel(?wOff) | FF0.50 X:Arel+Srel | FF0.60 X:Arel+Srel | FF0.80 ok(?Arel+Srel) | FF1.00 ok
+  cs rigid     FF0.00 ok | FF0.10 ok(?Arel+Srel) | FF0.20 X:Arel+Srel | FF0.30 X:Atr+Arel+Str+Srel | FF0.40 X:Atr+Arel+Str+Srel | FF0.50 X:Atr+Arel+Str+Srel | FF0.60 X:Atr+Arel+Str+Srel | FF0.80 X:Atr+Arel+Str+Srel | FF1.00 X:Atr+Arel+Str+Srel
+  cs complete  FF0.00 ok | FF0.10 ok | FF0.20 ok(?Atr) | FF0.30 X:Atr | FF0.40 X:Atr(?Arel+Srel) | FF0.50 X:Atr+Arel+Srel | FF0.60 X:Atr+Arel+Str+Srel | FF0.80 X:Atr+Arel+Str+Srel | FF1.00 X:Atr+Arel+Str+Srel
+  vec fin      FF0.00 X:Arel+Srel | FF0.10 ok(?Arel) | FF0.20 ok | FF0.30 ok | FF0.40 ok | FF0.50 ok | FF0.60 ok | FF0.80 X:Srel(?Arel) | FF1.00 X:Arel+Str+Srel
+
+P 0.70 I 0.120
+  vec rigid    FF0.00 ok(?brk+Arel) | FF0.10 ok(?brk+Arel+Srel) | FF0.20 X:Atr+Arel(?brk+Str+Srel) | FF0.30 X:Atr+Arel+Str+Srel(?brk) | FF0.40 X:Atr+Arel+Str+Srel(?brk) | FF0.60 X:Atr+Arel+Str+Srel(?brk)
+  vec complete FF0.00 X:Arel+Srel(?wOff) | FF0.10 X:Arel+Srel(?wOff) | FF0.20 X:Arel+Srel | FF0.30 X:Arel+Srel | FF0.40 X:Arel+Srel | FF0.60 X:Arel+Srel
+  cs rigid     FF0.00 ok | FF0.10 ok(?Arel+Srel) | FF0.20 X:Arel+Srel | FF0.30 X:Atr+Arel+Str+Srel | FF0.40 X:Atr+Arel+Str+Srel | FF0.60 X:Atr+Arel+Str+Srel
+  cs complete  FF0.00 ok | FF0.10 ok | FF0.20 ok(?Atr) | FF0.30 X:Atr | FF0.40 X:Atr(?Arel+Srel) | FF0.60 X:Atr+Arel+Str+Srel
+  vec fin      FF0.00 ok(?Arel) | FF0.10 ok | FF0.20 ok | FF0.30 ok | FF0.40 ok | FF0.60 ok
+
+P 0.70 I 0.150
+  vec rigid    FF0.00 ok(?brk+Srel) | FF0.10 ok(?brk+Atr+Arel+Str+Srel) | FF0.20 X:Atr+Str(?brk+Arel+Srel) | FF0.30 X:Atr+Arel+Str(?brk+Srel) | FF0.40 X:Atr+Arel+Str+Srel(?brk) | FF0.60 X:Atr+Arel+Str+Srel(?brk)
+  vec complete FF0.00 X:Arel+Srel | FF0.10 X:Arel+Srel | FF0.20 X:Arel+Srel | FF0.30 X:Arel+Srel | FF0.40 X:Arel+Srel | FF0.60 ok(?Arel+Srel)
+  cs rigid     FF0.00 ok | FF0.10 ok(?Arel+Srel) | FF0.20 X:Arel+Srel | FF0.30 X:Atr+Arel+Str+Srel | FF0.40 X:Atr+Arel+Str+Srel | FF0.60 X:Atr+Arel+Str+Srel
+  cs complete  FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 ok(?Atr) | FF0.40 X:Srel(?Atr+Arel) | FF0.60 X:Atr+Arel+Str+Srel
+  vec fin      FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 ok | FF0.40 ok | FF0.60 ok
+
+P 0.70 I 0.200
+  vec rigid    FF0.00 ok(?Arel+Srel) | FF0.05 ok(?Atr+Arel+Str+Srel) | FF0.10 ok(?Atr+Arel+Str+Srel) | FF0.20 X:Atr+Arel+Str(?Srel)
+  vec complete FF0.05 X:Arel+Srel | FF0.10 X:Arel+Srel | FF0.20 X:Arel+Srel | FF0.30 X:Arel+Srel | FF0.40 ok(?Arel+Srel) | FF0.60 ok | FF0.80 ok | FF1.00 ok | FF1.20 ok
+  cs rigid     FF0.00 ok | FF0.05 ok | FF0.10 ok | FF0.20 ok
+  cs complete  FF0.00 ok | FF0.05 ok | FF0.10 ok | FF0.20 ok
+  vec fin      FF0.00 ok | FF0.05 ok | FF0.20 ok | FF0.40 ok
+
+P 0.70 I 0.300
+  vec rigid    FF0.00 X:Arel+Srel(?Atr+Str) | FF0.10 X:Atr+Arel+Str+Srel | FF0.20 X:Atr+Arel+Str+Srel | FF0.30 X:Atr+Arel+Str+Srel
+  vec complete FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 ok
+  cs rigid     FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 X:Atr+Str
+  cs complete  FF0.00 ok | FF0.10 X:Srel | FF0.20 X:Arel+Srel | FF0.30 X:Arel+Srel
+  vec fin      FF0.00 ok | FF0.10 ok | FF0.20 ok | FF0.30 ok
+
+P 1.00 I 0.050
+  vec rigid    FF0.00 ok(?wOff) | FF0.10 ok(?wOff) | FF0.20 ok(?Srel+wOff)
+  vec complete FF0.60 X:Arel+Srel+wOff | FF0.80 X:wOff | FF1.00 X:wOff | FF1.20 X:wOff
+  cs rigid     FF0.00 ok(?wOff) | FF0.10 ok(?wOff) | FF0.20 ok(?wOff)
+  cs complete  FF0.00 ok(?Srel) | FF0.10 ok | FF0.20 ok
+  vec fin      FF0.00 X:Arel+wOff(?Srel) | FF0.20 X:wOff | FF0.40 X:wOff
+
+P 1.00 I 0.090
+  vec rigid    FF0.00 ok(?wOff) | FF0.10 ok(?Arel+wOff) | FF0.20 ok(?Arel+Srel+wOff)
+  vec complete FF0.60 X:Arel+Srel+wOff | FF0.80 X:wOff | FF1.00 X:wOff | FF1.20 X:wOff
+  cs rigid     FF0.00 ok(?wOff) | FF0.10 ok(?wOff) | FF0.20 ok(?Arel+Srel+wOff)
+  cs complete  FF0.00 ok | FF0.10 ok | FF0.20 ok
+  vec fin      FF0.00 X:Arel+wOff | FF0.20 X:wOff | FF0.40 X:wOff
+
+P 1.00 I 0.200
+  vec rigid    FF0.00 ok(?Arel+Srel+wOff) | FF0.10 ok(?Arel+Srel+wOff) | FF0.20 X:Arel(?Atr+Srel+wOff)
+  vec complete FF0.60 X:wOff | FF0.80 X:wOff | FF1.00 X:wOff | FF1.20 X:wOff
+  cs rigid     FF0.00 ok(?wOff) | FF0.10 ok(?wOff) | FF0.20 ok(?wOff)
+  cs complete  FF0.00 ok | FF0.10 ok | FF0.20 ok
+  vec fin      FF0.00 X:wOff | FF0.20 X:wOff | FF0.40 X:wOff

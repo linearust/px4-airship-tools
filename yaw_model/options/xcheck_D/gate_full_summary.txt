@@ -1,0 +1,90 @@
+
+== none:0.7:lite
+  vec rigid    all-pass 12/12
+     brake   pass 12/12 und  0  m min +0.61 med +0.66  end -5.39..-4.84
+     Atrack  pass 12/12 und  0  m_peak min +0.94 med +1.00; m_mean min +1.30 med +1.31  peak 8.28..8.39
+     Arel    pass 12/12 und  0  m min +5.23 med +6.06  settle 3.79..4.77  end -1.59..-1.10  integ@rel -0.0016..-0.0006
+     Strack  pass 12/12 und  0  m_peak min +1.08 med +1.12; m_mean min +1.28 med +1.33
+     Srel    pass 12/12 und  0  m min +5.56 med +5.89  settle 3.80..4.44  end -1.52..-1.19  integ@rel -0.0020..-0.0015
+     wOn     pass 12/12 und  0  m_rate min +0.89 med +0.93; m_integ min +0.0092 med +0.0092  rate 0.032..0.114 integ 0.0184..0.0184
+     wOff    pass 12/12 und  0  m_rate min +0.49 med +0.50  drift 1.492..1.535
+     wWk     pass 12/12 und  0  m_rate min +0.96 med +0.97; m_integ min +0.0036 med +0.0036
+  vec complete all-pass 0/12
+     brake   pass 12/12 und  0  m min +5.05 med +5.08  end -0.95..-0.87
+     Atrack  pass 12/12 und  0  m_peak min +3.06 med +3.09; m_mean min +1.16 med +1.18  peak 6.21..6.28
+     Arel    pass  0/12 und  0  m none settled  settle -  end 2.48..2.54  integ@rel 0.0904..0.0913
+     Strack  pass 12/12 und  0  m_peak min +3.08 med +3.11; m_mean min +1.14 med +1.16
+     Srel    pass  0/12 und  0  m none settled  settle -  end 2.36..2.47  integ@rel 0.0859..0.0872
+     wOn     pass 12/12 und  0  m_rate min +0.90 med +0.92; m_integ min +0.0064 med +0.0065  rate 0.058..0.100 integ 0.0212..0.0213
+     wOff    pass 12/12 und 11  m_rate min +0.12 med +0.14  drift 1.122..1.150
+     wWk     pass 12/12 und  0  m_rate min +0.97 med +0.98; m_integ min +0.0036 med +0.0036
+  cs rigid     all-pass 12/12
+     brake   pass 12/12 und  0  m min +5.26 med +5.35  end -0.74..-0.60
+     Atrack  pass 12/12 und  0  m_peak min +1.66 med +1.71; m_mean min +1.64 med +1.65  peak 7.60..7.67
+     Arel    pass 12/12 und  0  m min +7.14 med +7.16  settle 2.84..2.86  end -0.62..-0.57  integ@rel -0.0001..0.0001
+     Strack  pass 12/12 und  0  m_peak min +1.69 med +1.71; m_mean min +1.65 med +1.65
+     Srel    pass 12/12 und  0  m min +7.14 med +7.16  settle 2.84..2.86  end -0.70..-0.57  integ@rel -0.0001..0.0001
+     wOn     pass 12/12 und  0  m_rate min +0.96 med +0.98; m_integ min +0.0092 med +0.0092  rate 0.016..0.035 integ 0.0185..0.0185
+     wOff    pass 12/12 und  0  m_rate min +0.50 med +0.52  drift 1.496..1.531
+  cs complete  all-pass 12/12
+     brake   pass 12/12 und  0  m min +3.53 med +3.58  end -2.47..-2.37
+     Atrack  pass 12/12 und  0  m_peak min +0.30 med +0.39; m_mean min +0.79 med +0.92  peak 8.84..9.03
+     Arel    pass 12/12 und  0  m min +6.19 med +6.21  settle 3.48..3.81  end -0.83..-0.60  integ@rel 0.0116..0.0140
+     Strack  pass 12/12 und  0  m_peak min +2.00 med +2.00; m_mean min +1.22 med +1.30
+     Srel    pass 12/12 und  0  m min +2.41 med +2.73  settle 6.95..7.59  end -0.05..0.19  integ@rel 0.0200..0.0208
+     wOn     pass 12/12 und  0  m_rate min +0.59 med +0.61; m_integ min +0.0085 med +0.0089  rate 0.369..0.415 integ 0.0187..0.0193
+     wOff    pass 12/12 und  0  m_rate min +0.72 med +0.77  drift 1.723..1.799
+  vec fin      all-pass 0/12
+     brake   pass 12/12 und  0  m min +4.90 med +4.93  end -1.10..-0.94
+     Atrack  pass 12/12 und  0  m_peak min +2.39 med +2.42; m_mean min +1.46 med +1.50  peak 6.88..6.95
+     Arel    pass  0/12 und  0  m none settled  settle -  end 0.97..1.15  integ@rel 0.0482..0.0486
+     Strack  pass 12/12 und  0  m_peak min +2.76 med +2.78; m_mean min +1.50 med +1.51
+     Srel    pass  0/12 und 12  m min -0.12 med -0.11 (5 unsettled)  settle 10.09..10.12  end 0.63..0.78  integ@rel 0.0397..0.0405
+     wOn     pass 12/12 und  0  m_rate min +0.96 med +0.98; m_integ min +0.0091 med +0.0091  rate 0.014..0.039 integ 0.0187..0.0187
+     wOff    pass 12/12 und  0  m_rate min +0.26 med +0.27  drift 1.261..1.292
+     wWk     pass 12/12 und  0  m_rate min +0.96 med +0.98; m_integ min +0.0025 med +0.0025
+
+== restore:0.7:full
+  vec rigid    all-pass 40/40
+     brake   pass 40/40 und  0  m min +0.60 med +0.67  end -5.40..-4.80
+     Atrack  pass 40/40 und  0  m_peak min +0.94 med +1.00; m_mean min +1.29 med +1.31  peak 8.26..8.40
+     Arel    pass 40/40 und  0  m min +5.23 med +5.26  settle 3.79..4.77  end -1.57..-1.06  integ@rel -0.0014..-0.0002
+     Strack  pass 40/40 und  0  m_peak min +1.07 med +1.12; m_mean min +1.28 med +1.33
+     Srel    pass 40/40 und  0  m min +5.26 med +5.89  settle 3.80..4.74  end -1.50..-1.12  integ@rel -0.0020..-0.0001
+     wOn     pass 40/40 und  0  m_rate min +0.90 med +0.92; m_integ min +0.0092 med +0.0092  rate 0.029..0.104 integ 0.0184..0.0185
+     wOff    pass 40/40 und  0  m_rate min +0.48 med +0.50  drift 1.478..1.532
+     wWk     pass 40/40 und  0  m_rate min +0.95 med +0.97; m_integ min +0.0036 med +0.0036
+  vec complete all-pass 40/40
+     brake   pass 40/40 und  0  m min +5.05 med +5.09  end -0.95..-0.85
+     Atrack  pass 40/40 und  0  m_peak min +3.03 med +3.09; m_mean min +1.16 med +1.18  peak 6.21..6.31
+     Arel    pass 40/40 und  0  m min +1.78 med +2.10  settle 7.58..8.22  end -0.34..-0.11  integ@rel 0.0006..0.0914
+     Strack  pass 40/40 und  0  m_peak min +3.03 med +3.07; m_mean min +1.19 med +1.21
+     Srel    pass 40/40 und  0  m min +1.78 med +2.12  settle 7.56..8.22  end -0.36..-0.18  integ@rel 0.0002..0.0886
+     wOn     pass 40/40 und  0  m_rate min +0.80 med +0.83; m_integ min +0.0060 med +0.0064  rate 0.149..0.198 integ 0.0211..0.0218
+     wOff    pass 40/40 und 24  m_rate min +0.13 med +0.15  drift 1.125..1.167
+     wWk     pass 40/40 und  0  m_rate min +0.95 med +0.97; m_integ min +0.0033 med +0.0033
+  cs rigid     all-pass 40/40
+     brake   pass 40/40 und  0  m min +5.22 med +5.36  end -0.78..-0.57
+     Atrack  pass 40/40 und  0  m_peak min +1.66 med +1.71; m_mean min +1.64 med +1.65  peak 7.58..7.67
+     Arel    pass 40/40 und  0  m min +7.14 med +7.16  settle 2.84..2.86  end -0.68..-0.54  integ@rel 0.0000..0.0004
+     Strack  pass 40/40 und  0  m_peak min +1.68 med +1.72; m_mean min +1.64 med +1.66
+     Srel    pass 40/40 und  0  m min +7.14 med +7.15  settle 2.84..2.86  end -0.67..-0.55  integ@rel 0.0000..0.0004
+     wOn     pass 40/40 und  0  m_rate min +0.95 med +0.98; m_integ min +0.0092 med +0.0092  rate 0.013..0.055 integ 0.0185..0.0185
+     wOff    pass 40/40 und  0  m_rate min +0.50 med +0.52  drift 1.495..1.535
+  cs complete  all-pass 40/40
+     brake   pass 40/40 und  0  m min +3.51 med +3.59  end -2.49..-2.32
+     Atrack  pass 40/40 und  0  m_peak min +0.25 med +0.38; m_mean min +0.76 med +0.91  peak 8.84..9.09
+     Arel    pass 40/40 und  0  m min +6.82 med +6.84  settle 2.84..3.18  end -1.17..-1.01  integ@rel 0.0012..0.0141
+     Strack  pass 40/40 und  0  m_peak min +2.04 med +2.08; m_mean min +1.24 med +1.34
+     Srel    pass 40/40 und  0  m min +4.91 med +4.94  settle 4.73..5.09  end -0.61..-0.48  integ@rel 0.0007..0.0203
+     wOn     pass 40/40 und  0  m_rate min +0.48 med +0.50; m_integ min +0.0046 med +0.0059  rate 0.462..0.525 integ 0.0211..0.0232
+     wOff    pass 40/40 und  0  m_rate min +0.55 med +0.58  drift 1.552..1.630
+  vec fin      all-pass 40/40
+     brake   pass 40/40 und  0  m min +4.85 med +4.96  end -1.15..-0.91
+     Atrack  pass 40/40 und  0  m_peak min +2.36 med +2.42; m_mean min +1.45 med +1.50  peak 6.86..6.97
+     Arel    pass 40/40 und  0  m min +4.63 med +4.94  settle 5.04..5.37  end -0.85..-0.75  integ@rel 0.0003..0.0486
+     Strack  pass 40/40 und  0  m_peak min +2.78 med +2.82; m_mean min +1.40 med +1.42
+     Srel    pass 40/40 und  0  m min +4.92 med +4.95  settle 4.73..5.08  end -0.74..-0.59  integ@rel 0.0007..0.0404
+     wOn     pass 40/40 und  0  m_rate min +0.96 med +0.98; m_integ min +0.0084 med +0.0086  rate 0.011..0.039 integ 0.0177..0.0179
+     wOff    pass 40/40 und  0  m_rate min +0.23 med +0.25  drift 1.231..1.275
+     wWk     pass 40/40 und  0  m_rate min +0.96 med +0.98; m_integ min +0.0021 med +0.0022

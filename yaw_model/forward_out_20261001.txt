@@ -1,0 +1,587 @@
+Step 0a, 2026-10-01: the yaw model at HEAD, its gates, the forward-flight defect (yaw_model/step0a.py)
+=== The model aligned with HEAD ===
+PX4-Autopilot HEAD 4e1baea97c (clean)
+controller.DEFAULT_PARAMS, read from the yaml: AS_YAWRATE_P 0.7, AS_YAWRATE_I 0.09, AS_YR_INT_LIM 0.3, AS_YAWRATE_FF 0, AS_YAWRATE_MAX 15, MAN_DEADZONE 0.1, IMU_GYRO_CUTOFF 40
+  2520 airship_vectored_independent               P 0.7 I 0.09 INT_LIM 0.3 FF 0 (yaml default) MAX 15 THR_MDL_FAC 1
+  2522 airship_vectored_independent_fin           P 0.7 I 0.09 INT_LIM 0.3 FF 0.3 (ROMFS/px4fmu_common/init.d-posix/airframes/2522_gz_airship_vectored_independent_fin:17) MAX 15 THR_MDL_FAC 1
+  2527 airship_vectored_independent_am_fin_drag   P 0.7 I 0.09 INT_LIM 0.3 FF 1 (ROMFS/px4fmu_common/init.d-posix/airframes/2527_gz_airship_vectored_independent_am_fin_drag:19) MAX 15 THR_MDL_FAC 1
+  2510 cloudship                                  P 0.7 I 0.09 INT_LIM 0.3 FF 0 (yaml default) MAX 15 THR_MDL_FAC 1
+  2512 cloudship_fin                              P 0.7 I 0.09 INT_LIM 0.3 FF 0 (yaml default) MAX 15 THR_MDL_FAC 1
+  2517 cloudship_am_fin_drag                      P 0.7 I 0.09 INT_LIM 0.3 FF 0.05 (ROMFS/px4fmu_common/init.d-posix/airframes/2517_gz_cloudship_am_fin_drag:19) MAX 15 THR_MDL_FAC 1
+FF semantics (rate_control.cpp:78, :88-118; airship_yaw_rate_loop.hpp:58-69, :76-82): torque = P e + I + FF sp; the integral takes e alone, clipped by the flags; the flags come from the allocator's shortfall of the whole torque, FF included. FF does not take part in the integrator's saturation logic except through that shortfall. options/B (the 09-27/28 stage-2 implementation, rc.ff set after build) and the aligned path (FF through set_gains) give identical gate lines and samples on all five plants (checked 2026-10-01, old tree from the scratch snapshot).
+FF port against HEAD's SITL logs (ulog_check.py, chain14 of 2026-09-29, the logged rate driving the controller and allocator ports, no plant):
+  2026-09-29/03_05_52.ulg (SYS_AUTOSTART 2527, vectored, 4e1baea97c): torque p99 9.1e-05, integrator p99 9.1e-05, yaw saturation sign 1773/1776
+  2026-09-29/03_12_03.ulg (SYS_AUTOSTART 2522, vectored, 4e1baea97c): torque p99 1.2e-04, integrator p99 1.2e-04, yaw saturation sign 1579/1579
+  2026-09-29/03_22_07.ulg (SYS_AUTOSTART 2517, cloudship, 4e1baea97c): torque p99 8.5e-05, integrator p99 8.5e-05, yaw saturation sign 1311/1311
+
+=== G1: the 48 at-rest verdicts at HEAD gains ===
+Tolerance convention (reproduce.py, reproduce_head.py): the verdict is the gate's own pass/fail, compared exactly; per number TOL is the band sitl_check applies to it and SPREAD the range of the clean runs (">spread" flags a model value further from a run than the runs are from each other).
+The tolerance labels' line numbers are sitl_check.py's of 2026-09-27 (reproduce.CHECKS); in today's file: wind check :320, Manual :330, brake :377, tracking mean :408, peak :409, release :431, wind cases :480
+Records (read-only copies in records_head/):
+  chain12_20260928.txt                                         md5 ec1e849a5cd37e1e93ff5de26ff1fd7a
+  chain12b_20260928.txt                                        md5 46a734d277342e22b3090f1e4d6ab8bc
+  chain12c_20260928.txt                                        md5 a014b65241508ef493e1917662cdcb3f
+  chain13_20260928.txt                                         md5 2b2cd8a7f041b92eabec0a999fd8a00a
+  chain14_20260929.txt                                         md5 1e8c28858cc4e7d1481bf4044e750c38
+  chain14b_20260929.txt                                        md5 581dee90da1c3223e2bf3d3dce03a672
+
+=== gz_airship_vectored_independent   model status 0, 948 rows; gains P 0.7 I 0.09 INT_LIM 0.3 FF 0 (the runs' own: chain12_20260928, chain12b_20260928, chain13_20260928, chain14_20260929, chain14b_1_20260929, chain14b_2_20260929)
+  check         field      model  runs (clean) min..max    d(model)  spread  gate tolerance (sitl_check.py)     flags
+  wind check    start       0.00  -0.06..0.04                  0.06    0.10                                     
+  wind check    end        -2.10  -2.16..-2.08                 0.06    0.08  0.5 x expected, :314               
+  wind check    VERDICT     pass  6 clean runs: pass       agree
+  Manual        torque    0.5000  0.5000..0.5000             0.0000  0.0000  0.02, :324                         
+  Manual        start      -2.60  -2.70..-2.60                 0.10    0.10                                     
+  Manual        end        23.50  23.40..24.20                -0.70    0.80                                     
+  Manual        VERDICT     pass  6 clean runs: pass       agree
+  Acro brake    start      27.90  27.70..28.70                -0.80    1.00                                     
+  Acro brake    end        -5.30  -5.50..-5.20                 0.20    0.30  |r| < 6.0, :371                    
+  Acro brake    VERDICT     pass  6 clean runs: pass       agree
+  Acro track    mean        6.30  6.29..6.37                  -0.07    0.08  0.25 sp = 1.667, :402              
+  Acro track    peak        8.31  8.32..8.38                  -0.07    0.06  < 1.4 sp: 0.4 sp = 2.667, :403     
+  Acro track    start       0.38  0.10..0.37                   0.28    0.27                                     
+  Acro track    integ0    0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  Acro track    VERDICT     pass  6 clean runs: pass       agree
+  Acro release  start       6.30  6.20..6.60                  -0.30    0.40                                     
+  Acro release  end        -1.30  -1.50..-1.20                 0.20    0.30                                     
+  Acro release  settle      3.80  3.80..4.80                  -1.00    1.00  < 10.0 s, :425                     
+  Acro release  slope          -  -                               -       -                                     
+  Acro release  VERDICT     pass  6 clean runs: pass       agree
+  Stab track    mean        6.32  6.31..6.37                  -0.05    0.06  0.25 sp = 1.667, :402              
+  Stab track    peak        8.20  8.17..8.23                  -0.03    0.06  < 1.4 sp: 0.4 sp = 2.667, :403     
+  Stab track    start       0.19  0.15..0.29                  -0.10    0.14                                     
+  Stab track    integ0    0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  Stab track    VERDICT     pass  6 clean runs: pass       agree
+  Stab release  start       6.50  6.20..6.50                   0.30    0.30                                     
+  Stab release  end        -1.20  -1.50..-1.30                 0.30    0.20                                     >spread
+  Stab release  settle      3.80  3.90..4.40                  -0.60    0.50  < 10.0 s, :425                     >spread
+  Stab release  slope          -  -                               -       -                                     
+  Stab release  VERDICT     pass  6 clean runs: pass       agree
+  wind I on     rate        0.10  0.05..0.09                   0.05    0.04  < 1.0, :443                        >spread
+  wind I on     integ     0.0185  0.0184..0.0184             0.0001  0.0000  0.5 needed, :443                   
+  wind I on     VERDICT     pass  6 clean runs: pass       agree
+  wind I off    rate        1.51  1.49..1.54                  -0.03    0.05  > 1.0, :443                        
+  wind I off    integ     0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  wind I off    VERDICT     pass  6 clean runs: pass       agree
+  wind weak     rate        0.03  0.02..0.04                  -0.01    0.02  < 1.0, :443                        
+  wind weak     integ     0.0074  0.0073..0.0073             0.0001  0.0000  0.5 needed, :443                   
+  wind weak     VERDICT     pass  5 clean runs: pass       agree
+                                                           left out: chain14_20260929 says FAIL; both weak pushes lost, the guard marked the case unmeasured ("미측정" in the line; sitl_out/chain14b.sh:2-3)
+  series vs chain12_20260928     rate rms 0.14 deg/s over 945 rows; largest phase max |d| 0.70 deg/s (바람 1 N m, I 끔: 계속 밀린다 회복)
+  series vs chain12b_20260928    rate rms 0.14 deg/s over 946 rows; largest phase max |d| 0.84 deg/s (Acro 제동)
+  series vs chain13_20260928     rate rms 0.07 deg/s over 948 rows; largest phase max |d| 0.21 deg/s (Stabilized 추종)
+  series vs chain14_20260929     rate rms 0.19 deg/s over 929 rows; largest phase max |d| 0.61 deg/s (정지 대기 #2)
+  series vs chain14b_1_20260929  rate rms 0.08 deg/s over 948 rows; largest phase max |d| 0.23 deg/s (Acro 제동)
+  series vs chain14b_2_20260929  rate rms 0.13 deg/s over 942 rows; largest phase max |d| 0.59 deg/s (Acro 추종)
+
+=== gz_airship_vectored_independent_am_fin_drag   model status 0, 1012 rows; gains P 0.7 I 0.09 INT_LIM 0.3 FF 1 (the runs' own: chain12_20260928, chain12b_20260928, chain12c_1_20260928, chain12c_2_20260928, chain13_20260928, chain14_20260929)
+  check         field      model  runs (clean) min..max    d(model)  spread  gate tolerance (sitl_check.py)     flags
+  wind check    start       0.00  -0.02..0.04                 -0.04    0.06                                     
+  wind check    end        -0.82  -0.88..-0.80                 0.06    0.08  0.5 x expected, :314               
+  wind check    VERDICT     pass  5 clean runs: pass       agree
+                                                           left out: chain12b_20260928 says FAIL; gz transport dropped the push (0.02 -> 0.01 deg/s in 5 s; yaw_retune_20260927.md:174-179, sitl_out/chain12c.sh:2-3)
+  Manual        torque    0.5000  0.5000..0.5000             0.0000  0.0000  0.02, :324                         
+  Manual        start      -1.00  -1.00..0.00                 -1.00    1.00                                     
+  Manual        end         8.50  8.40..9.00                  -0.50    0.60                                     
+  Manual        VERDICT     pass  6 clean runs: pass       agree
+  Acro brake    start       9.40  9.30..9.90                  -0.50    0.60                                     
+  Acro brake    end        -0.90  -1.00..-0.90                 0.10    0.10  |r| < 6.0, :371                    
+  Acro brake    VERDICT     pass  6 clean runs: pass       agree
+  Acro track    mean        7.09  7.08..7.10                   0.01    0.02  0.25 sp = 1.667, :402              
+  Acro track    peak        7.21  7.24..7.27                  -0.06    0.03  < 1.4 sp: 0.4 sp = 2.667, :403     >spread
+  Acro track    start      -0.33  -0.35..-0.29                -0.04    0.06                                     
+  Acro track    integ0    0.0010  0.0010..0.0010             0.0000  0.0000                                     
+  Acro track    VERDICT     pass  6 clean runs: pass       agree
+  Acro release  start       7.10  7.00..7.10                   0.10    0.10                                     
+  Acro release  end        -0.20  -0.30..-0.20                 0.10    0.10                                     
+  Acro release  settle      8.20  7.90..8.20                   0.30    0.30  < 10.0 s, :425                     
+  Acro release  slope          -  -                               -       -                                     
+  Acro release  VERDICT     pass  6 clean runs: pass       agree
+  Stab track    mean        6.98  6.97..6.99                   0.01    0.02  0.25 sp = 1.667, :402              
+  Stab track    peak        7.39  7.42..7.44                  -0.05    0.02  < 1.4 sp: 0.4 sp = 2.667, :403     >spread
+  Stab track    start      -0.21  -0.27..-0.15                 0.06    0.12                                     
+  Stab track    integ0    0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  Stab track    VERDICT     pass  6 clean runs: pass       agree
+  Stab release  start       7.00  6.90..7.00                   0.10    0.10                                     
+  Stab release  end        -0.20  -0.30..-0.20                 0.10    0.10                                     
+  Stab release  settle      8.20  7.90..8.20                   0.30    0.30  < 10.0 s, :425                     
+  Stab release  slope          -  -                               -       -                                     
+  Stab release  VERDICT     pass  6 clean runs: pass       agree
+  wind I on     rate        0.19  0.18..0.20                   0.01    0.02  < 1.0, :443                        
+  wind I on     integ     0.0217  0.0216..0.0217             0.0001  0.0001  0.5 needed, :443                   
+  wind I on     VERDICT     pass  5 clean runs: pass       agree
+                                                           left out: chain12b_20260928 says FAIL; the push was gone ~27 s in (integrator 0.0092 against 0.0185; sitl_out/chain12c.sh:2-3)
+  wind I off    rate        1.16  1.15..1.18                  -0.02    0.03  > 1.0, :443                        
+  wind I off    integ     0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  wind I off    VERDICT     pass  6 clean runs: pass       agree
+  wind weak     rate        0.02  0.02..0.04                  -0.02    0.02  < 1.0, :443                        
+  wind weak     integ     0.0072  0.0071..0.0072             0.0001  0.0001  0.5 needed, :443                   
+  wind weak     VERDICT     pass  6 clean runs: pass       agree
+  series vs chain12_20260928     rate rms 0.06 deg/s over 1007 rows; largest phase max |d| 0.37 deg/s (바람 1 N m, I 켬: 적분기가 받아낸다 회복)
+  series vs chain12b_20260928    rate rms 0.23 deg/s over 1008 rows; largest phase max |d| 1.11 deg/s (바람 1 N m, I 켬: 적분기가 받아낸다)
+  series vs chain12c_1_20260928  rate rms 0.05 deg/s over 998 rows; largest phase max |d| 0.29 deg/s (정지 대기 #2)
+  series vs chain12c_2_20260928  rate rms 0.04 deg/s over 1008 rows; largest phase max |d| 0.20 deg/s (정지 대기 #2)
+  series vs chain13_20260928     rate rms 0.03 deg/s over 1009 rows; largest phase max |d| 0.21 deg/s (정지 대기 #2)
+  series vs chain14_20260929     rate rms 0.03 deg/s over 1009 rows; largest phase max |d| 0.20 deg/s (정지 대기 #2)
+
+=== gz_airship_vectored_independent_fin   model status 0, 879 rows; gains P 0.7 I 0.09 INT_LIM 0.3 FF 0.3 (the runs' own: chain12_20260928, chain12b_20260928, chain13_20260928, chain14_20260929)
+  check         field      model  runs (clean) min..max    d(model)  spread  gate tolerance (sitl_check.py)     flags
+  wind check    start       0.00  -0.02..0.01                  0.02    0.03                                     
+  wind check    end        -1.99  -2.03..-1.97                 0.04    0.06  0.5 x expected, :314               
+  wind check    VERDICT     pass  4 clean runs: pass       agree
+  Manual        torque    0.5000  0.5000..0.5000             0.0000  0.0000  0.02, :324                         
+  Manual        start      -2.40  -2.40..-2.10                -0.30    0.30                                     
+  Manual        end        17.10  17.00..17.20                 0.10    0.20                                     
+  Manual        VERDICT     pass  4 clean runs: pass       agree
+  Acro brake    start      18.60  18.40..18.70                 0.20    0.30                                     
+  Acro brake    end        -1.10  -1.20..-1.00                -0.10    0.20  |r| < 6.0, :371                    
+  Acro brake    VERDICT     pass  4 clean runs: pass       agree
+  Acro track    mean        7.05  7.05..7.06                  -0.01    0.01  0.25 sp = 1.667, :402              
+  Acro track    peak        7.08  7.08..7.11                  -0.03    0.03  < 1.4 sp: 0.4 sp = 2.667, :403     
+  Acro track    start      -0.13  -0.07..-0.04                -0.09    0.03                                     >spread
+  Acro track    integ0    0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  Acro track    VERDICT     pass  4 clean runs: pass       agree
+  Acro release  start       7.10  7.00..7.10                   0.10    0.10                                     
+  Acro release  end        -0.30  -0.30..-0.30                 0.00    0.00                                     
+  Acro release  settle      6.60  6.40..6.70                   0.20    0.30  < 10.0 s, :425                     
+  Acro release  slope          -  -                               -       -                                     
+  Acro release  VERDICT     pass  4 clean runs: pass       agree
+  Stab track    mean        6.63  6.61..6.63                   0.02    0.02  0.25 sp = 1.667, :402              
+  Stab track    peak        7.03  7.06..7.11                  -0.08    0.05  < 1.4 sp: 0.4 sp = 2.667, :403     >spread
+  Stab track    start      -0.28  -0.35..-0.27                 0.07    0.08                                     
+  Stab track    integ0    0.0000  0.0010..0.0010            -0.0010  0.0000                                     
+  Stab track    VERDICT     pass  4 clean runs: pass       agree
+  Stab release  start       6.60  6.60..6.70                  -0.10    0.10                                     
+  Stab release  end        -0.40  -0.40..-0.40                 0.00    0.00                                     
+  Stab release  settle      5.70  5.70..5.70                   0.00    0.00  < 10.0 s, :425                     
+  Stab release  slope          -  -                               -       -                                     
+  Stab release  VERDICT     pass  4 clean runs: pass       agree
+  wind I on     rate        0.00  0.01..0.03                  -0.03    0.02  < 1.0, :443                        
+  wind I on     integ     0.0182  0.0181..0.0181             0.0001  0.0000  0.5 needed, :443                   
+  wind I on     VERDICT     pass  4 clean runs: pass       agree
+  wind I off    rate        1.28  1.28..1.29                  -0.01    0.01  > 1.0, :443                        
+  wind I off    integ     0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  wind I off    VERDICT     pass  4 clean runs: pass       agree
+  wind weak     rate        0.00  0.01..0.02                  -0.02    0.01  < 1.0, :443                        
+  wind weak     integ     0.0061  0.0061..0.0061             0.0000  0.0000  0.5 needed, :443                   
+  wind weak     VERDICT     pass  4 clean runs: pass       agree
+  series vs chain12_20260928     rate rms 0.09 deg/s over 876 rows; largest phase max |d| 0.68 deg/s (바람 1 N m, I 켬: 적분기가 받아낸다 회복)
+  series vs chain12b_20260928    rate rms 0.04 deg/s over 878 rows; largest phase max |d| 0.14 deg/s (Acro 제동)
+  series vs chain13_20260928     rate rms 0.04 deg/s over 879 rows; largest phase max |d| 0.14 deg/s (Acro 추종)
+  series vs chain14_20260929     rate rms 0.05 deg/s over 877 rows; largest phase max |d| 0.41 deg/s (바람 1 N m, I 끔: 계속 밀린다 회복)
+
+=== gz_cloudship   model status 0, 680 rows; gains P 0.7 I 0.09 INT_LIM 0.3 FF 0 (the runs' own: chain12_20260928, chain12b_20260928, chain13_20260928, chain14_20260929)
+  check         field      model  runs (clean) min..max    d(model)  spread  gate tolerance (sitl_check.py)     flags
+  wind check    start       0.00  0.10..0.15                  -0.15    0.05                                     >spread
+  wind check    end       -46.94  -46.94..-46.38              -0.56    0.56  0.5 x expected, :314               
+  wind check    VERDICT     pass  4 clean runs: pass       agree
+  Manual        torque    0.5000  0.5000..0.5000             0.0000  0.0000  0.02, :324                         
+  Manual        start     -58.50  -59.20..-58.70               0.70    0.50                                     >spread
+  Manual        end         3.80  3.40..3.70                   0.40    0.30                                     >spread
+  Manual        VERDICT     pass  4 clean runs: pass       agree
+  Acro brake    start      11.10  10.70..11.00                 0.40    0.30                                     >spread
+  Acro brake    end        -0.60  -0.70..-0.50                 0.10    0.20  |r| < 6.0, :371                    
+  Acro brake    VERDICT     pass  4 clean runs: pass       agree
+  Acro track    mean        6.68  6.67..6.69                  -0.01    0.02  0.25 sp = 1.667, :402              
+  Acro track    peak        7.60  7.64..7.71                  -0.11    0.07  < 1.4 sp: 0.4 sp = 2.667, :403     >spread
+  Acro track    start      -0.17  -0.28..-0.12                 0.11    0.16                                     
+  Acro track    integ0    0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  Acro track    VERDICT     pass  4 clean runs: pass       agree
+  Acro release  start       6.70  6.70..6.80                  -0.10    0.10                                     
+  Acro release  end        -0.60  -0.70..-0.60                 0.10    0.10                                     
+  Acro release  settle      2.80  2.80..2.90                  -0.10    0.10  < 10.0 s, :425                     
+  Acro release  slope          -  -                               -       -                                     
+  Acro release  VERDICT     pass  4 clean runs: pass       agree
+  Stab track    mean        6.68  6.66..6.68                   0.02    0.02  0.25 sp = 1.667, :402              
+  Stab track    peak        7.59  7.65..7.70                  -0.11    0.05  < 1.4 sp: 0.4 sp = 2.667, :403     >spread
+  Stab track    start      -0.19  -0.19..-0.13                -0.06    0.06                                     
+  Stab track    integ0    0.0000  0.0000..0.0010            -0.0010  0.0010                                     
+  Stab track    VERDICT     pass  4 clean runs: pass       agree
+  Stab release  start       6.70  6.60..6.80                   0.10    0.20                                     
+  Stab release  end        -0.60  -0.60..-0.60                 0.00    0.00                                     
+  Stab release  settle      2.80  2.80..2.90                  -0.10    0.10  < 10.0 s, :425                     
+  Stab release  slope          -  -                               -       -                                     
+  Stab release  VERDICT     pass  4 clean runs: pass       agree
+  wind I on     rate        0.01  0.02..0.05                  -0.04    0.03  < 1.0, :443                        
+  wind I on     integ     0.0185  0.0185..0.0185             0.0000  0.0000  0.5 needed, :443                   
+  wind I on     VERDICT     pass  4 clean runs: pass       agree
+  wind I off    rate        1.52  1.49..1.53                   0.03    0.04  > 1.0, :443                        
+  wind I off    integ     0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  wind I off    VERDICT     pass  4 clean runs: pass       agree
+  series vs chain12_20260928     rate rms 0.14 deg/s over 677 rows; largest phase max |d| 1.07 deg/s (바람 0.082963 N m, I 끔: 계속 밀린다 회복)
+  series vs chain12b_20260928    rate rms 0.10 deg/s over 677 rows; largest phase max |d| 0.65 deg/s (Acro 제동)
+  series vs chain13_20260928     rate rms 0.08 deg/s over 680 rows; largest phase max |d| 0.54 deg/s (Manual 통과)
+  series vs chain14_20260929     rate rms 0.10 deg/s over 677 rows; largest phase max |d| 0.91 deg/s (Manual 통과)
+
+=== gz_cloudship_am_fin_drag   model status 0, 704 rows; gains P 0.7 I 0.09 INT_LIM 0.3 FF 0.05 (the runs' own: chain12_20260928, chain12b_20260928, chain13_20260928, chain14_20260929)
+  check         field      model  runs (clean) min..max    d(model)  spread  gate tolerance (sitl_check.py)     flags
+  wind check    start       0.00  -0.01..0.05                 -0.05    0.06                                     
+  wind check    end       -19.47  -20.07..-19.84               0.60    0.23  0.5 x expected, :314               >spread
+  wind check    VERDICT     pass  4 clean runs: pass       agree
+  Manual        torque    0.5000  0.5000..0.5000             0.0000  0.0000  0.02, :324                         
+  Manual        start     -21.10  -21.70..-14.30              -6.80    7.40                                     
+  Manual        end        16.80  16.40..20.60                -3.80    4.20                                     
+  Manual        VERDICT     pass  4 clean runs: pass       agree
+  Acro brake    start      19.80  19.40..23.00                -3.20    3.60                                     
+  Acro brake    end        -2.40  -3.20..-2.40                 0.80    0.80  |r| < 6.0, :371                    
+  Acro brake    VERDICT     pass  4 clean runs: pass       agree
+  Acro track    mean        5.83  5.76..5.82                   0.07    0.06  0.25 sp = 1.667, :402              
+  Acro track    peak        8.98  9.02..9.07                  -0.09    0.05  < 1.4 sp: 0.4 sp = 2.667, :403     >spread
+  Acro track    start      -0.67  -0.77..-0.69                 0.10    0.08                                     >spread
+  Acro track    integ0    0.0010  0.0010..0.0010             0.0000  0.0000                                     
+  Acro track    VERDICT     pass  3 clean runs: pass       agree
+                                                           left out: chain12_20260928 says FAIL; the triple wrench clear delayed the Manual check 2.4 s and every check after it started from another state (yaw_retune_20260927.md:166-172; fixed for chain12b, sitl_out/chain12b.sh:2-4)
+  Acro release  start       5.60  5.50..5.60                   0.10    0.10                                     
+  Acro release  end        -0.80  -0.80..-0.60                -0.20    0.20                                     
+  Acro release  settle      3.50  3.50..3.50                   0.00    0.00  < 10.0 s, :425                     
+  Acro release  slope          -  -                               -       -                                     
+  Acro release  VERDICT     pass  4 clean runs: pass       agree
+  Stab track    mean        7.11  7.14..7.21                  -0.10    0.07  0.25 sp = 1.667, :402              >spread
+  Stab track    peak        7.42  7.43..7.49                  -0.07    0.06  < 1.4 sp: 0.4 sp = 2.667, :403     
+  Stab track    start      -0.43  -0.43..-0.35                -0.08    0.08                                     
+  Stab track    integ0    0.0010  0.0010..0.0010             0.0000  0.0000                                     
+  Stab track    VERDICT     pass  4 clean runs: pass       agree
+  Stab release  start       7.30  7.30..7.40                  -0.10    0.10                                     
+  Stab release  end        -0.20  -0.30..-0.20                 0.10    0.10                                     
+  Stab release  settle      6.30  6.10..6.70                  -0.40    0.60  < 10.0 s, :425                     
+  Stab release  slope          -  -                               -       -                                     
+  Stab release  VERDICT     pass  4 clean runs: pass       agree
+  wind I on     rate        0.40  0.38..0.40                   0.02    0.02  < 1.0, :443                        
+  wind I on     integ     0.0191  0.0180..0.0192             0.0011  0.0012  0.5 needed, :443                   
+  wind I on     VERDICT     pass  4 clean runs: pass       agree
+  wind I off    rate        1.75  1.76..1.84                  -0.09    0.08  > 1.0, :443                        >spread
+  wind I off    integ     0.0000  0.0000..0.0000             0.0000  0.0000                                     
+  wind I off    VERDICT     pass  4 clean runs: pass       agree
+  series vs chain12_20260928     rate rms 0.72 deg/s over 699 rows; largest phase max |d| 6.82 deg/s (Manual 통과)
+  series vs chain12b_20260928    rate rms 0.09 deg/s over 695 rows; largest phase max |d| 0.64 deg/s (바람 확인)
+  series vs chain13_20260928     rate rms 0.07 deg/s over 703 rows; largest phase max |d| 0.51 deg/s (Manual 통과)
+  series vs chain14_20260929     rate rms 0.08 deg/s over 704 rows; largest phase max |d| 0.51 deg/s (Manual 통과)
+
+verdicts: the model agrees with the recorded verdict on 48 of 48 checks
+G1 verdicts: 48 / 48
+
+Harness replay: each HEAD-gain run's own rows through gate.py (today's sitl_check.py), clocked by the record, lines compared with the chain log:
+  chain12_20260928       gz_airship_vectored_independent                differs: gz_link's triple wrench clear of that day (2.4 s after the wind check) is not today's; fixed for chain12b (sitl_out/chain12b.sh:2-4)
+  chain12_20260928       gz_airship_vectored_independent_am_fin_drag    differs: gz_link's triple wrench clear of that day (2.4 s after the wind check) is not today's; fixed for chain12b (sitl_out/chain12b.sh:2-4)
+  chain12_20260928       gz_airship_vectored_independent_fin            differs: gz_link's triple wrench clear of that day (2.4 s after the wind check) is not today's; fixed for chain12b (sitl_out/chain12b.sh:2-4)
+  chain12_20260928       gz_cloudship                                   differs: gz_link's triple wrench clear of that day (2.4 s after the wind check) is not today's; fixed for chain12b (sitl_out/chain12b.sh:2-4)
+  chain12_20260928       gz_cloudship_am_fin_drag                       differs: gz_link's triple wrench clear of that day (2.4 s after the wind check) is not today's; fixed for chain12b (sitl_out/chain12b.sh:2-4)
+  chain12b_20260928      gz_cloudship_am_fin_drag                       equal
+  chain12b_20260928      gz_airship_vectored_independent                differs: the 50 s weak-wind window took 160 rows on the replayed clock against the 159 recorded (a window edge)
+  chain12b_20260928      gz_airship_vectored_independent_am_fin_drag    differs: lost pushes (chain12c.sh:2-3); today's sitl_check retries a push the loop does not carry, the record has no retry rows
+  chain12b_20260928      gz_airship_vectored_independent_fin            equal
+  chain12b_20260928      gz_cloudship                                   equal
+  chain12c_1_20260928    gz_airship_vectored_independent_am_fin_drag    equal
+  chain12c_2_20260928    gz_airship_vectored_independent_am_fin_drag    equal
+  chain13_20260928       gz_airship_vectored_independent                equal
+  chain13_20260928       gz_airship_vectored_independent_am_fin_drag    equal
+  chain13_20260928       gz_airship_vectored_independent_fin            differs: verdict lines equal; the rest wait before the Stabilized step ended one row later (its 1.0 s hold on rows stamped to 0.01 s)
+  chain13_20260928       gz_cloudship                                   equal
+  chain13_20260928       gz_cloudship_am_fin_drag                       equal
+  chain14_20260929       gz_airship_vectored_independent                differs: sitl_check printed |integrator| then and the signed value since (sitl_out/chain14b.sh:2-3): 0.0074 against -0.0073 in the unmeasured weak case
+  chain14_20260929       gz_airship_vectored_independent_am_fin_drag    equal
+  chain14_20260929       gz_airship_vectored_independent_fin            equal
+  chain14_20260929       gz_cloudship                                   equal
+  chain14_20260929       gz_cloudship_am_fin_drag                       equal
+  chain14b_1_20260929    gz_airship_vectored_independent                differs: verdict lines equal; one row of the last phase moved by a publish join (0.86 s)
+  chain14b_2_20260929    gz_airship_vectored_independent                equal
+  14 of 24 runs replay line for line
+
+=== G2: the P 0.5 reproduction (records chain7, chain9) at its own gains ===
+  gz_airship_vectored_independent                10 checks, gains P 0.5 I 0.09 FF 0 from chain7: ulog 2026-09-25/14_34_05.ulg; chain9: ulog 2026-09-27/08_36_30.ulg
+  gz_airship_vectored_independent_am_fin_drag    10 checks, gains P 0.5 I 0.09 FF 0 from chain7: ulog 2026-09-25/14_39_53.ulg; chain9: ulog 2026-09-27/08_47_52.ulg
+  gz_cloudship                                    9 checks, gains P 0.5 I 0.09 FF 0 from chain7: ulog 2026-09-25/14_45_54.ulg; chain9: ulog 2026-09-27/08_31_54.ulg
+  gz_cloudship_am_fin_drag                        9 checks, gains P 0.5 I 0.09 FF 0 from chain7: ulog 2026-09-25/14_50_29.ulg; chain9: ulog 2026-09-27/08_53_51.ulg
+  gz_airship_vectored_independent_fin            10 checks, gains P 0.5 I 0.09 FF 0 from chain9: ulog 2026-09-27/08_42_18.ulg
+G2: the model agrees with every record of every check: 86 of 86 (check, record) pairs, 48 checks
+  the 2026-09-27 reproduction.csv on disk: md5 6b3f307b49f747b6c621b6ca9a160e05; the run at the records' gains through the aligned code reproduces it byte for byte (checked 2026-10-01 with reproduce.py --out, CSV identical)
+
+=== G3: the fin replica's yaw damping, by the engine's procedure, on the engine's own stream ===
+added_mass_check samples the pose stream with a separate `gz topic -e` after its publish returns and fits over int(PUSH_S x RATE_HZ) poses; its record (sitl_out/added_mass_<model>.csv) shows the poses every 0.020 s (not the 1/60 s it assumes), so 150 poses span 3.0 s, and its first row's u under the known push fixes when the stream began. The model is sampled at the record's pose times from that start (fin_damping.py docstring); what is left is the plant. Beside each number: what the start alone does to it, and what a 2 % change of the fins' lift slope does to it.
+fin yaw damping, airship_vectored_independent_fin: the engine's procedure (added_mass_check.py) on the model's plant
+  the engine's record sitl_out/added_mass_airship_vectored_independent_fin.csv: 148 rows, poses every 0.020 s (gaps of 0.016 s too), 150 poses over 2.97 s (the check asks for int(PUSH_S x RATE_HZ) = 150 at 1 / 60 s); its first row u 0.05742 m/s
+  its refit times that run's inertia: K_d 216.4402, K_s 51.4612 = chain9_20260927.txt:74 (K_d 216.4416), chain9_20260927.txt:73 (K_s 51.4603): the record of that run
+  the model's stream started +12 steps (0.048 s) into its push, where its first row reads u 0.05742 (record 0.05742, |error| 0.00000 m/s): the engine's own start, measured from its record
+  yaw torque 22.273 N m on airship_vectored_independent, 120 poses at 0.020 s -> inertia 129.4822 kg m^2 (SDF 129.1503; engine 129.2818 (chain5_20260925.txt:19), 129.2818 (chain9_20260927.txt:67))
+  push (40.19, 3.35, 0) N through the centre of mass: end u 2.47 v 0.10 m/s r 0.024 rad/s, max sideslip 4.7 deg
+  r against the integrals of u v and u r: K_s / I 0.39831, K_d / I 1.67297 (intercept -0.0001); times the inertia above: K_s 51.5736, K_d 216.6201 N m s/rad per m/s
+  inertia-free, against the engine's record on the same stream: K_d / I 1.67297 vs 1.67417 (-0.07 %), K_s / I 0.39831 vs 0.39805 (+0.06 %)
+  row by row on the same times since the push began (skew 0.000 s): r rms 0.0006, max 0.0013 deg/s (r reaches 1.372 deg/s); u rms 0.0001, v rms 0.0001 m/s
+  engine (chain5_20260925.txt:25, chain5_20260925.txt:26): K_d 216.9014, K_s 51.5439; model - engine: K_d -0.2813 (-0.13 %), K_s +0.0297 (+0.06 %)
+  engine (chain9_20260927.txt:73, chain9_20260927.txt:74): K_d 216.4416, K_s 51.4603; model - engine: K_d +0.1785 (+0.08 %), K_s +0.1133 (+0.22 %)  (the record's run)
+  the procedure's sensitivity: K_d / I with the stream starting 0 / 0.1 / 0.2 / 0.3 / 0.45 / 0.6 s into the push: 1.6678 / 1.6785 / 1.6891 / 1.6997 / 1.7159 / 1.7333 (-0.4 .. +3.5 % of the record's 1.67417; a spread of 3.9 %)
+  the rigid hull's push (sitl_out/added_mass_airship_vectored_independent.csv, no fins), against the model's on its stream and start (+15 steps): u rms 0.0000 (largest model - record -0.0000) m/s, v rms 0.0000 m/s; r at the end -0.000 deg/s in the record, -0.000 in the model (record's largest |r| 0.000): what the record carries outside the fins
+  the comparison's leverage on the fins: their lift slope times 0.98 / 1 / 1.02 gives K_d / I 1.64016 / 1.67297 / 1.70579 (-2.03 / -0.07 / +1.89 % of the record's) and r rms against the record 0.0035 / 0.0006 / 0.0041 deg/s
+  files (fin_k x arm, added_mass_check.expected): 229.8141; static K_s 53.5415
+  the replica linearised about the link origin (u 2 m/s, r 0.002 rad/s, fins only): 229.2573
+net static yaw term on airship_vectored_independent_am_fin (Munk and fins), the engine's procedure on the model, on its record's stream (start +15 steps): K_s 13.9023 (inertia 323.6722, the model's rigid fin damping 216.6201 held; max sideslip 4.8 deg); files 15.5155
+  engine (chain5_20260925.txt:27, chain5_20260925.txt:20): K_s 14.1354 with its K_d 216.9014 held, inertia 323.5904; model - engine -0.2331
+  engine (chain9_20260927.txt:75, chain9_20260927.txt:68): K_s 14.0959 with its K_d 216.4416 held, inertia 323.5978; model - engine -0.1936  (the record on disk is this run's)
+fin yaw damping, cloudship_fin: the engine's procedure (added_mass_check.py) on the model's plant
+  the engine's record sitl_out/added_mass_cloudship_fin.csv: 148 rows, poses every 0.020 s, 150 poses over 2.98 s (the check asks for int(PUSH_S x RATE_HZ) = 150 at 1 / 60 s); its first row u 0.08349 m/s
+  its refit times that run's inertia: K_d 3.5302, K_s 2.5276 = chain5_20260925.txt:38 (K_d 3.5304), chain5_20260925.txt:37 (K_s 2.5277): the record of that run
+  the model's stream started +20 steps (0.080 s) into its push, where its first row reads u 0.08367 (record 0.08349, |error| 0.00018 m/s): the engine's own start, measured from its record
+  yaw torque 1.000 N m on cloudship, 120 poses at 0.020 s -> inertia 5.7823 kg m^2 (SDF 5.7986; engine 5.6922 (chain5_20260925.txt:31))
+  push (6.00, 0.50, 0) N through the centre of mass: end u 2.50 v 0.03 m/s r 0.037 rad/s, max sideslip 4.7 deg
+  r against the integrals of u v and u r: K_s / I 0.41266, K_d / I 0.60071 (intercept 0.0000); times the inertia above: K_s 2.3861, K_d 3.4735 N m s/rad per m/s
+  inertia-free, against the engine's record on the same stream: K_d / I 0.60071 vs 0.62019 (-3.14 %), K_s / I 0.41266 vs 0.44405 (-7.07 %)
+  row by row on the same times since the push began (skew 0.000 s): r rms 0.0547, max 0.0932 deg/s (r reaches 2.376 deg/s); u rms 0.0283, v rms 0.0028 m/s
+  engine (chain5_20260925.txt:37, chain5_20260925.txt:38): K_d 3.5304, K_s 2.5277; model - engine: K_d -0.0569 (-1.61 %), K_s -0.1416 (-5.60 %)  (the record's run)
+  the procedure's sensitivity: K_d / I with the stream starting 0 / 0.1 / 0.2 / 0.3 / 0.45 / 0.6 s into the push: 0.6011 / 0.6006 / 0.6002 / 0.5997 / 0.5992 / 0.5988 (-3.4 .. -3.1 % of the record's 0.62019; a spread of 0.4 %)
+  the rigid hull's push (sitl_out/added_mass_cloudship.csv, no fins), against the model's on its stream and start (+20 steps): u rms 0.0324 (largest model - record +0.0568) m/s, v rms 0.0089 m/s; r at the end +0.275 deg/s in the record, -0.000 in the model (record's largest |r| 0.275): what the record carries outside the fins
+  the comparison's leverage on the fins: their lift slope times 0.98 / 1 / 1.02 gives K_d / I 0.58926 / 0.60071 / 0.61217 (-4.99 / -3.14 / -1.29 % of the record's) and r rms against the record 0.0610 / 0.0547 / 0.0496 deg/s
+  files (fin_k x arm, added_mass_check.expected): 3.8878; static K_s 2.5030
+  the replica linearised about the link origin (u 2 m/s, r 0.002 rad/s, fins only): 3.7801
+net static yaw term on cloudship_am_fin (Munk and fins), the engine's procedure on the model, on its record's stream (start +1 steps): K_s -2.3598 (inertia 9.7333, the model's rigid fin damping 3.4735 held; max sideslip 4.1 deg); files -2.4198
+  engine (chain5_20260925.txt:39, chain5_20260925.txt:32): K_s -2.2212 with its K_d 3.5304 held, inertia 9.7788; model - engine -0.1386  (the record on disk is this run's)
+G3 reading. airship_vectored_independent_fin: K_d / I -0.07 % from the record on its own stream, r within 0.0006 deg/s rms, the equivalent of a -0.07 % lift-slope error; a 2 % change of the slope moves K_d / I by 1.96 % and the r residual to 0.0035 / 0.0041 deg/s (x5.5). cloudship_fin: K_d / I -3.14 % from the record on its own stream, r within 0.0547 deg/s rms, the equivalent of a -3.29 % lift-slope error; a 2 % change of the slope moves K_d / I by 1.91 % and the r residual to 0.0610 / 0.0496 deg/s (x0.9). The start is measured from each record, not a free parameter. Where 2 % of lift slope moves the r residual several-fold the comparison resolves the fins' damping; where it barely moves it, as on the Cloudship, whose records carry motion the planar model does not have even without fins (the rigid hull's line above), the comparison is consistent to the residual and no finer. The acceptance test of the fin damping as flown is the forward probe's steady turn (G4, the SITL cross-check: hold torque per rad/s) and 0b.
+
+=== G4: the defect, recomputed (forward.py, free surge, HEAD gains per airframe) ===
+Leg: warm-up 1 s with the hull held (rotors and pods at their trim state), Manual 2 s, Acro at t0, 3 s centred, the stick 20 s, released 120 s; FRD, deg/s; the legs the 0b check flies (forward_yaw_check.default_legs); throttle as the 0b check flies it: forward_yaw_check.quantize rounds the trim to the nearest count and hands sitl_link the count's midpoint, which its int() truncates to the count (forward.run_leg quantize 'midpoint'). Trim from the files (forward.trim_throttle = gz_model.trim_thrust, the formula forward_yaw_check uses: |xUabsU| u^2 over the two pods' full thrust), after forward.linear_thrust_check (THR_MDL_FAC 1, and on each pod motor SIM_GZ_EC_MIN 0 and SIM_GZ_EC_MAX equal to the plugin's maxRotVelocity):
+  2527 airship_vectored_independent_am_fin_drag: THR_MDL_FAC 1; SIM_GZ_EC_MIN1/2 0/0, MAX1/2 300/300 against maxRotVelocity 300.0/300.0 (ROMFS/px4fmu_common/init.d-posix/airframes/2520_gz_airship_vectored_independent:34)
+  2517 cloudship_am_fin_drag: THR_MDL_FAC 1; SIM_GZ_EC_MIN1/2 0/0, MAX1/2 1500/1500 against maxRotVelocity 1500.0/1500.0 (ROMFS/px4fmu_common/init.d-posix/airframes/2510_gz_cloudship:58)
+  airship_vectored_independent_am_fin_drag   2.0 m/s: drag 1.099 N, full thrust 36.00 N -> trim 0.0305 (the 0b check flies 31/1000 = 0.031, +1.5 %)
+  airship_vectored_independent_am_fin_drag   4.0 m/s: drag 4.397 N, full thrust 36.00 N -> trim 0.1221 (the 0b check flies 122/1000 = 0.122, -0.1 %)
+  cloudship_am_fin_drag                      1.0 m/s: drag 0.095 N, full thrust 31.78 N -> trim 0.0030 (the 0b check flies 3/1000 = 0.003, +0.8 %)
+  cloudship_am_fin_drag                      1.5 m/s: drag 0.213 N, full thrust 31.78 N -> trim 0.0067 (the 0b check flies 7/1000 = 0.007, +4.5 %)
+  cloudship_am_fin_drag                      2.0 m/s: drag 0.378 N, full thrust 31.78 N -> trim 0.0119 (the 0b check flies 12/1000 = 0.012, +0.8 %)
+  cloudship_am_fin_drag                      2.5 m/s: drag 0.591 N, full thrust 31.78 N -> trim 0.0186 (the 0b check flies 19/1000 = 0.019, +2.1 %)
+  cloudship_am_fin_drag                      4.0 m/s: drag 1.514 N, full thrust 31.78 N -> trim 0.0476 (the 0b check flies 48/1000 = 0.048, +0.8 %)
+  cloudship_am_fin_drag                      6.0 m/s: drag 3.406 N, full thrust 31.78 N -> trim 0.1071 (the 0b check flies 107/1000 = 0.107, -0.1 %)
+  airship_vectored_independent_fin           2.0 m/s: drag 0.000 N, full thrust 36.00 N -> trim 0.0000 (the 0b check flies 0/1000 = 0.000, +0.0 %)
+  airship_vectored_independent_fin           4.0 m/s: drag 0.000 N, full thrust 36.00 N -> trim 0.0000 (the 0b check flies 0/1000 = 0.000, +0.0 %)
+  cloudship_fin                              2.0 m/s: drag 0.000 N, full thrust 31.78 N -> trim 0.0000 (the 0b check flies 0/1000 = 0.000, +0.0 %)
+  cloudship_fin                              4.0 m/s: drag 0.000 N, full thrust 31.78 N -> trim 0.0000 (the 0b check flies 0/1000 = 0.000, +0.0 %)
+  the plan's rev-3 2527 trims (d1_speed_source_and_fins_20261001.md:250, 0.0305 / 0.1221): reproduced, 0.0305 / 0.1221. The fin plants without _drag have no surge drag and their fins none at zero incidence (cd = cda * alpha), so they hold u at throttle 0 in straight flight (test_forward.py: |u - u0| < 1e-6 over 10 s). The count moves the small Cloudship trims by up to half a count (above); the stability rows below fly the exact trim.
+Reversals, two quantities kept apart (forward.py docstring): vectored, a pod's swing between forward (cos(tilt) > +0.5) and back (< -0.5) per pod; Cloudship, the tail command's direction outside +-0.02. The band is a counting convention shared with forward_yaw_check, not a firmware or actuator threshold: the tail is commanded continuously through zero and gz's tail is linear with no deadband and no lag, so the count of every sign change of its thrust is kept beside it. With gz's gyro noise and the stick centred the tail command dithers: cloudship_fin at 2.0 m/s, 30 s: rms 0.00035, peak 0.00146 (the band is 14 x the peak); 0 flips outside the band, 1623 sign changes of the thrust; cloudship_am_fin_drag at 1.0 m/s, 30 s: rms 0.00035, peak 0.00143 (the band is 14 x the peak); 0 flips outside the band, 1635 sign changes of the thrust. In SITL the band-0 count is a noise count; the model's legs are noise-free, so there it counts the turns.
+
+| airframe model | u0 m/s | stick (sp deg/s) | throttle asked/flown | FF | r mean last 5 s | r peak | integ @stick end | torque @stick end | unalloc[2] @stick end | sat +/- | heading in release deg | r +10/+60/+120 s | integ +120 s | pod swings stick / release (stbd+port; vectored) | tail flips stick / release outside +-0.02 (thrust sign changes; Cloudship) | u stick start / end / release end | fins dorsal/ventral at stick end, release end (a attached, S stalled, - no flow: from behind); max alpha/alpha_stall, % of stick stalled |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2527 airship_vectored_independent_am_fin_drag | 2.0 | +1.00 (15.00) | 0.0305/0.0310 | 1 | +4.17 | +4.29 | +0.3000 | +0.6927 | +0 | 0/0 | +135.1 | +1.66 / +1.07 / +0.58 | +0.0878 | 1+0 / 0+0 | - | 2.00 / 2.07 / 1.88 | a/a, a/a; max a/as 0.95, 0% |
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.1221/0.1220 | 1 | +2.44 | +2.47 | +0.3000 | +0.7148 | +0 | 0/0 | +90.3 | +0.96 / +0.74 / +0.53 | +0.1582 | 1+0 / 0+0 | - | 4.00 / 3.85 / 3.86 | a/a, a/a; max a/as 0.30, 0% |
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +0.50 (6.67) | 0.1221/0.1220 | 1 | +1.12 | +1.20 | +0.1674 | +0.3506 | +0 | 0/0 | +50.5 | +0.53 / +0.42 / +0.30 | +0.0889 | 1+0 / 1+0 | - | 4.00 / 3.90 / 3.90 | a/a, a/a; max a/as 0.14, 0% |
+| 2522 airship_vectored_independent_fin | 2.0 | +1.00 (15.00) | 0.0000/0.0000 | 0.3 | +3.66 | +3.74 | +0.3000 | +0.5161 | +0 | 0/0 | +145.5 | +1.85 / +1.16 / +0.59 | +0.0715 | 1+0 / 0+0 | - | 2.00 / 2.02 / 1.60 | a/a, a/a; max a/as 0.79, 0% |
+| 2522 airship_vectored_independent_fin | 4.0 | +1.00 (15.00) | 0.0000/0.0000 | 0.3 | +2.02 | +2.05 | +0.3000 | +0.5368 | +0 | 0/0 | +103.4 | +1.06 / +0.86 / +0.63 | +0.1376 | 1+0 / 0+0 | - | 4.00 / 3.86 / 3.06 | a/a, a/a; max a/as 0.23, 0% |
+| 2522 airship_vectored_independent_fin | 4.0 | +0.50 (6.67) | 0.0000/0.0000 | 0.3 | +0.95 | +1.03 | +0.1731 | +0.2769 | +0 | 0/0 | +57.1 | +0.60 / +0.47 / +0.34 | +0.0835 | 1+0 / 0+0 | - | 4.00 / 3.92 / 3.42 | a/a, a/a; max a/as 0.11, 0% |
+| 2512 cloudship_fin | 2.0 | +1.00 (15.00) | 0.0000/0.0000 | 0 | +1.39 | +2.83 | +0.3000 | +0.4673 | +0 | 0/0 | +88.0 | +0.83 / +0.80 / +0.65 | +0.1587 | - | 0 / 0 (0 / 0) | 2.00 / 1.68 / 0.98 | a/a, a/a; max a/as 0.95, 0% |
+| 2512 cloudship_fin | 4.0 | +1.00 (15.00) | 0.0000/0.0000 | 0 | +0.66 | +1.57 | +0.3000 | +0.4749 | +0 | 0/0 | +66.6 | +0.44 / +0.58 / +0.66 | +0.1941 | - | 0 / 0 (0 / 0) | 4.00 / 3.33 / 1.27 | a/a, a/a; max a/as 0.27, 0% |
+| 2512 cloudship_fin | 4.0 | +0.50 (6.67) | 0.0000/0.0000 | 0 | +0.38 | +0.70 | +0.2000 | +0.2763 | +0 | 0/0 | +36.0 | +0.26 / +0.30 / +0.36 | +0.1435 | - | 0 / 0 (0 / 0) | 4.00 / 3.65 / 1.79 | a/a, a/a; max a/as 0.13, 0% |
+| 2517 cloudship_am_fin_drag | 2.0 | +1.00 (15.00) | 0.0119/0.0120 | 0.05 | +8.28 | +29.91 | +0.0971 | +0.1636 | +0 | 0/0 | +58.5 | +2.62 / -0.14 / -0.37 | +0.0052 | - | 2 / 1 (2 / 6) | 2.00 / -0.44 / 1.94 | -/-, a/a; max a/as 5.57, 28% |
+| 2517 cloudship_am_fin_drag | 2.5 | +1.00 (15.00) | 0.0186/0.0190 | 0.05 | +8.17 | +35.47 | +0.0869 | +0.1508 | +0 | 0/0 | +42.4 | +3.06 / +0.69 / +4.35 | +0.0203 | - | 2 / 5 (2 / 7) | 2.51 / -0.28 / 2.16 | -/-, a/a; max a/as 5.56, 25% |
+| 2517 cloudship_am_fin_drag | 2.5 | +0.50 (6.67) | 0.0186/0.0190 | 0.05 | +14.69 | +26.81 | -0.1318 | -0.0921 | +0 | 0/0 | -47.7 | -3.88 / +1.65 / -1.10 | -0.0569 | - | 1 / 4 (1 / 4) | 2.51 / 0.11 / 2.15 | S/S, a/a; max a/as 5.05, 52% |
+
+gz_airship_vectored_independent_am_fin_drag (2527), u0 2.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0305 flown 0.0310 (trim 0.0305: drag 1.099 N / full 36.00 N); P 0.7 I 0.09 LIM 0.3 FF 1
+  stick: r mean last 5 s +4.17, peak +4.29 deg/s; at its end integ +0.3000, torque +0.6927, unallocated +0, sat +0/-0; heading +65.5 deg in the stick
+  release: heading +135.1 deg; r at +10/+60/+120 s +1.66 / +1.07 / +0.58 deg/s; integ at +120 s +0.0878
+  stick: pod swings (cos(tilt) past +-0.5) stbd into the rear 1, back forward 0 (19.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear); release: pod swings (cos(tilt) past +-0.5) stbd into the rear 0, back forward 0 (120.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear)
+  u 2.00 -> 2.07 -> 1.88 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.95, ventral 0.90, release dorsal 0.95, ventral 0.90; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +4.29 deg/s; r 1 s means at +10/+60/end +1.66 / +1.08 / +0.59 deg/s; integ at +10/+60 +0.2705 / +0.1638; u 0.5 s means 2.03 -> 2.07 -> 1.88 m/s (stick start, stick end, release end)
+gz_airship_vectored_independent_am_fin_drag (2527), u0 4.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.1221 flown 0.1220 (trim 0.1221: drag 4.397 N / full 36.00 N); P 0.7 I 0.09 LIM 0.3 FF 1
+  stick: r mean last 5 s +2.44, peak +2.47 deg/s; at its end integ +0.3000, torque +0.7148, unallocated +0, sat +0/-0; heading +38.5 deg in the stick
+  release: heading +90.3 deg; r at +10/+60/+120 s +0.96 / +0.74 / +0.53 deg/s; integ at +120 s +0.1582
+  stick: pod swings (cos(tilt) past +-0.5) stbd into the rear 1, back forward 0 (19.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear); release: pod swings (cos(tilt) past +-0.5) stbd into the rear 0, back forward 0 (120.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear)
+  u 4.00 -> 3.85 -> 3.86 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.30, ventral 0.29, release dorsal 0.30, ventral 0.29; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +2.47 deg/s; r 1 s means at +10/+60/end +0.96 / +0.74 / +0.53 deg/s; integ at +10/+60 +0.2837 / +0.2174; u 0.5 s means 4.02 -> 3.85 -> 3.86 m/s (stick start, stick end, release end)
+gz_airship_vectored_independent_am_fin_drag (2527), u0 4.0 m/s, stick +0.50 (setpoint 6.67 deg/s), throttle trim -> fraction 0.1221 flown 0.1220 (trim 0.1221: drag 4.397 N / full 36.00 N); P 0.7 I 0.09 LIM 0.3 FF 1
+  stick: r mean last 5 s +1.12, peak +1.20 deg/s; at its end integ +0.1674, torque +0.3506, unallocated +0, sat +0/-0; heading +17.6 deg in the stick
+  release: heading +50.5 deg; r at +10/+60/+120 s +0.53 / +0.42 / +0.30 deg/s; integ at +120 s +0.0889
+  stick: pod swings (cos(tilt) past +-0.5) stbd into the rear 1, back forward 0 (19.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear); release: pod swings (cos(tilt) past +-0.5) stbd into the rear 0, back forward 1 (84.7 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear)
+  u 4.00 -> 3.90 -> 3.90 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.14, ventral 0.14, release dorsal 0.14, ventral 0.14; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +1.19 deg/s; r 1 s means at +10/+60/end +0.53 / +0.42 / +0.30 deg/s; integ at +10/+60 +0.1585 / +0.1219; u 0.5 s means 4.00 -> 3.90 -> 3.90 m/s (stick start, stick end, release end)
+gz_airship_vectored_independent_fin (2522), u0 2.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0000 flown 0.0000 (trim 0.0000: drag 0.000 N / full 36.00 N); P 0.7 I 0.09 LIM 0.3 FF 0.3
+  stick: r mean last 5 s +3.66, peak +3.74 deg/s; at its end integ +0.3000, torque +0.5161, unallocated +0, sat +0/-0; heading +53.7 deg in the stick
+  release: heading +145.5 deg; r at +10/+60/+120 s +1.85 / +1.16 / +0.59 deg/s; integ at +120 s +0.0715
+  stick: pod swings (cos(tilt) past +-0.5) stbd into the rear 1, back forward 0 (19.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear); release: pod swings (cos(tilt) past +-0.5) stbd into the rear 0, back forward 0 (120.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear)
+  u 2.00 -> 2.02 -> 1.60 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.79, ventral 0.75, release dorsal 0.79, ventral 0.75; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +3.74 deg/s; r 1 s means at +10/+60/end +1.85 / +1.16 / +0.60 deg/s; integ at +10/+60 +0.2684 / +0.1518; u 0.5 s means 2.02 -> 2.02 -> 1.60 m/s (stick start, stick end, release end)
+gz_airship_vectored_independent_fin (2522), u0 4.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0000 flown 0.0000 (trim 0.0000: drag 0.000 N / full 36.00 N); P 0.7 I 0.09 LIM 0.3 FF 0.3
+  stick: r mean last 5 s +2.02, peak +2.05 deg/s; at its end integ +0.3000, torque +0.5368, unallocated +0, sat +0/-0; heading +29.8 deg in the stick
+  release: heading +103.4 deg; r at +10/+60/+120 s +1.06 / +0.86 / +0.63 deg/s; integ at +120 s +0.1376
+  stick: pod swings (cos(tilt) past +-0.5) stbd into the rear 1, back forward 0 (19.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear); release: pod swings (cos(tilt) past +-0.5) stbd into the rear 0, back forward 0 (120.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear)
+  u 4.00 -> 3.86 -> 3.06 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.23, ventral 0.22, release dorsal 0.23, ventral 0.22; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +2.04 deg/s; r 1 s means at +10/+60/end +1.06 / +0.86 / +0.63 deg/s; integ at +10/+60 +0.2827 / +0.2075; u 0.5 s means 4.02 -> 3.86 -> 3.06 m/s (stick start, stick end, release end)
+gz_airship_vectored_independent_fin (2522), u0 4.0 m/s, stick +0.50 (setpoint 6.67 deg/s), throttle trim -> fraction 0.0000 flown 0.0000 (trim 0.0000: drag 0.000 N / full 36.00 N); P 0.7 I 0.09 LIM 0.3 FF 0.3
+  stick: r mean last 5 s +0.95, peak +1.03 deg/s; at its end integ +0.1731, torque +0.2769, unallocated +0, sat +0/-0; heading +13.5 deg in the stick
+  release: heading +57.1 deg; r at +10/+60/+120 s +0.60 / +0.47 / +0.34 deg/s; integ at +120 s +0.0835
+  stick: pod swings (cos(tilt) past +-0.5) stbd into the rear 1, back forward 0 (19.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear); release: pod swings (cos(tilt) past +-0.5) stbd into the rear 0, back forward 0 (120.0 s in the rear), port into the rear 0, back forward 0 (0.0 s in the rear)
+  u 4.00 -> 3.92 -> 3.42 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.11, ventral 0.11, release dorsal 0.11, ventral 0.11; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +1.02 deg/s; r 1 s means at +10/+60/end +0.60 / +0.47 / +0.34 deg/s; integ at +10/+60 +0.1634 / +0.1216; u 0.5 s means 4.01 -> 3.92 -> 3.42 m/s (stick start, stick end, release end)
+gz_cloudship_fin (2512), u0 2.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0000 flown 0.0000 (trim 0.0000: drag 0.000 N / full 31.78 N); P 0.7 I 0.09 LIM 0.3 FF 0
+  stick: r mean last 5 s +1.39, peak +2.83 deg/s; at its end integ +0.3000, torque +0.4673, unallocated +0, sat +0/-0; heading +30.6 deg in the stick
+  release: heading +88.0 deg; r at +10/+60/+120 s +0.83 / +0.80 / +0.65 deg/s; integ at +120 s +0.1587
+  stick: tail flips 0 outside +-0.02 (0.047 N, 0.090 N m), 0 sign changes of its thrust; release: tail flips 0 outside +-0.02 (0.047 N, 0.090 N m), 0 sign changes of its thrust
+  u 2.00 -> 1.68 -> 0.98 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.95, ventral 0.95, release dorsal 0.95, ventral 0.95; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +2.79 deg/s; r 1 s means at +10/+60/end +0.82 / +0.80 / +0.65 deg/s; integ at +10/+60 +0.2917 / +0.2269; u 0.5 s means 2.00 -> 1.69 -> 0.98 m/s (stick start, stick end, release end)
+gz_cloudship_fin (2512), u0 4.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0000 flown 0.0000 (trim 0.0000: drag 0.000 N / full 31.78 N); P 0.7 I 0.09 LIM 0.3 FF 0
+  stick: r mean last 5 s +0.66, peak +1.57 deg/s; at its end integ +0.3000, torque +0.4749, unallocated +0, sat +0/-0; heading +12.7 deg in the stick
+  release: heading +66.6 deg; r at +10/+60/+120 s +0.44 / +0.58 / +0.66 deg/s; integ at +120 s +0.1941
+  stick: tail flips 0 outside +-0.02 (0.047 N, 0.090 N m), 0 sign changes of its thrust; release: tail flips 0 outside +-0.02 (0.047 N, 0.090 N m), 0 sign changes of its thrust
+  u 4.00 -> 3.33 -> 1.27 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.27, ventral 0.27, release dorsal 0.69, ventral 0.69; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +1.48 deg/s; r 1 s means at +10/+60/end +0.44 / +0.58 / +0.66 deg/s; integ at +10/+60 +0.2944 / +0.2543; u 0.5 s means 4.00 -> 3.34 -> 1.27 m/s (stick start, stick end, release end)
+gz_cloudship_fin (2512), u0 4.0 m/s, stick +0.50 (setpoint 6.67 deg/s), throttle trim -> fraction 0.0000 flown 0.0000 (trim 0.0000: drag 0.000 N / full 31.78 N); P 0.7 I 0.09 LIM 0.3 FF 0
+  stick: r mean last 5 s +0.38, peak +0.70 deg/s; at its end integ +0.2000, torque +0.2763, unallocated +0, sat +0/-0; heading +6.0 deg in the stick
+  release: heading +36.0 deg; r at +10/+60/+120 s +0.26 / +0.30 / +0.36 deg/s; integ at +120 s +0.1435
+  stick: tail flips 0 outside +-0.02 (0.047 N, 0.090 N m), 0 sign changes of its thrust; release: tail flips 0 outside +-0.02 (0.047 N, 0.090 N m), 0 sign changes of its thrust
+  u 4.00 -> 3.65 -> 1.79 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 0.13, ventral 0.13, release dorsal 0.27, ventral 0.27; stalled 0 % of the stick; at stick end dorsal attached, ventral attached, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +0.66 deg/s; r 1 s means at +10/+60/end +0.26 / +0.30 / +0.36 deg/s; integ at +10/+60 +0.1968 / +0.1748; u 0.5 s means 4.00 -> 3.65 -> 1.79 m/s (stick start, stick end, release end)
+gz_cloudship_am_fin_drag (2517), u0 2.0 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0119 flown 0.0120 (trim 0.0119: drag 0.378 N / full 31.78 N); P 0.7 I 0.09 LIM 0.3 FF 0.05
+  stick: r mean last 5 s +8.28, peak +29.91 deg/s; at its end integ +0.0971, torque +0.1636, unallocated +0, sat +0/-0; heading +238.3 deg in the stick
+  release: heading +58.5 deg; r at +10/+60/+120 s +2.62 / -0.14 / -0.37 deg/s; integ at +120 s +0.0052
+  stick: tail flips 2 outside +-0.02 (0.047 N, 0.090 N m), 2 sign changes of its thrust; release: tail flips 1 outside +-0.02 (0.047 N, 0.090 N m), 6 sign changes of its thrust
+  u 2.00 -> -0.44 -> 1.94 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 5.57, ventral 5.56, release dorsal 5.56, ventral 5.56; stalled 28 % of the stick; at stick end dorsal no flow, ventral no flow, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +29.81 deg/s; r 1 s means at +10/+60/end +2.75 / -0.14 / -0.38 deg/s; integ at +10/+60 +0.0265 / +0.0008; u 0.5 s means 2.00 -> -0.44 -> 1.94 m/s (stick start, stick end, release end)
+gz_cloudship_am_fin_drag (2517), u0 2.5 m/s, stick +1.00 (setpoint 15.00 deg/s), throttle trim -> fraction 0.0186 flown 0.0190 (trim 0.0186: drag 0.591 N / full 31.78 N); P 0.7 I 0.09 LIM 0.3 FF 0.05
+  stick: r mean last 5 s +8.17, peak +35.47 deg/s; at its end integ +0.0869, torque +0.1508, unallocated +0, sat +0/-0; heading +245.0 deg in the stick
+  release: heading +42.4 deg; r at +10/+60/+120 s +3.06 / +0.69 / +4.35 deg/s; integ at +120 s +0.0203
+  stick: tail flips 2 outside +-0.02 (0.047 N, 0.090 N m), 2 sign changes of its thrust; release: tail flips 5 outside +-0.02 (0.047 N, 0.090 N m), 7 sign changes of its thrust
+  u 2.51 -> -0.28 -> 2.16 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 5.56, ventral 5.56, release dorsal 5.56, ventral 5.56; stalled 25 % of the stick; at stick end dorsal no flow, ventral no flow, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +35.31 deg/s; r 1 s means at +10/+60/end +3.06 / +0.57 / +4.24 deg/s; integ at +10/+60 +0.0189 / +0.0231; u 0.5 s means 2.51 -> -0.28 -> 2.17 m/s (stick start, stick end, release end)
+gz_cloudship_am_fin_drag (2517), u0 2.5 m/s, stick +0.50 (setpoint 6.67 deg/s), throttle trim -> fraction 0.0186 flown 0.0190 (trim 0.0186: drag 0.591 N / full 31.78 N); P 0.7 I 0.09 LIM 0.3 FF 0.05
+  stick: r mean last 5 s +14.69, peak +26.81 deg/s; at its end integ -0.1318, torque -0.0921, unallocated +0, sat +0/-0; heading +217.5 deg in the stick
+  release: heading -47.7 deg; r at +10/+60/+120 s -3.88 / +1.65 / -1.10 deg/s; integ at +120 s -0.0569
+  stick: tail flips 1 outside +-0.02 (0.047 N, 0.090 N m), 1 sign changes of its thrust; release: tail flips 4 outside +-0.02 (0.047 N, 0.090 N m), 4 sign changes of its thrust
+  u 2.51 -> 0.11 -> 2.15 m/s (stick start, stick end, release end)
+  fins: max |alpha|/alpha_stall stick dorsal 5.05, ventral 5.05, release dorsal 4.76, ventral 4.76; stalled 52 % of the stick; at stick end dorsal stalled, ventral stalled, at release end dorsal attached, ventral attached
+  as a 0b record has them: r peak (0.5 s moving mean) +26.74 deg/s; r 1 s means at +10/+60/end -3.83 / +1.79 / -0.83 deg/s; integ at +10/+60 -0.0908 / -0.0393; u 0.5 s means 2.51 -> 0.10 -> 2.14 m/s (stick start, stick end, release end)
+
+--- against the reference review (reference_design_review_20260930.md:220, :327-330: rev-3 2527, 4 m/s, full stick; FF 0 1.55 deg/s, FF 1.0 2.4 deg/s, integrator 0.3, 87-90 deg in 2 min, time constant about 199 s; a D1-policy cap 2.66 deg/s; its model held u fixed with zero thrust) ---
+| airframe model | u0 m/s | stick (sp deg/s) | throttle asked/flown | FF | r mean last 5 s | r peak | integ @stick end | torque @stick end | unalloc[2] @stick end | sat +/- | heading in release deg | r +10/+60/+120 s | integ +120 s | pod swings stick / release (stbd+port; vectored) | tail flips stick / release outside +-0.02 (thrust sign changes; Cloudship) | u stick start / end / release end | fins dorsal/ventral at stick end, release end (a attached, S stalled, - no flow: from behind); max alpha/alpha_stall, % of stick stalled |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.0000/0.0000 | 0 | +1.55 | +1.56 | +0.3000 | +0.4642 | +0 | 0/0 | +87.4 | +0.92 / +0.72 / +0.53 | +0.1626 | 1+0 / 0+0 | - | 4.00 / 4.00 / 4.00 | a/a, a/a; max a/as 0.18, 0% | the review's setup: u held at 4, thrust 0
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.0000/0.0000 | 0 | +2.24 | +2.34 | +0.3000 | +0.4546 | +0 | 0/0 | +157.0 | +1.55 / +1.41 / +0.71 | +0.0533 | 1+0 / 0+0 | - | 3.62 / 2.54 / 0.86 | a/a, a/a; max a/as 0.43, 0% | free surge, thrust 0 (gliding)
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.1221/0.1220 | 0 | +1.59 | +1.61 | +0.3000 | +0.4636 | +0 | 0/0 | +90.0 | +0.96 / +0.74 / +0.53 | +0.1586 | 1+0 / 0+0 | - | 4.00 / 3.87 / 3.86 | a/a, a/a; max a/as 0.19, 0% | free surge, trim thrust (the leg)
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.0000/0.0000 | 1 | +2.37 | +2.39 | +0.3000 | +0.7159 | +0 | 0/0 | +87.6 | +0.92 / +0.71 / +0.53 | +0.1624 | 1+0 / 0+0 | - | 4.00 / 4.00 / 4.00 | a/a, a/a; max a/as 0.28, 0% | the review's setup: u held at 4, thrust 0
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.0000/0.0000 | 1 | +3.38 | +3.55 | +0.3000 | +0.7017 | +0 | 0/0 | +156.9 | +1.54 / +1.41 / +0.71 | +0.0535 | 1+0 / 0+0 | - | 3.62 / 2.56 / 0.86 | a/a, a/a; max a/as 0.64, 0% | free surge, thrust 0 (gliding)
+| 2527 airship_vectored_independent_am_fin_drag | 4.0 | +1.00 (15.00) | 0.1221/0.1220 | 1 | +2.44 | +2.47 | +0.3000 | +0.7148 | +0 | 0/0 | +90.3 | +0.96 / +0.74 / +0.53 | +0.1582 | 1+0 / 0+0 | - | 4.00 / 3.85 / 3.86 | a/a, a/a; max a/as 0.30, 0% | free surge, trim thrust (the leg)
+  FF 0, the review's setup: u held at 4, thrust 0 r last 5 s 1.55 deg/s, heading in release +87.4 deg, release time constant 197 s
+  FF 0, free surge, thrust 0 (gliding)       r last 5 s 2.24 deg/s, heading in release +157.0 deg, release time constant 151 s
+  FF 0, free surge, trim thrust (the leg)    r last 5 s 1.59 deg/s, heading in release +90.0 deg, release time constant 188 s
+  FF 1, the review's setup: u held at 4, thrust 0 r last 5 s 2.37 deg/s, heading in release +87.6 deg, release time constant 196 s
+  FF 1, free surge, thrust 0 (gliding)       r last 5 s 3.38 deg/s, heading in release +156.9 deg, release time constant 152 s
+  FF 1, free surge, trim thrust (the leg)    r last 5 s 2.44 deg/s, heading in release +90.3 deg, release time constant 186 s
+  the plant's hold torque per rad/s at 4 m/s (u held, a 0.5 torque held to steady state): 17.10 (normalized per rad/s); the D1 cap r = (A - rho) / (FF0 + k u) with A 1, rho 0.3, FF0 0: 2.34 deg/s (FF0 1: 2.22). The review's 2.66 deg/s at A - rho = 0.7 implies 15.08 per rad/s, 12 % below this plant; the fins alone, linearised (fin_damping.linear_O 229.26 u N m s/rad over the 54.0 N m authority), give 16.98
+
+--- the complete Cloudship (2517) in forward flight: stability of straight flight, Acro, stick centred, an initial sway of 0.01 m/s to port, 150 s, the exact trim (not truncated); each speed twice: "held" with the surge held at u0 (the speed the row is labelled with, for the onset) and "free" (what the hull does, for the bound). Verdict: the last 30 s window's max |r| against the second's (30-60 s, past the entry), more than 5 % up grows, more than 5 % down decays. Beside it the speed flown (mean u per 30 s window, the same samples), the actuator's peak (the tail command, limit 1; the vectored torque, normalized), the samples with a saturation flag, and the fins' largest |alpha| / alpha_stall ---
+  gz_cloudship_am_fin_drag                     u0 1.00 held: max |r| per 30 s 0.146 0.090 0.043 0.021 0.010 deg/s -> decays (x0.11); u mean 1.00 1.00 1.00 1.00 1.00 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.04 x stall
+  gz_cloudship_am_fin_drag                     u0 1.00 free: max |r| per 30 s 0.146 0.090 0.042 0.020 0.010 deg/s -> decays (x0.11); u mean 1.00 0.99 0.99 1.00 1.00 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.04 x stall
+  gz_cloudship_am_fin_drag                     u0 1.25 held: max |r| per 30 s 0.166 0.135 0.093 0.062 0.041 deg/s -> decays (x0.30); u mean 1.25 1.25 1.25 1.25 1.25 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.04 x stall
+  gz_cloudship_am_fin_drag                     u0 1.25 free: max |r| per 30 s 0.166 0.134 0.090 0.060 0.039 deg/s -> decays (x0.29); u mean 1.24 1.24 1.24 1.24 1.24 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.04 x stall
+  gz_cloudship_am_fin_drag                     u0 1.50 held: max |r| per 30 s 0.205 0.214 0.222 0.230 0.238 deg/s -> grows (x1.11); u mean 1.50 1.50 1.50 1.50 1.50 m/s; tail |cmd| peak 0.004, 0 saturated; fins 0.04 x stall
+  gz_cloudship_am_fin_drag                     u0 1.50 free: max |r| per 30 s 0.203 0.206 0.209 0.210 0.212 deg/s -> neutral (x1.03); u mean 1.49 1.48 1.48 1.48 1.48 m/s; tail |cmd| peak 0.004, 0 saturated; fins 0.04 x stall
+  gz_cloudship_am_fin_drag                     u0 1.75 held: max |r| per 30 s 0.308 0.449 0.629 0.845 1.084 deg/s -> grows (x2.42); u mean 1.75 1.75 1.75 1.75 1.75 m/s; tail |cmd| peak 0.022, 0 saturated; fins 0.15 x stall
+  gz_cloudship_am_fin_drag                     u0 1.75 free: max |r| per 30 s 0.303 0.425 0.568 0.721 0.869 deg/s -> grows (x2.04); u mean 1.74 1.72 1.71 1.69 1.68 m/s; tail |cmd| peak 0.017, 0 saturated; fins 0.13 x stall
+  gz_cloudship_am_fin_drag                     u0 2.00 held: max |r| per 30 s 0.460 0.943 1.617 2.384 3.044 deg/s -> grows (x3.23); u mean 2.00 2.00 2.00 2.00 2.00 m/s; tail |cmd| peak 0.058, 0 saturated; fins 0.37 x stall
+  gz_cloudship_am_fin_drag                     u0 2.00 free: max |r| per 30 s 0.450 0.866 1.366 1.832 2.142 deg/s -> grows (x2.47); u mean 1.99 1.96 1.92 1.87 1.82 m/s; tail |cmd| peak 0.040, 0 saturated; fins 0.29 x stall
+  gz_cloudship_am_fin_drag                     u0 2.50 held: max |r| per 30 s 0.905 3.267 5.902 7.018 7.345 deg/s -> grows (x2.25); u mean 2.50 2.50 2.50 2.50 2.50 m/s; tail |cmd| peak 0.127, 0 saturated; fins 0.69 x stall
+  gz_cloudship_am_fin_drag                     u0 2.50 free: max |r| per 30 s 0.887 2.835 4.249 4.548 4.494 deg/s -> grows (x1.59); u mean 2.48 2.39 2.23 2.10 2.06 m/s; tail |cmd| peak 0.077, 0 saturated; fins 0.53 x stall
+  gz_cloudship_am_fin_drag                     u0 3.00 held: max |r| per 30 s 0.943 5.911 10.503 10.846 10.874 deg/s -> grows (x1.84); u mean 3.00 3.00 3.00 3.00 3.00 m/s; tail |cmd| peak 0.184, 0 saturated; fins 0.84 x stall
+  gz_cloudship_am_fin_drag                     u0 3.00 free: max |r| per 30 s 1.050 5.388 6.783 6.697 6.527 deg/s -> grows (x1.21); u mean 2.96 2.75 2.45 2.36 2.35 m/s; tail |cmd| peak 0.113, 0 saturated; fins 0.68 x stall
+  gz_cloudship_am_fin_drag                     u0 4.00 held: max |r| per 30 s 6.105 15.579 108.607 107.377 107.374 deg/s -> grows (x6.89); u mean 4.00 4.00 4.00 4.00 4.00 m/s; tail |cmd| peak 1.000, 797 saturated; fins 4.99 x stall
+  gz_cloudship_am_fin_drag                     u0 4.00 free: max |r| per 30 s 4.504 10.992 11.012 10.765 10.765 deg/s -> neutral (x0.98); u mean 3.77 3.18 3.01 2.99 2.96 m/s; tail |cmd| peak 0.178, 0 saturated; fins 0.87 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 1.00 held: max |r| per 30 s 0.023 0.002 0.002 0.001 0.001 deg/s -> decays (x0.24); u mean 1.00 1.00 1.00 1.00 1.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.06 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 1.00 free: max |r| per 30 s 0.023 0.002 0.002 0.001 0.001 deg/s -> decays (x0.24); u mean 1.00 1.00 1.00 1.00 1.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.06 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 2.00 held: max |r| per 30 s 0.026 0.001 0.001 0.001 0.000 deg/s -> decays (x0.42); u mean 2.00 2.00 2.00 2.00 2.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.03 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 2.00 free: max |r| per 30 s 0.026 0.001 0.001 0.001 0.000 deg/s -> decays (x0.42); u mean 2.00 2.00 2.00 2.00 2.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.03 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 3.00 held: max |r| per 30 s 0.025 0.001 0.000 0.000 0.000 deg/s -> decays (x0.55); u mean 3.00 3.00 3.00 3.00 3.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.02 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 3.00 free: max |r| per 30 s 0.025 0.001 0.000 0.000 0.000 deg/s -> decays (x0.55); u mean 3.00 3.00 3.00 3.00 3.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.02 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 4.00 held: max |r| per 30 s 0.024 0.000 0.000 0.000 0.000 deg/s -> decays (x0.63); u mean 4.00 4.00 4.00 4.00 4.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.01 x stall
+  gz_airship_vectored_independent_am_fin_drag  u0 4.00 free: max |r| per 30 s 0.024 0.000 0.000 0.000 0.000 deg/s -> decays (x0.63); u mean 4.00 4.00 4.00 4.00 4.00 m/s; |torque| peak 0.000, 0 saturated; fins 0.01 x stall
+  gz_cloudship_am_fin_drag                     u0 1.50 held Munk x0.92: max |r| per 30 s 0.148 0.114 0.075 0.048 0.031 deg/s -> decays (x0.27); u mean 1.50 1.50 1.50 1.50 1.50 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.03 x stall
+  gz_cloudship_am_fin_drag                     u0 1.50 free Munk x0.92: max |r| per 30 s 0.148 0.113 0.073 0.047 0.030 deg/s -> decays (x0.26); u mean 1.49 1.49 1.49 1.49 1.50 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.03 x stall
+  gz_cloudship_am_fin_drag                     u0 2.00 held Munk x0.92: max |r| per 30 s 0.211 0.248 0.289 0.333 0.380 deg/s -> grows (x1.53); u mean 2.00 2.00 2.00 2.00 2.00 m/s; tail |cmd| peak 0.007, 0 saturated; fins 0.05 x stall
+  gz_cloudship_am_fin_drag                     u0 2.00 free Munk x0.92: max |r| per 30 s 0.209 0.240 0.273 0.306 0.340 deg/s -> grows (x1.41); u mean 1.99 1.98 1.98 1.97 1.97 m/s; tail |cmd| peak 0.007, 0 saturated; fins 0.05 x stall
+  gz_cloudship_am_fin_drag                     u0 2.50 held Munk x0.92: max |r| per 30 s 0.385 0.759 1.285 1.907 2.482 deg/s -> grows (x3.27); u mean 2.50 2.50 2.50 2.50 2.50 m/s; tail |cmd| peak 0.048, 0 saturated; fins 0.26 x stall
+  gz_cloudship_am_fin_drag                     u0 2.50 free Munk x0.92: max |r| per 30 s 0.379 0.713 1.133 1.566 1.903 deg/s -> grows (x2.67); u mean 2.49 2.46 2.42 2.38 2.33 m/s; tail |cmd| peak 0.036, 0 saturated; fins 0.21 x stall
+  gz_cloudship_am_fin_drag                     u0 3.00 held Munk x0.92: max |r| per 30 s 0.652 2.025 3.939 5.142 5.659 deg/s -> grows (x2.79); u mean 3.00 3.00 3.00 3.00 3.00 m/s; tail |cmd| peak 0.100, 0 saturated; fins 0.48 x stall
+  gz_cloudship_am_fin_drag                     u0 3.00 free Munk x0.92: max |r| per 30 s 0.641 1.846 3.134 3.754 3.907 deg/s -> grows (x2.12); u mean 2.98 2.92 2.80 2.67 2.60 m/s; tail |cmd| peak 0.068, 0 saturated; fins 0.38 x stall
+  gz_cloudship_am_fin_drag                     u0 4.00 held Munk x0.92: max |r| per 30 s 0.793 4.583 9.273 10.688 10.753 deg/s -> grows (x2.35); u mean 4.00 4.00 4.00 4.00 4.00 m/s; tail |cmd| peak 0.185, 0 saturated; fins 0.67 x stall
+  gz_cloudship_am_fin_drag                     u0 4.00 free Munk x0.92: max |r| per 30 s 0.744 4.487 7.176 7.298 7.184 deg/s -> grows (x1.60); u mean 3.94 3.70 3.37 3.27 3.25 m/s; tail |cmd| peak 0.121, 0 saturated; fins 0.57 x stall
+  gz_cloudship_am_fin_drag                     u0 1.50 held Munk x0.85: max |r| per 30 s 0.120 0.067 0.030 0.013 0.006 deg/s -> decays (x0.09); u mean 1.50 1.50 1.50 1.50 1.50 m/s; tail |cmd| peak 0.002, 0 saturated; fins 0.03 x stall
+  gz_cloudship_am_fin_drag                     u0 1.50 free Munk x0.85: max |r| per 30 s 0.120 0.067 0.029 0.013 0.006 deg/s -> decays (x0.09); u mean 1.49 1.49 1.50 1.50 1.50 m/s; tail |cmd| peak 0.002, 0 saturated; fins 0.03 x stall
+  gz_cloudship_am_fin_drag                     u0 2.00 held Munk x0.85: max |r| per 30 s 0.136 0.101 0.066 0.043 0.027 deg/s -> decays (x0.27); u mean 2.00 2.00 2.00 2.00 2.00 m/s; tail |cmd| peak 0.002, 0 saturated; fins 0.02 x stall
+  gz_cloudship_am_fin_drag                     u0 2.00 free Munk x0.85: max |r| per 30 s 0.136 0.101 0.065 0.042 0.027 deg/s -> decays (x0.26); u mean 1.99 1.99 1.99 1.99 2.00 m/s; tail |cmd| peak 0.002, 0 saturated; fins 0.02 x stall
+  gz_cloudship_am_fin_drag                     u0 2.50 held Munk x0.85: max |r| per 30 s 0.155 0.154 0.153 0.152 0.151 deg/s -> neutral (x0.98); u mean 2.50 2.50 2.50 2.50 2.50 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.02 x stall
+  gz_cloudship_am_fin_drag                     u0 2.50 free Munk x0.85: max |r| per 30 s 0.154 0.153 0.148 0.146 0.143 deg/s -> decays (x0.94); u mean 2.49 2.48 2.48 2.48 2.48 m/s; tail |cmd| peak 0.003, 0 saturated; fins 0.02 x stall
+  gz_cloudship_am_fin_drag                     u0 3.00 held Munk x0.85: max |r| per 30 s 0.233 0.328 0.450 0.596 0.760 deg/s -> grows (x2.31); u mean 3.00 3.00 3.00 3.00 3.00 m/s; tail |cmd| peak 0.015, 0 saturated; fins 0.07 x stall
+  gz_cloudship_am_fin_drag                     u0 3.00 free Munk x0.85: max |r| per 30 s 0.230 0.319 0.426 0.549 0.678 deg/s -> grows (x2.13); u mean 2.99 2.97 2.96 2.95 2.93 m/s; tail |cmd| peak 0.013, 0 saturated; fins 0.06 x stall
+  gz_cloudship_am_fin_drag                     u0 4.00 held Munk x0.85: max |r| per 30 s 0.489 1.358 2.744 3.849 4.465 deg/s -> grows (x3.29); u mean 4.00 4.00 4.00 4.00 4.00 m/s; tail |cmd| peak 0.082, 0 saturated; fins 0.30 x stall
+  gz_cloudship_am_fin_drag                     u0 4.00 free Munk x0.85: max |r| per 30 s 0.483 1.284 2.366 3.112 3.451 deg/s -> grows (x2.69); u mean 3.98 3.93 3.84 3.72 3.64 m/s; tail |cmd| peak 0.062, 0 saturated; fins 0.26 x stall
+  2517: held, last/second window 1.00 m/s x0.11, 1.25 m/s x0.30, 1.50 m/s x1.11, 1.75 m/s x2.42, 2.00 m/s x3.23, 2.50 m/s x2.25, 3.00 m/s x1.84, 4.00 m/s x6.89; neutral near 1.48 m/s
+  2517 Munk x0.92: held, last/second window 1.50 m/s x0.27, 2.00 m/s x1.53, 2.50 m/s x3.27, 3.00 m/s x2.79, 4.00 m/s x2.35; neutral near 1.88 m/s
+  2517 Munk x0.85: held, last/second window 1.50 m/s x0.09, 2.00 m/s x0.27, 2.50 m/s x0.98, 3.00 m/s x2.31, 4.00 m/s x3.29; neutral near 2.51 m/s
+  2517 at 4 m/s, what bounds the cycle: free, max |r| 10.8 deg/s in the last window with the tail at 0.178 of its range at most and 0 saturated samples, the speed falling to 2.96 m/s (window means 3.77 3.18 3.01 2.99 2.96); held at 4.0, the same start departs: max |r| 107.4 deg/s, tail peak 1.000, 797 saturated samples, fins at 5.0 x their stall. The free cycle is bounded by the speed it loses, not by the tail's limits.
+
+--- the stalled branch (airship_tail_design.md:113-121): put on it before the loop closes, r0 15 deg/s with the full stick held through Manual into Acro, against the attached start of the G4 legs ---
+| airframe model | u0 m/s | stick (sp deg/s) | throttle asked/flown | FF | r mean last 5 s | r peak | integ @stick end | torque @stick end | unalloc[2] @stick end | sat +/- | heading in release deg | r +10/+60/+120 s | integ +120 s | pod swings stick / release (stbd+port; vectored) | tail flips stick / release outside +-0.02 (thrust sign changes; Cloudship) | u stick start / end / release end | fins dorsal/ventral at stick end, release end (a attached, S stalled, - no flow: from behind); max alpha/alpha_stall, % of stick stalled |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2527 airship_vectored_independent_am_fin_drag | 2.0 | +1.00 (15.00) | 0.0305/0.0310 | 1 | +14.93 | +17.06 | +0.0554 | +0.3076 | +0 | 0/0 | +57.3 | +0.91 / -0.06 / -0.02 | -0.0027 | 0+0 / 1+2 | - | 1.85 / -0.20 / 1.76 | -/-, a/a; max a/as 10.02, 42% | started stalled
+| 2527 airship_vectored_independent_am_fin_drag | 2.0 | +1.00 (15.00) | 0.0305/0.0310 | 1 | +4.17 | +4.29 | +0.3000 | +0.6927 | +0 | 0/0 | +135.1 | +1.66 / +1.07 / +0.58 | +0.0878 | 1+0 / 0+0 | - | 2.00 / 2.07 / 1.88 | a/a, a/a; max a/as 0.95, 0% | started attached (the G4 leg form)
+| 2527 airship_vectored_independent_am_fin_drag | 2.5 | +1.00 (15.00) | 0.0477/0.0480 | 1 | +14.15 | +15.38 | +0.0662 | +0.3234 | +0 | 0/0 | +64.8 | +1.50 / -0.05 / -0.02 | -0.0038 | 0+0 / 1+2 | - | 2.38 / -0.41 / 2.29 | -/-, a/a; max a/as 10.02, 51% | started stalled
+| 2527 airship_vectored_independent_am_fin_drag | 2.5 | +1.00 (15.00) | 0.0477/0.0480 | 1 | +3.59 | +3.68 | +0.3000 | +0.7001 | +0 | 0/0 | +121.5 | +1.42 / +0.98 / +0.59 | +0.1091 | 1+0 / 0+0 | - | 2.50 / 2.48 / 2.36 | a/a, a/a; max a/as 0.69, 0% | started attached (the G4 leg form)
+| 2522 airship_vectored_independent_fin | 2.0 | +1.00 (15.00) | 0.0000/0.0000 | 0.3 | +6.59 | +18.05 | +0.3000 | +0.4714 | +0 | 0/0 | +156.0 | +2.13 / +1.29 / +0.56 | +0.0548 | 0+0 / 0+0 | - | 1.81 / 1.59 / 1.29 | S/S, a/a; max a/as 5.53, 56% | started stalled
+| 2522 airship_vectored_independent_fin | 2.0 | +1.00 (15.00) | 0.0000/0.0000 | 0.3 | +3.66 | +3.74 | +0.3000 | +0.5161 | +0 | 0/0 | +145.5 | +1.85 / +1.16 / +0.59 | +0.0715 | 1+0 / 0+0 | - | 2.00 / 2.02 / 1.60 | a/a, a/a; max a/as 0.79, 0% | started attached (the G4 leg form)
+| 2522 airship_vectored_independent_fin | 2.5 | +1.00 (15.00) | 0.0000/0.0000 | 0.3 | +3.28 | +9.86 | +0.3000 | +0.5214 | +0 | 0/0 | +137.6 | +1.65 / +1.11 / +0.62 | +0.0839 | 0+0 / 0+0 | - | 2.46 / 2.32 / 1.81 | a/a, a/a; max a/as 2.96, 3% | started stalled
+| 2522 airship_vectored_independent_fin | 2.5 | +1.00 (15.00) | 0.0000/0.0000 | 0.3 | +3.07 | +3.13 | +0.3000 | +0.5235 | +0 | 0/0 | +134.0 | +1.57 / +1.09 / +0.63 | +0.0895 | 1+0 / 0+0 | - | 2.50 / 2.45 / 1.91 | a/a, a/a; max a/as 0.55, 0% | started attached (the G4 leg form)
+
+--- gz's gyro noise (closed_loop W2, seeded) on the 2527 4 m/s full-stick leg ---
+  seed 1: r mean last 5 s 2.443 deg/s, integ 0.3000, heading in release +90.27 deg, r +120 s +0.531
+  seed 2: r mean last 5 s 2.443 deg/s, integ 0.3000, heading in release +90.27 deg, r +120 s +0.531
+  seed 3: r mean last 5 s 2.443 deg/s, integ 0.3000, heading in release +90.29 deg, r +120 s +0.532
+
+--- cross-check against the main session's SITL probes of 2026-10-01 (scratchpad probe_fwd.py, HEAD 4e1baea97c; an informal run, not the 0b check): the model started from each log's ground-truth state at the Acro switch, with the log's own gains, throttle, stick and segment lengths; rows from the switch on ---
+  2026-10-01/10_39_42.ulg gz_airship_vectored_independent_am_fin_drag (SYS_AUTOSTART 2527; the log's gains P 0.7 I 0.09 LIM 0.3 FF 1): at the Acro switch, ground truth u 4.055 v -0.000 m/s (FRD), roll +0.00 deg, p +0.02, r -0.08 deg/s; the EKF's heading is +1.87 deg off the truth there, and its velocity in its own heading reads u 4.058 v -0.131; stick +1.000, throttle 0.122; centred 3.034 s, stick 20.358 s, release 40.33 s (the stick's edges from the rate and torque setpoints, each inside 20 / 16 ms; manual_control_setpoint reads them +6 / +56 ms later)
+     t-acro t-stick | r deg/s  SITL / model  | integ  SITL / model      | u m/s  SITL / model  | r from the EKF entry
+        0.5    -2.5 |  -0.032 /  -0.019      | +0.0000 / +0.0000         | 4.053 / 4.053        |  -0.307
+        1.0    -2.0 |  -0.020 /  -0.002      | +0.0000 / +0.0000         | 4.052 / 4.052        |  -0.320
+        2.0    -1.0 |  -0.001 /  +0.001      | +0.0001 / +0.0000         | 4.050 / 4.050        |  -0.205
+        5.0     2.0 |  +1.382 /  +1.398      | +0.0102 / +0.0104         | 4.140 / 4.139        |  +1.370
+        8.0     5.0 |  +1.609 /  +1.613      | +0.0738 / +0.0739         | 4.084 / 4.084        |  +1.615
+       13.0    10.0 |  +1.929 /  +1.977      | +0.1775 / +0.1775         | 4.002 / 4.001        |  +1.985
+       18.0    15.0 |  +2.300 /  +2.336      | +0.2783 / +0.2783         | 3.929 / 3.928        |  +2.344
+       22.0    19.0 |  +2.445 /  +2.455      | +0.3000 / +0.3000         | 3.878 / 3.876        |  +2.459
+       23.4    20.4 |  +2.399 /  +2.364      | +0.3000 / +0.3000         | 3.862 / 3.860        |  +2.368
+       25.0    22.0 |  +1.021 /  +1.017      | +0.2967 / +0.2967         | 3.852 / 3.850        |  +1.019
+       28.0    25.0 |  +1.012 /  +0.986      | +0.2920 / +0.2920         | 3.845 / 3.844        |  +0.987
+       33.0    30.0 |  +0.957 /  +0.959      | +0.2843 / +0.2843         | 3.836 / 3.835        |  +0.960
+       43.0    40.0 |  +0.952 /  +0.912      | +0.2695 / +0.2697         | 3.824 / 3.823        |  +0.912
+       53.0    50.0 |  +0.871 /  +0.866      | +0.2554 / +0.2557         | 3.819 / 3.818        |  +0.866
+       63.0    60.0 |  +0.810 /  +0.821      | +0.2419 / +0.2424         | 3.819 / 3.818        |  +0.821
+    rms SITL - model, centred segment (3 rows): r 0.013 deg/s, integ 0.0000, u 0.0004 m/s
+    rms SITL - model, stick and release (12 rows): r 0.025 deg/s, integ 0.0002, u 0.0014 m/s
+    the plant's hold torque per rad/s over the stick's last 2 s (mean torque over mean r, 100 / 200 SITL samples, 100 model rows): SITL 16.689, model 16.671 (-0.1 %), at r 2.455 / 2.457 deg/s and u 3.874 / 3.872 m/s
+  2026-10-01/10_47_36.ulg gz_airship_vectored_independent_fin (SYS_AUTOSTART 2522; the log's gains P 0.7 I 0.09 LIM 0.3 FF 0.3): at the Acro switch, ground truth u 2.136 v -0.000 m/s (FRD), roll -0.00 deg, p -0.01, r -0.01 deg/s; the EKF's heading is +1.83 deg off the truth there, and its velocity in its own heading reads u 2.134 v -0.066; stick +1.000, throttle 0.000; centred 3.136 s, stick 20.498 s, release 60.31 s (the stick's edges from the rate and torque setpoints, each inside 8 / 4 ms; manual_control_setpoint reads them +52 / +150 ms later)
+     t-acro t-stick | r deg/s  SITL / model  | integ  SITL / model      | u m/s  SITL / model  | r from the EKF entry
+        0.5    -2.6 |  -0.001 /  -0.003      | +0.0000 / +0.0000         | 2.136 / 2.136        |  -0.609
+        1.0    -2.1 |  -0.011 /  -0.001      | +0.0000 / +0.0000         | 2.136 / 2.136        |  -0.599
+        2.0    -1.1 |  +0.039 /  -0.001      | +0.0000 / +0.0000         | 2.136 / 2.136        |  -0.344
+        5.1     2.0 |  +1.694 /  +1.706      | +0.0124 / +0.0122         | 2.231 / 2.230        |  +1.645
+        8.1     5.0 |  +1.981 /  +1.977      | +0.0747 / +0.0745         | 2.209 / 2.210        |  +1.970
+       13.1    10.0 |  +2.680 /  +2.648      | +0.1741 / +0.1740         | 2.178 / 2.179        |  +2.654
+       18.1    15.0 |  +3.307 /  +3.276      | +0.2684 / +0.2683         | 2.153 / 2.153        |  +3.282
+       22.1    19.0 |  +3.545 /  +3.549      | +0.3000 / +0.3000         | 2.138 / 2.139        |  +3.541
+       23.5    20.4 |  +3.622 /  +3.563      | +0.3000 / +0.3000         | 2.134 / 2.134        |  +3.555
+       25.1    22.0 |  +2.119 /  +2.082      | +0.2945 / +0.2945         | 2.125 / 2.125        |  +2.078
+       28.1    25.0 |  +1.854 /  +1.875      | +0.2852 / +0.2854         | 2.108 / 2.108        |  +1.871
+       33.1    30.0 |  +1.801 /  +1.775      | +0.2708 / +0.2711         | 2.081 / 2.081        |  +1.772
+       43.1    40.0 |  +1.654 /  +1.635      | +0.2437 / +0.2443         | 2.029 / 2.029        |  +1.633
+       53.1    50.0 |  +1.516 /  +1.504      | +0.2186 / +0.2197         | 1.981 / 1.980        |  +1.502
+       63.1    60.0 |  +1.489 /  +1.379      | +0.1955 / +0.1971         | 1.936 / 1.934        |  +1.377
+    rms SITL - model, centred segment (3 rows): r 0.024 deg/s, integ 0.0000, u 0.0001 m/s
+    rms SITL - model, stick and release (12 rows): r 0.042 deg/s, integ 0.0006, u 0.0009 m/s
+    the plant's hold torque per rad/s over the stick's last 2 s (mean torque over mean r, 100 / 200 SITL samples, 100 model rows): SITL 8.336, model 8.358 (+0.3 %), at r 3.562 / 3.554 deg/s and u 2.137 / 2.137 m/s
+
+=== the model's tests ===
+  test_controller.py: exit 0, 113 PASS; 0 failed
+  test_forward.py: exit 0, 73 PASS; 0 failed
+  test_fin_damping.py: exit 0, 9 PASS; 0 failed

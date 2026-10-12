@@ -1,0 +1,7 @@
+gains: 120 runs to do (0 already in /tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/C/scan_gains.jsonl)
+  25 / 120
+  50 / 120
+  75 / 120
+  100 / 120
+done /tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/C/scan_gains.jsonl
+exit 0

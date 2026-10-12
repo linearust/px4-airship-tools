@@ -1,0 +1,399 @@
+{
+ "chain10_20260927": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "chain12_20260928": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_FF": 0.3,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_FF": 0.05,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "chain12b_20260928": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_FF": 0.3,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_FF": 0.05,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "chain12c_1_20260928": {
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  }
+ },
+ "chain12c_2_20260928": {
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  }
+ },
+ "chain13_20260928": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_FF": 0.3,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_FF": 0.05,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "chain14_20260929": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_FF": 0.3,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_FF": 0.05,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "chain14b_1_20260929": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  }
+ },
+ "chain14b_2_20260929": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.7,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  }
+ },
+ "chain7_20260925": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "chain9_20260927": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_I": 0.09,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.5,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ },
+ "stage2B_20260927": {
+  "gz_airship_vectored_independent": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.07,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.65,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2520
+  },
+  "gz_airship_vectored_independent_am_fin_drag": {
+   "AS_YAWRATE_FF": 1.0,
+   "AS_YAWRATE_I": 0.07,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.65,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2527
+  },
+  "gz_airship_vectored_independent_fin": {
+   "AS_YAWRATE_FF": 0.3,
+   "AS_YAWRATE_I": 0.07,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.65,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2522
+  },
+  "gz_cloudship": {
+   "AS_YAWRATE_FF": 0.0,
+   "AS_YAWRATE_I": 0.07,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.65,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2510
+  },
+  "gz_cloudship_am_fin_drag": {
+   "AS_YAWRATE_FF": 0.05,
+   "AS_YAWRATE_I": 0.07,
+   "AS_YAWRATE_MAX": 15.0,
+   "AS_YAWRATE_P": 0.65,
+   "AS_YR_INT_LIM": 0.3,
+   "MAN_DEADZONE": 0.1,
+   "SYS_AUTOSTART": 2517
+  }
+ }
+}

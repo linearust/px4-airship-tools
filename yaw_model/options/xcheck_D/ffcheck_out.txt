@@ -1,0 +1,6 @@
+gz_airship_vectored_independent_am_fin_drag  ff 0.00 P 0.7 status 1  Arel False settle None end 2.53 integ_end_push 0.0907 | Srel False | peak 6.23 | wOn True wOff True
+gz_airship_vectored_independent_am_fin_drag  ff 0.40 P 0.7 status 1  Arel False settle None end 1.62 integ_end_push 0.0546 | Srel False | peak 6.58 | wOn True wOff True
+gz_airship_vectored_independent_am_fin_drag  ff 0.76 P 0.7 status 1  Arel False settle 10.11999999999999 end 0.54 integ_end_push 0.0234 | Srel True | peak 6.91 | wOn True wOff True
+gz_airship_vectored_independent_fin          ff 0.00 P 0.7 status 1  Arel False settle None end 0.99 integ_end_push 0.0485 | Srel False | peak 6.93 | wOn True wOff True
+gz_airship_vectored_independent_fin          ff 0.40 P 0.7 status 0  Arel True settle 5.36999999999999 end -0.71 integ_end_push 0.0042 | Srel True | peak 7.18 | wOn True wOff True
+gz_airship_vectored_independent_fin          ff 0.76 P 0.7 status 0  Arel True settle 3.789999999999992 end -2.02 integ_end_push -0.0345 | Srel True | peak 8.10 | wOn True wOff True

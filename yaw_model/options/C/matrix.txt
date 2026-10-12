@@ -1,0 +1,72 @@
+Compact pass-count / margin matrix from scan_full.jsonl + scan_gains.jsonl
+-> matrix.txt. One block per setting, one line per plant. Each check:
+pass/runs and the margin range (min..max, + inside). Units: brake, peak,
+mean, wind rate, I-off in deg/s; release in s (10 - settle), or 'end x..y'
+= |rate| at the window end when it never settled (1.0 needed); wind integ
+as % of the needed torque. '?' marks UNDECIDED (split, or a margin inside
+the model's uncertainty: rate band 0.4 vec rigid / 0.15 cld complete /
+0.12 else, settle 0.6 s).
+
+P 0.50 I 0.09 b 1.000
+  vec rigid          A.brake 0/12 -1.75..-1.26 | A.track 12/12 pk+0.46..+0.52 mn+0.99 | A.release 12/12 +5.0..+5.6s | S.track 12/12 pk+0.52..+0.61 mn+0.98 | S.release 12/12 +4.9..+5.6s | w.I on 12/12 r+0.88 i+46% | w.I off 12/12 +1.07..+1.12 | w.weak 12/12 r+0.92 i+49%
+  vec complete       A.brake 12/12 +4.95..+5.03 | A.track 12/12 pk+2.98..+3.06 mn+1.23 | A.release 0/12 end2.75..2.88 | S.track 12/12 pk+2.99..+3.06 mn+1.23 | S.release 0/12 end2.66..2.78 | w.I on 12/12 r+0.75 i+11% | w.I off 12/12 +0.34..+0.38 | w.weak 12/12 r+0.96 i+43%
+  cld rigid          A.brake 12/12 +4.99..+5.19 | A.track 12/12 pk+1.21..+1.29 mn+1.64 | A.release 12/12 +6.5..+6.8s | S.track 12/12 pk+1.19..+1.26 mn+1.65 | S.release 12/12 +6.5..+6.8s | w.I on 12/12 r+0.95 i+50% | w.I off 12/12 +1.10..+1.13
+  cld complete       A.brake 12/12 +2.64..+2.73 | A.track 1/12 pk-0.19..+0.02 mn+0.56? | A.release 12/12 +5.9..+6.2s | S.track 12/12 pk+1.67..+1.79 mn+1.14 | S.release 12/12 +2.1..+2.4s | w.I on 12/12 r+0.56 i+31% | w.I off 12/12 +1.03..+1.11
+  vec fin (2nd case) A.brake 12/12 +4.36..+4.54 | A.track 12/12 pk+2.30..+2.39 mn+1.41 | A.release 0/12 end0.82..1.01 | S.track 12/12 pk+2.68..+2.73 mn+1.55 | S.release 0/12 end0.58..0.65(2 settled) | w.I on 12/12 r+0.96 i+49% | w.I off 12/12 +0.62..+0.66 | w.weak 12/12 r+0.97 i+31%
+
+P 0.50 I 0.09 b 0.694
+  vec rigid          A.brake 0/12 -1.75..-1.26 | A.track 12/12 pk+1.00..+1.05 mn+1.06 | A.release 12/12 +3.4..+4.0s | S.track 12/12 pk+1.08..+1.18 mn+1.03 | S.release 12/12 +3.4..+4.3s | w.I on 12/12 r+0.86 i+46% | w.I off 12/12 +1.07..+1.11 | w.weak 12/12 r+0.94 i+49%
+  vec complete       A.brake 12/12 +4.95..+5.03 | A.track 12/12 pk+3.09..+3.17 mn+1.11 | A.release 0/12 end3.08..3.23 | S.track 12/12 pk+3.09..+3.16 mn+1.13 | S.release 0/12 end2.95..3.06 | w.I on 12/12 r+0.82 i+22% | w.I off 12/12 +0.35..+0.37 | w.weak 12/12 r+0.97 i+43%
+  cld rigid          A.brake 12/12 +4.99..+5.19 | A.track 12/12 pk+1.94..+1.99 mn+1.64 | A.release 12/12 +4.9..+5.3s | S.track 12/12 pk+1.92..+1.98 mn+1.64 | S.release 12/12 +5.0..+5.3s | w.I on 12/12 r+0.97 i+50% | w.I off 12/12 +1.10..+1.13
+  cld complete       A.brake 12/12 +2.64..+2.73 | A.track 11/12 pk-0.02..+0.12 mn+1.13? | A.release 12/12 +4.6..+4.6s | S.track 12/12 pk+2.00..+2.09 mn+1.41 | S.release 0/12 end0.52..0.68(2 settled) | w.I on 12/12 r+0.58 i+33% | w.I off 12/12 +1.07..+1.15
+  vec fin (2nd case) A.brake 12/12 +4.36..+4.54 | A.track 12/12 pk+2.40..+2.49 mn+1.52 | A.release 0/12 end1.73..2.02 | S.track 12/12 pk+2.72..+2.76 mn+1.54 | S.release 0/12 end1.15..1.37 | w.I on 12/12 r+0.95 i+50% | w.I off 12/12 +0.63..+0.65 | w.weak 12/12 r+0.97 i+31%
+
+P 0.70 I 0.09 b 1.000
+  vec rigid          A.brake 43/43 +0.59..+1.19 | A.track 43/43 pk+0.94..+1.07 mn+1.29 | A.release 43/43 +5.2..+6.2s | S.track 43/43 pk+1.06..+1.24 mn+1.27 | S.release 43/43 +5.6..+6.2s | w.I on 43/43 r+0.88 i+50% | w.I off 43/43 +0.48..+0.54 | w.weak 43/43 r+0.94 i+49%
+  vec complete       A.brake 12/12 +5.05..+5.13 | A.track 12/12 pk+3.06..+3.12 mn+1.16 | A.release 0/12 end2.46..2.53 | S.track 12/12 pk+3.09..+3.13 mn+1.14 | S.release 0/12 end2.36..2.47 | w.I on 12/12 r+0.90 i+35% | w.I off 12/12 +0.12..+0.15 | w.weak 12/12 r+0.96 i+48%
+  cld rigid          A.brake 12/12 +5.26..+5.40 | A.track 12/12 pk+1.69..+1.73 mn+1.64 | A.release 12/12 +7.1..+7.2s | S.track 12/12 pk+1.69..+1.73 mn+1.64 | S.release 12/12 +7.1..+7.2s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.50..+0.53
+  cld complete       A.brake 12/12 +3.53..+3.63 | A.track 12/12 pk+0.30..+0.50 mn+0.79 | A.release 12/12 +6.2..+6.5s | S.track 12/12 pk+2.00..+2.06 mn+1.22 | S.release 12/12 +2.4..+3.0s | w.I on 12/12 r+0.59 i+46% | w.I off 12/12 +0.72..+0.80
+  vec fin (2nd case) A.brake 12/12 +4.90..+5.06 | A.track 12/12 pk+2.39..+2.45 mn+1.46 | A.release 0/12 end0.91..1.15 | S.track 12/12 pk+2.76..+2.81 mn+1.50 | S.release 0/12 end0.70..0.78(7 settled) | w.I on 12/12 r+0.96 i+49% | w.I off 12/12 +0.26..+0.28 | w.weak 12/12 r+0.96 i+33%
+
+P 0.70 I 0.09 b 0.900
+  vec rigid          A.brake 43/43 +0.59..+1.19 | A.track 43/43 pk+1.21..+1.33 mn+1.21 | A.release 43/43 +4.9..+5.6s | S.track 43/43 pk+1.34..+1.49 mn+1.17 | S.release 43/43 +4.9..+5.6s | w.I on 43/43 r+0.88 i+50% | w.I off 43/43 +0.48..+0.53 | w.weak 43/43 r+0.95 i+49%
+  vec complete       A.brake 12/12 +5.05..+5.13 | A.track 12/12 pk+3.12..+3.18 mn+1.10 | A.release 0/12 end2.55..2.63 | S.track 12/12 pk+3.14..+3.20 mn+1.10 | S.release 0/12 end2.45..2.57 | w.I on 12/12 r+0.87 i+40% | w.I off 12/12 +0.11..+0.15? | w.weak 12/12 r+0.96 i+48%
+  cld rigid          A.brake 12/12 +5.26..+5.40 | A.track 12/12 pk+2.03..+2.08 mn+1.64 | A.release 12/12 +6.5..+6.8s | S.track 12/12 pk+2.04..+2.09 mn+1.64 | S.release 12/12 +6.5..+6.8s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.49..+0.53
+  cld complete       A.brake 12/12 +3.54..+3.63 | A.track 12/12 pk+0.40..+0.53 mn+0.92 | A.release 12/12 +5.5..+5.9s | S.track 12/12 pk+2.17..+2.24 mn+1.35 | S.release 12/12 +1.1..+1.8s | w.I on 12/12 r+0.59 i+46% | w.I off 12/12 +0.77..+0.82
+  vec fin (2nd case) A.brake 12/12 +4.90..+5.06 | A.track 12/12 pk+2.44..+2.51 mn+1.52 | A.release 0/12 end1.21..1.45 | S.track 12/12 pk+2.77..+2.83 mn+1.47 | S.release 0/12 end0.93..1.00 | w.I on 12/12 r+0.95 i+48% | w.I off 12/12 +0.26..+0.29 | w.weak 12/12 r+0.96 i+34%
+
+P 0.70 I 0.15 b 1.000
+  vec rigid          A.brake 8/12 -0.16..+0.78? | A.track 12/12 pk+0.62..+0.72 mn+1.22 | A.release 12/12 +5.5..+6.2s | S.track 12/12 pk+0.67..+0.76 mn+1.30 | S.release 12/12 +5.9..+6.2s | w.I on 12/12 r+0.90 i+50% | w.I off 12/12 +0.49..+0.52 | w.weak 12/12 r+0.94 i+49%
+  vec complete       A.brake 12/12 +4.43..+4.51 | A.track 12/12 pk+2.61..+2.67 mn+1.63 | A.release 0/12 end1.78..1.90 | S.track 12/12 pk+2.71..+2.76 mn+1.55 | S.release 0/12 end1.69..1.88 | w.I on 12/12 r+0.81 i+46% | w.I off 12/12 +0.13..+0.17 | w.weak 12/12 r+0.97 i+45%
+  cld rigid          A.brake 12/12 +5.68..+5.83 | A.track 12/12 pk+1.37..+1.45 mn+1.65 | A.release 12/12 +7.5..+7.5s | S.track 12/12 pk+1.33..+1.43 mn+1.65 | S.release 12/12 +7.5..+7.5s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.50..+0.53
+  cld complete       A.brake 12/12 +4.58..+4.66 | A.track 12/12 pk+0.23..+0.45 mn+0.29 | A.release 12/12 +6.5..+6.5s | S.track 12/12 pk+1.51..+1.59 mn+1.09 | S.release 12/12 +4.6..+5.0s | w.I on 12/12 r+0.77 i+48% | w.I off 12/12 +0.92..+1.02
+  vec fin (2nd case) A.brake 12/12 +4.77..+4.99 | A.track 12/12 pk+2.26..+2.34 mn+1.34 | A.release 12/12 +1.2..+1.8s | S.track 12/12 pk+2.57..+2.61 mn+1.58 | S.release 12/12 +2.1..+2.1s | w.I on 12/12 r+0.97 i+49% | w.I off 12/12 +0.25..+0.28 | w.weak 12/12 r+0.96 i+34%
+
+P 0.70 I 0.20 b 1.000
+  vec rigid          A.brake 33/33 +0.41..+1.72 | A.track 33/33 pk+0.41..+0.52 mn+1.22 | A.release 33/33 +4.3..+5.6s | S.track 33/33 pk+0.38..+0.56 mn+1.22? | S.release 33/33 +4.3..+5.3s | w.I on 33/33 r+0.90 i+50% | w.I off 33/33 +0.48..+0.53 | w.weak 33/33 r+0.95 i+49%
+  vec complete       A.brake 12/12 +4.12..+4.20 | A.track 12/12 pk+2.51..+2.54 mn+1.56 | A.release 0/12 end0.99..1.27 | S.track 12/12 pk+2.59..+2.63 mn+1.64 | S.release 0/12 end0.97..1.22 | w.I on 12/12 r+0.96 i+33% | w.I off 12/12 +0.15..+0.19 | w.weak 12/12 r+0.96 i+47%
+  cld rigid          A.brake 12/12 +5.88..+5.99 | A.track 12/12 pk+1.21..+1.25 mn+1.65 | A.release 12/12 +1.8..+7.8s | S.track 12/12 pk+1.15..+1.24 mn+1.65 | S.release 12/12 +1.8..+7.8s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.50..+0.53
+  cld complete       A.brake 12/12 +5.50..+5.61 | A.track 12/12 pk+0.46..+0.63 mn+0.32 | A.release 12/12 +6.2..+6.5s | S.track 12/12 pk+1.26..+1.35 mn+1.10 | S.release 12/12 +5.5..+5.9s | w.I on 12/12 r+0.81 i+44% | w.I off 12/12 +1.01..+1.16
+  vec fin (2nd case) A.brake 12/12 +4.69..+4.91 | A.track 12/12 pk+2.30..+2.35 mn+1.36 | A.release 12/12 +2.7..+3.1s | S.track 12/12 pk+2.35..+2.40 mn+1.58 | S.release 12/12 +3.0..+3.4s | w.I on 12/12 r+0.95 i+49% | w.I off 12/12 +0.25..+0.28 | w.weak 12/12 r+0.97 i+35%
+
+P 0.70 I 0.20 b 0.900
+  vec rigid          A.brake 12/12 +0.44..+1.68 | A.track 12/12 pk+0.59..+0.68 mn+1.23 | A.release 12/12 +4.0..+4.6s | S.track 12/12 pk+0.63..+0.71 mn+1.23 | S.release 12/12 +4.3..+5.3s | w.I on 12/12 r+0.90 i+50% | w.I off 12/12 +0.48..+0.52 | w.weak 12/12 r+0.95 i+49%
+  vec complete       A.brake 12/12 +4.12..+4.20 | A.track 12/12 pk+2.52..+2.55 mn+1.57 | A.release 0/12 end1.15..1.43 | S.track 12/12 pk+2.60..+2.64 mn+1.64 | S.release 0/12 end1.20..1.38 | w.I on 12/12 r+0.96 i+33% | w.I off 12/12 +0.15..+0.18 | w.weak 12/12 r+0.96 i+47%
+  cld rigid          A.brake 12/12 +5.88..+5.99 | A.track 12/12 pk+1.45..+1.52 mn+1.65 | A.release 12/12 +7.5..+7.5s | S.track 12/12 pk+1.42..+1.50 mn+1.65 | S.release 12/12 +7.5..+7.5s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.50..+0.53
+  cld complete       A.brake 12/12 +5.50..+5.61 | A.track 12/12 pk+0.48..+0.64 mn+0.30 | A.release 12/12 +5.9..+6.2s | S.track 12/12 pk+1.40..+1.48 mn+1.11 | S.release 12/12 +5.0..+5.3s | w.I on 12/12 r+0.81 i+44% | w.I off 12/12 +1.02..+1.16
+  vec fin (2nd case) A.brake 12/12 +4.69..+4.91 | A.track 12/12 pk+2.30..+2.35 mn+1.36 | A.release 12/12 +2.1..+2.7s | S.track 12/12 pk+2.42..+2.48 mn+1.58 | S.release 12/12 +2.4..+2.7s | w.I on 12/12 r+0.96 i+49% | w.I off 12/12 +0.25..+0.30 | w.weak 12/12 r+0.97 i+35%
+
+P 0.70 I 0.20 b 0.800
+  vec rigid          A.brake 12/12 +0.44..+1.68 | A.track 12/12 pk+0.75..+0.85 mn+1.23 | A.release 12/12 +3.7..+4.3s | S.track 12/12 pk+0.79..+0.87 mn+1.20 | S.release 12/12 +3.6..+4.0s | w.I on 12/12 r+0.91 i+50% | w.I off 12/12 +0.49..+0.53 | w.weak 12/12 r+0.96 i+49%
+  vec complete       A.brake 12/12 +4.12..+4.20 | A.track 12/12 pk+2.53..+2.56 mn+1.58 | A.release 0/12 end1.32..1.60 | S.track 12/12 pk+2.60..+2.64 mn+1.64 | S.release 0/12 end1.33..1.50 | w.I on 12/12 r+0.94 i+34% | w.I off 12/12 +0.14..+0.18 | w.weak 12/12 r+0.96 i+47%
+  cld rigid          A.brake 12/12 +5.88..+5.99 | A.track 12/12 pk+1.66..+1.74 mn+1.65 | A.release 12/12 +7.1..+7.2s | S.track 12/12 pk+1.61..+1.71 mn+1.65 | S.release 12/12 +7.1..+7.2s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.50..+0.53
+  cld complete       A.brake 12/12 +5.50..+5.61 | A.track 12/12 pk+0.46..+0.65 mn+0.29 | A.release 12/12 +5.6..+5.9s | S.track 12/12 pk+1.51..+1.58 mn+1.14 | S.release 12/12 +4.6..+4.9s | w.I on 12/12 r+0.82 i+44% | w.I off 12/12 +1.04..+1.16
+  vec fin (2nd case) A.brake 12/12 +4.69..+4.91 | A.track 12/12 pk+2.29..+2.35 mn+1.36 | A.release 12/12 +1.8..+2.1s | S.track 12/12 pk+2.49..+2.53 mn+1.59 | S.release 12/12 +2.0..+2.4s | w.I on 12/12 r+0.97 i+49% | w.I off 12/12 +0.25..+0.28 | w.weak 12/12 r+0.96 i+35%
+
+P 0.80 I 0.20 b 1.000
+  vec rigid          A.brake 12/12 +1.29..+2.47 | A.track 12/12 pk+0.67..+0.79 mn+1.31 | A.release 12/12 +5.9..+6.5s | S.track 12/12 pk+0.62..+0.79 mn+1.31 | S.release 12/12 +5.9..+6.5s | w.I on 12/12 r+0.90 i+50% | w.I off 12/12 +0.29..+0.34? | w.weak 12/12 r+0.96 i+49%
+  vec complete       A.brake 12/12 +4.28..+4.36 | A.track 12/12 pk+2.53..+2.56 mn+1.57 | A.release 0/12 end0.97..1.23 | S.track 12/12 pk+2.61..+2.66 mn+1.63 | S.release 0/12 end0.95..1.18 | w.I on 12/12 r+0.96 i+40% | w.I off 12/12 +0.05..+0.09? | w.weak 12/12 r+0.96 i+46%
+  cld rigid          A.brake 12/12 +5.87..+6.00 | A.track 12/12 pk+1.40..+1.45 mn+1.65 | A.release 12/12 +7.8..+7.8s | S.track 12/12 pk+1.33..+1.45 mn+1.65 | S.release 12/12 +7.8..+7.8s | w.I on 12/12 r+0.96 i+50% | w.I off 12/12 +0.31..+0.34
+  cld complete       A.brake 12/12 +5.44..+5.52 | A.track 12/12 pk+0.61..+0.76 mn+0.46 | A.release 12/12 +6.5..+6.8s | S.track 12/12 pk+1.46..+1.54 mn+1.14 | S.release 12/12 +5.6..+5.9s | w.I on 12/12 r+0.82 i+43% | w.I off 12/12 +0.84..+0.97
+  vec fin (2nd case) A.brake 12/12 +4.91..+5.12 | A.track 12/12 pk+2.33..+2.38 mn+1.38 | A.release 12/12 +2.7..+3.1s | S.track 12/12 pk+2.45..+2.48 mn+1.58 | S.release 12/12 +3.0..+3.4s | w.I on 12/12 r+0.97 i+49% | w.I off 12/12 +0.12..+0.15? | w.weak 12/12 r+0.97 i+37%
+

@@ -1,0 +1,251 @@
+
+=== P 0.65 I 0.070 FF 0.00 {"phys_slew": 60}
+  vec rigid     (5 runs)  all pass, decided
+    Acro brake    5/5              end -5.19..-5.11 (m 0.81..0.89)
+    Acro track    5/5              peak 8.30..8.34 (m 0.99..1.04) mean 6.29..6.31 (m 1.29..1.31)
+    Acro release  5/5              settle 4.1..4.7 s (m 5.3..5.9) r0 6.31..6.42 end -1.39..-1.19
+    Stab track    5/5              peak 8.14..8.17 (m 1.16..1.19) mean 6.29..6.34 (m 1.29..1.34)
+    Stab release  5/5              settle 4.1..4.7 s (m 5.3..5.9) r0 6.20..6.30 end -1.46..-1.34
+    wind I on     5/5              rate 0.10..0.12 (m 0.88..0.90) integ 0.0186..0.0186 need 0.0185 (m 0.0092..0.0092)
+    wind I off    5/5              rate 1.62..1.64 (m 0.62..0.64)
+    wind weak     5/5              rate 0.03..0.05 (m 0.95..0.97) integ 0.0073..0.0073 need 0.0074 (m 0.0036..0.0036)
+    wind check    5/5              
+    Manual        5/5              
+  vec complete  (5 runs)  NOT CLEAN: Acro release 0/5; Stab release 0/5; wind I off 5/5 UNDECIDED
+    Acro brake    5/5              end -0.62..-0.55 (m 5.38..5.45)
+    Acro track    5/5              peak 6.94..7.00 (m 2.34..2.39) mean 6.80..6.82 (m 1.52..1.54)
+    Acro release  0/5              settle - s never x5 (m -) r0 7.01..7.05 end 3.28..3.35
+    Stab track    5/5              peak 5.99..6.04 (m 3.29..3.34) mean 5.79..5.80 (m 0.79..0.80)
+    Stab release  0/5              settle - s never x5 (m -) r0 5.79..5.87 end 2.30..2.34
+    wind I on     5/5              rate 0.20..0.23 (m 0.77..0.80) integ 0.0163..0.0163 need 0.0185 (m 0.0070..0.0070)
+    wind I off    5/5 UNDECIDED    rate 1.02..1.06 (m 0.02..0.06)
+    wind weak     5/5              rate 0.01..0.03 (m 0.97..0.99) integ 0.0072..0.0072 need 0.0074 (m 0.0035..0.0035)
+    wind check    5/5              
+    Manual        5/5              
+  vec fin       (5 runs)  NOT CLEAN: Acro track 0/5; Acro release 0/5
+    Acro brake    5/5              end -1.29..-1.21 (m 4.71..4.79)
+    Acro track    0/5              peak 10.17..10.20 (m -0.87..-0.83) mean 9.79..9.83 (m -1.49..-1.45)
+    Acro release  0/5              settle - s never x5 (m -) r0 10.24..10.29 end 0.29..0.35
+    Stab track    5/5              peak 8.18..8.22 (m 1.12..1.16) mean 6.06..6.08 (m 1.06..1.08)
+    Stab release  5/5              settle 8.5..8.5 s (m 1.5..1.5) r0 5.97..6.05 end 0.34..0.41
+    wind I on     5/5              rate 0.02..0.04 (m 0.96..0.98) integ 0.0186..0.0187 need 0.0185 (m 0.0091..0.0092)
+    wind I off    5/5              rate 1.20..1.24 (m 0.20..0.24)
+    wind weak     5/5              rate 0.04..0.06 (m 0.94..0.96) integ 0.0056..0.0056 need 0.0074 (m 0.0019..0.0019)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.00 {"slew": 240}
+  vec rigid     (5 runs)  all pass, decided
+    Acro brake    5/5              end -5.20..-5.12 (m 0.80..0.88)
+    Acro track    5/5              peak 8.18..8.24 (m 1.09..1.16) mean 6.32..6.34 (m 1.32..1.34)
+    Acro release  5/5              settle 4.7 s (m 5.3) r0 6.34..6.51 end -1.31..-1.21
+    Stab track    5/5              peak 8.08..8.11 (m 1.22..1.25) mean 6.27..6.31 (m 1.27..1.31)
+    Stab release  5/5              settle 4.1..4.4 s (m 5.6..5.9) r0 6.22..6.33 end -1.40..-1.34
+    wind I on     5/5              rate 0.09..0.11 (m 0.89..0.91) integ 0.0186..0.0186 need 0.0185 (m 0.0091..0.0092)
+    wind I off    5/5              rate 1.61..1.64 (m 0.61..0.64)
+    wind weak     5/5              rate 0.03..0.05 (m 0.95..0.97) integ 0.0073..0.0073 need 0.0074 (m 0.0036..0.0036)
+    wind check    5/5              
+    Manual        5/5              
+  vec complete  (5 runs)  NOT CLEAN: Acro release 0/5; Stab release 0/5
+    Acro brake    5/5              end -1.07..-0.99 (m 4.93..5.01)
+    Acro track    5/5              peak 5.99..6.07 (m 3.27..3.34) mean 5.95..5.99 (m 0.95..0.99)
+    Acro release  0/5              settle - s never x5 (m -) r0 5.98..6.07 end 2.51..2.57
+    Stab track    5/5              peak 6.03..6.10 (m 3.23..3.30) mean 5.99..6.01 (m 0.99..1.01)
+    Stab release  0/5              settle - s never x5 (m -) r0 6.01..6.06 end 2.44..2.53
+    wind I on     5/5              rate 0.12..0.15 (m 0.85..0.88) integ 0.0182..0.0183 need 0.0185 (m 0.0090..0.0090)
+    wind I off    5/5              rate 1.18..1.21 (m 0.18..0.21)
+    wind weak     5/5              rate 0.02..0.04 (m 0.96..0.98) integ 0.0073..0.0073 need 0.0074 (m 0.0036..0.0036)
+    wind check    5/5              
+    Manual        5/5              
+  vec fin       (5 runs)  NOT CLEAN: Acro release 0/5; Stab release 0/5 UNDECIDED
+    Acro brake    5/5              end -1.32..-1.24 (m 4.68..4.76)
+    Acro track    5/5              peak 6.39..6.44 (m 2.90..2.95) mean 6.30..6.34 (m 1.30..1.34)
+    Acro release  0/5              settle - s never x5 (m -) r0 6.38..6.46 end 1.17..1.23
+    Stab track    5/5              peak 6.58..6.61 (m 2.73..2.75) mean 6.51..6.53 (m 1.51..1.53)
+    Stab release  0/5 UNDECIDED    settle 10.1 s never x4 (m -0.1) r0 6.43..6.53 end 0.69..0.73
+    wind I on     5/5              rate 0.02..0.04 (m 0.96..0.98) integ 0.0180..0.0180 need 0.0185 (m 0.0088..0.0088)
+    wind I off    5/5              rate 1.29..1.31 (m 0.29..0.31)
+    wind weak     5/5              rate 0.03..0.04 (m 0.96..0.97) integ 0.0056..0.0056 need 0.0074 (m 0.0019..0.0019)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.00 {"slew": 60}
+  vec rigid     (5 runs)  all pass, decided
+    Acro brake    5/5              end -2.73..-2.65 (m 3.27..3.35)
+    Acro track    5/5              peak 8.30..8.34 (m 0.99..1.03) mean 6.43..6.46 (m 1.43..1.46)
+    Acro release  5/5              settle 4.7..5.1 s (m 4.9..5.3) r0 6.31..6.50 end -1.44..-1.23
+    Stab track    5/5              peak 8.17..8.23 (m 1.10..1.16) mean 6.42..6.45 (m 1.42..1.45)
+    Stab release  5/5              settle 4.8 s (m 5.2) r0 6.24..6.39 end -1.53..-1.37
+    wind I on     5/5              rate 0.10..0.15 (m 0.85..0.90) integ 0.0186..0.0186 need 0.0185 (m 0.0091..0.0091)
+    wind I off    5/5              rate 1.62..1.64 (m 0.62..0.64)
+    wind weak     5/5              rate 0.04..0.06 (m 0.94..0.96) integ 0.0073..0.0073 need 0.0074 (m 0.0036..0.0036)
+    wind check    5/5              
+    Manual        5/5              
+  vec complete  (5 runs)  NOT CLEAN: Acro release 0/5; Stab release 0/5; wind I off 5/5 UNDECIDED
+    Acro brake    5/5              end -0.17..-0.10 (m 5.83..5.90)
+    Acro track    5/5              peak 6.87..6.94 (m 2.39..2.47) mean 6.79..6.81 (m 1.53..1.55)
+    Acro release  0/5              settle - s never x5 (m -) r0 6.89..6.94 end 3.08..3.14
+    Stab track    5/5              peak 5.75..5.80 (m 3.54..3.58) mean 5.71..5.72 (m 0.71..0.72)
+    Stab release  0/5              settle - s never x5 (m -) r0 5.73..5.77 end 2.26..2.32
+    wind I on     5/5              rate 0.22..0.23 (m 0.77..0.78) integ 0.0162..0.0162 need 0.0185 (m 0.0069..0.0070)
+    wind I off    5/5 UNDECIDED    rate 1.03..1.05 (m 0.03..0.05)
+    wind weak     5/5              rate 0.03..0.05 (m 0.95..0.97) integ 0.0073..0.0073 need 0.0074 (m 0.0036..0.0036)
+    wind check    5/5              
+    Manual        5/5              
+  vec fin       (5 runs)  NOT CLEAN: Acro track 0/5; Acro release 0/5; Stab release 0/5
+    Acro brake    5/5              end -1.37..-1.30 (m 4.63..4.70)
+    Acro track    0/5              peak 10.25..10.32 (m -0.99..-0.92) mean 10.21..10.24 (m -1.90..-1.88)
+    Acro release  0/5              settle - s never x5 (m -) r0 10.19..10.24 end 0.58..0.63
+    Stab track    5/5              peak 7.04..7.10 (m 2.23..2.30) mean 6.00..6.02 (m 1.00..1.02)
+    Stab release  0/5              settle - s never x5 (m -) r0 5.92..5.99 end 0.90..0.97
+    wind I on     5/5              rate 0.02..0.03 (m 0.97..0.98) integ 0.0206..0.0206 need 0.0185 (m 0.0071..0.0072)
+    wind I off    5/5              rate 1.27..1.28 (m 0.27..0.28)
+    wind weak     5/5              rate 0.02..0.04 (m 0.96..0.98) integ 0.0061..0.0061 need 0.0074 (m 0.0024..0.0024)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.00 {"tail_tau": 0.025}
+  cs rigid      (5 runs)  all pass, decided
+    Acro brake    5/5              end -0.83..-0.76 (m 5.17..5.24)
+    Acro track    5/5              peak 7.55..7.60 (m 1.73..1.78) mean 6.70..6.72 (m 1.62..1.64)
+    Acro release  5/5              settle 2.8..3.2 s (m 6.8..7.2) r0 6.68..6.71 end -0.71..-0.63
+    Stab track    5/5              peak 7.55..7.61 (m 1.72..1.78) mean 6.69..6.71 (m 1.62..1.64)
+    Stab release  5/5              settle 3.2 s (m 6.8) r0 6.63..6.71 end -0.70..-0.63
+    wind I on     5/5              rate 0.01..0.03 (m 0.97..0.99) integ 0.0184..0.0184 need 0.0185 (m 0.0092..0.0092)
+    wind I off    5/5              rate 1.63..1.65 (m 0.63..0.65)
+    wind check    5/5              
+    Manual        5/5              
+  cs complete   (5 runs)  all pass, decided
+    Acro brake    5/5              end -2.88..-2.81 (m 3.12..3.19)
+    Acro track    5/5              peak 8.92..8.96 (m 0.38..0.42) mean 6.36..6.40 (m 1.36..1.40)
+    Acro release  5/5              settle 4.1 s (m 5.9) r0 5.91..5.96 end -0.73..-0.69
+    Stab track    5/5              peak 7.12..7.20 (m 2.13..2.21) mean 6.91..6.93 (m 1.40..1.42)
+    Stab release  5/5              settle 8.8..9.2 s (m 0.8..1.2) r0 7.04..7.10 end 0.38..0.43
+    wind I on     5/5              rate 0.51..0.54 (m 0.46..0.49) integ 0.0190..0.0190 need 0.0185 (m 0.0088..0.0088)
+    wind I off    5/5              rate 1.73..1.75 (m 0.73..0.75)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.00 {"tail_tau": 0.05}
+  cs rigid      (5 runs)  all pass, decided
+    Acro brake    5/5              end -0.83..-0.75 (m 5.17..5.25)
+    Acro track    5/5              peak 7.55..7.60 (m 1.73..1.78) mean 6.70..6.72 (m 1.62..1.64)
+    Acro release  5/5              settle 2.8..3.2 s (m 6.8..7.2) r0 6.65..6.71 end -0.72..-0.64
+    Stab track    5/5              peak 7.55..7.63 (m 1.71..1.78) mean 6.69..6.71 (m 1.62..1.64)
+    Stab release  5/5              settle 3.2 s (m 6.8) r0 6.64..6.71 end -0.73..-0.65
+    wind I on     5/5              rate 0.02..0.03 (m 0.97..0.98) integ 0.0184..0.0184 need 0.0185 (m 0.0092..0.0092)
+    wind I off    5/5              rate 1.64..1.65 (m 0.64..0.65)
+    wind check    5/5              
+    Manual        5/5              
+  cs complete   (5 runs)  all pass, decided
+    Acro brake    5/5              end -2.88..-2.81 (m 3.12..3.19)
+    Acro track    5/5              peak 8.91..8.95 (m 0.38..0.42) mean 6.36..6.39 (m 1.36..1.39)
+    Acro release  5/5              settle 4.1 s (m 5.9) r0 5.90..5.96 end -0.73..-0.69
+    Stab track    5/5              peak 7.13..7.21 (m 2.13..2.21) mean 6.91..6.93 (m 1.40..1.42)
+    Stab release  5/5              settle 8.8..9.2 s (m 0.8..1.2) r0 7.05..7.10 end 0.37..0.42
+    wind I on     5/5              rate 0.51..0.54 (m 0.46..0.49) integ 0.0190..0.0190 need 0.0185 (m 0.0087..0.0087)
+    wind I off    5/5              rate 1.73..1.75 (m 0.73..0.75)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.10 {"tail_tau": 0.025}
+  cs complete   (5 runs)  all pass, decided
+    Acro brake    5/5              end -2.88..-2.81 (m 3.12..3.19)
+    Acro track    5/5              peak 9.08..9.11 (m 0.22..0.25) mean 6.08..6.12 (m 1.08..1.12)
+    Acro release  5/5              settle 3.5 s (m 6.5) r0 5.76..5.81 end -1.09..-1.05
+    Stab track    5/5              peak 7.47..7.51 (m 1.82..1.86) mean 7.18..7.20 (m 1.13..1.15)
+    Stab release  5/5              settle 6.3..6.6 s (m 3.4..3.7) r0 7.27..7.32 end -0.23..-0.16
+    wind I on     5/5              rate 0.53..0.55 (m 0.45..0.47) integ 0.0196..0.0196 need 0.0185 (m 0.0081..0.0082)
+    wind I off    5/5              rate 1.68..1.70 (m 0.68..0.70)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.10 {"tail_tau": 0.05}
+  cs complete   (5 runs)  all pass, decided
+    Acro brake    5/5              end -2.88..-2.81 (m 3.12..3.19)
+    Acro track    5/5              peak 9.08..9.10 (m 0.23..0.25) mean 6.08..6.11 (m 1.08..1.11)
+    Acro release  5/5              settle 3.5 s (m 6.5) r0 5.76..5.81 end -1.09..-1.05
+    Stab track    5/5              peak 7.48..7.52 (m 1.81..1.86) mean 7.19..7.20 (m 1.13..1.15)
+    Stab release  5/5              settle 6.3..6.6 s (m 3.4..3.7) r0 7.28..7.33 end -0.24..-0.17
+    wind I on     5/5              rate 0.53..0.55 (m 0.45..0.47) integ 0.0196..0.0197 need 0.0185 (m 0.0081..0.0081)
+    wind I off    5/5              rate 1.68..1.70 (m 0.68..0.70)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.30 {"phys_slew": 60}
+  vec fin       (5 runs)  NOT CLEAN: Acro track 0/5; Stab track 0/5
+    Acro brake    5/5              end -1.29..-1.21 (m 4.71..4.79)
+    Acro track    0/5              peak 10.75..10.77 (m -1.44..-1.42) mean 10.68..10.72 (m -2.38..-2.34)
+    Acro release  5/5              settle 7.0..7.0 s (m 3.0..3.0) r0 10.73..10.80 end -2.02..-1.95
+    Stab track    0/5              peak 9.66..9.70 (m -0.37..-0.32) mean 6.12..6.13 (m 1.12..1.13)
+    Stab release  5/5              settle 5.1..5.1 s (m 4.9..4.9) r0 6.05..6.14 end -0.95..-0.90
+    wind I on     5/5              rate 0.02..0.06 (m 0.94..0.98) integ 0.0158..0.0159 need 0.0185 (m 0.0066..0.0066)
+    wind I off    5/5              rate 1.21..1.24 (m 0.21..0.24)
+    wind weak     5/5              rate 0.02..0.04 (m 0.96..0.98) integ 0.0048..0.0048 need 0.0074 (m 0.0011..0.0011)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.30 {"slew": 240}
+  vec fin       (5 runs)  all pass, decided
+    Acro brake    5/5              end -1.32..-1.24 (m 4.68..4.76)
+    Acro track    5/5              peak 7.01..7.04 (m 2.29..2.32) mean 6.63..6.67 (m 1.63..1.67)
+    Acro release  5/5              settle 6.0..6.3 s (m 3.7..4.0) r0 6.68..6.77 end -0.17..-0.11
+    Stab track    5/5              peak 7.06..7.09 (m 2.25..2.27) mean 6.64..6.67 (m 1.64..1.67)
+    Stab release  5/5              settle 5.1..5.4 s (m 4.6..4.9) r0 6.56..6.64 end -0.45..-0.41
+    wind I on     5/5              rate 0.03..0.05 (m 0.95..0.97) integ 0.0173..0.0173 need 0.0185 (m 0.0080..0.0080)
+    wind I off    5/5              rate 1.30..1.33 (m 0.30..0.33)
+    wind weak     5/5              rate 0.03..0.03 (m 0.97..0.97) integ 0.0055..0.0055 need 0.0074 (m 0.0018..0.0018)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 0.30 {"slew": 60}
+  vec fin       (5 runs)  NOT CLEAN: Acro track 0/5; Stab track 0/5
+    Acro brake    5/5              end -1.37..-1.30 (m 4.63..4.70)
+    Acro track    0/5              peak 10.76..10.79 (m -1.46..-1.43) mean 10.69..10.71 (m -2.38..-2.35)
+    Acro release  5/5              settle 6.6..7.0 s (m 3.0..3.4) r0 10.70..10.74 end -1.82..-1.77
+    Stab track    0/5              peak 9.54..9.58 (m -0.25..-0.21) mean 6.10..6.11 (m 1.10..1.11)
+    Stab release  5/5              settle 5.7..6.0 s (m 4.0..4.3) r0 6.03..6.06 end -0.57..-0.51
+    wind I on     5/5              rate 0.04..0.07 (m 0.93..0.96) integ 0.0180..0.0181 need 0.0185 (m 0.0088..0.0088)
+    wind I off    5/5              rate 1.22..1.25 (m 0.22..0.25)
+    wind weak     5/5              rate 0.05..0.07 (m 0.93..0.95) integ 0.0055..0.0055 need 0.0074 (m 0.0018..0.0018)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 1.00 {"phys_slew": 60}
+  vec complete  (5 runs)  NOT CLEAN: Acro track 0/5 UNDECIDED
+    Acro brake    5/5              end -0.62..-0.55 (m 5.38..5.45)
+    Acro track    0/5 UNDECIDED    peak 8.56..8.60 (m 0.73..0.77) mean 8.45..8.46 (m -0.13..-0.12)
+    Acro release  5/5              settle 9.2..9.5 s (m 0.5..0.8) r0 8.39..8.43 end -0.19..-0.13
+    Stab track    5/5              peak 8.57..8.64 (m 0.69..0.76) mean 6.80..6.81 (m 1.52..1.54)
+    Stab release  5/5              settle 7.9..8.2 s (m 1.8..2.1) r0 6.76..6.81 end -0.35..-0.26
+    wind I on     5/5              rate 0.07..0.08 (m 0.92..0.93) integ 0.0213..0.0213 need 0.0185 (m 0.0064..0.0065)
+    wind I off    5/5              rate 1.16..1.18 (m 0.16..0.18)
+    wind weak     5/5              rate 0.03..0.05 (m 0.95..0.97) integ 0.0071..0.0071 need 0.0074 (m 0.0034..0.0034)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 1.00 {"slew": 240}
+  vec complete  (5 runs)  all pass, decided
+    Acro brake    5/5              end -1.07..-0.99 (m 4.93..5.01)
+    Acro track    5/5              peak 7.34..7.39 (m 1.94..1.99) mean 7.00..7.03 (m 1.31..1.34)
+    Acro release  5/5              settle 7.9..8.2 s (m 1.8..2.1) r0 6.96..7.05 end -0.10..-0.05
+    Stab track    5/5              peak 7.29..7.31 (m 2.02..2.05) mean 7.07..7.09 (m 1.24..1.26)
+    Stab release  5/5              settle 7.9..8.2 s (m 1.8..2.1) r0 7.01..7.10 end -0.15..-0.09
+    wind I on     5/5              rate 0.09..0.11 (m 0.89..0.91) integ 0.0220..0.0220 need 0.0185 (m 0.0057..0.0057)
+    wind I off    5/5              rate 1.21..1.23 (m 0.21..0.23)
+    wind weak     5/5              rate 0.04..0.08 (m 0.92..0.96) integ 0.0076..0.0077 need 0.0074 (m 0.0034..0.0035)
+    wind check    5/5              
+    Manual        5/5              
+
+=== P 0.65 I 0.070 FF 1.00 {"slew": 60}
+  vec complete  (5 runs)  NOT CLEAN: Acro track 5/5 UNDECIDED; Stab release 5/5 UNDECIDED; wind I off 5/5 UNDECIDED
+    Acro brake    5/5              end -0.17..-0.10 (m 5.83..5.90)
+    Acro track    5/5 UNDECIDED    peak 8.41..8.43 (m 0.90..0.92) mean 8.24..8.26 (m 0.07..0.09)
+    Acro release  5/5              settle 9.5 s (m 0.5) r0 8.18..8.22 end -0.03..0.03
+    Stab track    5/5              peak 7.38..8.47 (m 0.86..1.95) mean 6.83..6.93 (m 1.40..1.51)
+    Stab release  5/5 UNDECIDED    settle 9.2..9.5 s (m 0.5..0.8) r0 6.80..6.96 end 0.20..0.39
+    wind I on     5/5              rate 0.02..0.04 (m 0.96..0.98) integ 0.0198..0.0202 need 0.0185 (m 0.0075..0.0080)
+    wind I off    5/5 UNDECIDED    rate 1.09..1.11 (m 0.09..0.11)
+    wind weak     5/5              rate 0.02..0.03 (m 0.97..0.98) integ 0.0070..0.0072 need 0.0074 (m 0.0033..0.0035)
+    wind check    5/5              
+    Manual        5/5              

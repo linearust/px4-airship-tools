@@ -1,0 +1,71 @@
+ACTUATOR VARIANTS, nominal timing, seeds 201-205, my b
+
+('servo', 60.0)  0.7  0.2  0.8
+  vec rigid          A.brake 5/5 +0.23..+0.28? | A.track 5/5 pk+0.81..+0.86 mn+1.45..+1.46 | A.release 5/5 +3.7..+3.7s | S.track 5/5 pk+0.79..+0.83 mn+1.37..+1.39 | S.release 5/5 +3.7..+3.7s | w.I on 5/5 r+0.89 i+50% | w.I off 5/5 +0.50..+0.51 | w.weak 5/5 r+0.95 i+49% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +4.60..+4.65 | A.track 5/5 pk+1.47..+1.51 mn+0.60..+0.62 | A.release 0/5 end0.88..0.96(5)? | S.track 5/5 pk+2.02..+2.06 mn+1.45..+1.48 | S.release 0/5 end1.34..1.41(5) | w.I on 5/5 r+0.97 i+41% | w.I off 4/5 -0.00..+0.02? | w.weak 5/5 r+0.98 i+48% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +4.85..+4.90 | A.track 0/5 pk-0.76..-0.72 mn-1.05..-1.02 | A.release 2/5 +6.2..+6.2s end2.25..2.32(3)? | S.track 5/5 pk+0.98..+1.07 mn+1.48..+1.52 | S.release 5/5 +2.7..+3.0s | w.I on 5/5 r+0.97 i+47% | w.I off 5/5 +0.12..+0.15 | w.weak 5/5 r+0.96 i+30% | w.check 5/5 +0.84..+0.93
+
+('servo', 60.0)  0.7  0.2  0.9
+  vec rigid          A.brake 5/5 +0.23..+0.28? | A.track 5/5 pk+0.66..+0.71 mn+1.53..+1.58 | A.release 4/5 +4.6..+4.6s end2.26..2.26(1)? | S.track 5/5 pk+0.69..+0.72 mn+1.16..+1.39 | S.release 5/5 +4.3..+4.3s | w.I on 5/5 r+0.89 i+50% | w.I off 5/5 +0.50..+0.51 | w.weak 5/5 r+0.95 i+49% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +4.60..+4.65 | A.track 5/5 pk+1.45..+1.49 mn+0.60..+0.63 | A.release 0/5 end0.68..0.76(5)? | S.track 5/5 pk+1.94..+1.98 mn+1.47..+1.49 | S.release 0/5 end1.19..1.21(5) | w.I on 5/5 r+0.97 i+41% | w.I off 3/5 -0.00..+0.02? | w.weak 5/5 r+0.97 i+48% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +4.85..+4.90 | A.track 0/5 pk-0.75..-0.71 mn-0.87..-0.83 | A.release 0/5 end2.44..2.51(5) | S.track 5/5 pk+0.84..+0.88 mn+1.47..+1.52 | S.release 5/5 +3.4..+3.4s | w.I on 5/5 r+0.97 i+47% | w.I off 5/5 +0.13..+0.15 | w.weak 5/5 r+0.96 i+29% | w.check 5/5 +0.84..+0.93
+
+('servo', 60.0)  0.7  0.2  1.0
+  vec rigid          A.brake 5/5 +0.23..+0.28? | A.track 5/5 pk+0.49..+0.53 mn+1.52..+1.56 | A.release 0/5 end2.38..2.55(5) | S.track 5/5 pk+0.50..+0.57 mn+1.42..+1.45 | S.release 5/5 +4.6..+4.6s | w.I on 5/5 r+0.89 i+50% | w.I off 5/5 +0.50..+0.51 | w.weak 5/5 r+0.95 i+49% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +4.60..+4.65 | A.track 5/5 pk+1.43..+1.48 mn+0.61..+0.63 | A.release 0/5 end0.49..0.56(5)? | S.track 5/5 pk+1.81..+1.88 mn+1.48..+1.51 | S.release 0/5 end0.98..1.07(5)? | w.I on 5/5 r+0.96 i+41% | w.I off 5/5 +0.00..+0.02? | w.weak 5/5 r+0.97 i+47% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +4.85..+4.90 | A.track 0/5 pk-0.75..-0.72 mn-0.70..-0.66 | A.release 0/5 end2.63..2.70(5) | S.track 5/5 pk+0.66..+0.71 mn+1.48..+1.52 | S.release 5/5 +3.7..+4.0s | w.I on 5/5 r+0.97 i+46% | w.I off 5/5 +0.13..+0.16 | w.weak 5/5 r+0.96 i+29% | w.check 5/5 +0.84..+0.93
+
+('slew', 240.0)  0.7  0.2  0.8
+  vec rigid          A.brake 5/5 +2.67..+2.70 | A.track 5/5 pk+1.02..+1.06 mn+1.26..+1.48 | A.release 5/5 +4.6..+4.6s | S.track 5/5 pk+0.87..+0.92 mn+1.24..+1.46 | S.release 5/5 +4.6..+4.6s | w.I on 5/5 r+0.92 i+50% | w.I off 5/5 +0.50..+0.52 | w.weak 5/5 r+0.97 i+48% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +3.67..+3.72 | A.track 5/5 pk+2.58..+2.62 mn+1.65..+1.67 | A.release 0/5 end1.14..1.23(5) | S.track 5/5 pk+2.55..+2.57 mn+1.62..+1.64 | S.release 0/5 end1.09..1.15(5)? | w.I on 5/5 r+0.96 i+38% | w.I off 5/5 +0.16..+0.17 | w.weak 5/5 r+0.97 i+45% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +4.76..+4.82 | A.track 5/5 pk+2.52..+2.57 mn+1.62..+1.65 | A.release 5/5 +2.4..+2.7s | S.track 5/5 pk+2.38..+2.42 mn+1.56..+1.58 | S.release 5/5 +3.0..+3.4s | w.I on 5/5 r+0.97 i+49% | w.I off 5/5 +0.22..+0.24 | w.weak 5/5 r+0.97 i+33% | w.check 5/5 +0.84..+0.93
+
+('slew', 240.0)  0.7  0.2  0.9
+  vec rigid          A.brake 5/5 +2.67..+2.70 | A.track 5/5 pk+0.88..+0.91 mn+1.49..+1.52 | A.release 5/5 +4.9..+4.9s | S.track 5/5 pk+0.66..+0.77 mn+1.23..+1.41 | S.release 5/5 +4.6..+4.9s | w.I on 5/5 r+0.90 i+50% | w.I off 5/5 +0.47..+0.51 | w.weak 5/5 r+0.96 i+48% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +3.67..+3.72 | A.track 5/5 pk+2.57..+2.60 mn+1.65..+1.67 | A.release 0/5 end0.97..1.06(5)? | S.track 5/5 pk+2.54..+2.57 mn+1.61..+1.64 | S.release 0/5 end0.96..1.01(5)? | w.I on 5/5 r+0.97 i+38% | w.I off 5/5 +0.16..+0.17 | w.weak 5/5 r+0.98 i+45% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +4.76..+4.82 | A.track 5/5 pk+2.42..+2.46 mn+1.61..+1.64 | A.release 5/5 +3.0..+3.0s | S.track 5/5 pk+2.35..+2.37 mn+1.55..+1.57 | S.release 5/5 +3.7..+3.7s | w.I on 5/5 r+0.96 i+49% | w.I off 5/5 +0.20..+0.24 | w.weak 5/5 r+0.97 i+33% | w.check 5/5 +0.84..+0.93
+
+('slew', 240.0)  0.7  0.2  1.0
+  vec rigid          A.brake 5/5 +2.67..+2.70 | A.track 5/5 pk+0.70..+0.74 mn+1.49..+1.51 | A.release 5/5 +5.3..+5.3s | S.track 5/5 pk+0.52..+0.54 mn+1.31..+1.54 | S.release 5/5 +5.3..+5.3s | w.I on 5/5 r+0.93 i+50% | w.I off 5/5 +0.49..+0.52 | w.weak 5/5 r+0.97 i+49% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +3.67..+3.72 | A.track 5/5 pk+2.56..+2.58 mn+1.64..+1.67 | A.release 0/5 end0.81..0.89(5)? | S.track 5/5 pk+2.52..+2.56 mn+1.61..+1.64 | S.release 0/5 end0.77..0.82(5)? | w.I on 5/5 r+0.97 i+38% | w.I off 5/5 +0.15..+0.17 | w.weak 5/5 r+0.98 i+45% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +4.76..+4.82 | A.track 5/5 pk+2.28..+2.33 mn+1.61..+1.64 | A.release 5/5 +3.4..+3.7s | S.track 5/5 pk+2.29..+2.32 mn+1.54..+1.57 | S.release 5/5 +4.0..+4.3s | w.I on 5/5 r+0.97 i+49% | w.I off 5/5 +0.22..+0.24 | w.weak 5/5 r+0.96 i+33% | w.check 5/5 +0.84..+0.93
+
+('slew', 60.0)  0.7  0.2  0.8
+  vec rigid          A.brake 5/5 +1.36..+1.41 | A.track 5/5 pk+0.73..+0.82 mn+1.24..+1.26 | A.release 5/5 +5.6..+5.9s | S.track 5/5 pk+0.75..+0.81 mn+1.21..+1.27 | S.release 5/5 +4.6..+5.3s | w.I on 5/5 r+0.88 i+50% | w.I off 5/5 +0.49..+0.53 | w.weak 5/5 r+0.96 i+49% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +4.88..+4.93 | A.track 5/5 pk+1.53..+1.56 mn+0.59..+0.62 | A.release 0/5 end1.73..1.79(5) | S.track 5/5 pk+2.28..+2.34 mn+1.41..+1.44 | S.release 0/5 end1.70..1.78(5) | w.I on 5/5 r+0.92 i+49% | w.I off 4/5 -0.00..+0.03? | w.weak 5/5 r+0.97 i+47% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +5.06..+5.11 | A.track 0/5 pk-0.78..-0.74 mn-1.10..-1.08 | A.release 5/5 +5.9..+5.9s | S.track 5/5 pk+0.96..+1.01 mn+1.40..+1.44 | S.release 5/5 +1.2..+1.5s | w.I on 5/5 r+0.97 i+49% | w.I off 5/5 +0.13..+0.16 | w.weak 5/5 r+0.96 i+31% | w.check 5/5 +0.84..+0.93
+
+('slew', 60.0)  0.7  0.2  0.9
+  vec rigid          A.brake 5/5 +1.36..+1.41 | A.track 5/5 pk+0.60..+0.69 mn+1.18..+1.27 | A.release 5/5 +5.6..+5.6s | S.track 5/5 pk+0.62..+0.65 mn+1.26..+1.27 | S.release 5/5 +5.9..+5.9s | w.I on 5/5 r+0.88 i+50% | w.I off 5/5 +0.48..+0.51 | w.weak 5/5 r+0.96 i+48% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +4.88..+4.93 | A.track 5/5 pk+1.52..+1.55 mn+0.59..+0.62 | A.release 0/5 end1.55..1.60(5) | S.track 5/5 pk+2.22..+2.28 mn+1.42..+1.45 | S.release 0/5 end1.58..1.61(5) | w.I on 5/5 r+0.93 i+50% | w.I off 5/5 +0.00..+0.02? | w.weak 5/5 r+0.97 i+47% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +5.06..+5.11 | A.track 0/5 pk-0.79..-0.74 mn-0.97..-0.95 | A.release 0/5 end2.30..2.36(5) | S.track 5/5 pk+0.81..+0.84 mn+1.40..+1.44 | S.release 5/5 +1.5..+1.8s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.14..+0.16 | w.weak 5/5 r+0.96 i+31% | w.check 5/5 +0.84..+0.93
+
+('slew', 60.0)  0.7  0.2  1.0
+  vec rigid          A.brake 5/5 +1.36..+1.41 | A.track 5/5 pk+0.45..+0.56 mn+1.22..+1.27 | A.release 5/5 +5.9..+5.9s | S.track 5/5 pk+0.39..+0.43 mn+1.21..+1.24? | S.release 5/5 +4.9..+4.9s | w.I on 5/5 r+0.88 i+50% | w.I off 5/5 +0.50..+0.51 | w.weak 5/5 r+0.96 i+49% | w.check 5/5 +0.95..+1.03
+  vec complete       A.brake 5/5 +4.88..+4.93 | A.track 5/5 pk+1.50..+1.54 mn+0.60..+0.62 | A.release 0/5 end1.36..1.42(5) | S.track 5/5 pk+2.18..+2.23 mn+1.44..+1.46 | S.release 0/5 end1.41..1.48(5) | w.I on 5/5 r+0.93 i+49% | w.I off 5/5 +0.01..+0.02? | w.weak 5/5 r+0.97 i+47% | w.check 5/5 +0.34..+0.43
+  vec fin (2nd case) A.brake 5/5 +5.06..+5.11 | A.track 0/5 pk-0.76..-0.73 mn-0.84..-0.81 | A.release 0/5 end2.52..2.58(5) | S.track 5/5 pk+0.63..+0.65 mn+1.40..+1.45 | S.release 5/5 +2.1..+2.4s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.13..+0.16 | w.weak 5/5 r+0.96 i+31% | w.check 5/5 +0.84..+0.93
+
+('tail_tau', 0.025)  0.7  0.2  0.8
+  cld rigid          A.brake 5/5 +5.92..+5.97 | A.track 5/5 pk+1.67..+1.71 mn+1.66..+1.67 | A.release 5/5 +7.2..+7.2s | S.track 5/5 pk+1.65..+1.68 mn+1.64..+1.67 | S.release 5/5 +7.2..+7.2s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.51..+0.53 | w.check 5/5 +22.20..+22.29
+  cld complete       A.brake 5/5 +5.56..+5.61 | A.track 5/5 pk+0.57..+0.62 mn+0.30..+0.31 | A.release 5/5 +5.9..+5.9s | S.track 5/5 pk+1.50..+1.57 mn+1.19..+1.21 | S.release 5/5 +4.6..+4.6s | w.I on 5/5 r+0.83 i+45% | w.I off 5/5 +1.09..+1.11 | w.check 5/5 +9.01..+9.10
+
+('tail_tau', 0.025)  0.7  0.2  0.9
+  cld rigid          A.brake 5/5 +5.92..+5.97 | A.track 5/5 pk+1.42..+1.49 mn+1.66..+1.67 | A.release 5/5 +7.5..+7.5s | S.track 5/5 pk+1.44..+1.48 mn+1.64..+1.67 | S.release 5/5 +7.5..+7.5s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.51..+0.53 | w.check 5/5 +22.20..+22.29
+  cld complete       A.brake 5/5 +5.56..+5.61 | A.track 5/5 pk+0.54..+0.59 mn+0.33..+0.34 | A.release 5/5 +6.2..+6.2s | S.track 5/5 pk+1.38..+1.46 mn+1.16..+1.19 | S.release 5/5 +5.2..+5.3s | w.I on 5/5 r+0.83 i+45% | w.I off 5/5 +1.09..+1.11 | w.check 5/5 +9.01..+9.10
+
+('tail_tau', 0.025)  0.7  0.2  1.0
+  cld rigid          A.brake 5/5 +5.92..+5.97 | A.track 5/5 pk+1.17..+1.23 mn+1.66..+1.67 | A.release 5/5 +1.8..+7.8s | S.track 5/5 pk+1.16..+1.19 mn+1.64..+1.67 | S.release 5/5 +7.8..+7.8s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.51..+0.53 | w.check 5/5 +22.20..+22.29
+  cld complete       A.brake 5/5 +5.56..+5.61 | A.track 5/5 pk+0.51..+0.57 mn+0.36..+0.38 | A.release 5/5 +6.5..+6.5s | S.track 5/5 pk+1.22..+1.31 mn+1.14..+1.17 | S.release 5/5 +5.6..+5.6s | w.I on 5/5 r+0.83 i+46% | w.I off 5/5 +1.09..+1.10 | w.check 5/5 +9.01..+9.10
+
+('tail_tau', 0.05)  0.7  0.2  0.8
+  cld rigid          A.brake 5/5 +5.92..+5.97 | A.track 5/5 pk+1.64..+1.69 mn+1.66..+1.67 | A.release 5/5 +7.2..+7.2s | S.track 5/5 pk+1.63..+1.66 mn+1.64..+1.67 | S.release 5/5 +7.2..+7.2s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.51..+0.53 | w.check 5/5 +22.20..+22.29
+  cld complete       A.brake 5/5 +5.59..+5.64 | A.track 5/5 pk+0.59..+0.65 mn+0.31..+0.32 | A.release 5/5 +5.9..+5.9s | S.track 5/5 pk+1.49..+1.56 mn+1.19..+1.22 | S.release 5/5 +4.6..+4.9s | w.I on 5/5 r+0.83 i+46% | w.I off 5/5 +1.08..+1.10 | w.check 5/5 +9.01..+9.10
+
+('tail_tau', 0.05)  0.7  0.2  0.9
+  cld rigid          A.brake 5/5 +5.92..+5.97 | A.track 5/5 pk+1.39..+1.46 mn+1.66..+1.67 | A.release 5/5 +7.5..+7.5s | S.track 5/5 pk+1.42..+1.45 mn+1.64..+1.67 | S.release 5/5 +7.5..+7.5s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.51..+0.53 | w.check 5/5 +22.20..+22.29
+  cld complete       A.brake 5/5 +5.59..+5.64 | A.track 5/5 pk+0.56..+0.61 mn+0.34..+0.35 | A.release 5/5 +6.2..+6.2s | S.track 5/5 pk+1.37..+1.45 mn+1.17..+1.20 | S.release 5/5 +5.2..+5.3s | w.I on 5/5 r+0.83 i+46% | w.I off 5/5 +1.08..+1.10 | w.check 5/5 +9.01..+9.10
+
+('tail_tau', 0.05)  0.7  0.2  1.0
+  cld rigid          A.brake 5/5 +5.92..+5.97 | A.track 5/5 pk+1.14..+1.20 mn+1.66..+1.67 | A.release 5/5 +1.8..+7.8s | S.track 5/5 pk+1.13..+1.16 mn+1.64..+1.67 | S.release 5/5 +7.8..+7.8s | w.I on 5/5 r+0.97 i+50% | w.I off 5/5 +0.51..+0.53 | w.check 5/5 +22.20..+22.29
+  cld complete       A.brake 5/5 +5.59..+5.64 | A.track 5/5 pk+0.53..+0.60 mn+0.37..+0.38 | A.release 5/5 +6.5..+6.5s | S.track 5/5 pk+1.25..+1.30 mn+1.14..+1.17 | S.release 5/5 +5.6..+5.6s | w.I on 5/5 r+0.83 i+46% | w.I off 5/5 +1.07..+1.09 | w.check 5/5 +9.01..+9.10
+

@@ -1,0 +1,91 @@
+  통과  바람(외부 토크)이 기체를 민다 — 5 초 동안 0.00 -> -1.99 deg/s (1 N m 이 요 관성 129.2 kg m^2 와 요 감쇠 0 에 주는 2.22 의 절반 이상)
+  통과  Manual 에서 스틱이 곧 토크 — 토크 0.500, 각속도가 -2.4 -> 17.1 deg/s 로 계속 오른다
+  통과  Acro 가 남은 회전을 잡는다 — 18.6 -> -1.1 deg/s
+  통과  Acro: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 6.83, 최대 6.90 deg/s; 출발 -0.13 deg/s, 적분기 0.000
+  실패  Acro: 스틱을 놓으면 선다 — 6.9 -> 1.0 deg/s, 창이 끝날 때까지 계속 내려간다 (마지막 3 초 -0.24 deg/s^2)
+  통과  Stabilized: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 6.51, 최대 6.51 deg/s; 출발 0.23 deg/s, 적분기 -0.000
+  실패  Stabilized: 스틱을 놓으면 선다 — 6.5 -> 0.7 deg/s, 창이 끝날 때까지 계속 내려간다 (마지막 3 초 -0.20 deg/s^2)
+  통과  바람 1 N m, I 켬: 적분기가 받아낸다 — 마지막 2 초 |각속도| 0.00 deg/s, 적분기 0.0188 (필요한 토크 0.0185)
+  통과  바람 1 N m, I 끔: 계속 밀린다 — 마지막 2 초 |각속도| 1.28 deg/s, 적분기 0.0000 (필요한 토크 0.0185)
+  통과  바람 0.4 N m (틸트 밴드 아래), I 켬 — 마지막 2 초 |각속도| 0.01 deg/s, 적분기 0.0062 (필요한 토크 0.0074)
+
+=== release in acro at 40.3: rate 18.71 -> -1.11 deg/s, integ -0.0001 -> -0.0199
+  u<0 from 0.00 s; swing after that 7.52 s; sat flag 1.48 s; unwinding blocked by the flag 0.0000; by-choice withheld 0.00 N m s (max 0.0000)
+    0.0 r  18.71 u -0.2286 I -0.0001 ach +0.0000 steering  steering   178.6    1.4 held 0 sat 0/1 N +14.24
+    0.5 r  15.61 u -0.1908 I -0.0001 ach +0.0000 steering  steering   118.6   61.4 held 0 sat 0/1 N  +0.00
+    1.0 r  12.87 u -0.1574 I -0.0001 ach -0.0428 steering  steering    58.6  121.4 held 0 sat 0/1 N  -2.17
+    1.5 r  10.02 u -0.1227 I -0.0004 ach -0.1227 steering  steering     0.0  180.0 held 0 sat 0/0 N  -6.71
+    2.0 r   8.04 u -0.1056 I -0.0074 ach -0.1056 steering  steering     0.0  180.0 held 0 sat 0/0 N  -5.75
+    2.5 r   6.21 u -0.0888 I -0.0130 ach -0.0888 steering  steering     0.0  180.0 held 0 sat 0/0 N  -4.85
+    3.0 r   4.61 u -0.0735 I -0.0172 ach -0.0735 steering  steering     0.0  180.0 held 0 sat 0/0 N  -4.00
+    3.5 r   3.76 u -0.0663 I -0.0205 ach -0.0663 steering  steering     0.0  180.0 held 0 sat 0/0 N  -3.60
+    4.0 r   2.92 u -0.0587 I -0.0231 ach -0.0587 steering  steering     0.0  180.0 held 0 sat 0/0 N  -3.20
+    4.5 r   1.89 u -0.0480 I -0.0250 ach -0.0480 steering  steering     0.0  180.0 held 0 sat 0/0 N  -2.62
+    5.0 r   1.34 u -0.0426 I -0.0262 ach -0.0426 steering  steering     0.0  180.0 held 0 sat 0/0 N  -2.31
+    5.5 r   0.96 u -0.0388 I -0.0271 ach -0.0388 steering  steering     0.0  180.0 held 0 sat 0/0 N  -2.11
+    6.0 r   0.26 u -0.0308 I -0.0276 ach -0.0308 steering  steering     0.0  180.0 held 0 sat 0/0 N  -1.69
+    6.5 r  -0.18 u -0.0254 I -0.0276 ach -0.0254 steering  steering     0.0  180.0 held 0 sat 0/0 N  -1.38
+    7.0 r  -0.26 u -0.0242 I -0.0274 ach -0.0242 steering  steering     0.0  180.0 held 0 sat 0/0 N  -1.31
+    7.5 r  -0.56 u -0.0202 I -0.0271 ach -0.0202 steering  steering     0.0  180.0 held 0 sat 0/0 N  -1.11
+    8.0 r  -0.86 u -0.0161 I -0.0265 ach -0.0161 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.87
+    8.5 r  -0.83 u -0.0157 I -0.0259 ach -0.0157 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.85
+    9.0 r  -0.91 u -0.0142 I -0.0252 ach -0.0142 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.77
+    9.5 r  -1.14 u -0.0105 I -0.0244 ach -0.0105 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.57
+   10.0 r  -1.12 u -0.0098 I -0.0235 ach -0.0098 released  released     0.0  180.0 held 1 sat 0/0 N  -0.53
+   10.5 r  -1.06 u -0.0097 I -0.0227 ach -0.0097 released  released     0.0  180.0 held 1 sat 0/0 N  -0.53
+   11.0 r  -1.21 u -0.0069 I -0.0218 ach -0.0069 released  released     0.0  180.0 held 1 sat 0/0 N  -0.38
+   11.5 r  -1.24 u -0.0057 I -0.0208 ach -0.0057 released  released     0.0  180.0 held 1 sat 0/0 N  -0.31
+
+=== release in acro at 99.5: rate 6.91 -> 0.96 deg/s, integ 0.0484 -> 0.0047
+  u<0 from 0.00 s; swing after that 1.42 s; sat flag 1.46 s; unwinding blocked by the flag 0.0143; by-choice withheld 0.00 N m s (max 0.0000)
+    0.0 r   6.91 u -0.0359 I +0.0484 ach +0.0000 steering  steering   179.5    0.5 held 0 sat 0/0 N  +2.46
+    0.5 r   6.42 u -0.0300 I +0.0484 ach +0.0000 steering  steering   119.5   60.5 held 0 sat 0/1 N  +0.00
+    1.0 r   6.03 u -0.0253 I +0.0484 ach -0.0065 steering  steering    59.5  120.5 held 0 sat 0/1 N  -0.33
+    1.5 r   5.50 u -0.0191 I +0.0481 ach -0.0191 holding   holding      0.0  180.0 held 1 sat 0/0 N  -1.04
+    2.0 r   4.99 u -0.0169 I +0.0440 ach -0.0169 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.92
+    2.5 r   4.59 u -0.0158 I +0.0402 ach -0.0158 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.86
+    3.0 r   4.23 u -0.0149 I +0.0368 ach -0.0149 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.81
+    3.5 r   3.88 u -0.0138 I +0.0336 ach -0.0138 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.75
+    4.0 r   3.60 u -0.0133 I +0.0307 ach -0.0133 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.72
+    4.5 r   3.36 u -0.0130 I +0.0279 ach -0.0130 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.71
+    5.0 r   3.09 u -0.0124 I +0.0254 ach -0.0124 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.67
+    5.5 r   2.87 u -0.0119 I +0.0231 ach -0.0119 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.64
+    6.0 r   2.68 u -0.0119 I +0.0209 ach -0.0119 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.64
+    6.5 r   2.48 u -0.0114 I +0.0189 ach -0.0114 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.62
+    7.0 r   2.28 u -0.0109 I +0.0170 ach -0.0109 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.59
+    7.5 r   2.13 u -0.0108 I +0.0153 ach -0.0108 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.58
+    8.0 r   1.98 u -0.0105 I +0.0136 ach -0.0105 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.57
+    8.5 r   1.81 u -0.0099 I +0.0122 ach -0.0099 released  released     0.0  180.0 held 1 sat 0/0 N  -0.54
+    9.0 r   1.67 u -0.0096 I +0.0108 ach -0.0096 released  released     0.0  180.0 held 1 sat 0/0 N  -0.52
+    9.5 r   1.55 u -0.0094 I +0.0095 ach -0.0094 released  released     0.0  180.0 held 1 sat 0/0 N  -0.51
+   10.0 r   1.41 u -0.0088 I +0.0084 ach -0.0088 released  released     0.0  180.0 held 1 sat 0/0 N  -0.48
+   10.5 r   1.29 u -0.0084 I +0.0073 ach -0.0084 released  released     0.0  180.0 held 1 sat 0/0 N  -0.45
+   11.0 r   1.19 u -0.0082 I +0.0063 ach -0.0082 released  released     0.0  180.0 held 1 sat 0/0 N  -0.44
+   11.5 r   1.07 u -0.0077 I +0.0055 ach -0.0077 released  released     0.0  180.0 held 1 sat 0/0 N  -0.42
+
+=== release in stabilized at 153.7: rate 6.51 -> 0.66 deg/s, integ 0.0401 -> 0.0038
+  u<0 from 0.00 s; swing after that 1.90 s; sat flag 1.46 s; unwinding blocked by the flag 0.0134; by-choice withheld 0.00 N m s (max 0.0000)
+    0.0 r   6.51 u -0.0394 I +0.0401 ach +0.0000 steering  steering   179.5    0.5 held 0 sat 0/0 N  +2.27
+    0.5 r   6.04 u -0.0337 I +0.0401 ach +0.0000 steering  steering   119.5   60.5 held 0 sat 0/1 N  +0.00
+    1.0 r   5.65 u -0.0290 I +0.0401 ach -0.0075 steering  steering    59.5  120.5 held 0 sat 0/1 N  -0.38
+    1.5 r   5.09 u -0.0224 I +0.0398 ach -0.0224 steering  steering     0.0  180.0 held 0 sat 0/0 N  -1.23
+    2.0 r   4.55 u -0.0195 I +0.0360 ach -0.0195 holding   holding      0.0  180.0 held 1 sat 0/0 N  -1.06
+    2.5 r   4.12 u -0.0177 I +0.0326 ach -0.0177 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.96
+    3.0 r   3.74 u -0.0161 I +0.0296 ach -0.0161 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.87
+    3.5 r   3.38 u -0.0145 I +0.0268 ach -0.0145 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.78
+    4.0 r   3.09 u -0.0135 I +0.0242 ach -0.0135 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.73
+    4.5 r   2.83 u -0.0127 I +0.0219 ach -0.0127 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.69
+    5.0 r   2.57 u -0.0116 I +0.0198 ach -0.0116 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.63
+    5.5 r   2.35 u -0.0109 I +0.0179 ach -0.0109 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.59
+    6.0 r   2.17 u -0.0104 I +0.0161 ach -0.0104 holding   holding      0.0  180.0 held 1 sat 0/0 N  -0.56
+    6.5 r   1.98 u -0.0097 I +0.0145 ach -0.0097 released  released     0.0  180.0 held 1 sat 0/0 N  -0.53
+    7.0 r   1.80 u -0.0090 I +0.0130 ach -0.0090 released  released     0.0  180.0 held 1 sat 0/0 N  -0.49
+    7.5 r   1.66 u -0.0086 I +0.0116 ach -0.0086 released  released     0.0  180.0 held 1 sat 0/0 N  -0.47
+    8.0 r   1.51 u -0.0081 I +0.0104 ach -0.0081 released  released     0.0  180.0 held 1 sat 0/0 N  -0.44
+    8.5 r   1.36 u -0.0074 I +0.0092 ach -0.0074 released  released     0.0  180.0 held 1 sat 0/0 N  -0.40
+    9.0 r   1.25 u -0.0070 I +0.0082 ach -0.0070 released  released     0.0  180.0 held 1 sat 0/0 N  -0.38
+    9.5 r   1.15 u -0.0067 I +0.0073 ach -0.0067 released  released     0.0  180.0 held 1 sat 0/0 N  -0.36
+   10.0 r   1.02 u -0.0061 I +0.0064 ach -0.0061 released  released     0.0  180.0 held 1 sat 0/0 N  -0.33
+   10.5 r   0.92 u -0.0056 I +0.0057 ach -0.0056 released  released     0.0  180.0 held 1 sat 0/0 N  -0.30
+   11.0 r   0.85 u -0.0054 I +0.0050 ach -0.0054 released  released     0.0  180.0 held 1 sat 0/0 N  -0.29
+   11.5 r   0.75 u -0.0048 I +0.0043 ach -0.0048 released  released     0.0  180.0 held 1 sat 0/0 N  -0.26

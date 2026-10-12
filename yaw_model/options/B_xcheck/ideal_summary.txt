@@ -1,0 +1,35 @@
+
+vec complete  P 0.65 I 0.07 FF 0.89   (5 runs, 1 timing members, seeds 1,2,3,4,5)
+    brake         5/5                end -0.70..-0.62 m 5.30..5.38
+    Acro track    5/5                peak 7.02..7.05 (m 2.28..2.31) mean 6.98..7.00 (m 1.33..1.36)
+    Acro release  5/5 UNDECIDED      settle 9.49..9.80 s r0 6.90..7.02 end 0.38..0.48 | thr-u 10.12(never x4) thr+u 9.16..9.17
+    Stab track    5/5                peak 7.01..7.07 (m 2.27..2.32) mean 6.88..6.91 (m 1.43..1.45)
+    Stab release  5/5 UNDECIDED      settle 9.48..9.80 s r0 6.84..6.93 end 0.36..0.44 | thr-u 9.80..10.12 thr+u 8.85..9.17
+    wind I on     5/5                rate 0.09..0.11 (m 0.89..0.91) integ 0.0220..0.0220 need 0.0185 (m_integ 0.0058..0.0058)
+    wind I off    5/5 undecided@alt  rate 1.20..1.23 (m 0.20..0.23)
+    wind weak     5/5                rate 0.03..0.06 (m 0.94..0.97) integ 0.0075..0.0076 need 0.0074 (m_integ 0.0036..0.0036)
+    wind check    5/5                
+    Manual        5/5                
+
+cs complete   P 0.65 I 0.07 FF 0.14   (5 runs, 1 timing members, seeds 1,2,3,4,5)
+    brake         5/5                end -2.88..-2.81 m 3.12..3.19
+    Acro track    5/5 UNDECIDED      peak 9.16..9.20 (m 0.14..0.18) mean 6.00..6.04 (m 1.00..1.04)
+    Acro release  5/5                settle 3.16 s r0 5.74..5.79 end -1.23..-1.19 | thr-u 3.47 thr+u 3.16
+    Stab track    5/5                peak 7.61..7.65 (m 1.68..1.72) mean 7.28..7.29 (m 1.04..1.05)
+    Stab release  5/5                settle 5.69..6.00 s r0 7.34..7.39 end -0.46..-0.41 | thr-u 6.00..6.32 thr+u 5.68..5.69
+    wind I on     5/5                rate 0.53..0.56 (m 0.44..0.47) integ 0.0199..0.0199 need 0.0185 (m_integ 0.0078..0.0078)
+    wind I off    5/5                rate 1.66..1.69 (m 0.66..0.69)
+    wind check    5/5                
+    Manual        5/5                
+
+vec fin       P 0.65 I 0.07 FF 0.38   (5 runs, 1 timing members, seeds 1,2,3,4,5)
+    brake         5/5                end -1.05..-0.98 m 4.95..5.02
+    Acro track    5/5                peak 7.15..7.22 (m 2.11..2.18) mean 7.12..7.15 (m 1.18..1.21)
+    Acro release  5/5                settle 6.32 s r0 7.16..7.22 end -0.40..-0.35 | thr-u 6.64 thr+u 6.00
+    Stab track    5/5                peak 7.24..7.25 (m 2.08..2.09) mean 6.70..6.71 (m 1.62..1.64)
+    Stab release  5/5                settle 5.37 s r0 6.67..6.76 end -0.59..-0.49 | thr-u 5.68 thr+u 5.05..5.37
+    wind I on     5/5                rate 0.02..0.03 (m 0.97..0.98) integ 0.0175..0.0175 need 0.0185 (m_integ 0.0083..0.0083)
+    wind I off    5/5                rate 1.33..1.36 (m 0.33..0.36)
+    wind weak     5/5                rate 0.02..0.03 (m 0.97..0.98) integ 0.0062..0.0062 need 0.0074 (m_integ 0.0025..0.0025)
+    wind check    5/5                
+    Manual        5/5                

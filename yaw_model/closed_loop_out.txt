@@ -1,0 +1,315 @@
+Closed-loop model of the SITL yaw gate: reproduction summary and cause analysis
+(numbers are the gate's own verdict-line numbers; * = that verdict failed; records: chain7_20260925.txt,
+ chain9_20260927.txt; gains AS_YAWRATE_P 0.5, I 0.09, INT_LIM 0.3, MAX 15 deg/s, MAN_DEADZONE 0.1)
+
+1. The three plant stages against the records (the controller and actuation are the same in all three)
+   1dof   = plants.get(target, fins=1): I r_dot = N - c_hull r|r| - one fin broadside (the plant part)
+   planar = + surge and sway, the added-mass Coriolis (Munk) moment, the fin plugin on the true fin velocity,
+            the actuators as forces where they act (Cloudship tail force; the pods' net surge)
+   roll   = + roll: rigid ixz, buoyancy roll stiffness, the whole added-mass block (yp), roll damping rows,
+            the pods' vertical thrust and reaction couple in roll, horizontal fins (the default model)
+
+  gz_airship_vectored_independent
+  check          field        chain7     chain9       1dof     planar       roll
+  wind check     end           -2.09      -2.11      -2.10      -2.10      -2.10
+  Manual         end           23.50      23.30      24.20      24.20      23.50
+  Acro brake     start        27.80*     27.70*     28.10*     28.10*     27.90*
+  Acro brake     end          -7.70*     -7.60*     -7.30*     -7.30*     -7.70*
+  Acro track     mean           6.00       6.05       6.03       6.03       6.00
+  Acro track     peak           8.84       8.84       8.47       8.47       8.81
+  Acro release   start          5.80       5.70       6.00       6.00       5.80
+  Acro release   end           -2.00      -2.00      -1.80      -1.80      -2.00
+  Acro release   settle         4.70       4.80       4.70       4.70       4.70
+  Acro release   slope             -          -          -          -          -
+  Stab track     mean           6.10       6.00       6.04       6.04       6.00
+  Stab track     peak           8.78       8.75       8.53       8.53       8.73
+  Stab release   start          6.30       6.00       6.00       6.00       6.00
+  Stab release   end           -1.70      -1.90      -1.80      -1.80      -1.80
+  Stab release   settle         5.10       5.10       4.70       4.70       5.10
+  Stab release   slope             -          -          -          -          -
+  wind I on      rate           0.10       0.09       0.05       0.05       0.10
+  wind I on      integ        0.0179     0.0179     0.0179     0.0179     0.0179
+  wind I off     rate           2.08       2.09       2.10       2.10       2.11
+  wind weak      rate           0.06       0.04       0.01       0.01       0.05
+  wind weak      integ        0.0073     0.0073     0.0074     0.0074     0.0074
+
+  gz_airship_vectored_independent_am_fin_drag
+  check          field        chain7     chain9       1dof     planar       roll
+  wind check     end           -0.86      -0.82      -0.82      -0.82      -0.82
+  Manual         end            8.60       8.50       8.70       8.50       8.50
+  Acro brake     start          9.40       9.30       9.80       9.50       9.40
+  Acro brake     end           -1.00      -1.00      -1.30      -1.00      -1.00
+  Acro track     mean           6.23       6.23       6.52       6.24       6.24
+  Acro track     peak           6.29       6.29       6.53       6.29       6.29
+  Acro release   start         6.30*      6.30*      6.50*      6.30*      6.30*
+  Acro release   end           2.80*      2.70*      2.90*      2.80*      2.80*
+  Acro release   settle           -*         -*         -*         -*         -*
+  Acro release   slope        -0.22*     -0.21*     -0.18*     -0.21*     -0.21*
+  Stab track     mean           6.25       6.24       6.46       6.24       6.24
+  Stab track     peak           6.28       6.29       6.48       6.27       6.27
+  Stab release   start         6.30*      6.30*      6.50*      6.30*      6.30*
+  Stab release   end           2.70*      2.70*      2.80*      2.70*      2.70*
+  Stab release   settle           -*         -*         -*         -*         -*
+  Stab release   slope        -0.19*     -0.21*     -0.18*     -0.20*     -0.20*
+  wind I on      rate           0.22       0.20       0.38       0.19       0.19
+  wind I on      integ        0.0254     0.0255     0.0257     0.0258     0.0259
+  wind I off     rate           1.37       1.35       1.43       1.35       1.36
+  wind weak      rate           0.02       0.01       0.02       0.01       0.01
+  wind weak      integ        0.0070     0.0070     0.0066     0.0070     0.0070
+
+  gz_cloudship
+  check          field        chain7     chain9       1dof     planar       roll
+  wind check     end          -46.58     -46.81     -46.82     -46.82     -46.94
+  Manual         end            3.90       4.40       3.80       3.80       3.80
+  Acro brake     start         11.20      11.80      11.00      11.00      11.10
+  Acro brake     end           -0.80      -0.90      -0.90      -0.90      -0.90
+  Acro track     mean           6.65       6.66       6.65       6.65       6.65
+  Acro track     peak           8.17       8.11       8.04       8.04       8.05
+  Acro release   start          6.60       6.60       6.70       6.70       6.70
+  Acro release   end           -1.00      -0.90      -1.00      -1.00      -1.00
+  Acro release   settle         3.20       3.20       3.20       3.20       3.20
+  Acro release   slope             -          -          -          -          -
+  Stab track     mean           6.64       6.65       6.65       6.65       6.65
+  Stab track     peak           8.15       8.18       8.06       8.06       8.08
+  Stab release   start          6.70       6.70       6.70       6.70       6.70
+  Stab release   end           -0.90      -0.90      -1.00      -1.00      -1.00
+  Stab release   settle         3.20       3.20       3.20       3.20       3.20
+  Stab release   slope             -          -          -          -          -
+  wind I on      rate           0.02       0.05       0.00       0.00       0.02
+  wind I on      integ        0.0185     0.0185     0.0185     0.0185     0.0185
+  wind I off     rate           2.13       2.11       2.12       2.12       2.13
+
+  gz_cloudship_am_fin_drag
+  check          field        chain7     chain9       1dof     planar       roll
+  wind check     end          -19.87     -20.01     -19.82     -19.40     -19.47
+  Manual         end           16.50      16.80      16.40      16.50      16.80
+  Acro brake     start         19.60      19.80      19.60      19.70      19.80
+  Acro brake     end           -3.40      -3.50      -3.00      -3.30      -3.30
+  Acro track     mean          5.73*      5.64*       6.69      5.73*      5.77*
+  Acro track     peak          9.42*      9.54*       7.30      9.42*      9.41*
+  Acro release   start          5.30       5.20       6.70       5.30       5.30
+  Acro release   end           -1.10      -1.10      -0.90      -1.10      -1.10
+  Acro release   settle         4.10       4.10       6.00       4.10       4.10
+  Acro release   slope             -          -          -          -          -
+  Stab track     mean           7.12       7.16       6.69       7.12       7.09
+  Stab track     peak           7.59       7.59       7.33       7.57       7.58
+  Stab release   start          7.30       7.30       6.70       7.30       7.30
+  Stab release   end           -0.40      -0.40      -0.90      -0.40      -0.40
+  Stab release   settle         7.60       7.90       6.00       7.60       7.60
+  Stab release   slope             -          -          -          -          -
+  wind I on      rate           0.40       0.42       0.01       0.43       0.42
+  wind I on      integ        0.0214     0.0211     0.0183     0.0214     0.0214
+  wind I off     rate           2.07       2.12       1.95       2.08       2.06
+
+  gz_airship_vectored_independent_fin   (hold-out plant, not used to build anything)
+  check          field        chain9       roll
+  wind check     end           -1.97      -1.99
+  Manual         end           17.00      17.10
+  Acro brake     start         18.50      18.60
+  Acro brake     end           -1.60      -1.60
+  Acro track     mean           6.90       6.89
+  Acro track     peak           7.00       6.96
+  Acro release   start         7.00*      7.00*
+  Acro release   end           1.00*      0.90*
+  Acro release   settle           -*         -*
+  Acro release   slope        -0.34*     -0.36*
+  Stab track     mean           6.55       6.56
+  Stab track     peak           6.65       6.57
+  Stab release   start         6.50*      6.60*
+  Stab release   end           0.60*      0.60*
+  Stab release   settle           -*         -*
+  Stab release   slope        -0.30*     -0.30*
+  wind I on      rate           0.04       0.02
+  wind I on      integ        0.0185     0.0185
+  wind I off     rate           1.64       1.65
+  wind weak      rate           0.04       0.00
+  wind weak      integ        0.0061     0.0062
+
+2. Cause of the 1dof misses, by switching single terms off in the full model
+
+  2a gz_cloudship_am_fin_drag: the Acro tracking failure
+  check          field        chain7     chain9       roll    no Munk    no fins     planar  pl.noMunk pl.noTrans
+  wind check     end          -19.87     -20.01     -19.47     -19.47     -20.32     -19.40     -19.40     -19.82
+  Manual         end           16.50      16.80      16.80      16.60      16.00      16.50      16.40      16.40
+  Acro brake     start         19.60      19.80      19.80      19.80      19.20      19.70      19.60      19.60
+  Acro brake     end           -3.40      -3.50      -3.30      -3.00      -3.20      -3.30      -3.10      -3.00
+  Acro track     mean          5.73*      5.64*      5.77*       6.57      5.80*      5.73*       6.55       6.69
+  Acro track     peak          9.42*      9.54*      9.41*       7.42      9.37*      9.42*       7.40       7.30
+  Acro release   start          5.30       5.20       5.30       6.50       5.40       5.30       6.50       6.70
+  Acro release   end           -1.10      -1.10      -1.10      -0.60      -1.40      -1.10      -0.60      -0.90
+  Acro release   settle         4.10       4.10       4.10       5.70       3.80       4.10       5.70       6.00
+  Acro release   slope             -          -          -          -          -          -          -          -
+  Stab track     mean           7.12       7.16       7.09       6.75       7.07       7.12       6.76       6.69
+  Stab track     peak           7.59       7.59       7.58       7.29       7.89       7.57       7.31       7.33
+  Stab release   start          7.30       7.30       7.30       6.70       7.20       7.30       6.70       6.70
+  Stab release   end           -0.40      -0.40      -0.40      -1.00      -0.50      -0.40      -1.00      -0.90
+  Stab release   settle         7.60       7.90       7.60       5.70       7.30       7.60       5.70       6.00
+  Stab release   slope             -          -          -          -          -          -          -          -
+  wind I on      rate           0.40       0.42       0.42       0.01       0.40       0.43       0.02       0.01
+  wind I on      integ        0.0214     0.0211     0.0214     0.0182     0.0218     0.0214     0.0184     0.0183
+  wind I off     rate           2.07       2.12       2.06       1.96       2.01       2.08       1.99       1.95
+     pl.noTrans = the planar plant with u, v held at 0 and one broadside fin: the 1dof plant again.
+     State of the hull during the Acro push (roll model; FRD rate; V = world drift of the hull origin;
+     Munk = +(m_y - m_x) u v, the FRD yaw moment it adds, against the 0.5 x 4.478 = 2.239 N m of P per rad/s):
+            t     rate   torque    integ        u        v      |V|    Munk  fins
+          0.0    -0.63   0.0064   0.0009  -0.0756  +0.1316   0.1517 -0.0489     0
+          2.0     1.93   0.0607   0.0194  -0.0818  +0.1445   0.1660 -0.0582     0
+          4.0     3.92   0.0547   0.0308  -0.1089  +0.1516   0.1866 -0.0813     0
+          6.0     5.13   0.0507   0.0373  -0.1493  +0.1510   0.2123 -0.1110     0
+          8.0     5.74   0.0491   0.0410  -0.1937  +0.1430   0.2408 -0.1364     0
+         10.0     6.05   0.0487   0.0434  -0.2358  +0.1287   0.2687 -0.1494     0
+         12.0     6.30   0.0482   0.0450  -0.2721  +0.1087   0.2930 -0.1456     0
+         14.0     6.62   0.0461   0.0457  -0.3006  +0.0829   0.3119 -0.1226     0
+         16.0     7.09   0.0416   0.0452  -0.3195  +0.0503   0.3234 -0.0791     0
+         18.0     7.71   0.0340   0.0431  -0.3253  +0.0099   0.3254 -0.0159     0
+         20.0     8.43   0.0234   0.0388  -0.3129  -0.0385   0.3153 +0.0593     0
+         22.0     9.09   0.0110   0.0322  -0.2768  -0.0899   0.2911 +0.1225     0
+         24.0     9.41   0.0001   0.0240  -0.2156  -0.1348   0.2543 +0.1431     0
+         26.0     9.14  -0.0060   0.0156  -0.1368  -0.1636   0.2133 +0.1102     0
+         28.0     8.31  -0.0054   0.0090  -0.0550  -0.1723   0.1809 +0.0466     0
+         30.0     7.22   0.0006   0.0055  +0.0169  -0.1637   0.1646 -0.0136     2
+         32.0     6.22   0.0092   0.0053  +0.0734  -0.1441   0.1617 -0.0520     2
+         34.0     5.53   0.0178   0.0079  +0.1152  -0.1186   0.1654 -0.0673     2
+     The hull enters the push already drifting at 0.15 m/s (the Manual phase's and the brake's tail FORCE;
+     the rest wait stops only the yaw) and the push's own tail force adds to it. In a turn the drift
+     rotates through the body at the yaw rate, so u v, and with it the Munk moment, goes through one
+     cycle per 180 deg of heading (22-27 s at 8-6.7 deg/s). The rate follows: the Munk moment reaches
+     twice the 0.076 N m it takes to hold 6.67 deg/s. Only one term does this: without it (no Munk) the
+     model tracks like the 1dof plant; without the fins it still fails. The chain7 Stabilized push shows the
+     same cycle: 7.59 at 132.2 s, 6.39 at 147.0 s, 7.30 again by 155.9 s. The drift never shows in the
+     gate's columns; the gate logs no velocity.
+
+  2b gz_airship_vectored_independent_am_fin_drag: tracking 6.52 in the 1dof model against 6.23 recorded
+  check          field        chain7     chain9       roll   no surge    no fins    no Munk       1dof    1dof f2
+  wind check     end           -0.86      -0.82      -0.82      -0.82      -0.83      -0.82      -0.82      -0.82
+  Manual         end            8.60       8.50       8.50       8.70       9.00       8.50       8.70       8.50
+  Acro brake     start          9.40       9.30       9.40       9.70      10.10       9.30       9.80       9.40
+  Acro brake     end           -1.00      -1.00      -1.00      -1.20      -1.20      -1.20      -1.30      -1.20
+  Acro track     mean           6.23       6.23       6.24       6.28       6.74       6.26       6.52       6.25
+  Acro track     peak           6.29       6.29       6.29       6.30       6.78       6.31       6.53       6.28
+  Acro release   start         6.30*      6.30*      6.30*      6.30*      6.80*      6.30*      6.50*      6.30*
+  Acro release   end           2.80*      2.70*      2.80*      2.70*      2.40*      2.90*      2.90*      2.70*
+  Acro release   settle           -*         -*         -*         -*         -*         -*         -*         -*
+  Acro release   slope        -0.22*     -0.21*     -0.21*     -0.20*     -0.36*     -0.21*     -0.18*     -0.22*
+  Stab track     mean           6.25       6.24       6.24       6.33       6.85       6.25       6.46       6.18
+  Stab track     peak           6.28       6.29       6.27       6.37       6.87       6.28       6.48       6.21
+  Stab release   start         6.30*      6.30*      6.30*      6.40*      6.80*      6.30*      6.50*      6.20*
+  Stab release   end           2.70*      2.70*      2.70*      2.70*      2.20*      2.70*      2.80*      2.70*
+  Stab release   settle           -*         -*         -*         -*         -*         -*         -*         -*
+  Stab release   slope        -0.19*     -0.21*     -0.20*     -0.21*     -0.36*     -0.20*     -0.18*     -0.21*
+  wind I on      rate           0.22       0.20       0.19       0.17       0.55       0.11       0.38       0.14
+  wind I on      integ        0.0254     0.0255     0.0259     0.0246     0.0272     0.0244     0.0257     0.0247
+  wind I off     rate           1.37       1.35       1.36       1.39       1.60       1.37       1.43       1.38
+  wind weak      rate           0.02       0.01       0.01       0.00       0.03       0.00       0.02       0.01
+  wind weak      integ        0.0070     0.0070     0.0070     0.0067     0.0069     0.0066     0.0066     0.0066
+     Manual 통과:
+       t+0.0   rate  -1.01  u +0.0000 v +0.0004 m/s  vertical fins open 1
+       t+0.5   rate   0.09  u +0.0785 v +0.0069 m/s  vertical fins open 2
+       t+1.0   rate   1.28  u +0.1614 v -0.0067 m/s  vertical fins open 2
+       t+1.5   rate   3.14  u +0.1896 v -0.0246 m/s  vertical fins open 2
+       t+2.0   rate   5.49  u +0.1889 v +0.0393 m/s  vertical fins open 2
+       t+3.0   rate   8.93  u +0.1883 v -0.0030 m/s  vertical fins open 2
+     Acro 추종:
+       t+0.0   rate  -0.31  u +0.1655 v +0.0072 m/s  vertical fins open 2
+       t+5.0   rate   2.00  u +0.1638 v +0.0105 m/s  vertical fins open 2
+       t+10.0  rate   4.35  u +0.1516 v +0.0277 m/s  vertical fins open 2
+       t+20.0  rate   5.76  u +0.0821 v +0.0427 m/s  vertical fins open 2
+       t+34.0  rate   6.26  u +0.0220 v -0.0052 m/s  vertical fins open 2
+     The 1dof plant fixes the fin share at one. In the runs both vertical fins act from the Manual phase
+     on, because the hull drifts forward (u > 0) and LiftDrag.cc:312 gives a fin nothing only when its
+     flow comes from behind. Two sources of that drift, both in the model: the pods' net surge while one
+     of them swings (from rest the port pod thrusts at once while the starboard pod turns through 90 deg,
+     vectored_actuation.py regime A: u 0.19 m/s by the end of the Manual step), and, with that switched
+     off ("no surge"), the fins themselves: an open fin's side force makes sway, sway times yaw rate is
+     surge through the Coriolis terms, and the forward drift then opens the other fin (later, in the Acro
+     push). The surge drag (xUabsU 0.2748) hardly decays it. 1dof with two fins ("1dof f2") gets the
+     pushes and releases but not the I-on wind case (0.14 against 0.20-0.22 deg/s): there the flow at the
+     fins is the drift's, and the fin damping is the attached-flow K_d u r, not a broadside r|r|.
+
+  2c gz_airship_vectored_independent: peaks 0.3-0.4 low and a +-0.4 deg/s ripple in the planar model
+  check          field        chain7     chain9       roll      ixz 0     ixz -1 pod roll 0     planar
+  wind check     end           -2.09      -2.11      -2.10      -2.10      -2.10      -2.10      -2.10
+  Manual         end           23.50      23.30      23.50      24.20      24.60      24.10      24.20
+  Acro brake     start        27.80*     27.70*     27.90*     28.10*     28.20*     28.10*     28.10*
+  Acro brake     end          -7.70*     -7.60*     -7.70*     -7.30*     -7.10*     -7.40*     -7.30*
+  Acro track     mean           6.00       6.05       6.00       6.03       6.12       6.02       6.03
+  Acro track     peak           8.84       8.84       8.81       8.47       8.87       8.48       8.47
+  Acro release   start          5.80       5.70       5.80       6.00       6.00       6.10       6.00
+  Acro release   end           -2.00      -2.00      -2.00      -1.80      -1.90      -1.70      -1.80
+  Acro release   settle         4.70       4.80       4.70       4.70       5.10       4.70       4.70
+  Acro release   slope             -          -          -          -          -          -          -
+  Stab track     mean           6.10       6.00       6.00       6.04       5.97       6.03       6.04
+  Stab track     peak           8.78       8.75       8.73       8.53       8.81       8.60       8.53
+  Stab release   start          6.30       6.00       6.00       6.00       6.00       6.10       6.00
+  Stab release   end           -1.70      -1.90      -1.80      -1.80      -1.80      -1.70      -1.80
+  Stab release   settle         5.10       5.10       5.10       4.70       5.10       4.70       4.70
+  Stab release   slope             -          -          -          -          -          -          -
+  wind I on      rate           0.10       0.09       0.10       0.05       0.13       0.05       0.05
+  wind I on      integ        0.0179     0.0179     0.0179     0.0179     0.0179     0.0179     0.0179
+  wind I off     rate           2.08       2.09       2.11       2.10       2.11       2.09       2.10
+  wind weak      rate           0.06       0.04       0.05       0.01       0.07       0.02       0.01
+  wind weak      integ        0.0073     0.0073     0.0074     0.0074     0.0074     0.0074     0.0074
+     rate rms against the chain9 series over Manual, brake, both pushes and releases [deg/s]: roll 0.16, ixz 0 0.24, ixz -1 0.39, pod roll 0 0.26, planar 0.24
+     The rigid hull has no roll damping; buoyancy makes roll a 1.66 s pendulum (K 576 N m/rad, Ixx 43.3,
+     ixz 20.1 kg m^2: coupling.py A; chain9_20260927.txt:69 measured 1.659 s). A swinging pod's thrust
+     has a vertical part at 1.5 m from the centre line, a roll kick at every swing (pod roll 0 removes the
+     ripple), and ixz feeds the roll swing into the body yaw rate the gyro reads (ixz 0 removes it too).
+     The max-of-samples peak and the one-row brake reading pick the ripple up; the means do not.
+     ixz -1 (the other sign convention for the SDF <ixz>) fits worse, which supports reading <ixz> as the
+     inertia-matrix element (SDF spec; coupling.products adds -m dx dz accordingly).
+
+3. The other candidate causes, each tried on the full model (verdicts and the numbers that moved most)
+  RTF 0.98 (chain9 vectored wind-check slope 0.980 +- 0.010, validate_gate.py)
+    gz_airship_vectored_independent              verdict flips: none largest moves: Acro brake start 27.90->27.00; Manual end 23.50->22.90; Acro release start 5.80->6.20
+    gz_airship_vectored_independent_am_fin_drag  verdict flips: none largest moves: wind I on integ 0.0259->0.0236; Acro brake start 9.40->9.20; Acro release end 2.80->2.90
+    gz_cloudship                                 verdict flips: none largest moves: wind check end -46.94->-45.99; Stab release settle 3.20->3.50; Acro release settle 3.20->3.50
+    gz_cloudship_am_fin_drag                     verdict flips: none largest moves: Manual end 16.80->16.30; Acro brake start 19.80->19.30; Stab release settle 7.60->7.90
+  RTF 1.02
+    gz_airship_vectored_independent              verdict flips: none largest moves: Acro brake start 27.90->28.80; Manual end 23.50->24.20; Acro release end -2.00->-1.50
+    gz_airship_vectored_independent_am_fin_drag  verdict flips: none largest moves: Manual end 8.50->8.70; Acro brake end -1.00->-1.10; Acro brake start 9.40->9.50
+    gz_cloudship                                 verdict flips: none largest moves: wind check end -46.94->-47.90; Acro brake start 11.10->11.40; Manual end 3.80->4.00
+    gz_cloudship_am_fin_drag                     verdict flips: none largest moves: Manual end 16.80->17.30; Acro brake start 19.80->20.30; Stab release settle 7.60->7.30
+  stick delay 0 s (20 Hz stream: 0-50 ms, sitl_link.py:283-299)
+    gz_airship_vectored_independent              verdict flips: none largest moves: Acro brake start 27.90->28.30; Stab release settle 5.10->4.70; Manual end 23.50->23.80
+    gz_airship_vectored_independent_am_fin_drag  verdict flips: none largest moves: Manual end 8.50->8.60; wind I on integ 0.0259->0.0258
+    gz_cloudship                                 verdict flips: none largest moves: Manual end 3.80->4.40; Acro brake start 11.10->11.60; Stab track peak 8.08->8.07
+    gz_cloudship_am_fin_drag                     verdict flips: none largest moves: Acro release settle 4.10->3.80; Manual end 16.80->16.90; Acro brake start 19.80->19.90
+  stick delay 0.05 s
+    gz_airship_vectored_independent              verdict flips: none largest moves: Manual end 23.50->23.20; Acro release settle 4.70->5.00; Acro brake start 27.90->27.60
+    gz_airship_vectored_independent_am_fin_drag  verdict flips: none largest moves: Manual end 8.50->8.40; Acro brake start 9.40->9.30; wind I on rate 0.19->0.18
+    gz_cloudship                                 verdict flips: none largest moves: Manual end 3.80->3.30; Acro brake start 11.10->10.60; Stab release settle 3.20->3.50
+    gz_cloudship_am_fin_drag                     verdict flips: none largest moves: Manual end 16.80->16.60; Acro brake start 19.80->19.70; Acro track peak 9.41->9.38
+  gyro noise on (0.00087 rad/s, model.sdf)
+    gz_airship_vectored_independent              verdict flips: none largest moves: Manual end 23.50->23.40; Acro release end -2.00->-1.90; Stab release end -1.80->-1.90
+    gz_airship_vectored_independent_am_fin_drag  verdict flips: none largest moves: Acro release end 2.80->2.90; Manual end 8.50->8.40; wind I on integ 0.0259->0.0254
+    gz_cloudship                                 verdict flips: none largest moves: wind check end -46.94->-46.98; Acro track peak 8.05->8.09; wind I on rate 0.02->0.03
+    gz_cloudship_am_fin_drag                     verdict flips: none largest moves: Stab release settle 7.60->7.90; Manual end 16.80->16.70; Stab release end -0.40->-0.30
+  one extra 4 ms transport step (vectored only)
+    gz_airship_vectored_independent              verdict flips: none largest moves: Manual end 23.50->23.40
+    gz_airship_vectored_independent_am_fin_drag  verdict flips: none largest moves: wind I on integ 0.0259->0.0258
+
+  Saturation / anti-windup and the integrator resets are in the model, not candidates for a fix:
+  the recorded integrator column is reproduced in every closed-loop phase (reproduction_out.txt, integ
+  rms <= 0.0012 against a range of 0.1): the pod-swing saturation flags that freeze it, the reset when
+  Manual opens the loop (every "출발" row starts at |integ| <= 0.001), and the carry-over from Stabilized to
+  Acro before the wind cases (Cloudship complete: the I-on case starts from the release's -0.021).
+  Sampling is the gate's own: gate.py runs sitl_check.main() with its wall-clock windows.
+
+4. What the model still misses, and why (no verdict disagrees; no number is off by more than the gate's
+   own tolerance for it; reproduction_out.txt flags the numbers further off than the two SITL runs are
+   from each other)
+  gz_cloudship_am_fin_drag                     first wind check -19.47 deg/s (records: chain7 -19.87, chain9 -20.01); vertical fins open at +1..4.7 s: [1, 2, 2, 2, 2]; u +0.0058 m/s at +4.7 s
+  gz_airship_vectored_independent_fin          first wind check -1.99 deg/s (records: chain9 -1.97); vertical fins open at +1..4.7 s: [1, 1, 1, 1, 2]; u +0.0000 m/s at +4.7 s
+  a) The first wind check on a finned plant is the one phase that starts from exact rest. There the
+     fin plugin's gate (flow from behind -> nothing, LiftDrag.cc:312) is decided by sub-mm/s surge
+     drift and the roll angle. On the complete Cloudship the model opens the second fin by +2 s, which
+     gz does not; the two gz runs disagree with each other too (-19.87, -20.01). Held here: heave and pitch
+     (w = 0, theta = 0); the Cloudship's buoyancy sits 0.022 m aft of its centre of mass
+     (gz_model.centre_of_volume vs centre_of_mass), a ~2.5 deg nose-down trim the model does not
+     have; whether that is what decides the at-rest drift is untested. From the Manual phase on, the
+     actuators' own drift (0.15-0.33 m/s) swamps it.
+  b) gz_cloudship Manual end / brake start (0.5-0.7 deg/s): those rows sample a 22 deg/s^2 ramp, so
+     20-30 ms of harness timing moves them that far (section 3: stick delay 0 vs 50 ms moves them 1.1
+     deg/s); chain7 and chain9 differ by 0.5-0.6 on the same two numbers.
+  c) The rigid vectored ripple (section 2c) is modelled, but its phase over 100+ s is not a stable
+     quantity: the Acro push row rms stays at 0.21 deg/s while the Stabilized push is 0.04.

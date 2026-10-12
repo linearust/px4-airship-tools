@@ -1,0 +1,6 @@
+gz_cloudship_am_fin_drag                      chain7  Acro 추종: |dV| rms 0.019 m/s (log |V| rms 0.245);  Stabilized 추종: |dV| rms 0.016 m/s (log |V| rms 0.150);  Acro 제동: |dV| rms 0.026 m/s (log |V| rms 0.249)
+gz_cloudship_am_fin_drag                      chain9  Acro 추종: |dV| rms 0.036 m/s (log |V| rms 0.248);  Stabilized 추종: |dV| rms 0.025 m/s (log |V| rms 0.152);  Acro 제동: |dV| rms 0.049 m/s (log |V| rms 0.252)
+gz_cloudship                                  chain9  Acro 추종: |dV| rms 0.033 m/s (log |V| rms 0.437);  Stabilized 추종: |dV| rms 0.028 m/s (log |V| rms 0.432);  Acro 제동: |dV| rms 0.035 m/s (log |V| rms 0.388)
+gz_airship_vectored_independent               chain9  Acro 추종: |dV| rms 0.028 m/s (log |V| rms 0.204);  Stabilized 추종: |dV| rms 0.032 m/s (log |V| rms 0.203);  Acro 제동: |dV| rms 0.030 m/s (log |V| rms 0.205)
+gz_airship_vectored_independent_am_fin_drag   chain9  Acro 추종: |dV| rms 0.018 m/s (log |V| rms 0.117);  Stabilized 추종: |dV| rms 0.018 m/s (log |V| rms 0.070);  Acro 제동: |dV| rms 0.024 m/s (log |V| rms 0.157)
+gz_airship_vectored_independent_fin           chain9  Acro 추종: |dV| rms 0.021 m/s (log |V| rms 0.146);  Stabilized 추종: |dV| rms 0.019 m/s (log |V| rms 0.089);  Acro 제동: |dV| rms 0.027 m/s (log |V| rms 0.191)

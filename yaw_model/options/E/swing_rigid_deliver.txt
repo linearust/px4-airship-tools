@@ -1,0 +1,22 @@
+  통과  바람(외부 토크)이 기체를 민다 — 5 초 동안 0.00 -> -2.10 deg/s (1 N m 이 요 관성 129.2 kg m^2 와 요 감쇠 0 에 주는 2.22 의 절반 이상)
+  통과  Manual 에서 스틱이 곧 토크 — 토크 0.500, 각속도가 -2.6 -> 23.5 deg/s 로 계속 오른다
+  실패  Acro 가 남은 회전을 잡는다 — 27.9 -> -7.7 deg/s
+  통과  Acro: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 6.02, 최대 8.77 deg/s; 출발 0.03 deg/s, 적분기 -0.000
+  통과  Acro: 스틱을 놓으면 선다 — 5.7 -> -2.0 deg/s, 4.7 초 만에 정지
+  통과  Stabilized: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 5.98, 최대 8.70 deg/s; 출발 0.24 deg/s, 적분기 0.000
+  통과  Stabilized: 스틱을 놓으면 선다 — 5.9 -> -1.9 deg/s, 4.7 초 만에 정지
+  통과  바람 1 N m, I 켬: 적분기가 받아낸다 — 마지막 2 초 |각속도| 0.09 deg/s, 적분기 0.0180 (필요한 토크 0.0185)
+  통과  바람 1 N m, I 끔: 계속 밀린다 — 마지막 2 초 |각속도| 2.12 deg/s, 적분기 0.0000 (필요한 토크 0.0185)
+  통과  바람 0.4 N m (틸트 밴드 아래), I 켬 — 마지막 2 초 |각속도| 0.04 deg/s, 적분기 0.0074 (필요한 토크 0.0074)
+
+swings per phase (gz_airship_vectored_independent, deliver, P 0.50 I 0.09):
+  Manual 통과                                   1   first at sim 37.13: torque +0.5000 integ +0.0000 rate -2.62 deg/s
+  Acro 제동                                     6   first at sim 40.28: torque -0.1865 integ -0.0001 rate +28.04 deg/s
+  정지 대기                                      14   first at sim 55.75: torque +0.0100 integ -0.0501 rate -6.89 deg/s
+  Acro 추종                                     8   first at sim 96.36: torque +0.0608 integ -0.0002 rate -0.33 deg/s
+  정지 대기                                      14   first at sim 55.75: torque +0.0100 integ -0.0501 rate -6.89 deg/s
+  Stabilized 추종                               2   first at sim 174.90: torque -0.0100 integ +0.0059 rate +8.49 deg/s
+  바람 1 N m, I 켬: 적분기가 받아낸다                    2   first at sim 209.12: torque +0.0100 integ -0.0070 rate -1.95 deg/s
+  바람 1 N m, I 켬: 적분기가 받아낸다 회복                 6   first at sim 262.13: torque -0.0103 integ +0.0000 rate +1.17 deg/s
+  바람 1 N m, I 끔: 계속 밀린다                       2   first at sim 268.85: torque +0.0100 integ +0.0000 rate -1.15 deg/s
+  total 41

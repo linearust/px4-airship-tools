@@ -1,0 +1,12 @@
+coarse: 240 runs to do (0 already in /tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/C/scan_coarse.jsonl)
+  25 / 240
+  50 / 240
+  75 / 240
+  100 / 240
+  125 / 240
+  150 / 240
+  175 / 240
+  200 / 240
+  225 / 240
+done /tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/C/scan_coarse.jsonl
+exit 0

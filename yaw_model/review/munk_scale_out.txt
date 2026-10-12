@@ -1,0 +1,4 @@
+Munk x 0.85: Acro mean/peak 5.78/8.99 pass; Stab 7.08/7.52; wind I on 0.35/0.0224; rate rms chain7 Acro  0.30, chain7 Acro  0.27, chain7 Stabi 0.06, chain7 Stabi 0.12, chain9 Acro  0.32, chain9 Acro  0.22, chain9 Stabi 0.07, chain9 Stabi 0.15
+Munk x 0.92: Acro mean/peak 5.76/9.16 pass; Stab 7.09/7.55; wind I on 0.39/0.0221; rate rms chain7 Acro  0.16, chain7 Acro  0.16, chain7 Stabi 0.04, chain7 Stabi 0.07, chain9 Acro  0.19, chain9 Acro  0.11, chain9 Stabi 0.05, chain9 Stabi 0.09
+Munk x 1.00: Acro mean/peak 5.77/9.41 FAIL; Stab 7.09/7.58; wind I on 0.42/0.0214; rate rms chain7 Acro  0.05, chain7 Acro  0.03, chain7 Stabi 0.03, chain7 Stabi 0.05, chain9 Acro  0.11, chain9 Acro  0.07, chain9 Stabi 0.04, chain9 Stabi 0.05
+Munk x 1.08: Acro mean/peak 5.81/9.68 FAIL; Stab 7.09/7.61; wind I on 0.45/0.0204; rate rms chain7 Acro  0.24, chain7 Acro  0.15, chain7 Stabi 0.04, chain7 Stabi 0.10, chain9 Acro  0.26, chain9 Acro  0.21, chain9 Stabi 0.04, chain9 Stabi 0.08

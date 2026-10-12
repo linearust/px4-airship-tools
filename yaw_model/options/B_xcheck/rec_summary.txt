@@ -1,0 +1,58 @@
+
+vec rigid     P 0.65 I 0.07 FF 0.00   (40 runs, 8 timing members, seeds 1,2,3,4,5)
+    brake         40/40              end -5.11..-4.54 m 0.89..1.46
+    Acro track    40/40              peak 8.22..8.34 (m 1.00..1.11) mean 6.32..6.41 (m 1.32..1.41)
+    Acro release  40/40 UNDECIDED    settle 4.11..5.05 s r0 6.09..6.61 end -1.61..-1.05 | thr-u 4.74..5.37(never x4) thr+u 3.47..4.42
+    Stab track    40/40              peak 8.04..8.18 (m 1.15..1.29) mean 6.30..6.39 (m 1.30..1.39)
+    Stab release  40/40 UNDECIDED    settle 4.10..4.76 s r0 6.10..6.50 end -1.62..-1.22 | thr-u 4.73..5.08(never x1) thr+u 3.47..4.11
+    wind I on     40/40              rate 0.03..0.11 (m 0.89..0.97) integ 0.0186..0.0187 need 0.0185 (m_integ 0.0091..0.0092)
+    wind I off    40/40              rate 1.58..1.66 (m 0.58..0.66)
+    wind weak     40/40              rate 0.02..0.05 (m 0.95..0.98) integ 0.0073..0.0073 need 0.0074 (m_integ 0.0036..0.0036)
+    wind check    40/40              
+    Manual        40/40              
+
+vec complete  P 0.65 I 0.07 FF 1.00   (40 runs, 8 timing members, seeds 1,2,3,4,5)
+    brake         40/40              end -0.71..-0.60 m 5.29..5.40
+    Acro track    40/40              peak 7.18..7.25 (m 2.09..2.16) mean 7.10..7.14 (m 1.20..1.23)
+    Acro release  40/40 undecided@alt settle 8.51..9.17 s r0 7.03..7.14 end -0.03..0.22 | thr-u 8.85..9.53 thr+u 8.21..8.85
+    Stab track    40/40              peak 7.26..7.31 (m 2.02..2.07) mean 7.02..7.06 (m 1.28..1.31)
+    Stab release  40/40 undecided@alt settle 8.53..9.17 s r0 6.97..7.09 end 0.00..0.20 | thr-u 8.85..9.54 thr+u 7.90..8.58
+    wind I on     40/40              rate 0.04..0.12 (m 0.88..0.96) integ 0.0221..0.0223 need 0.0185 (m_integ 0.0055..0.0056)
+    wind I off    40/40 undecided@alt rate 1.20..1.25 (m 0.20..0.25)
+    wind weak     40/40              rate 0.02..0.07 (m 0.93..0.98) integ 0.0076..0.0077 need 0.0074 (m_integ 0.0034..0.0035)
+    wind check    40/40              
+    Manual        40/40              
+
+cs rigid      P 0.65 I 0.07 FF 0.00   (40 runs, 8 timing members, seeds 1,2,3,4,5)
+    brake         40/40              end -0.93..-0.73 m 5.07..5.27
+    Acro track    40/40              peak 7.54..7.61 (m 1.72..1.80) mean 6.68..6.72 (m 1.62..1.66)
+    Acro release  40/40              settle 2.84..3.18 s r0 6.62..6.74 end -0.73..-0.59 | thr-u 3.16..3.18 thr+u 2.84..3.16
+    Stab track    40/40              peak 7.54..7.62 (m 1.71..1.80) mean 6.68..6.72 (m 1.62..1.66)
+    Stab release  40/40              settle 2.84..3.18 s r0 6.63..6.76 end -0.72..-0.61 | thr-u 3.15..3.18 thr+u 2.83..3.16
+    wind I on     40/40              rate 0.01..0.05 (m 0.95..0.99) integ 0.0184..0.0184 need 0.0185 (m_integ 0.0091..0.0092)
+    wind I off    40/40              rate 1.61..1.65 (m 0.61..0.65)
+    wind check    40/40              
+    Manual        40/40              
+
+cs complete   P 0.65 I 0.07 FF 0.05   (40 runs, 8 timing members, seeds 1,2,3,4,5)
+    brake         40/40              end -2.96..-2.72 m 3.04..3.28
+    Acro track    40/40              peak 8.94..9.10 (m 0.24..0.40) mean 6.05..6.45 (m 1.05..1.45)
+    Acro release  40/40              settle 3.79..3.81 s r0 5.76..6.03 end -0.98..-0.74 | thr-u 3.79..4.13 thr+u 3.47..3.81
+    Stab track    40/40              peak 7.26..7.35 (m 1.98..2.08) mean 6.95..7.16 (m 1.17..1.39)
+    Stab release  40/40              settle 7.27..7.90 s r0 7.09..7.34 end -0.04..0.22 | thr-u 7.58..8.26 thr+u 6.94..7.59
+    wind I on     40/40              rate 0.48..0.57 (m 0.43..0.52) integ 0.0190..0.0194 need 0.0185 (m_integ 0.0084..0.0088)
+    wind I off    40/40              rate 1.67..1.76 (m 0.67..0.76)
+    wind check    40/40              
+    Manual        40/40              
+
+vec fin       P 0.65 I 0.07 FF 0.30   (40 runs, 8 timing members, seeds 1,2,3,4,5)
+    brake         40/40              end -1.10..-0.89 m 4.90..5.11
+    Acro track    40/40              peak 7.07..7.18 (m 2.15..2.26) mean 7.02..7.10 (m 1.23..1.31)
+    Acro release  40/40              settle 6.94..7.59 s r0 7.03..7.16 end -0.08..0.05 | thr-u 7.27..7.90 thr+u 6.62..6.99
+    Stab track    40/40              peak 6.93..7.00 (m 2.34..2.40) mean 6.62..6.66 (m 1.62..1.66)
+    Stab release  40/40              settle 5.99..6.36 s r0 6.57..6.71 end -0.34..-0.22 | thr-u 6.32..6.68 thr+u 5.68..6.04
+    wind I on     40/40              rate 0.02..0.04 (m 0.96..0.98) integ 0.0176..0.0177 need 0.0185 (m_integ 0.0084..0.0084)
+    wind I off    40/40              rate 1.33..1.37 (m 0.33..0.37)
+    wind weak     40/40              rate 0.02..0.04 (m 0.96..0.98) integ 0.0061..0.0062 need 0.0074 (m_integ 0.0024..0.0025)
+    wind check    40/40              
+    Manual        40/40              

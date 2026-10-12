@@ -1,0 +1,484 @@
+STEP 0 -> stick (Acro from rest, push 60 s, release 40 s). noise-off value [noise seeds 11,12 range]
+  os%, t_pk s, rise10-90 s, settle10 = last exit from +-10 % (s), rel = first |r|<1 held 1.5 s, under = min rate after release, relI0 = integ at release
+  vec rigid act None stick 0.5
+    P 0.50 I 0.09 b 0.694 | os +17.3% [+18.5..+18.5] t_pk 26.9 rise 7.0 settle10 - [-] | rel 8.9 [8.9..9.0] under -1.23 relI0 0.0296 end +0.78
+    P 0.50 I 0.09 b 1.000 | os +24.1% [+25.1..+25.2] t_pk 13.6 rise 5.5 settle10 - [-] | rel 7.2 [7.2..7.2] under -1.69 relI0 0.0100 end +0.69
+    P 0.70 I 0.09 b 0.800 | os  +9.2% [+10.5..+10.6] t_pk 21.9 rise 6.8 settle10 - [60.0..60.0] | rel 6.1 [6.4..6.5] under -0.53 relI0 0.0232 end -0.44
+    P 0.70 I 0.09 b 0.900 | os +12.3% [+13.5..+13.6] t_pk 25.2 rise 5.7 settle10 31.1 [59.4..59.6] | rel 6.6 [6.9..6.9] under -0.57 relI0 0.0201 end -0.44
+    P 0.70 I 0.09 b 1.000 | os +16.1% [+17.2..+17.3] t_pk 25.2 rise 5.2 settle10 27.1 [27.0..49.3] | rel 5.2 [5.8..5.8] under -0.82 relI0 0.0134 end +0.63
+    P 0.70 I 0.20 b 0.800 | os +19.9% [+20.9..+21.1] t_pk 15.2 rise 4.8 settle10 52.4 [59.4..59.6] | rel 3.7 [3.7..3.7] under -1.59 relI0 0.0121 end -0.51
+    P 0.70 I 0.20 b 0.900 | os +21.9% [+22.8..+23.1] t_pk 11.9 rise 4.4 settle10 50.6 [59.4..59.4] | rel 3.5 [3.6..3.6] under -1.72 relI0 0.0069 end -0.59
+    P 0.70 I 0.20 b 1.000 | os +24.2% [+25.2..+25.5] t_pk 11.9 rise 4.1 settle10 59.5 [57.7..59.4] | rel 3.2 [3.3..3.3] under -1.96 relI0 -0.0035 end -0.63
+  vec rigid act None stick 1.0
+    P 0.50 I 0.09 b 0.694 | os +17.2% [-] t_pk 21.9 rise 7.0 settle10 24.3 [-] | rel 9.4 [-] under -2.68 relI0 0.0541 end +0.65
+    P 0.50 I 0.09 b 1.000 | os +24.0% [-] t_pk 16.9 rise 5.5 settle10 22.5 [-] | rel 24.7 [-] under -3.88 relI0 0.0098 end +0.71
+    P 0.70 I 0.09 b 0.800 | os  +9.2% [-] t_pk 25.2 rise 6.8 settle10 7.8 [-] | rel 7.0 [-] under -1.51 relI0 0.0469 end +0.38
+    P 0.70 I 0.09 b 0.900 | os +12.3% [-] t_pk 15.2 rise 5.7 settle10 22.6 [-] | rel 5.9 [-] under -2.05 relI0 0.0277 end +0.30
+    P 0.70 I 0.09 b 1.000 | os +16.1% [-] t_pk 15.2 rise 5.2 settle10 20.8 [-] | rel 5.2 [-] under -2.75 relI0 0.0068 end +0.28
+    P 0.70 I 0.20 b 0.800 | os +19.8% [-] t_pk 11.9 rise 4.8 settle10 16.9 [-] | rel 16.3 [-] under -3.60 relI0 0.0361 end -0.57
+    P 0.70 I 0.20 b 0.900 | os +21.8% [-] t_pk 11.9 rise 4.4 settle10 16.0 [-] | rel 16.2 [-] under -3.99 relI0 0.0179 end -0.52
+    P 0.70 I 0.20 b 1.000 | os +24.2% [-] t_pk 10.3 rise 4.1 settle10 15.9 [-] | rel 16.1 [-] under -4.36 relI0 0.0028 end -0.46
+  vec rigid act ('slew', 60.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os +14.5% [+15.8] t_pk 29.7 rise 8.5 settle10 60.0 [59.4] | rel 10.4 [11.0] under -0.89 relI0 0.0306 end +0.41
+    P 0.50 I 0.09 b 1.000 | os +19.6% [+20.9] t_pk 16.4 rise 6.7 settle10 57.2 [57.2] | rel 8.9 [8.9] under -1.34 relI0 0.0139 end +0.69
+    P 0.70 I 0.09 b 0.800 | os  +6.3% [+7.8] t_pk 29.7 rise 8.2 settle10 - [-] | rel 4.7 [4.9] under -0.91 relI0 0.0085 end +0.51
+    P 0.70 I 0.09 b 0.900 | os  +8.8% [+10.0] t_pk 23.0 rise 7.0 settle10 - [-] | rel 5.0 [5.1] under -0.79 relI0 0.0127 end +0.58
+    P 0.70 I 0.09 b 1.000 | os +12.1% [+13.4] t_pk 28.0 rise 6.3 settle10 33.3 [59.0] | rel 4.9 [4.9] under -0.87 relI0 0.0110 end +0.54
+    P 0.70 I 0.20 b 0.800 | os +15.5% [+16.7] t_pk 18.1 rise 6.3 settle10 58.0 [58.0] | rel 3.4 [3.5] under -1.96 relI0 0.0038 end +0.17
+    P 0.70 I 0.20 b 0.900 | os +16.5% [+17.7] t_pk 13.1 rise 5.8 settle10 56.4 [56.5] | rel 3.2 [3.2] under -2.11 relI0 -0.0048 end +0.08
+    P 0.70 I 0.20 b 1.000 | os +18.2% [+19.3] t_pk 11.4 rise 5.4 settle10 57.6 [56.5] | rel 3.0 [3.0] under -2.35 relI0 -0.0126 end -0.30
+  vec rigid act ('slew', 240.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os +18.3% [+19.5] t_pk 18.0 rise 6.6 settle10 - [-] | rel 7.8 [7.9] under -1.33 relI0 0.0261 end +0.75
+    P 0.50 I 0.09 b 1.000 | os +25.7% [+26.9] t_pk 13.0 rise 5.1 settle10 - [-] | rel 6.1 [6.1] under -1.85 relI0 0.0062 end +0.66
+    P 0.70 I 0.09 b 0.800 | os +10.1% [+11.3] t_pk 24.6 rise 6.0 settle10 - [60.0] | rel 6.9 [6.9] under -0.40 relI0 0.0277 end -0.39
+    P 0.70 I 0.09 b 0.900 | os +13.4% [+14.7] t_pk 16.3 rise 5.2 settle10 28.5 [57.0] | rel 6.7 [6.7] under -0.59 relI0 0.0216 end +0.37
+    P 0.70 I 0.09 b 1.000 | os +17.3% [+18.6] t_pk 22.9 rise 4.6 settle10 24.8 [24.7] | rel 5.1 [5.1] under -0.81 relI0 0.0139 end +0.60
+    P 0.70 I 0.20 b 0.800 | os +21.8% [+23.0] t_pk 11.3 rise 4.2 settle10 49.3 [58.2] | rel 4.0 [4.0] under -1.42 relI0 0.0190 end -0.70
+    P 0.70 I 0.20 b 0.900 | os +24.0% [+25.2] t_pk 13.0 rise 3.9 settle10 49.2 [58.2] | rel 3.6 [3.7] under -1.59 relI0 0.0111 end -0.70
+    P 0.70 I 0.20 b 1.000 | os +26.6% [+27.6] t_pk  9.7 rise 3.6 settle10 48.2 [58.2] | rel 3.4 [3.4] under -1.77 relI0 0.0046 end -0.75
+  vec rigid act ('servo', 60.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os +19.1% [+20.4] t_pk 27.6 rise 6.8 settle10 - [-] | rel 8.8 [8.8] under -1.51 relI0 0.0295 end +0.83
+    P 0.50 I 0.09 b 1.000 | os +27.0% [+28.5] t_pk 22.4 rise 5.5 settle10 - [-] | rel 7.1 [7.2] under -2.21 relI0 0.0077 end +0.77
+    P 0.70 I 0.09 b 0.800 | os +11.3% [+12.5] t_pk 35.3 rise 6.4 settle10 - [-] | rel 6.6 [7.2] under -0.44 relI0 0.0267 end -0.40
+    P 0.70 I 0.09 b 0.900 | os +14.4% [+16.0] t_pk 25.5 rise 5.9 settle10 59.7 [59.6] | rel 7.4 [7.4] under -0.74 relI0 0.0211 end +0.47
+    P 0.70 I 0.09 b 1.000 | os +18.6% [+20.0] t_pk 25.4 rise 5.2 settle10 26.9 [59.4] | rel 5.9 [6.8] under -0.76 relI0 0.0137 end +0.71
+    P 0.70 I 0.20 b 0.800 | os +23.0% [+24.8] t_pk 15.8 rise 4.7 settle10 - [60.0] | rel 3.8 [3.9] under -1.53 relI0 0.0145 end -0.69
+    P 0.70 I 0.20 b 0.900 | os +25.4% [+26.8] t_pk 15.4 rise 4.5 settle10 59.9 [60.0] | rel 3.5 [3.6] under -1.67 relI0 0.0076 end -0.70
+    P 0.70 I 0.20 b 1.000 | os +27.6% [+29.2] t_pk 14.0 rise 4.3 settle10 - [-] | rel 3.3 [3.3] under -1.83 relI0 0.0009 end -0.72
+  vec complete act None stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -3.2% [-2.2..-2.1] t_pk 60.0 rise 24.8 settle10 27.1 [28.6..28.8] | rel 24.9 [25.0..25.1] under -0.66 relI0 0.1173 end -0.66
+    P 0.50 I 0.09 b 1.000 | os  -2.8% [-1.7..-1.7] t_pk 60.0 rise 22.1 settle10 23.9 [24.9..25.2] | rel 22.6 [22.8..22.8] under -0.67 relI0 0.1004 end -0.66
+    P 0.70 I 0.09 b 0.800 | os  -3.7% [-2.8..-2.7] t_pk 60.0 rise 28.4 settle10 30.1 [32.3..32.8] | rel 25.2 [25.3..25.3] under -0.36 relI0 0.1133 end -0.36
+    P 0.70 I 0.09 b 0.900 | os  -3.5% [-2.5..-2.5] t_pk 60.0 rise 26.8 settle10 28.4 [30.8..31.0] | rel 24.0 [24.1..24.1] under -0.37 relI0 0.1057 end -0.37
+    P 0.70 I 0.09 b 1.000 | os  -3.2% [-2.2..-2.2] t_pk 60.0 rise 24.9 settle10 26.4 [28.6..28.8] | rel 22.7 [22.8..22.8] under -0.37 relI0 0.0982 end -0.36
+    P 0.70 I 0.20 b 0.800 | os  +0.0% [+1.3..+1.4] t_pk 27.3 rise 10.9 settle10 12.6 [12.8..13.0] | rel 13.0 [13.1..13.1] under -0.84 relI0 0.1227 end +0.32
+    P 0.70 I 0.20 b 0.900 | os  +0.2% [+1.5..+1.5] t_pk 25.2 rise 10.4 settle10 12.0 [12.2..12.4] | rel 12.6 [12.7..12.7] under -0.85 relI0 0.1145 end +0.37
+    P 0.70 I 0.20 b 1.000 | os  +0.4% [+1.7..+1.8] t_pk 25.1 rise 9.9 settle10 11.4 [11.7..11.8] | rel 12.1 [12.2..12.3] under -0.86 relI0 0.1064 end +0.40
+  vec complete act None stick 1.0
+    P 0.50 I 0.09 b 0.694 | os -25.4% [-] t_pk 55.6 rise - settle10 - [-] | rel - [-] under +0.91 relI0 0.2999 end +0.91
+    P 0.50 I 0.09 b 1.000 | os -21.3% [-] t_pk 52.8 rise - settle10 - [-] | rel - [-] under +0.89 relI0 0.2999 end +0.89
+    P 0.70 I 0.09 b 0.800 | os -23.8% [-] t_pk 54.7 rise - settle10 - [-] | rel - [-] under +1.49 relI0 0.2999 end +1.49
+    P 0.70 I 0.09 b 0.900 | os -22.0% [-] t_pk 53.1 rise - settle10 - [-] | rel - [-] under +1.48 relI0 0.2999 end +1.48
+    P 0.70 I 0.09 b 1.000 | os -20.2% [-] t_pk 52.2 rise - settle10 - [-] | rel - [-] under +1.47 relI0 0.2999 end +1.47
+    P 0.70 I 0.20 b 0.800 | os -23.2% [-] t_pk 18.4 rise - settle10 - [-] | rel 18.9 [-] under -0.76 relI0 0.2998 end -0.42
+    P 0.70 I 0.20 b 0.900 | os -21.5% [-] t_pk 18.4 rise - settle10 - [-] | rel 18.9 [-] under -0.76 relI0 0.2998 end -0.42
+    P 0.70 I 0.20 b 1.000 | os -19.7% [-] t_pk 18.5 rise - settle10 - [-] | rel 18.8 [-] under -0.76 relI0 0.2998 end -0.41
+  vec complete act ('slew', 60.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -3.3% [-2.2] t_pk 60.0 rise 26.8 settle10 29.8 [31.6] | rel 25.8 [26.1] under -0.59 relI0 0.1165 end -0.59
+    P 0.50 I 0.09 b 1.000 | os  -2.8% [-1.8] t_pk 60.0 rise 24.6 settle10 27.0 [28.6] | rel 23.5 [23.6] under -0.60 relI0 0.0996 end -0.60
+    P 0.70 I 0.09 b 0.800 | os  -3.8% [-2.8] t_pk 60.0 rise 30.7 settle10 32.9 [35.3] | rel 26.1 [26.1] under -0.30 relI0 0.1123 end -0.30
+    P 0.70 I 0.09 b 0.900 | os  -3.5% [-2.5] t_pk 60.0 rise 29.5 settle10 31.5 [33.3] | rel 24.8 [25.1] under -0.32 relI0 0.1047 end -0.32
+    P 0.70 I 0.09 b 1.000 | os  -3.2% [-2.2] t_pk 60.0 rise 28.0 settle10 29.9 [32.0] | rel 23.5 [23.6] under -0.33 relI0 0.0972 end -0.33
+    P 0.70 I 0.20 b 0.800 | os  -0.2% [+1.2] t_pk 33.0 rise 12.4 settle10 14.6 [14.9] | rel 14.4 [14.5] under -0.74 relI0 0.1220 end -0.17
+    P 0.70 I 0.20 b 0.900 | os  -0.1% [+1.3] t_pk 33.0 rise 12.1 settle10 14.1 [14.3] | rel 14.0 [14.0] under -0.75 relI0 0.1137 end -0.08
+    P 0.70 I 0.20 b 1.000 | os  -0.1% [+1.3] t_pk 33.0 rise 11.8 settle10 13.6 [14.0] | rel 13.5 [13.6] under -0.76 relI0 0.1055 end +0.00
+  vec complete act ('slew', 240.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -3.2% [-2.2] t_pk 60.0 rise 23.8 settle10 25.8 [27.7] | rel 24.5 [24.5] under -0.70 relI0 0.1177 end -0.70
+    P 0.50 I 0.09 b 1.000 | os  -2.7% [-1.7] t_pk 60.0 rise 20.7 settle10 22.2 [23.8] | rel 22.1 [22.2] under -0.70 relI0 0.1009 end -0.68
+    P 0.70 I 0.09 b 0.800 | os  -3.7% [-2.7] t_pk 60.0 rise 27.2 settle10 28.6 [30.8] | rel 24.8 [24.9] under -0.39 relI0 0.1138 end -0.39
+    P 0.70 I 0.09 b 0.900 | os  -3.4% [-2.4] t_pk 60.0 rise 25.2 settle10 26.5 [28.6] | rel 23.6 [23.8] under -0.39 relI0 0.1063 end -0.39
+    P 0.70 I 0.09 b 1.000 | os  -3.2% [-2.2] t_pk 60.0 rise 23.1 settle10 24.3 [26.5] | rel 22.3 [22.4] under -0.39 relI0 0.0988 end -0.39
+    P 0.70 I 0.20 b 0.800 | os  +0.4% [+1.6] t_pk 24.3 rise 10.1 settle10 11.5 [11.7] | rel 12.3 [12.4] under -0.90 relI0 0.1231 end +0.45
+    P 0.70 I 0.20 b 0.900 | os  +0.6% [+1.9] t_pk 22.4 rise 9.7 settle10 10.9 [11.4] | rel 11.9 [11.9] under -0.92 relI0 0.1149 end +0.47
+    P 0.70 I 0.20 b 1.000 | os  +0.9% [+2.1] t_pk 22.2 rise 9.2 settle10 10.4 [10.7] | rel 11.4 [11.5] under -0.93 relI0 0.1068 end +0.49
+  vec complete act ('servo', 60.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -3.0% [-2.0] t_pk 60.0 rise 24.4 settle10 27.1 [28.6] | rel 25.4 [25.4] under -0.71 relI0 0.1173 end -0.71
+    P 0.50 I 0.09 b 1.000 | os  -2.5% [-1.4] t_pk 60.0 rise 21.3 settle10 23.5 [24.9] | rel 23.0 [23.2] under -0.71 relI0 0.1005 end -0.70
+    P 0.70 I 0.09 b 0.800 | os  -3.4% [-2.4] t_pk 60.0 rise 27.7 settle10 29.9 [32.0] | rel 25.7 [25.6] under -0.40 relI0 0.1134 end -0.40
+    P 0.70 I 0.09 b 0.900 | os  -3.1% [-2.1] t_pk 60.0 rise 25.9 settle10 28.0 [30.8] | rel 24.5 [24.6] under -0.41 relI0 0.1059 end -0.41
+    P 0.70 I 0.09 b 1.000 | os  -2.9% [-1.8] t_pk 60.0 rise 24.1 settle10 26.0 [28.0] | rel 23.1 [23.2] under -0.40 relI0 0.0983 end -0.40
+    P 0.70 I 0.20 b 0.800 | os  +0.3% [+1.6] t_pk 28.1 rise 10.0 settle10 12.1 [12.3] | rel 13.0 [13.1] under -0.88 relI0 0.1222 end +0.32
+    P 0.70 I 0.20 b 0.900 | os  +0.5% [+1.8] t_pk 25.8 rise 9.6 settle10 11.6 [11.7] | rel 12.5 [12.7] under -0.88 relI0 0.1140 end +0.37
+    P 0.70 I 0.20 b 1.000 | os  +0.7% [+2.0] t_pk 25.8 rise 9.3 settle10 11.2 [11.4] | rel 12.1 [12.2] under -0.89 relI0 0.1058 end +0.42
+  cld rigid act None stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +9.3% [+10.2..+10.5] t_pk 10.3 rise 4.7 settle10 5.1 [11.7..12.0] | rel 4.6 [4.6..4.6] under -0.62 relI0 0.0178 end +0.00
+    P 0.50 I 0.09 b 1.000 | os +20.1% [+21.1..+21.3] t_pk  8.4 rise 3.1 settle10 13.8 [14.1..14.2] | rel 3.1 [3.1..3.1] under -1.34 relI0 -0.0000 end +0.00
+    P 0.70 I 0.09 b 0.800 | os  +3.7% [+4.7..+4.8] t_pk 10.1 rise 4.1 settle10 4.3 [4.4..4.4] | rel 3.7 [3.7..3.8] under -0.24 relI0 0.0163 end +0.00
+    P 0.70 I 0.09 b 0.900 | os  +8.0% [+9.0..+9.2] t_pk  8.5 rise 3.3 settle10 3.5 [3.5..3.5] | rel 3.1 [3.1..3.1] under -0.53 relI0 0.0081 end +0.00
+    P 0.70 I 0.09 b 1.000 | os +13.1% [+14.2..+14.3] t_pk  7.0 rise 2.7 settle10 10.9 [11.7..12.0] | rel 2.6 [2.6..2.6] under -0.87 relI0 -0.0000 end +0.00
+    P 0.70 I 0.20 b 0.800 | os +14.3% [+15.3..+15.7] t_pk  6.7 rise 2.8 settle10 9.0 [9.1..9.2] | rel 2.7 [2.7..2.7] under -0.95 relI0 0.0162 end +0.00
+    P 0.70 I 0.20 b 0.900 | os +17.5% [+18.5..+18.8] t_pk  6.1 rise 2.4 settle10 9.2 [9.4..9.5] | rel 2.4 [2.4..2.4] under -1.17 relI0 0.0081 end +0.00
+    P 0.70 I 0.20 b 1.000 | os +21.5% [+22.7..+22.9] t_pk  5.5 rise 2.2 settle10 9.4 [9.6..9.8] | rel 2.2 [2.2..2.2] under -1.43 relI0 -0.0001 end +0.01
+  cld rigid act None stick 1.0
+    P 0.50 I 0.09 b 0.694 | os  +9.3% [-] t_pk 10.3 rise 4.7 settle10 5.1 [-] | rel 5.5 [-] under -1.38 relI0 0.0400 end +0.01
+    P 0.50 I 0.09 b 1.000 | os +20.1% [-] t_pk  8.4 rise 3.1 settle10 13.8 [-] | rel 15.4 [-] under -3.01 relI0 -0.0001 end +0.01
+    P 0.70 I 0.09 b 0.800 | os  +3.7% [-] t_pk 10.1 rise 4.1 settle10 4.3 [-] | rel 4.8 [-] under -0.55 relI0 0.0366 end +0.01
+    P 0.70 I 0.09 b 0.900 | os  +8.0% [-] t_pk  8.5 rise 3.3 settle10 3.5 [-] | rel 3.8 [-] under -1.20 relI0 0.0182 end +0.01
+    P 0.70 I 0.09 b 1.000 | os +13.1% [-] t_pk  7.0 rise 2.7 settle10 10.9 [-] | rel 13.7 [-] under -1.96 relI0 -0.0001 end +0.01
+    P 0.70 I 0.20 b 0.800 | os +14.3% [-] t_pk  6.7 rise 2.8 settle10 9.0 [-] | rel 10.3 [-] under -2.15 relI0 0.0365 end +0.01
+    P 0.70 I 0.20 b 0.900 | os +17.5% [-] t_pk  6.0 rise 2.4 settle10 9.2 [-] | rel 10.4 [-] under -2.64 relI0 0.0181 end +0.01
+    P 0.70 I 0.20 b 1.000 | os +21.5% [-] t_pk  5.5 rise 2.2 settle10 9.4 [-] | rel 10.4 [-] under -3.21 relI0 -0.0002 end +0.02
+  cld rigid act ('tail_tau', 0.025) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +9.4% [+10.6] t_pk 10.3 rise 4.7 settle10 5.1 [12.0] | rel 4.6 [4.6] under -0.62 relI0 0.0178 end +0.00
+    P 0.50 I 0.09 b 1.000 | os +20.3% [+21.5] t_pk  8.4 rise 3.1 settle10 13.8 [14.2] | rel 3.1 [3.1] under -1.35 relI0 -0.0000 end +0.00
+    P 0.70 I 0.09 b 0.800 | os  +3.8% [+4.9] t_pk 10.1 rise 4.0 settle10 4.3 [4.3] | rel 3.7 [3.7] under -0.25 relI0 0.0163 end +0.00
+    P 0.70 I 0.09 b 0.900 | os  +8.2% [+9.3] t_pk  8.5 rise 3.2 settle10 3.5 [3.5] | rel 3.1 [3.1] under -0.54 relI0 0.0081 end +0.00
+    P 0.70 I 0.09 b 1.000 | os +13.4% [+14.5] t_pk  7.0 rise 2.7 settle10 10.9 [12.0] | rel 2.6 [2.6] under -0.88 relI0 -0.0000 end +0.00
+    P 0.70 I 0.20 b 0.800 | os +14.6% [+15.9] t_pk  6.7 rise 2.7 settle10 9.0 [9.2] | rel 2.7 [2.7] under -0.97 relI0 0.0162 end +0.00
+    P 0.70 I 0.20 b 0.900 | os +17.9% [+19.2] t_pk  5.8 rise 2.4 settle10 9.2 [9.5] | rel 2.4 [2.4] under -1.20 relI0 0.0081 end +0.01
+    P 0.70 I 0.20 b 1.000 | os +22.0% [+23.1] t_pk  5.5 rise 2.1 settle10 9.4 [9.5] | rel 2.1 [2.2] under -1.46 relI0 -0.0001 end +0.01
+  cld rigid act ('tail_tau', 0.05) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +9.6% [+10.8] t_pk 10.3 rise 4.6 settle10 5.1 [12.0] | rel 4.6 [4.6] under -0.63 relI0 0.0178 end +0.00
+    P 0.50 I 0.09 b 1.000 | os +20.6% [+21.8] t_pk  8.4 rise 3.1 settle10 13.8 [14.2] | rel 3.1 [3.1] under -1.37 relI0 -0.0000 end +0.00
+    P 0.70 I 0.09 b 0.800 | os  +3.8% [+4.9] t_pk 10.2 rise 4.0 settle10 4.3 [4.3] | rel 3.7 [3.7] under -0.25 relI0 0.0163 end +0.00
+    P 0.70 I 0.09 b 0.900 | os  +8.3% [+9.4] t_pk  8.5 rise 3.2 settle10 3.4 [3.5] | rel 3.0 [3.1] under -0.55 relI0 0.0081 end +0.00
+    P 0.70 I 0.09 b 1.000 | os +13.6% [+14.7] t_pk  7.1 rise 2.6 settle10 11.0 [12.0] | rel 2.6 [2.6] under -0.90 relI0 -0.0000 end +0.00
+    P 0.70 I 0.20 b 0.800 | os +14.9% [+16.2] t_pk  6.6 rise 2.7 settle10 9.0 [9.2] | rel 2.7 [2.7] under -0.99 relI0 0.0162 end +0.00
+    P 0.70 I 0.20 b 0.900 | os +18.3% [+19.6] t_pk  5.8 rise 2.3 settle10 9.2 [9.5] | rel 2.4 [2.4] under -1.22 relI0 0.0081 end +0.00
+    P 0.70 I 0.20 b 1.000 | os +22.5% [+23.6] t_pk  5.5 rise 2.1 settle10 9.4 [9.5] | rel 2.1 [2.2] under -1.49 relI0 -0.0001 end +0.01
+  cld complete act None stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +5.0% [+6.3..+6.4] t_pk 30.4 rise 7.2 settle10 7.8 [7.9..8.0] | rel 7.9 [8.0..8.0] under -0.59 relI0 0.0358 end +0.04
+    P 0.50 I 0.09 b 1.000 | os  +7.8% [+8.9..+9.0] t_pk 11.7 rise 5.2 settle10 5.6 [5.7..5.7] | rel 5.8 [5.8..5.8] under -0.95 relI0 0.0180 end +0.04
+    P 0.70 I 0.09 b 0.800 | os  +3.6% [+4.9..+5.0] t_pk 30.5 rise 6.7 settle10 7.1 [7.3..7.3] | rel 7.0 [7.1..7.1] under -0.19 relI0 0.0339 end -0.00
+    P 0.70 I 0.09 b 0.900 | os  +4.2% [+5.4..+5.5] t_pk 28.7 rise 5.5 settle10 5.9 [6.0..6.0] | rel 5.9 [5.9..6.0] under -0.32 relI0 0.0258 end +0.00
+    P 0.70 I 0.09 b 1.000 | os  +4.8% [+5.9..+6.1] t_pk 26.9 rise 4.7 settle10 5.0 [5.1..5.1] | rel 5.0 [5.0..5.1] under -0.52 relI0 0.0177 end +0.00
+    P 0.70 I 0.20 b 0.800 | os +10.0% [+11.0..+11.1] t_pk  8.4 rise 4.0 settle10 4.4 [9.9..10.1] | rel 4.3 [4.3..4.4] under -1.00 relI0 0.0340 end -0.01
+    P 0.70 I 0.20 b 0.900 | os +12.1% [+13.2..+13.3] t_pk  8.1 rise 3.6 settle10 10.3 [10.6..10.7] | rel 4.0 [3.9..4.0] under -1.12 relI0 0.0258 end -0.01
+    P 0.70 I 0.20 b 1.000 | os +14.4% [+15.6..+15.7] t_pk  7.9 rise 3.3 settle10 10.7 [10.9..11.2] | rel 3.6 [3.6..3.6] under -1.28 relI0 0.0175 end -0.01
+  cld complete act None stick 1.0
+    P 0.50 I 0.09 b 0.694 | os  +4.7% [-] t_pk 44.7 rise 12.0 settle10 12.6 [-] | rel 14.9 [-] under -0.61 relI0 0.1240 end +0.01
+    P 0.50 I 0.09 b 1.000 | os  +5.3% [-] t_pk 42.6 rise 7.7 settle10 8.1 [-] | rel 12.1 [-] under -0.71 relI0 0.0850 end +0.01
+    P 0.70 I 0.09 b 0.800 | os  +3.6% [-] t_pk 43.9 rise 12.4 settle10 12.8 [-] | rel 16.2 [-] under -0.17 relI0 0.1199 end -0.07
+    P 0.70 I 0.09 b 0.900 | os  +3.9% [-] t_pk 43.3 rise 10.7 settle10 11.0 [-] | rel 14.7 [-] under -0.19 relI0 0.1022 end -0.08
+    P 0.70 I 0.09 b 1.000 | os  +4.3% [-] t_pk 42.1 rise 7.9 settle10 8.3 [-] | rel 13.0 [-] under -0.23 relI0 0.0845 end -0.08
+    P 0.70 I 0.20 b 0.800 | os  +6.8% [-] t_pk 15.6 rise 4.9 settle10 5.3 [-] | rel 7.6 [-] under -0.95 relI0 0.1256 end -0.04
+    P 0.70 I 0.20 b 0.900 | os  +7.4% [-] t_pk 15.3 rise 4.4 settle10 4.7 [-] | rel 7.0 [-] under -1.06 relI0 0.1074 end -0.04
+    P 0.70 I 0.20 b 1.000 | os  +8.0% [-] t_pk 15.0 rise 3.9 settle10 4.2 [-] | rel 6.4 [-] under -1.19 relI0 0.0892 end -0.04
+  cld complete act ('tail_tau', 0.025) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +5.0% [+6.4] t_pk 30.4 rise 7.1 settle10 7.7 [8.0] | rel 7.9 [8.0] under -0.60 relI0 0.0358 end +0.04
+    P 0.50 I 0.09 b 1.000 | os  +7.9% [+9.1] t_pk 11.7 rise 5.1 settle10 5.6 [5.7] | rel 5.7 [5.8] under -0.96 relI0 0.0180 end +0.04
+    P 0.70 I 0.09 b 0.800 | os  +3.6% [+5.0] t_pk 30.6 rise 6.7 settle10 7.1 [7.3] | rel 7.0 [7.1] under -0.19 relI0 0.0339 end -0.00
+    P 0.70 I 0.09 b 0.900 | os  +4.2% [+5.5] t_pk 28.8 rise 5.5 settle10 5.8 [6.0] | rel 5.9 [5.9] under -0.32 relI0 0.0258 end +0.00
+    P 0.70 I 0.09 b 1.000 | os  +4.8% [+5.9] t_pk 26.9 rise 4.6 settle10 5.0 [5.0] | rel 5.0 [5.1] under -0.52 relI0 0.0177 end +0.00
+    P 0.70 I 0.20 b 0.800 | os +10.2% [+11.4] t_pk  8.4 rise 3.9 settle10 9.1 [10.4] | rel 4.3 [4.3] under -1.02 relI0 0.0340 end -0.01
+    P 0.70 I 0.20 b 0.900 | os +12.4% [+13.4] t_pk  8.1 rise 3.6 settle10 10.3 [10.7] | rel 3.9 [4.0] under -1.14 relI0 0.0258 end -0.01
+    P 0.70 I 0.20 b 1.000 | os +14.7% [+15.9] t_pk  7.9 rise 3.3 settle10 10.8 [11.2] | rel 3.6 [3.6] under -1.30 relI0 0.0175 end -0.01
+  cld complete act ('tail_tau', 0.05) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +5.0% [+6.4] t_pk 30.5 rise 7.0 settle10 7.7 [8.0] | rel 7.9 [8.0] under -0.60 relI0 0.0358 end +0.04
+    P 0.50 I 0.09 b 1.000 | os  +8.1% [+9.2] t_pk 11.7 rise 5.1 settle10 5.6 [5.7] | rel 5.7 [5.8] under -0.97 relI0 0.0180 end +0.04
+    P 0.70 I 0.09 b 0.800 | os  +3.7% [+5.1] t_pk 30.6 rise 6.6 settle10 7.1 [7.2] | rel 6.9 [7.1] under -0.19 relI0 0.0339 end -0.00
+    P 0.70 I 0.09 b 0.900 | os  +4.2% [+5.5] t_pk 28.8 rise 5.4 settle10 5.8 [6.0] | rel 5.8 [5.8] under -0.33 relI0 0.0258 end +0.00
+    P 0.70 I 0.09 b 1.000 | os  +4.9% [+6.0] t_pk 27.0 rise 4.6 settle10 5.0 [5.0] | rel 5.0 [5.0] under -0.53 relI0 0.0177 end +0.00
+    P 0.70 I 0.20 b 0.800 | os +10.4% [+11.6] t_pk  8.4 rise 3.9 settle10 9.5 [10.5] | rel 4.3 [4.3] under -1.03 relI0 0.0340 end -0.01
+    P 0.70 I 0.20 b 0.900 | os +12.6% [+13.7] t_pk  8.1 rise 3.6 settle10 10.4 [10.7] | rel 3.9 [4.0] under -1.16 relI0 0.0258 end -0.01
+    P 0.70 I 0.20 b 1.000 | os +15.0% [+16.1] t_pk  7.8 rise 3.3 settle10 10.8 [11.2] | rel 3.6 [3.6] under -1.33 relI0 0.0175 end -0.01
+  vec fin (2nd case) act None stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -0.1% [+0.9..+1.0] t_pk 25.2 rise 12.6 settle10 14.0 [14.5..14.6] | rel 13.8 [13.8..13.8] under -0.41 relI0 0.0641 end -0.18
+    P 0.50 I 0.09 b 1.000 | os  +1.2% [+2.4..+2.7] t_pk 21.9 rise 9.9 settle10 11.0 [11.3..11.4] | rel 10.8 [11.0..11.0] under -0.31 relI0 0.0463 end -0.09
+    P 0.70 I 0.09 b 0.800 | os  -1.0% [-0.4..-0.1] t_pk 60.0 rise 13.9 settle10 14.9 [15.4..16.2] | rel 12.9 [13.1..13.1] under -0.15 relI0 0.0611 end -0.15
+    P 0.70 I 0.09 b 0.900 | os  -0.7% [-0.0..+0.2] t_pk 60.0 rise 12.3 settle10 13.1 [13.3..13.6] | rel 12.9 [13.1..13.1] under -0.14 relI0 0.0531 end -0.14
+    P 0.70 I 0.09 b 1.000 | os  -0.3% [+0.4..+0.6] t_pk 60.0 rise 10.6 settle10 11.3 [11.4..11.4] | rel 11.3 [11.4..11.5] under -0.11 relI0 0.0450 end -0.11
+    P 0.70 I 0.20 b 0.800 | os  +3.5% [+4.4..+4.6] t_pk 16.9 rise 7.0 settle10 7.9 [8.0..8.0] | rel 7.8 [7.9..7.9] under -0.47 relI0 0.0629 end +0.02
+    P 0.70 I 0.20 b 0.900 | os  +3.7% [+4.7..+5.0] t_pk 16.9 rise 6.1 settle10 7.0 [7.2..7.3] | rel 7.4 [7.5..7.5] under -0.49 relI0 0.0545 end +0.03
+    P 0.70 I 0.20 b 1.000 | os  +4.2% [+5.2..+5.4] t_pk 15.2 rise 5.8 settle10 6.5 [6.6..6.6] | rel 6.8 [6.8..6.9] under -0.53 relI0 0.0461 end +0.04
+  vec fin (2nd case) act None stick 1.0
+    P 0.50 I 0.09 b 0.694 | os  -3.9% [-] t_pk 60.0 rise 34.8 settle10 36.1 [-] | rel 28.4 [-] under +0.17 relI0 0.2453 end +0.17
+    P 0.50 I 0.09 b 1.000 | os  -3.0% [-] t_pk 60.0 rise 32.8 settle10 33.8 [-] | rel 25.1 [-] under -0.11 relI0 0.2076 end -0.11
+    P 0.70 I 0.09 b 0.800 | os  -4.2% [-] t_pk 60.0 rise 35.4 settle10 36.3 [-] | rel 28.7 [-] under +0.18 relI0 0.2365 end +0.18
+    P 0.70 I 0.09 b 0.900 | os  -3.8% [-] t_pk 60.0 rise 34.3 settle10 35.2 [-] | rel 27.2 [-] under +0.12 relI0 0.2196 end +0.12
+    P 0.70 I 0.09 b 1.000 | os  -3.4% [-] t_pk 60.0 rise 33.2 settle10 33.9 [-] | rel 25.8 [-] under +0.11 relI0 0.2028 end +0.11
+    P 0.70 I 0.20 b 0.800 | os  +1.0% [-] t_pk 38.4 rise 10.8 settle10 11.7 [-] | rel 13.4 [-] under -0.75 relI0 0.2585 end +0.05
+    P 0.70 I 0.20 b 0.900 | os  +1.0% [-] t_pk 38.0 rise 10.5 settle10 11.4 [-] | rel 12.9 [-] under -0.73 relI0 0.2401 end +0.02
+    P 0.70 I 0.20 b 1.000 | os  +1.0% [-] t_pk 37.6 rise 9.7 settle10 10.5 [-] | rel 12.0 [-] under -0.72 relI0 0.2216 end -0.01
+  vec fin (2nd case) act ('slew', 60.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -0.9% [+0.3] t_pk 28.1 rise 14.8 settle10 16.3 [17.1] | rel 14.9 [15.0] under -0.37 relI0 0.0632 end -0.25
+    P 0.50 I 0.09 b 1.000 | os  -0.3% [+1.0] t_pk 26.4 rise 12.2 settle10 13.2 [14.0] | rel 12.0 [12.3] under -0.27 relI0 0.0453 end -0.17
+    P 0.70 I 0.09 b 0.800 | os  -1.7% [-0.7] t_pk 60.0 rise 17.0 settle10 17.9 [19.1] | rel 14.2 [14.5] under -0.23 relI0 0.0599 end -0.23
+    P 0.70 I 0.09 b 0.900 | os  -1.4% [-0.4] t_pk 60.0 rise 15.4 settle10 16.2 [17.5] | rel 13.8 [14.4] under -0.23 relI0 0.0519 end -0.22
+    P 0.70 I 0.09 b 1.000 | os  -1.1% [-0.2] t_pk 60.0 rise 13.6 settle10 14.3 [15.1] | rel 13.0 [13.1] under -0.20 relI0 0.0439 end -0.20
+    P 0.70 I 0.20 b 0.800 | os  +1.9% [+3.1] t_pk 19.7 rise 8.8 settle10 9.7 [10.2] | rel 9.3 [9.4] under -0.37 relI0 0.0626 end -0.08
+    P 0.70 I 0.20 b 0.900 | os  +1.9% [+3.1] t_pk 19.7 rise 8.4 settle10 9.2 [9.3] | rel 8.9 [9.0] under -0.39 relI0 0.0542 end -0.07
+    P 0.70 I 0.20 b 1.000 | os  +1.9% [+3.1] t_pk 19.7 rise 7.8 settle10 8.5 [8.7] | rel 8.5 [8.5] under -0.40 relI0 0.0458 end -0.07
+  vec fin (2nd case) act ('slew', 240.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  +0.3% [+1.6] t_pk 23.1 rise 11.7 settle10 12.7 [13.2] | rel 13.3 [13.3] under -0.45 relI0 0.0646 end -0.16
+    P 0.50 I 0.09 b 1.000 | os  +2.1% [+3.4] t_pk 21.2 rise 8.6 settle10 9.4 [9.7] | rel 10.1 [10.3] under -0.37 relI0 0.0469 end -0.04
+    P 0.70 I 0.09 b 0.800 | os  -0.6% [+0.3] t_pk 60.0 rise 12.4 settle10 13.2 [14.0] | rel 12.0 [13.6] under -0.10 relI0 0.0617 end -0.10
+    P 0.70 I 0.09 b 0.900 | os  -0.2% [+0.7] t_pk 60.0 rise 10.5 settle10 11.2 [11.7] | rel 11.9 [12.1] under -0.09 relI0 0.0537 end -0.09
+    P 0.70 I 0.09 b 1.000 | os  +0.2% [+1.2] t_pk 60.0 rise 8.7 settle10 9.4 [9.7] | rel 10.3 [10.6] under -0.06 relI0 0.0457 end -0.05
+    P 0.70 I 0.20 b 0.800 | os  +4.2% [+5.7] t_pk 14.7 rise 5.9 settle10 6.7 [6.8] | rel 7.0 [7.1] under -0.52 relI0 0.0629 end +0.06
+    P 0.70 I 0.20 b 0.900 | os  +4.8% [+6.1] t_pk 14.6 rise 5.4 settle10 6.1 [6.2] | rel 6.5 [6.5] under -0.56 relI0 0.0545 end +0.07
+    P 0.70 I 0.20 b 1.000 | os  +5.4% [+6.6] t_pk 13.0 rise 5.0 settle10 5.6 [5.7] | rel 6.0 [6.1] under -0.64 relI0 0.0461 end +0.07
+  vec fin (2nd case) act ('servo', 60.0) stick 0.5
+    P 0.50 I 0.09 b 0.694 | os  -0.2% [+1.1] t_pk 25.6 rise 12.1 settle10 13.8 [14.1] | rel 14.2 [14.3] under -0.51 relI0 0.0636 end -0.22
+    P 0.50 I 0.09 b 1.000 | os  +1.0% [+2.1] t_pk 23.9 rise 9.2 settle10 10.4 [10.7] | rel 10.7 [10.8] under -0.36 relI0 0.0456 end -0.12
+    P 0.70 I 0.09 b 0.800 | os  -1.2% [-0.2] t_pk 60.0 rise 14.1 settle10 15.1 [16.4] | rel 13.7 [13.6] under -0.21 relI0 0.0604 end -0.20
+    P 0.70 I 0.09 b 0.900 | os  -0.9% [+0.0] t_pk 60.0 rise 12.5 settle10 13.3 [13.6] | rel 12.5 [12.9] under -0.18 relI0 0.0524 end -0.18
+    P 0.70 I 0.09 b 1.000 | os  -0.7% [+0.3] t_pk 60.0 rise 9.7 settle10 10.4 [11.7] | rel 10.7 [11.0] under -0.15 relI0 0.0443 end -0.14
+    P 0.70 I 0.20 b 0.800 | os  +3.1% [+4.6] t_pk 17.2 rise 6.4 settle10 7.4 [7.7] | rel 7.8 [7.9] under -0.47 relI0 0.0623 end -0.01
+    P 0.70 I 0.20 b 0.900 | os  +3.4% [+5.0] t_pk 15.6 rise 6.1 settle10 6.9 [7.0] | rel 7.2 [7.2] under -0.53 relI0 0.0538 end -0.00
+    P 0.70 I 0.20 b 1.000 | os  +3.9% [+5.5] t_pk 13.9 rise 5.7 settle10 6.5 [6.5] | rel 6.7 [6.8] under -0.60 relI0 0.0454 end +0.02
+
+WIND step (world-z couple, scale x authority/54 N m; FRD = -tau) after 40 s at the stick, noise seed 11
+  base = rate before, Ib = integ before, peak/end dev (deg/s), Imax = max |integ| in the 60 s
+  vec rigid stick 0.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base   0.00 Ib -0.0000 peak dev  -6.72 end dev  +0.03 Imax 0.106
+    P 0.50 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -6.72 end dev  +0.03 Imax 0.106
+    P 0.70 I 0.09 b 0.800 | base   0.00 Ib -0.0000 peak dev  -5.58 end dev  +0.01 Imax 0.095
+    P 0.70 I 0.09 b 0.900 | base   0.00 Ib -0.0000 peak dev  -5.58 end dev  +0.01 Imax 0.095
+    P 0.70 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -5.58 end dev  +0.01 Imax 0.095
+    P 0.70 I 0.20 b 0.800 | base   0.00 Ib -0.0000 peak dev  -4.97 end dev  +0.01 Imax 0.110
+    P 0.70 I 0.20 b 0.900 | base   0.00 Ib -0.0000 peak dev  -4.97 end dev  +0.01 Imax 0.110
+    P 0.70 I 0.20 b 1.000 | base   0.00 Ib -0.0000 peak dev  -4.97 end dev  +0.01 Imax 0.110
+  vec rigid stick 0.5 scale 5
+    P 0.50 I 0.09 b 0.694 | base   5.92 Ib +0.0146 peak dev  -6.37 end dev  +0.76 Imax 0.125
+    P 0.50 I 0.09 b 1.000 | base   6.01 Ib +0.0013 peak dev  -6.08 end dev  +0.67 Imax 0.106
+    P 0.70 I 0.09 b 0.800 | base   7.04 Ib +0.0039 peak dev  -6.83 end dev  -0.37 Imax 0.112
+    P 0.70 I 0.09 b 0.900 | base   6.12 Ib +0.0022 peak dev  -5.50 end dev  +0.55 Imax 0.104
+    P 0.70 I 0.09 b 1.000 | base   6.19 Ib -0.0016 peak dev  -5.29 end dev  +0.49 Imax 0.095
+    P 0.70 I 0.20 b 0.800 | base   6.50 Ib +0.0288 peak dev  -3.54 end dev  +0.17 Imax 0.122
+    P 0.70 I 0.20 b 0.900 | base   6.60 Ib +0.0205 peak dev  -3.66 end dev  +0.08 Imax 0.114
+    P 0.70 I 0.20 b 1.000 | base   6.59 Ib +0.0122 peak dev  -3.65 end dev  +0.09 Imax 0.105
+  vec rigid stick 1.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base  14.38 Ib +0.0394 peak dev  -6.29 end dev  +0.63 Imax 0.147
+    P 0.50 I 0.09 b 1.000 | base  14.40 Ib +0.0011 peak dev  -6.19 end dev  +0.61 Imax 0.106
+    P 0.70 I 0.09 b 0.800 | base  14.61 Ib +0.0348 peak dev  -5.44 end dev  +0.39 Imax 0.132
+    P 0.70 I 0.09 b 0.900 | base  14.77 Ib +0.0180 peak dev  -5.50 end dev  +0.22 Imax 0.114
+    P 0.70 I 0.09 b 1.000 | base  14.78 Ib -0.0000 peak dev  -5.51 end dev  +0.21 Imax 0.095
+    P 0.70 I 0.20 b 0.800 | base  15.15 Ib +0.0453 peak dev  -4.11 end dev  -0.15 Imax 0.143
+    P 0.70 I 0.20 b 0.900 | base  15.32 Ib +0.0240 peak dev  -4.40 end dev  -0.32 Imax 0.125
+    P 0.70 I 0.20 b 1.000 | base  15.42 Ib +0.0056 peak dev  -4.54 end dev  -0.42 Imax 0.107
+  vec rigid stick 0.5 scale 1
+    P 0.50 I 0.09 b 0.694 | base   5.92 Ib +0.0146 peak dev  -1.76 end dev  +0.75 Imax 0.041
+    P 0.50 I 0.09 b 1.000 | base   6.01 Ib +0.0013 peak dev  -1.52 end dev  +0.66 Imax 0.023
+    P 0.70 I 0.09 b 0.800 | base   7.04 Ib +0.0039 peak dev  -2.91 end dev  -0.38 Imax 0.036
+    P 0.70 I 0.09 b 0.900 | base   6.12 Ib +0.0022 peak dev  -1.69 end dev  +0.54 Imax 0.028
+    P 0.70 I 0.09 b 1.000 | base   6.19 Ib -0.0016 peak dev  -1.49 end dev  +0.48 Imax 0.020
+    P 0.70 I 0.20 b 0.800 | base   6.50 Ib +0.0288 peak dev  +0.64 end dev  +0.17 Imax 0.036
+    P 0.70 I 0.20 b 0.900 | base   6.60 Ib +0.0205 peak dev  +0.69 end dev  +0.07 Imax 0.028
+    P 0.70 I 0.20 b 1.000 | base   6.59 Ib +0.0122 peak dev  +0.67 end dev  +0.08 Imax 0.020
+  vec complete stick 0.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base   0.00 Ib -0.0000 peak dev  -3.77 end dev  +0.05 Imax 0.104
+    P 0.50 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -3.77 end dev  +0.05 Imax 0.104
+    P 0.70 I 0.09 b 0.800 | base   0.00 Ib -0.0000 peak dev  -3.42 end dev  +0.09 Imax 0.098
+    P 0.70 I 0.09 b 0.900 | base   0.00 Ib -0.0000 peak dev  -3.42 end dev  +0.09 Imax 0.098
+    P 0.70 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -3.42 end dev  +0.09 Imax 0.098
+    P 0.70 I 0.20 b 0.800 | base   0.00 Ib -0.0001 peak dev  -3.04 end dev  +0.04 Imax 0.113
+    P 0.70 I 0.20 b 0.900 | base   0.00 Ib -0.0001 peak dev  -3.04 end dev  +0.04 Imax 0.113
+    P 0.70 I 0.20 b 1.000 | base   0.00 Ib -0.0001 peak dev  -3.04 end dev  +0.04 Imax 0.113
+  vec complete stick 0.5 scale 5
+    P 0.50 I 0.09 b 0.694 | base   6.26 Ib +0.1083 peak dev  -2.16 end dev  +0.24 Imax 0.208
+    P 0.50 I 0.09 b 1.000 | base   6.32 Ib +0.0926 peak dev  -2.17 end dev  +0.17 Imax 0.190
+    P 0.70 I 0.09 b 0.800 | base   6.17 Ib +0.1025 peak dev  -1.97 end dev  +0.27 Imax 0.204
+    P 0.70 I 0.09 b 0.900 | base   6.21 Ib +0.0957 peak dev  -1.98 end dev  +0.24 Imax 0.196
+    P 0.70 I 0.09 b 1.000 | base   6.25 Ib +0.0889 peak dev  -1.99 end dev  +0.20 Imax 0.188
+    P 0.70 I 0.20 b 0.800 | base   6.63 Ib +0.1194 peak dev  -1.82 end dev  -0.00 Imax 0.213
+    P 0.70 I 0.20 b 0.900 | base   6.64 Ib +0.1114 peak dev  -1.82 end dev  -0.01 Imax 0.205
+    P 0.70 I 0.20 b 1.000 | base   6.64 Ib +0.1034 peak dev  -1.82 end dev  -0.01 Imax 0.197
+  vec complete stick 1.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base  11.09 Ib +0.3000 peak dev  -1.67 end dev  -1.54 Imax 0.300
+    P 0.50 I 0.09 b 1.000 | base  11.72 Ib +0.3000 peak dev  -1.56 end dev  -1.46 Imax 0.300
+    P 0.70 I 0.09 b 0.800 | base  11.36 Ib +0.3000 peak dev  -1.55 end dev  -1.43 Imax 0.300
+    P 0.70 I 0.09 b 0.900 | base  11.62 Ib +0.3000 peak dev  -1.50 end dev  -1.39 Imax 0.300
+    P 0.70 I 0.09 b 1.000 | base  11.86 Ib +0.3000 peak dev  -1.44 end dev  -1.33 Imax 0.300
+    P 0.70 I 0.20 b 0.800 | base  11.33 Ib +0.3000 peak dev  -1.52 end dev  -1.41 Imax 0.300
+    P 0.70 I 0.20 b 0.900 | base  11.61 Ib +0.3000 peak dev  -1.49 end dev  -1.39 Imax 0.300
+    P 0.70 I 0.20 b 1.000 | base  11.88 Ib +0.3000 peak dev  -1.47 end dev  -1.37 Imax 0.300
+  vec complete stick 0.5 scale 1
+    P 0.50 I 0.09 b 0.694 | base   6.26 Ib +0.1083 peak dev  +0.45 end dev  +0.34 Imax 0.139
+    P 0.50 I 0.09 b 1.000 | base   6.32 Ib +0.0926 peak dev  -0.40 end dev  +0.28 Imax 0.121
+    P 0.70 I 0.09 b 0.800 | base   6.17 Ib +0.1025 peak dev  +0.51 end dev  +0.41 Imax 0.136
+    P 0.70 I 0.09 b 0.900 | base   6.21 Ib +0.0957 peak dev  +0.48 end dev  +0.37 Imax 0.128
+    P 0.70 I 0.09 b 1.000 | base   6.25 Ib +0.0889 peak dev  +0.44 end dev  +0.34 Imax 0.120
+    P 0.70 I 0.20 b 0.800 | base   6.63 Ib +0.1194 peak dev  -0.42 end dev  +0.01 Imax 0.140
+    P 0.70 I 0.20 b 0.900 | base   6.64 Ib +0.1114 peak dev  -0.42 end dev  +0.00 Imax 0.132
+    P 0.70 I 0.20 b 1.000 | base   6.64 Ib +0.1034 peak dev  -0.43 end dev  +0.00 Imax 0.124
+  cld rigid stick 0.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base   0.00 Ib -0.0000 peak dev  -7.01 end dev  +0.00 Imax 0.096
+    P 0.50 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -7.01 end dev  +0.00 Imax 0.096
+    P 0.70 I 0.09 b 0.800 | base   0.00 Ib -0.0000 peak dev  -5.70 end dev  +0.00 Imax 0.092
+    P 0.70 I 0.09 b 0.900 | base   0.00 Ib -0.0000 peak dev  -5.70 end dev  +0.00 Imax 0.092
+    P 0.70 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -5.70 end dev  +0.00 Imax 0.092
+    P 0.70 I 0.20 b 0.800 | base   0.00 Ib -0.0000 peak dev  -4.90 end dev  +0.00 Imax 0.097
+    P 0.70 I 0.20 b 0.900 | base   0.00 Ib -0.0000 peak dev  -4.90 end dev  +0.00 Imax 0.097
+    P 0.70 I 0.20 b 1.000 | base   0.00 Ib -0.0000 peak dev  -4.90 end dev  +0.00 Imax 0.097
+  cld rigid stick 0.5 scale 5
+    P 0.50 I 0.09 b 0.694 | base   6.66 Ib +0.0178 peak dev  -7.00 end dev  +0.01 Imax 0.113
+    P 0.50 I 0.09 b 1.000 | base   6.66 Ib +0.0000 peak dev  -7.00 end dev  +0.01 Imax 0.096
+    P 0.70 I 0.09 b 0.800 | base   6.67 Ib +0.0163 peak dev  -5.71 end dev  +0.00 Imax 0.109
+    P 0.70 I 0.09 b 0.900 | base   6.67 Ib +0.0082 peak dev  -5.71 end dev  +0.00 Imax 0.101
+    P 0.70 I 0.09 b 1.000 | base   6.67 Ib +0.0000 peak dev  -5.71 end dev  +0.00 Imax 0.092
+    P 0.70 I 0.20 b 0.800 | base   6.67 Ib +0.0163 peak dev  -4.90 end dev  +0.01 Imax 0.113
+    P 0.70 I 0.20 b 0.900 | base   6.67 Ib +0.0081 peak dev  -4.90 end dev  +0.01 Imax 0.105
+    P 0.70 I 0.20 b 1.000 | base   6.67 Ib -0.0000 peak dev  -4.90 end dev  +0.01 Imax 0.097
+  cld rigid stick 1.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base  14.99 Ib +0.0401 peak dev  -7.00 end dev  +0.02 Imax 0.136
+    P 0.50 I 0.09 b 1.000 | base  15.00 Ib +0.0000 peak dev  -7.00 end dev  +0.02 Imax 0.096
+    P 0.70 I 0.09 b 0.800 | base  15.01 Ib +0.0367 peak dev  -5.72 end dev  +0.01 Imax 0.129
+    P 0.70 I 0.09 b 0.900 | base  15.01 Ib +0.0183 peak dev  -5.72 end dev  +0.00 Imax 0.111
+    P 0.70 I 0.09 b 1.000 | base  15.01 Ib +0.0000 peak dev  -5.73 end dev  +0.00 Imax 0.092
+    P 0.70 I 0.20 b 0.800 | base  15.00 Ib +0.0366 peak dev  -4.89 end dev  +0.01 Imax 0.134
+    P 0.70 I 0.20 b 0.900 | base  15.00 Ib +0.0183 peak dev  -4.89 end dev  +0.01 Imax 0.115
+    P 0.70 I 0.20 b 1.000 | base  15.00 Ib -0.0000 peak dev  -4.88 end dev  +0.01 Imax 0.097
+  cld rigid stick 0.5 scale 1
+    P 0.50 I 0.09 b 0.694 | base   6.66 Ib +0.0178 peak dev  -1.45 end dev  +0.01 Imax 0.037
+    P 0.50 I 0.09 b 1.000 | base   6.66 Ib +0.0000 peak dev  -1.45 end dev  +0.01 Imax 0.019
+    P 0.70 I 0.09 b 0.800 | base   6.67 Ib +0.0163 peak dev  -1.20 end dev  +0.00 Imax 0.035
+    P 0.70 I 0.09 b 0.900 | base   6.67 Ib +0.0082 peak dev  -1.20 end dev  +0.00 Imax 0.027
+    P 0.70 I 0.09 b 1.000 | base   6.67 Ib +0.0000 peak dev  -1.21 end dev  +0.00 Imax 0.018
+    P 0.70 I 0.20 b 0.800 | base   6.67 Ib +0.0163 peak dev  -1.04 end dev  +0.00 Imax 0.036
+    P 0.70 I 0.20 b 0.900 | base   6.67 Ib +0.0081 peak dev  -1.03 end dev  +0.01 Imax 0.028
+    P 0.70 I 0.20 b 1.000 | base   6.67 Ib -0.0000 peak dev  -1.03 end dev  +0.01 Imax 0.019
+  cld complete stick 0.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base   0.00 Ib -0.0000 peak dev  -5.59 end dev  +0.01 Imax 0.089
+    P 0.50 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -5.59 end dev  +0.01 Imax 0.089
+    P 0.70 I 0.09 b 0.800 | base   0.00 Ib -0.0000 peak dev  -4.79 end dev  +0.02 Imax 0.080
+    P 0.70 I 0.09 b 0.900 | base   0.00 Ib -0.0000 peak dev  -4.79 end dev  +0.02 Imax 0.080
+    P 0.70 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -4.79 end dev  +0.02 Imax 0.080
+    P 0.70 I 0.20 b 0.800 | base   0.00 Ib -0.0000 peak dev  -4.11 end dev  +0.00 Imax 0.100
+    P 0.70 I 0.20 b 0.900 | base   0.00 Ib -0.0000 peak dev  -4.11 end dev  +0.00 Imax 0.100
+    P 0.70 I 0.20 b 1.000 | base   0.00 Ib -0.0000 peak dev  -4.11 end dev  +0.00 Imax 0.100
+  cld complete stick 0.5 scale 5
+    P 0.50 I 0.09 b 0.694 | base   6.77 Ib +0.0310 peak dev  -7.74 end dev  -6.02 Imax 0.300
+    P 0.50 I 0.09 b 1.000 | base   6.64 Ib +0.0134 peak dev  -7.43 end dev  -6.07 Imax 0.300
+    P 0.70 I 0.09 b 0.800 | base   6.74 Ib +0.0302 peak dev  -7.50 end dev  -6.19 Imax 0.300
+    P 0.70 I 0.09 b 0.900 | base   6.71 Ib +0.0221 peak dev  -7.36 end dev  -6.26 Imax 0.300
+    P 0.70 I 0.09 b 1.000 | base   6.68 Ib +0.0141 peak dev  -7.27 end dev  -6.35 Imax 0.300
+    P 0.70 I 0.20 b 0.800 | base   6.53 Ib +0.0307 peak dev -14.78 end dev  -5.00 Imax 0.300
+    P 0.70 I 0.20 b 0.900 | base   6.51 Ib +0.0230 peak dev -14.63 end dev  -4.06 Imax 0.300
+    P 0.70 I 0.20 b 1.000 | base   6.49 Ib +0.0152 peak dev -14.44 end dev  -3.34 Imax 0.300
+  cld complete stick 1.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base  14.75 Ib +0.1246 peak dev  -3.22 end dev  +0.51 Imax 0.216
+    P 0.50 I 0.09 b 1.000 | base  14.98 Ib +0.0851 peak dev  -3.39 end dev  +0.13 Imax 0.180
+    P 0.70 I 0.09 b 0.800 | base  14.70 Ib +0.1186 peak dev  -2.82 end dev  +0.42 Imax 0.211
+    P 0.70 I 0.09 b 0.900 | base  14.82 Ib +0.1009 peak dev  -2.90 end dev  +0.23 Imax 0.194
+    P 0.70 I 0.09 b 1.000 | base  14.97 Ib +0.0831 peak dev  -3.07 end dev  -0.02 Imax 0.178
+    P 0.70 I 0.20 b 0.800 | base  15.38 Ib +0.1196 peak dev  -3.16 end dev  -1.14 Imax 0.230
+    P 0.70 I 0.20 b 0.900 | base  15.47 Ib +0.1001 peak dev  -3.33 end dev  -1.21 Imax 0.213
+    P 0.70 I 0.20 b 1.000 | base  15.55 Ib +0.0806 peak dev  -3.50 end dev  -1.27 Imax 0.196
+  cld complete stick 0.5 scale 1
+    P 0.50 I 0.09 b 0.694 | base   6.77 Ib +0.0310 peak dev  -1.37 end dev  -0.52 Imax 0.059
+    P 0.50 I 0.09 b 1.000 | base   6.64 Ib +0.0134 peak dev  -1.26 end dev  -0.44 Imax 0.042
+    P 0.70 I 0.09 b 0.800 | base   6.74 Ib +0.0302 peak dev  -1.15 end dev  -0.37 Imax 0.057
+    P 0.70 I 0.09 b 0.900 | base   6.71 Ib +0.0221 peak dev  -1.13 end dev  -0.36 Imax 0.049
+    P 0.70 I 0.09 b 1.000 | base   6.68 Ib +0.0141 peak dev  -1.09 end dev  -0.34 Imax 0.041
+    P 0.70 I 0.20 b 0.800 | base   6.53 Ib +0.0307 peak dev  -0.80 end dev  -0.04 Imax 0.060
+    P 0.70 I 0.20 b 0.900 | base   6.51 Ib +0.0230 peak dev  -0.77 end dev  -0.01 Imax 0.052
+    P 0.70 I 0.20 b 1.000 | base   6.49 Ib +0.0152 peak dev  +0.78 end dev  +0.02 Imax 0.044
+  vec fin (2nd case) stick 0.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base   0.00 Ib -0.0000 peak dev  -5.28 end dev  -0.00 Imax 0.098
+    P 0.50 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -5.28 end dev  -0.00 Imax 0.098
+    P 0.70 I 0.09 b 0.800 | base   0.00 Ib -0.0000 peak dev  -4.60 end dev  +0.00 Imax 0.093
+    P 0.70 I 0.09 b 0.900 | base   0.00 Ib -0.0000 peak dev  -4.60 end dev  +0.00 Imax 0.093
+    P 0.70 I 0.09 b 1.000 | base   0.00 Ib -0.0000 peak dev  -4.60 end dev  +0.00 Imax 0.093
+    P 0.70 I 0.20 b 0.800 | base   0.00 Ib -0.0000 peak dev  -4.32 end dev  +0.00 Imax 0.102
+    P 0.70 I 0.20 b 0.900 | base   0.00 Ib -0.0000 peak dev  -4.32 end dev  +0.00 Imax 0.102
+    P 0.70 I 0.20 b 1.000 | base   0.00 Ib -0.0000 peak dev  -4.32 end dev  +0.00 Imax 0.102
+  vec fin (2nd case) stick 0.5 scale 5
+    P 0.50 I 0.09 b 0.694 | base   6.40 Ib +0.0560 peak dev  -4.09 end dev  +0.08 Imax 0.154
+    P 0.50 I 0.09 b 1.000 | base   6.39 Ib +0.0397 peak dev  -4.02 end dev  +0.06 Imax 0.136
+    P 0.70 I 0.09 b 0.800 | base   6.39 Ib +0.0537 peak dev  -3.51 end dev  +0.11 Imax 0.149
+    P 0.70 I 0.09 b 0.900 | base   6.40 Ib +0.0463 peak dev  -3.49 end dev  +0.09 Imax 0.141
+    P 0.70 I 0.09 b 1.000 | base   6.42 Ib +0.0390 peak dev  -3.47 end dev  +0.07 Imax 0.133
+    P 0.70 I 0.20 b 0.800 | base   6.47 Ib +0.0597 peak dev  -2.98 end dev  +0.11 Imax 0.157
+    P 0.70 I 0.20 b 0.900 | base   6.47 Ib +0.0519 peak dev  -2.97 end dev  +0.11 Imax 0.148
+    P 0.70 I 0.20 b 1.000 | base   6.48 Ib +0.0440 peak dev  -2.97 end dev  +0.11 Imax 0.140
+  vec fin (2nd case) stick 1.0 scale 5
+    P 0.50 I 0.09 b 0.694 | base  13.72 Ib +0.2230 peak dev  -1.91 end dev  -0.19 Imax 0.300
+    P 0.50 I 0.09 b 1.000 | base  14.02 Ib +0.1875 peak dev  -2.13 end dev  +0.56 Imax 0.300
+    P 0.70 I 0.09 b 0.800 | base  13.65 Ib +0.2105 peak dev  -1.86 end dev  +0.09 Imax 0.300
+    P 0.70 I 0.09 b 0.900 | base  13.78 Ib +0.1950 peak dev  -1.93 end dev  +0.40 Imax 0.300
+    P 0.70 I 0.09 b 1.000 | base  13.91 Ib +0.1796 peak dev  -2.00 end dev  +0.71 Imax 0.300
+    P 0.70 I 0.20 b 0.800 | base  15.12 Ib +0.2505 peak dev  -2.29 end dev  -1.41 Imax 0.300
+    P 0.70 I 0.20 b 0.900 | base  15.12 Ib +0.2324 peak dev  -2.31 end dev  -0.97 Imax 0.300
+    P 0.70 I 0.20 b 1.000 | base  15.12 Ib +0.2142 peak dev  -2.32 end dev  -0.53 Imax 0.300
+  vec fin (2nd case) stick 0.5 scale 1
+    P 0.50 I 0.09 b 0.694 | base   6.40 Ib +0.0560 peak dev  -0.85 end dev  +0.12 Imax 0.081
+    P 0.50 I 0.09 b 1.000 | base   6.39 Ib +0.0397 peak dev  -0.81 end dev  +0.13 Imax 0.063
+    P 0.70 I 0.09 b 0.800 | base   6.39 Ib +0.0537 peak dev  -0.73 end dev  +0.17 Imax 0.078
+    P 0.70 I 0.09 b 0.900 | base   6.40 Ib +0.0463 peak dev  -0.72 end dev  +0.16 Imax 0.070
+    P 0.70 I 0.09 b 1.000 | base   6.42 Ib +0.0390 peak dev  -0.71 end dev  +0.14 Imax 0.062
+    P 0.70 I 0.20 b 0.800 | base   6.47 Ib +0.0597 peak dev  -0.58 end dev  +0.16 Imax 0.082
+    P 0.70 I 0.20 b 0.900 | base   6.47 Ib +0.0519 peak dev  -0.57 end dev  +0.16 Imax 0.074
+    P 0.70 I 0.20 b 1.000 | base   6.48 Ib +0.0440 peak dev  -0.57 end dev  +0.16 Imax 0.065
+
+TORQUE-COMMAND NOISE (gz gyro noise, seeds 11/12): std over 20 s, std_hf = minus a 1 s moving mean
+  vec rigid stick 0.0
+    P 0.50 I 0.09 b 0.694 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+  vec rigid stick 0.5
+    P 0.50 I 0.09 b 0.694 | std 0.00483..0.00486  std_hf 0.00027..0.00027
+    P 0.50 I 0.09 b 1.000 | std 0.00477..0.00480  std_hf 0.00031..0.00031
+    P 0.70 I 0.09 b 0.800 | std 0.00690..0.00691  std_hf 0.00043..0.00043
+    P 0.70 I 0.09 b 0.900 | std 0.00546..0.00550  std_hf 0.00045..0.00046
+    P 0.70 I 0.09 b 1.000 | std 0.00443..0.00446  std_hf 0.00048..0.00049
+    P 0.70 I 0.20 b 0.800 | std 0.00746..0.00756  std_hf 0.00041..0.00042
+    P 0.70 I 0.20 b 0.900 | std 0.00745..0.00746  std_hf 0.00048..0.00048
+    P 0.70 I 0.20 b 1.000 | std 0.00737..0.00748  std_hf 0.00047..0.00047
+  vec complete stick 0.0
+    P 0.50 I 0.09 b 0.694 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+  vec complete stick 0.5
+    P 0.50 I 0.09 b 0.694 | std 0.00220..0.00221  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00193..0.00194  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00238..0.00239  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00224..0.00225  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00209..0.00210  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00101..0.00102  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00096..0.00096  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00091..0.00091  std_hf 0.00035..0.00035
+  cld rigid stick 0.0
+    P 0.50 I 0.09 b 0.694 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+  cld rigid stick 0.5
+    P 0.50 I 0.09 b 0.694 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00025..0.00026  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00036..0.00036  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00036..0.00036  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00036..0.00036  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00036..0.00036  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00036..0.00036  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00036..0.00036  std_hf 0.00035..0.00035
+  cld complete stick 0.0
+    P 0.50 I 0.09 b 0.694 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+  cld complete stick 0.5
+    P 0.50 I 0.09 b 0.694 | std 0.00144..0.00144  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00088..0.00088  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00120..0.00120  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00094..0.00094  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00073..0.00074  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00063..0.00064  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00064..0.00065  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00067..0.00068  std_hf 0.00035..0.00035
+  vec fin (2nd case) stick 0.0
+    P 0.50 I 0.09 b 0.694 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00025..0.00025  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00035..0.00035  std_hf 0.00035..0.00035
+  vec fin (2nd case) stick 0.5
+    P 0.50 I 0.09 b 0.694 | std 0.00184..0.00185  std_hf 0.00025..0.00025
+    P 0.50 I 0.09 b 1.000 | std 0.00132..0.00132  std_hf 0.00025..0.00025
+    P 0.70 I 0.09 b 0.800 | std 0.00150..0.00151  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 0.900 | std 0.00128..0.00129  std_hf 0.00035..0.00035
+    P 0.70 I 0.09 b 1.000 | std 0.00107..0.00107  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.800 | std 0.00101..0.00102  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 0.900 | std 0.00101..0.00102  std_hf 0.00035..0.00035
+    P 0.70 I 0.20 b 1.000 | std 0.00104..0.00105  std_hf 0.00035..0.00035

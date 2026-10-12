@@ -1,0 +1,36 @@
+== wind_10pct
+  vec rigid    peak_rate 7.16 -> 5.94  heading_peak_deg 78.3 -> 69.9  recover_0.2deg 34.9 -> 22.3  peak_rate_after_off 6.6 -> 5.5
+  vec complete peak_rate 3.89 -> 3.54  heading_peak_deg 74.4 -> 70.4  recover_0.2deg 32.2 -> 34.7  peak_rate_after_off 3.59 -> 3.36
+  vec fin      peak_rate 5.54 -> 4.83  heading_peak_deg 72.1 -> 68.5  recover_0.2deg 23.8 -> 28.6  peak_rate_after_off 5 -> 4.43
+  cs rigid     peak_rate 7.5 -> 6.08  heading_peak_deg 65.7 -> 63.6  recover_0.2deg 16.4 -> 24.8  peak_rate_after_off 7.5 -> 6.07
+  cs complete  peak_rate 5.92 -> 5.06  heading_peak_deg 60.3 -> 54.1  recover_0.2deg 29.1 -> 18.3  peak_rate_after_off 4.96 -> 4.33
+== wind_gate
+  vec rigid    peak_rate 1.75 -> 1.48  heading_peak_deg 16.6 -> 14.3  recover_0.2deg 16.1 -> 17.1  peak_rate_after_off 1.22 -> 1.02
+  vec complete peak_rate 1.18 -> 1.05  heading_peak_deg 17.3 -> 15.4  recover_0.2deg 23.7 -> 23.6  peak_rate_after_off 0.807 -> 0.745
+  vec fin      peak_rate 1.63 -> 1.4  heading_peak_deg 15.7 -> 13.9  recover_0.2deg 16.5 -> 17.4  peak_rate_after_off 1.14 -> 0.974
+  cs rigid     peak_rate 1.39 -> 1.13  heading_peak_deg 12.2 -> 11.8  recover_0.2deg 13.7 -> 16  peak_rate_after_off 1.39 -> 1.12
+  cs complete  peak_rate 1.2 -> 1  heading_peak_deg 12.9 -> 11.9  recover_0.2deg 16.1 -> 17.4  peak_rate_after_off 1.19 -> 0.978
+== gust
+  vec rigid    peak_rate 6.97 -> 5.89  heading_peak_deg 22.2 -> 19.9  recover_0.2deg None -> None  peak_rate_after_off 3.16 -> 2.18
+  vec complete peak_rate 3.44 -> 3.21  heading_peak_deg 10.1 -> 9.66  recover_0.2deg None -> None  peak_rate_after_off 1.31 -> 1.07
+  vec fin      peak_rate 5.48 -> 4.82  heading_peak_deg 19.3 -> 17.7  recover_0.2deg None -> None  peak_rate_after_off 2.1 -> 1.61
+  cs rigid     peak_rate 7.5 -> 6.08  heading_peak_deg 28.1 -> 23.8  recover_0.2deg None -> None  peak_rate_after_off 4.12 -> 2.71
+  cs complete  peak_rate 5.91 -> 5.06  heading_peak_deg 20.2 -> 18.1  recover_0.2deg None -> None  peak_rate_after_off 2.8 -> 2.04
+== step_half
+  vec rigid    overshoot_pct 24.1 -> 16.1  rise_10_90 5.48 -> 5.18  settle10 inf -> 27  settle5 inf -> inf
+  vec complete overshoot_pct -2.74 -> -3.2  rise_10_90 22.1 -> 24.9  settle10 23.9 -> 26.3  settle5 38.7 -> 45.1
+  vec fin      overshoot_pct 1.16 -> -0.311  rise_10_90 9.94 -> 10.6  settle10 11 -> 11.3  settle5 13.3 -> 14.9
+  cs rigid     overshoot_pct 20.1 -> 13.1  rise_10_90 3.16 -> 2.72  settle10 13.8 -> 10.8  settle5 16.4 -> 15.5
+  cs complete  overshoot_pct 7.8 -> 4.83  rise_10_90 5.16 -> 4.68  settle10 5.58 -> 4.98  settle5 30.7 -> 5.76
+== step_small
+  vec rigid    overshoot_pct 38.3 -> 16.3  rise_10_90 7.22 -> 5.14  settle10 45 -> inf  settle5 51.8 -> inf
+  vec complete overshoot_pct 19.1 -> 10.5  rise_10_90 9.62 -> 9.68  settle10 33.7 -> 25.5  settle5 39 -> 35.9
+  vec fin      overshoot_pct 13.7 -> 7.44  rise_10_90 8.14 -> 5.7  settle10 inf -> 6.42  settle5 inf -> 20.4
+  cs rigid     overshoot_pct 20.1 -> 13.3  rise_10_90 3.16 -> 2.72  settle10 13.8 -> 10.8  settle5 16.5 -> 15.5
+  cs complete  overshoot_pct 21.3 -> 14.3  rise_10_90 4.62 -> 4.1  settle10 18.5 -> 15.7  settle5 21.4 -> 20.2
+== noise
+  vec rigid    torque_std 0.00025 -> 0.00035  esc_std 0.000151 -> 0.000212
+  vec complete torque_std 0.00025 -> 0.00035  esc_std 0.000151 -> 0.000212
+  vec fin      torque_std 0.00025 -> 0.00035  esc_std 0.000151 -> 0.000212
+  cs rigid     torque_std 0.00025 -> 0.000351  esc_std 0.0141 -> 0.0167  tail_reversals_per_s 53.5 -> 53.8
+  cs complete  torque_std 0.00025 -> 0.00035  esc_std 0.0141 -> 0.0167  tail_reversals_per_s 53.7 -> 53.7

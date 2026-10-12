@@ -1,0 +1,69 @@
+step: rise 10-90 % [s], t90 [s], peak [deg/s], overshoot [%], ts10 = last exit from +-10 % sp [s],
+      ess = mean(r) - sp over the last 10 s [deg/s], rel = gate settle rule from release [s],
+      rel10 = last exit from 0.1 sp after release [s], under = most negative rate after release
+wind: gust at rest: peak |r|, rec = last exit from 0.25 deg/s [s], integ/needed at 60 s;
+      gust in a 6.67 deg/s turn: peak deviation, recovery to 0.25 deg/s [s]
+noise: high-pass torque rms at rest / in the turn (gyro noise) / in the turn with stick jitter 0.002
+
+vec rigid    P 0.65 I 0.070 FF 0.00 {"phys_slew": 60}
+   stick 0.5  sp  6.67  rise 5.8 t90 6.6 peak 7.91 over 19%  ts10 59.7 ess -0.61 | rel 5.3 rel10 36.4 under -0.91
+
+vec complete P 0.65 I 0.070 FF 0.00 {"phys_slew": 60}
+   stick 0.5  sp  6.67  rise 30.7 t90 32.6 peak 6.42 over -4%  ts10 38.3 ess -0.38 | rel 30.9 rel10 32.7 under -0.25
+
+vec complete P 0.65 I 0.070 FF 1.00 {"phys_slew": 60}
+   stick 0.5  sp  6.67  rise 5.4 t90 6.2 peak 7.26 over 9%  ts10 6.3 ess +0.18 | rel 8.2 rel10 40.0 under -1.34
+
+vec fin      P 0.65 I 0.070 FF 0.00 {"phys_slew": 60}
+   stick 0.5  sp  6.67  rise 11.6 t90 12.4 peak 6.63 over -1%  ts10 14.9 ess -0.17 | rel 13.4 rel10 16.4 under -0.26
+
+vec fin      P 0.65 I 0.070 FF 0.30 {"phys_slew": 60}
+   stick 0.5  sp  6.67  rise 4.8 t90 5.4 peak 6.99 over 5%  ts10 5.5 ess -0.03 | rel 6.5 rel10 7.0 under -0.57
+
+vec rigid    P 0.65 I 0.070 FF 0.00 {"slew": 240}
+   stick 0.5  sp  6.67  rise 5.0 t90 5.7 peak 7.87 over 18%  ts10 29.6 ess -0.53 | rel 5.2 rel10 34.2 under -0.94
+
+vec complete P 0.65 I 0.070 FF 0.00 {"slew": 240}
+   stick 0.5  sp  6.67  rise 30.3 t90 31.5 peak 6.39 over -4%  ts10 39.5 ess -0.41 | rel 30.0 rel10 32.1 under -0.29
+
+vec complete P 0.65 I 0.070 FF 1.00 {"slew": 240}
+   stick 0.5  sp  6.67  rise 4.7 t90 5.4 peak 7.34 over 10%  ts10 17.3 ess +0.14 | rel 7.5 rel10 40.0 under -1.38
+
+vec fin      P 0.65 I 0.070 FF 0.00 {"slew": 240}
+   stick 0.5  sp  6.67  rise 10.3 t90 11.0 peak 6.65 over -0%  ts10 12.1 ess -0.20 | rel 13.0 rel10 15.9 under -0.19
+
+vec fin      P 0.65 I 0.070 FF 0.30 {"slew": 240}
+   stick 0.5  sp  6.67  rise 4.0 t90 4.6 peak 7.21 over 8%  ts10 4.8 ess -0.01 | rel 5.7 rel10 6.6 under -0.50
+
+vec rigid    P 0.65 I 0.070 FF 0.00 {"slew": 60}
+   stick 0.5  sp  6.67  rise 6.7 t90 7.5 peak 7.56 over 13%  ts10 60.0 ess -0.66 | rel 4.8 rel10 32.0 under -1.13
+
+vec complete P 0.65 I 0.070 FF 0.00 {"slew": 60}
+   stick 0.5  sp  6.67  rise 34.0 t90 35.8 peak 6.38 over -4%  ts10 41.2 ess -0.41 | rel 30.9 rel10 33.1 under -0.16
+
+vec complete P 0.65 I 0.070 FF 1.00 {"slew": 60}
+   stick 0.5  sp  6.67  rise 5.9 t90 6.6 peak 7.10 over 7%  ts10 6.8 ess +0.14 | rel 8.8 rel10 40.0 under -1.12
+
+vec fin      P 0.65 I 0.070 FF 0.00 {"slew": 60}
+   stick 0.5  sp  6.67  rise 15.6 t90 16.4 peak 6.60 over -1%  ts10 18.6 ess -0.20 | rel 15.4 rel10 18.3 under -0.30
+
+vec fin      P 0.65 I 0.070 FF 0.30 {"slew": 60}
+   stick 0.5  sp  6.67  rise 5.6 t90 6.1 peak 6.87 over 3%  ts10 6.3 ess -0.06 | rel 7.3 rel10 8.3 under -0.30
+
+cs rigid     P 0.65 I 0.070 FF 0.00 {"tail_tau": 0.025}
+   stick 0.5  sp  6.67  rise 2.9 t90 3.2 peak 7.56 over 13%  ts10 13.0 ess +0.00 | rel 2.9 rel10 12.4 under -0.91
+
+cs complete  P 0.65 I 0.070 FF 0.00 {"tail_tau": 0.025}
+   stick 0.5  sp  6.67  rise 5.3 t90 5.7 peak 7.07 over 6%  ts10 5.7 ess -0.10 | rel 5.8 rel10 6.7 under -0.47
+
+cs complete  P 0.65 I 0.070 FF 0.10 {"tail_tau": 0.025}
+   stick 0.5  sp  6.67  rise 4.1 t90 4.4 peak 7.22 over 8%  ts10 4.5 ess -0.06 | rel 4.4 rel10 17.1 under -0.90
+
+cs rigid     P 0.65 I 0.070 FF 0.00 {"tail_tau": 0.05}
+   stick 0.5  sp  6.67  rise 2.9 t90 3.1 peak 7.57 over 13%  ts10 13.0 ess +0.00 | rel 2.9 rel10 12.4 under -0.91
+
+cs complete  P 0.65 I 0.070 FF 0.00 {"tail_tau": 0.05}
+   stick 0.5  sp  6.67  rise 5.2 t90 5.6 peak 7.07 over 6%  ts10 5.7 ess -0.09 | rel 5.7 rel10 6.6 under -0.47
+
+cs complete  P 0.65 I 0.070 FF 0.10 {"tail_tau": 0.05}
+   stick 0.5  sp  6.67  rise 4.0 t90 4.4 peak 7.23 over 8%  ts10 4.5 ess -0.06 | rel 4.4 rel10 17.1 under -0.90

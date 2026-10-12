@@ -1,0 +1,50 @@
+2026-09-25/14_34_05.ulg (SYS_AUTOSTART 2520, vectored, 9535f8abcd)
+  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: 0; smallest gyro step 4000 us; control_allocator_status publish times mod 8000 us: [4000]
+  torque, loop closed : n=14688 median 1.12e-05 p95 5.30e-05 p99 9.41e-05 max 1.76e-04  (stick step times taken from the torque 1 times)
+  torque, loop open   : n=1915 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  integrator (|I| max 0.1126): n=1478 median 1.11e-05 p95 5.31e-05 p99 7.23e-05 max 1.76e-04
+  yaw unallocated sign: 1661/1662 logged status samples agree; 50 logged samples carry a yaw flag
+    first disagreements (t, logged, model): [(38020000, 0.0, 1.0)]
+  tilt servos          : n=6644 median 0.00e+00 p95 0.00e+00 p99 2.66e-03 max 3.20e-02
+  motors               : n=6644 median 3.63e-06 p95 5.22e-05 p99 7.15e-05 max 1.67e-02
+2026-09-25/14_39_53.ulg (SYS_AUTOSTART 2527, vectored, 9535f8abcd)
+  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: 0; smallest gyro step 4000 us; control_allocator_status publish times mod 8000 us: [0]
+  torque, loop closed : n=15278 median 2.98e-06 p95 8.72e-05 p99 9.01e-05 max 5.82e-02  (stick step times taken from the torque 2 times)
+  torque, loop open   : n=1916 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  integrator (|I| max 0.0954): n=1538 median 2.96e-06 p95 8.71e-05 p99 9.00e-05 max 9.13e-05
+  yaw unallocated sign: 1721/1721 logged status samples agree; 51 logged samples carry a yaw flag
+  tilt servos          : n=6880 median 0.00e+00 p95 0.00e+00 p99 4.16e-06 max 2.67e-03
+  motors               : n=6880 median 1.34e-06 p95 8.54e-05 p99 8.93e-05 max 4.16e-03
+2026-09-25/14_45_54.ulg (SYS_AUTOSTART 2510, cloudship, 9535f8abcd)
+  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: 0; smallest gyro step 4000 us; control_allocator_status publish times mod 8000 us: [4000]
+  torque, loop closed : n=10683 median 2.54e-06 p95 1.24e-04 p99 1.26e-04 max 1.27e-04  (stick step times taken from the torque 1 times)
+  torque, loop open   : n=2267 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  integrator (|I| max 0.0305): n=1077 median 2.50e-06 p95 1.23e-04 p99 1.26e-04 max 1.27e-04
+  yaw unallocated sign: 1296/1296 logged status samples agree; 0 logged samples carry a yaw flag
+  tilt servos          : n=2591 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  motors               : n=7773 median 0.00e+00 p95 1.10e-05 p99 1.24e-04 max 1.27e-04
+2026-09-25/14_50_29.ulg (SYS_AUTOSTART 2517, cloudship, 9535f8abcd)
+  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: 0; smallest gyro step 4000 us; control_allocator_status publish times mod 8000 us: [0]
+  torque, loop closed : n=10952 median 3.14e-06 p95 8.54e-05 p99 8.72e-05 max 1.75e-04  (stick step times taken from the torque 1 times)
+  torque, loop open   : n=2114 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  integrator (|I| max 0.0530): n=1105 median 3.14e-06 p95 8.53e-05 p99 8.69e-05 max 8.83e-05
+  yaw unallocated sign: 1308/1308 logged status samples agree; 0 logged samples carry a yaw flag
+  tilt servos          : n=2614 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  motors               : n=7842 median 0.00e+00 p95 4.09e-05 p99 8.57e-05 max 1.05e-04
+2026-09-27/08_31_54.ulg (SYS_AUTOSTART 2510, cloudship, 1965de11ab)
+  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: 2; smallest gyro step 4000 us; control_allocator_status publish times mod 8000 us: [0, 4000]
+  torque, loop closed : n=10709 median 1.71e-05 p95 4.06e-05 p99 4.27e-05 max 3.12e-04  (stick step times taken from the torque 0 times)
+  torque, loop open   : n=2269 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  integrator (|I| max 0.0319): n=1080 median 1.67e-05 p95 4.06e-05 p99 4.25e-05 max 4.37e-05
+  yaw unallocated sign: 1299/1299 logged status samples agree; 0 logged samples carry a yaw flag
+  tilt servos          : n=2597 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  motors               : n=7791 median 0.00e+00 p95 3.79e-05 p99 4.10e-05 max 1.23e-04
+2026-09-27/08_36_30.ulg (SYS_AUTOSTART 2520, vectored, 1965de11ab)
+  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: 0; smallest gyro step 4000 us; control_allocator_status publish times mod 8000 us: [0]
+  torque, loop closed : n=14691 median 4.31e-06 p95 9.19e-05 p99 9.71e-05 max 1.65e-04  (stick step times taken from the torque 0 times)
+  torque, loop open   : n=1919 median 0.00e+00 p95 0.00e+00 p99 0.00e+00 max 0.00e+00
+  integrator (|I| max 0.1120): n=1478 median 4.25e-06 p95 9.19e-05 p99 9.68e-05 max 1.65e-04
+  yaw unallocated sign: 1661/1662 logged status samples agree; 51 logged samples carry a yaw flag
+    first disagreements (t, logged, model): [(125616000, 0.0, 1.0)]
+  tilt servos          : n=6646 median 0.00e+00 p95 0.00e+00 p99 1.60e-02 max 3.47e-02
+  motors               : n=6646 median 2.02e-06 p95 2.97e-05 p99 9.88e-05 max 1.65e-02

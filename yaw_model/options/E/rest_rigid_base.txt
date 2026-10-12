@@ -1,0 +1,7 @@
+gz_airship_vectored_independent base P 0.50: first rest wait, 42 rows (13.0 s)
+  t   55.46 rate  -7.17 deg/s torque +0.0157 integ -0.0467 satP 0 satN 0  released/released
+  t   57.99 rate  -7.17 deg/s torque +0.0274 integ -0.0350 satP 0 satN 0  steering/steering
+  t   60.52 rate  -4.75 deg/s torque +0.0305 integ -0.0109 satP 0 satN 0  steering/steering
+  t   63.05 rate  -3.42 deg/s torque +0.0348 integ +0.0050 satP 0 satN 0  steering/steering
+  t   65.58 rate  -0.93 deg/s torque +0.0218 integ +0.0137 satP 0 satN 0  steering/steering
+  t   68.10 rate  -0.45 deg/s torque +0.0200 integ +0.0161 satP 0 satN 0  holding/holding

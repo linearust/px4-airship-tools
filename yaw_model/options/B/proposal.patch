@@ -1,0 +1,77 @@
+PROPOSAL ONLY (option B, yaw rate feedforward). Not applied; the owner decides
+the new parameter and every value below. Values are the ones the model judged
+(ffcommon.py / sweep.py, ens2.jsonl): P 0.65, I 0.07, FF per plant.
+
+--- a/src/modules/airship_att_control/airship_att_control_params.yaml
++++ b/src/modules/airship_att_control/airship_att_control_params.yaml
+@@ AS_YAWRATE_P
+-      default: 0.5
++      default: 0.65
+@@ AS_YAWRATE_I
+-      default: 0.09
++      default: 0.07
+@@ after AS_YR_INT_LIM
++    AS_YAWRATE_FF:
++      description:
++        short: Yaw rate feedforward
++        long: Normalized yaw torque per rad/s of commanded yaw rate, added to the
++          rate controller output. It supplies the torque that holds a commanded
++          rate against the hull's yaw damping, so the integrator holds less and
++          the vehicle stops sooner when the stick is released. Set it to the
++          torque that holds a steady turn divided by that turn rate (both
++          measured, torque in the unit of the yaw torque setpoint). Hull
++          damping grows with the square of the rate, so the value is right at
++          one rate only: too large overshoots and reverses on release at
++          smaller rates, too small leaves the rest to the integrator. 0 on a
++          vehicle without aerodynamic yaw damping. Unused where the yaw rate
++          loop stays open (see AS_YAWRATE_MAX).
++      type: float
++      default: 0.0
++      min: 0.0
++      max: 3.0
++      decimal: 3
++      increment: 0.01
+
+--- a/src/modules/airship_att_control/airship_att_control.hpp
++++ b/src/modules/airship_att_control/airship_att_control.hpp
+@@ DEFINE_PARAMETERS(
+ 		(ParamFloat<px4::params::AS_YAWRATE_I>) _param_as_yawrate_i,
++		(ParamFloat<px4::params::AS_YAWRATE_FF>) _param_as_yawrate_ff,
+ 		(ParamFloat<px4::params::AS_YR_INT_LIM>) _param_as_yr_int_lim,
+
+--- a/src/modules/airship_att_control/airship_att_control_main.cpp
++++ b/src/modules/airship_att_control/airship_att_control_main.cpp
+@@ AirshipAttitudeControl::parameters_updated()
+ 	_rate_control.setIntegratorLimit(Vector3f(0.f, 0.f, _param_as_yr_int_lim.get()));
++	// torque += FF * rate setpoint (rate_control.cpp:78); only yaw has a loop
++	_rate_control.setFeedForwardGain(Vector3f(0.f, 0.f, _param_as_yawrate_ff.get()));
+ 	_yaw_rate_max = math::radians(_param_as_yawrate_max.get());
+
+Airframe defaults, one per gz physics variant (the value is a property of the
+plant, not of the vehicle's controller):
+
+--- a/ROMFS/px4fmu_common/init.d-posix/airframes/2527_gz_airship_vectored_independent_am_fin_drag
++++ b/ROMFS/px4fmu_common/init.d-posix/airframes/2527_gz_airship_vectored_independent_am_fin_drag
+ . ${R}etc/init.d-posix/airframes/2520_gz_airship_vectored_independent
++
++param set-default AS_YAWRATE_FF 1.0
+
+--- a/ROMFS/px4fmu_common/init.d-posix/airframes/2522_gz_airship_vectored_independent_fin
++++ b/ROMFS/px4fmu_common/init.d-posix/airframes/2522_gz_airship_vectored_independent_fin
+ . ${R}etc/init.d-posix/airframes/2520_gz_airship_vectored_independent
++
++param set-default AS_YAWRATE_FF 0.3
+
+--- a/ROMFS/px4fmu_common/init.d-posix/airframes/2517_gz_cloudship_am_fin_drag
++++ b/ROMFS/px4fmu_common/init.d-posix/airframes/2517_gz_cloudship_am_fin_drag
+ . ${R}etc/init.d-posix/airframes/2510_gz_cloudship
++
++param set-default AS_YAWRATE_FF 0.05
+   (0.05 is the value with every check decided; 0.1 leaves the Acro peak within
+   0.15 deg/s of 1.4 sp, 0 leaves the Stabilized release settle time undecided)
+
+2520 and 2510 (no aerodynamic damping in the plant) keep the default 0.
+Untested variants would take their own value from their damping (analytic,
+hull + broadside fins, at 6.67 deg/s): 2521 vectored drag ~0.52, 2524
+vectored am 0, 2526 vectored am_fin ~0.21-0.42, 2511 cloudship drag ~0.13,
+2512/2516 cloudship fin ~0.01-0.03, 2514 cloudship am 0.

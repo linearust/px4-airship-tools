@@ -1,0 +1,15 @@
+gz_airship_vectored_independent               none     P0.7 seed 2  rows SAME (948/948, 0 differ)  releases 0  verdicts SAME
+gz_airship_vectored_independent               restore  P0.7 seed 2  rows SAME (948/948, 0 differ)  releases 3  verdicts SAME
+gz_airship_vectored_independent               reset    P0.7 seed 2  rows SAME (948/948, 0 differ)  releases 3  verdicts SAME
+gz_airship_vectored_independent_am_fin_drag   none     P0.7 seed 2  rows SAME (959/959, 0 differ)  releases 0  verdicts SAME
+gz_airship_vectored_independent_am_fin_drag   restore  P0.7 seed 2  rows SAME (1012/1012, 0 differ)  releases 3  verdicts SAME
+gz_airship_vectored_independent_am_fin_drag   reset    P0.7 seed 2  rows SAME (1012/1012, 0 differ)  releases 3  verdicts SAME
+gz_cloudship                                  none     P0.7 seed 2  rows SAME (680/680, 0 differ)  releases 0  verdicts SAME
+gz_cloudship                                  restore  P0.7 seed 2  rows SAME (680/680, 0 differ)  releases 3  verdicts SAME
+gz_cloudship                                  reset    P0.7 seed 2  rows SAME (680/680, 0 differ)  releases 3  verdicts SAME
+gz_cloudship_am_fin_drag                      none     P0.7 seed 2  rows SAME (702/702, 0 differ)  releases 0  verdicts SAME
+gz_cloudship_am_fin_drag                      restore  P0.7 seed 2  rows SAME (708/708, 0 differ)  releases 3  verdicts SAME
+gz_cloudship_am_fin_drag                      reset    P0.7 seed 2  rows SAME (708/708, 0 differ)  releases 3  verdicts SAME
+gz_airship_vectored_independent_fin           none     P0.7 seed 2  rows SAME (888/888, 0 differ)  releases 0  verdicts SAME
+gz_airship_vectored_independent_fin           restore  P0.7 seed 2  rows SAME (916/916, 0 differ)  releases 3  verdicts SAME
+gz_airship_vectored_independent_fin           reset    P0.7 seed 2  rows SAME (916/916, 0 differ)  releases 3  verdicts SAME

@@ -1,0 +1,5 @@
+gz_airship_vectored_independent               noise-free Acro 8.81 Stab 8.73 | 6 noisy seeds: Acro 8.81..8.86 (mean 8.840) Stab 8.73..8.80 (mean 8.748); Acro verdicts PPPPPP; brake end -7.7 -7.7 -7.7 -7.7 -7.7 -7.7
+gz_airship_vectored_independent_am_fin_drag   noise-free Acro 6.29 Stab 6.27 | 6 noisy seeds: Acro 6.29..6.32 (mean 6.305) Stab 6.27..6.31 (mean 6.282); Acro verdicts PPPPPP; brake end -1.0 -1.0 -1.0 -1.0 -1.0 -1.0
+gz_cloudship                                  noise-free Acro 8.05 Stab 8.08 | 6 noisy seeds: Acro 8.05..8.10 (mean 8.082) Stab 8.08..8.12 (mean 8.100); Acro verdicts PPPPPP; brake end -0.9 -0.8 -0.9 -0.9 -0.9 -0.9
+gz_cloudship_am_fin_drag                      noise-free Acro 9.41 Stab 7.58 | 6 noisy seeds: Acro 9.37..9.46 (mean 9.427) Stab 7.60..7.64 (mean 7.617); Acro verdicts FFFFFF; brake end -3.3 -3.3 -3.3 -3.3 -3.3 -3.3
+gz_airship_vectored_independent_fin           noise-free Acro 6.96 Stab 6.57 | 6 noisy seeds: Acro 6.97..7.01 (mean 6.985) Stab 6.60..6.65 (mean 6.623); Acro verdicts PPPPPP; brake end -1.6 -1.5 -1.6 -1.6 -1.6 -1.6

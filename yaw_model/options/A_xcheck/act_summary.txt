@@ -1,0 +1,181 @@
+
+##### P 0.500 I 0.090 INT_LIM 0.30  act ['slew', 60.0]  seeds all  band table option A
+  --- vec rigid: 8 runs; integrator true max 0.0822
+    Acro brake      8/8   PASS      worst  +1.60 band | min/med/max end +0.642/+1.312/+1.392
+    Acro track      8/8   PASS      worst  +1.28 band | min/med/max mean +1.156/+1.206/+1.249; peak +0.513/+0.559/+0.595
+    Acro release    8/8   PASS      worst  +1.45 band | min/med/max release +0.218/+0.357/+0.400
+    Stab track      8/8   PASS      worst  +1.32 band | min/med/max mean +1.041/+1.045/+1.163; peak +0.529/+0.562/+0.573
+    Stab release    8/8   PASS      worst  +2.06 band | min/med/max release +0.310/+0.422/+0.481
+    wind I on       8/8   PASS      worst  +5.76 band | min/med/max rate +0.864/+0.893/+0.902; integ +0.008/+0.008/+0.009
+    wind I off      8/8   PASS      worst  +7.30 band | min/med/max rate +1.095/+1.107/+1.110
+    wind weak       8/8   PASS      worst  +3.64 band | min/med/max rate +0.933/+0.956/+0.961; integ +0.004/+0.004/+0.004
+  --- vec complete: 8 runs; integrator true max 0.0927
+    Acro brake      8/8   PASS      worst +37.07 band | min/med/max end +5.560/+5.630/+5.784
+    Acro track      8/8   PASS      worst  +7.68 band | min/med/max mean +1.152/+1.258/+1.372; peak +1.963/+2.027/+2.126
+    Acro release    0/8   FAIL      worst -19.48 band | min/med/max release -2.922/-2.859/-2.838
+    Stab track      8/8   PASS      worst  +6.39 band | min/med/max mean +0.958/+0.974/+1.006; peak +2.974/+3.117/+3.197
+    Stab release    0/8   FAIL      worst -12.31 band | min/med/max release -1.846/-1.791/-1.781
+    wind I on       8/8   PASS      worst  +4.73 band | min/med/max rate +0.897/+0.915/+0.917; integ +0.005/+0.005/+0.005
+    wind I off      8/8   PASS      worst  +1.26 band | min/med/max rate +0.189/+0.213/+0.234
+    wind weak       8/8   PASS      worst  +3.49 band | min/med/max rate +0.973/+0.981/+0.988; integ +0.003/+0.004/+0.004
+  --- vec fin: 8 runs; integrator true max 0.0685
+    Acro brake      8/8   PASS      worst +30.49 band | min/med/max end +4.573/+4.605/+4.635
+    Acro track      0/8   FAIL      worst -18.66 band | min/med/max mean -2.799/-2.789/-2.773; peak -1.883/-1.873/-1.841
+    Acro release    7/8   UNDECIDED worst  -1.09 band | min/med/max release -0.163/+0.323/+0.357
+    Stab track      8/8   PASS      worst  +5.43 band | min/med/max mean +1.056/+1.063/+1.080; peak +0.815/+0.832/+0.920
+    Stab release    0/8   FAIL      worst  -2.74 band | min/med/max release -0.411/-0.254/-0.219
+    wind I on       8/8   PASS      worst  +6.29 band | min/med/max rate +0.944/+0.969/+0.970; integ +0.007/+0.008/+0.008
+    wind I off      8/8   PASS      worst  +3.44 band | min/med/max rate +0.516/+0.538/+0.564
+    wind weak       8/8   PASS      worst  +1.59 band | min/med/max rate +0.950/+0.954/+0.978; integ +0.002/+0.002/+0.002
+
+##### P 0.700 I 0.200 INT_LIM 0.30  act ['slew', 60.0]  seeds all  band table option A
+  --- vec rigid: 8 runs; integrator true max 0.1194
+    Acro brake      8/8   PASS      worst  +2.04 band | min/med/max end +0.814/+1.356/+1.442
+    Acro track      8/8   PASS      worst  +1.17 band | min/med/max mean +1.208/+1.253/+1.266; peak +0.469/+0.496/+0.573
+    Acro release    8/8   UNDECIDED worst  +0.59 band | min/med/max release +0.088/+0.168/+0.284
+    Stab track      8/8   UNDECIDED worst  +0.95 band | min/med/max mean +1.211/+1.224/+1.263; peak +0.378/+0.425/+0.487
+    Stab release    8/8   PASS      worst  +1.45 band | min/med/max release +0.217/+0.292/+0.402
+    wind I on       8/8   PASS      worst  +5.94 band | min/med/max rate +0.891/+0.918/+0.928; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +3.14 band | min/med/max rate +0.471/+0.504/+0.532
+    wind weak       8/8   PASS      worst  +3.61 band | min/med/max rate +0.952/+0.968/+0.971; integ +0.004/+0.004/+0.004
+  --- vec complete: 8 runs; integrator true max 0.1135
+    Acro brake      8/8   PASS      worst +32.41 band | min/med/max end +4.861/+4.905/+5.032
+    Acro track      8/8   PASS      worst  +4.01 band | min/med/max mean +0.601/+0.606/+0.654; peak +1.484/+1.488/+1.554
+    Acro release    0/8   FAIL      worst  -9.66 band | min/med/max release -1.449/-1.359/-1.234
+    Stab track      8/8   PASS      worst  +9.49 band | min/med/max mean +1.424/+1.459/+1.476; peak +2.122/+2.205/+2.291
+    Stab release    0/8   FAIL      worst  -8.21 band | min/med/max release -1.232/-1.198/-1.087
+    wind I on       8/8   PASS      worst  +6.17 band | min/med/max rate +0.925/+0.948/+0.970; integ +0.008/+0.009/+0.009
+    wind I off      8/8   UNDECIDED worst  +0.06 band | min/med/max rate +0.009/+0.021/+0.034
+    wind weak       8/8   PASS      worst  +3.47 band | min/med/max rate +0.964/+0.984/+0.989; integ +0.003/+0.003/+0.004
+  --- vec fin: 8 runs; integrator true max 0.0765
+    Acro brake      8/8   PASS      worst +33.80 band | min/med/max end +5.071/+5.078/+5.121
+    Acro track      0/8   FAIL      worst  -7.56 band | min/med/max mean -1.135/-0.826/-0.483; peak -0.771/-0.739/-0.727
+    Acro release    0/8   UNDECIDED worst  -1.54 band | min/med/max release -0.231/-0.151/-0.071
+    Stab track      8/8   PASS      worst  +3.97 band | min/med/max mean +1.433/+1.446/+1.454; peak +0.595/+0.619/+0.626
+    Stab release    8/8   PASS      worst  +5.02 band | min/med/max release +0.752/+0.781/+0.797
+    wind I on       8/8   PASS      worst  +6.46 band | min/med/max rate +0.969/+0.984/+0.987; integ +0.009/+0.009/+0.009
+    wind I off      8/8   UNDECIDED worst  +1.00 band | min/med/max rate +0.149/+0.152/+0.167
+    wind weak       8/8   PASS      worst  +2.25 band | min/med/max rate +0.971/+0.976/+0.986; integ +0.002/+0.002/+0.002
+
+##### P 0.500 I 0.090 INT_LIM 0.30  act ['servo', 60.0]  seeds all  band table option A
+  --- vec rigid: 8 runs; integrator true max 0.1126
+    Acro brake      0/8   FAIL      worst  -4.55 band | min/med/max end -1.819/-1.477/-0.465
+    Acro track      8/8   PASS      worst  +1.02 band | min/med/max mean +0.871/+0.990/+1.021; peak +0.409/+0.453/+0.520
+    Acro release    8/8   PASS      worst  +2.21 band | min/med/max release +0.331/+0.438/+0.518
+    Stab track      8/8   PASS      worst  +1.15 band | min/med/max mean +0.836/+0.990/+1.014; peak +0.460/+0.503/+0.587
+    Stab release    8/8   PASS      worst  +2.01 band | min/med/max release +0.302/+0.387/+0.523
+    wind I on       8/8   PASS      worst  +5.57 band | min/med/max rate +0.835/+0.882/+0.936; integ +0.008/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +7.07 band | min/med/max rate +1.060/+1.089/+1.107
+    wind weak       8/8   PASS      worst  +3.63 band | min/med/max rate +0.941/+0.950/+0.966; integ +0.004/+0.004/+0.004
+  --- vec complete: 8 runs; integrator true max 0.0954
+    Acro brake      8/8   PASS      worst +33.80 band | min/med/max end +5.070/+5.101/+5.223
+    Acro track      8/8   PASS      worst  +6.31 band | min/med/max mean +0.947/+1.016/+1.116; peak +1.822/+1.851/+1.919
+    Acro release    0/8   FAIL      worst -19.90 band | min/med/max release -2.984/-2.917/-2.906
+    Stab track      8/8   PASS      worst  +7.02 band | min/med/max mean +1.053/+1.073/+1.097; peak +2.867/+2.972/+3.052
+    Stab release    0/8   FAIL      worst -12.90 band | min/med/max release -1.935/-1.870/-1.829
+    wind I on       8/8   PASS      worst  +3.83 band | min/med/max rate +0.822/+0.850/+0.869; integ +0.004/+0.004/+0.004
+    wind I off      8/8   PASS      worst  +1.17 band | min/med/max rate +0.175/+0.196/+0.199
+    wind weak       8/8   PASS      worst  +3.66 band | min/med/max rate +0.978/+0.981/+0.987; integ +0.004/+0.004/+0.004
+  --- vec fin: 8 runs; integrator true max 0.0683
+    Acro brake      8/8   PASS      worst +31.16 band | min/med/max end +4.674/+4.696/+4.794
+    Acro track      0/8   FAIL      worst -17.19 band | min/med/max mean -2.579/-2.427/-2.209; peak -1.822/-1.809/-1.750
+    Acro release    8/8   PASS      worst  +1.53 band | min/med/max release +0.229/+0.246/+0.373
+    Stab track      8/8   PASS      worst  +5.09 band | min/med/max mean +1.041/+1.053/+1.074; peak +0.764/+0.787/+0.791
+    Stab release    8/8   PASS      worst  +2.50 band | min/med/max release +0.374/+0.412/+0.428
+    wind I on       8/8   PASS      worst  +6.42 band | min/med/max rate +0.962/+0.974/+0.978; integ +0.008/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +3.16 band | min/med/max rate +0.473/+0.498/+0.502
+    wind weak       8/8   UNDECIDED worst  +0.91 band | min/med/max rate +0.956/+0.973/+0.979; integ +0.001/+0.001/+0.001
+
+##### P 0.700 I 0.200 INT_LIM 0.30  act ['servo', 60.0]  seeds all  band table option A
+  --- vec rigid: 8 runs; integrator true max 0.1827
+    Acro brake      8/8   UNDECIDED worst  +0.49 band | min/med/max end +0.198/+0.269/+0.792
+    Acro track      8/8   UNDECIDED worst  +0.99 band | min/med/max mean +1.462/+1.535/+1.652; peak +0.396/+0.525/+0.669
+    Acro release    3/8   UNDECIDED worst  -1.24 band | min/med/max release -0.186/-0.117/+0.115
+    Stab track      8/8   UNDECIDED worst  +0.98 band | min/med/max mean +1.281/+1.447/+1.659; peak +0.393/+0.553/+0.597
+    Stab release    6/8   UNDECIDED worst  -0.38 band | min/med/max release -0.057/+0.034/+0.068
+    wind I on       8/8   PASS      worst  +5.92 band | min/med/max rate +0.889/+0.901/+0.947; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +3.39 band | min/med/max rate +0.509/+0.515/+0.524
+    wind weak       8/8   PASS      worst  +3.60 band | min/med/max rate +0.962/+0.965/+0.983; integ +0.004/+0.004/+0.004
+  --- vec complete: 8 runs; integrator true max 0.1165
+    Acro brake      8/8   PASS      worst +30.77 band | min/med/max end +4.616/+4.624/+4.711
+    Acro track      8/8   PASS      worst  +3.97 band | min/med/max mean +0.595/+0.617/+0.673; peak +1.447/+1.455/+1.471
+    Acro release    0/8   FAIL      worst  -4.08 band | min/med/max release -0.612/-0.477/-0.360
+    Stab track      8/8   PASS      worst  +9.86 band | min/med/max mean +1.480/+1.514/+1.522; peak +1.827/+1.847/+1.877
+    Stab release    0/8   FAIL      worst  -5.43 band | min/med/max release -0.814/-0.748/-0.725
+    wind I on       8/8   PASS      worst  +6.41 band | min/med/max rate +0.961/+0.980/+0.981; integ +0.007/+0.008/+0.008
+    wind I off      8/8   UNDECIDED worst  +0.06 band | min/med/max rate +0.008/+0.009/+0.029
+    wind weak       8/8   PASS      worst  +3.50 band | min/med/max rate +0.968/+0.982/+0.989; integ +0.004/+0.004/+0.004
+  --- vec fin: 8 runs; integrator true max 0.0761
+    Acro brake      8/8   PASS      worst +32.36 band | min/med/max end +4.854/+4.870/+4.962
+    Acro track      0/8   FAIL      worst  -7.09 band | min/med/max mean -1.063/-0.693/-0.262; peak -0.759/-0.737/-0.686
+    Acro release    0/8   UNDECIDED worst  -1.59 band | min/med/max release -0.239/-0.131/-0.097
+    Stab track      8/8   PASS      worst  +4.01 band | min/med/max mean +1.495/+1.517/+1.528; peak +0.602/+0.676/+0.703
+    Stab release    8/8   PASS      worst  +4.34 band | min/med/max release +0.650/+0.670/+0.692
+    wind I on       8/8   PASS      worst  +6.45 band | min/med/max rate +0.968/+0.985/+0.991; integ +0.008/+0.008/+0.009
+    wind I off      8/8   UNDECIDED worst  +0.93 band | min/med/max rate +0.139/+0.151/+0.163
+    wind weak       8/8   PASS      worst  +2.08 band | min/med/max rate +0.970/+0.976/+0.987; integ +0.002/+0.002/+0.002
+
+##### P 0.700 I 0.200 INT_LIM 0.30  act ['slew', 240.0]  seeds all  band table option A
+  --- vec rigid: 8 runs; integrator true max 0.2023
+    Acro brake      8/8   PASS      worst  +5.90 band | min/med/max end +2.361/+2.657/+2.745
+    Acro track      8/8   PASS      worst  +1.72 band | min/med/max mean +1.355/+1.508/+1.656; peak +0.688/+0.724/+0.765
+    Acro release    8/8   UNDECIDED worst  +0.88 band | min/med/max release +0.132/+0.156/+0.280
+    Stab track      8/8   PASS      worst  +1.24 band | min/med/max mean +1.320/+1.339/+1.536; peak +0.495/+0.526/+0.575
+    Stab release    8/8   PASS      worst  +1.28 band | min/med/max release +0.193/+0.222/+0.280
+    wind I on       8/8   PASS      worst  +6.14 band | min/med/max rate +0.922/+0.956/+0.963; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +3.21 band | min/med/max rate +0.481/+0.517/+0.526
+    wind weak       8/8   PASS      worst  +3.59 band | min/med/max rate +0.966/+0.975/+0.979; integ +0.004/+0.004/+0.004
+  --- vec complete: 8 runs; integrator true max 0.1075
+    Acro brake      8/8   PASS      worst +24.57 band | min/med/max end +3.685/+3.698/+3.778
+    Acro track      8/8   PASS      worst +10.93 band | min/med/max mean +1.640/+1.650/+1.663; peak +2.569/+2.570/+2.600
+    Acro release    0/8   FAIL      worst  -4.13 band | min/med/max release -0.620/-0.570/-0.518
+    Stab track      8/8   PASS      worst +10.71 band | min/med/max mean +1.606/+1.610/+1.633; peak +2.529/+2.552/+2.566
+    Stab release    0/8   FAIL      worst  -4.23 band | min/med/max release -0.635/-0.572/-0.466
+    wind I on       8/8   PASS      worst  +6.45 band | min/med/max rate +0.968/+0.975/+0.989; integ +0.007/+0.007/+0.007
+    wind I off      8/8   PASS      worst  +1.04 band | min/med/max rate +0.157/+0.167/+0.178
+    wind weak       8/8   PASS      worst  +3.34 band | min/med/max rate +0.970/+0.987/+0.988; integ +0.003/+0.003/+0.003
+  --- vec fin: 8 runs; integrator true max 0.0745
+    Acro brake      8/8   PASS      worst +31.48 band | min/med/max end +4.722/+4.787/+4.811
+    Acro track      8/8   PASS      worst +10.68 band | min/med/max mean +1.603/+1.631/+1.657; peak +2.317/+2.349/+2.371
+    Acro release    8/8   PASS      worst  +4.83 band | min/med/max release +0.724/+0.751/+0.765
+    Stab track      8/8   PASS      worst +10.30 band | min/med/max mean +1.545/+1.569/+1.581; peak +2.270/+2.305/+2.316
+    Stab release    8/8   PASS      worst  +4.36 band | min/med/max release +0.655/+0.707/+0.731
+    wind I on       8/8   PASS      worst  +6.52 band | min/med/max rate +0.978/+0.982/+0.985; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +1.53 band | min/med/max rate +0.229/+0.240/+0.254
+    wind weak       8/8   PASS      worst  +2.41 band | min/med/max rate +0.973/+0.981/+0.985; integ +0.002/+0.002/+0.002
+
+##### P 0.700 I 0.200 INT_LIM 0.30  act ['tail_tau', 0.05]  seeds all  band table option A
+  --- cs rigid: 8 runs; integrator true max 0.0449
+    Acro brake      8/8   PASS      worst +39.36 band | min/med/max end +5.904/+5.942/+5.957
+    Acro track      8/8   PASS      worst  +7.70 band | min/med/max mean +1.649/+1.663/+1.665; peak +1.156/+1.170/+1.198
+    Acro release    8/8   PASS      worst  +2.55 band | min/med/max release +0.382/+0.452/+0.475
+    Stab track      8/8   PASS      worst  +7.31 band | min/med/max mean +1.654/+1.658/+1.666; peak +1.096/+1.114/+1.157
+    Stab release    8/8   PASS      worst  +2.46 band | min/med/max release +0.369/+0.376/+0.470
+    wind I on       8/8   PASS      worst  +6.41 band | min/med/max rate +0.961/+0.973/+0.983; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +3.36 band | min/med/max rate +0.504/+0.527/+0.539
+  --- cs complete: 8 runs; integrator true max 0.0959
+    Acro brake      8/8   PASS      worst +37.33 band | min/med/max end +5.599/+5.618/+5.645
+    Acro track      8/8   PASS      worst  +2.30 band | min/med/max mean +0.344/+0.385/+0.465; peak +0.475/+0.534/+0.656
+    Acro release    8/8   PASS      worst  +3.04 band | min/med/max release +0.456/+0.490/+0.543
+    Stab track      8/8   PASS      worst  +7.27 band | min/med/max mean +1.090/+1.140/+1.254; peak +1.272/+1.303/+1.312
+    Stab release    8/8   PASS      worst  +2.71 band | min/med/max release +0.406/+0.486/+0.506
+    wind I on       8/8   PASS      worst  +5.52 band | min/med/max rate +0.828/+0.831/+0.849; integ +0.008/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +6.58 band | min/med/max rate +0.987/+1.092/+1.120
+
+##### P 0.700 I 0.200 INT_LIM 0.30  act ['tail_tau', 0.1]  seeds all  band table option A
+  --- cs rigid: 8 runs; integrator true max 0.0415
+    Acro brake      8/8   PASS      worst +39.40 band | min/med/max end +5.910/+5.947/+5.963
+    Acro track      8/8   PASS      worst  +7.25 band | min/med/max mean +1.650/+1.663/+1.665; peak +1.087/+1.101/+1.143
+    Acro release    8/8   PASS      worst  +2.61 band | min/med/max release +0.391/+0.468/+0.479
+    Stab track      8/8   PASS      worst  +6.84 band | min/med/max mean +1.654/+1.659/+1.666; peak +1.027/+1.048/+1.099
+    Stab release    8/8   PASS      worst  +2.50 band | min/med/max release +0.375/+0.388/+0.475
+    wind I on       8/8   PASS      worst  +6.41 band | min/med/max rate +0.961/+0.973/+0.983; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +3.36 band | min/med/max rate +0.503/+0.528/+0.540
+  --- cs complete: 8 runs; integrator true max 0.0975
+    Acro brake      8/8   PASS      worst +37.75 band | min/med/max end +5.662/+5.679/+5.710
+    Acro track      8/8   PASS      worst  +2.43 band | min/med/max mean +0.364/+0.402/+0.482; peak +0.526/+0.589/+0.709
+    Acro release    8/8   PASS      worst  +2.86 band | min/med/max release +0.429/+0.447/+0.527
+    Stab track      8/8   PASS      worst  +7.30 band | min/med/max mean +1.095/+1.145/+1.256; peak +1.244/+1.281/+1.290
+    Stab release    8/8   PASS      worst  +2.57 band | min/med/max release +0.385/+0.421/+0.456
+    wind I on       8/8   PASS      worst  +5.51 band | min/med/max rate +0.827/+0.830/+0.848; integ +0.009/+0.009/+0.009
+    wind I off      8/8   PASS      worst  +6.47 band | min/med/max rate +0.970/+1.073/+1.096

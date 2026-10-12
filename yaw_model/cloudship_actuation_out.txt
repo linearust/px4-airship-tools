@@ -1,0 +1,112 @@
+Cloudship tail actuation, gz SITL (2510_gz_cloudship + models/cloudship*)
+  CA_R_REV 4 -> tail range [-1, 1]; THR_MDL_FAC 1; SIM_GZ_EC_MIN3/MAX3/DIS3 1100/1900/1500
+  plugin duty 1100..1900 bidirectional 1 minCommand 0, thrust poly +[0.0, 0.0, 2.3544, 0.0] -[0.0, 0.0, 2.3544, 0.0]
+  plugin lag elements present: none (no lag); torque polynomials present: none (no couple)
+  mass 7.3148 kg, com (0.02197, 0.00000, 0.40397), tail at (-1.88, 0.0, 0.3352), thrust axis (0.0, 1.0, 0.0) (+Y = port)
+  lever 1.90197 m x full thrust 2.3544 N = K 4.47801 N m per unit u
+  complete plant (cloudship_am_fin_drag) gives the same: K 4.47801, com (0.02197, 0.0, 0.40397)
+  wrench at u = +1, FRD: roll +0.1619, pitch -0.0000, yaw +4.4780 N m
+
+Stages for a held u (float32 where PX4 is float):
+         u     tail  sat          s       duty        ref     F [N]   N [N m]   N/(K u)
+    +0.100   +0.100   +0  +0.316228  1626.4911  +0.316228  +0.23544  +0.44780  1.000000
+    +0.300   +0.300   +0  +0.547723  1719.0890  +0.547722  +0.70632  +1.34340  1.000000
+    +1.000   +1.000   +0  +1.000000  1900.0000  +1.000000  +2.35440  +4.47801  1.000000
+    -0.100   -0.100   +0  -0.316228  1373.5089  -0.316228  -0.23544  -0.44780  1.000000
+    -0.300   -0.300   +0  -0.547723  1280.9110  -0.547722  -0.70632  -1.34340  1.000000
+    -1.000   -1.000   +0  -1.000000  1100.0000  -1.000000  -2.35440  -4.47801  1.000000
+    +1.500   +1.000   +1  +1.000000  1900.0000  +1.000000  +2.35440  +4.47801  0.666667
+    -1.500   -1.000   -1  -1.000000  1100.0000  -1.000000  -2.35440  -4.47801  0.666667
+    +0.000   +0.000   +0  +0.000000  1500.0000  +0.000000  +0.00000  +0.00000       nan
+
+Step responses: u steps at t = 0 from 0 (controller samples every 4 ms, gz step 4 ms)
+    t [ms]        u=0.1   u=0.1 +1st        u=0.3   u=0.3 +1st        u=1.0   u=1.0 +1st
+        -8      0.00000      0.00000      0.00000      0.00000      0.00000      0.00000
+        -4      0.00000      0.00000      0.00000      0.00000      0.00000      0.00000
+         0      0.44780      0.00000      1.34340      0.00000      4.47801      0.00000
+         4      0.44780      0.44780      1.34340      1.34340      4.47801      4.47801
+         8      0.44780      0.44780      1.34340      1.34340      4.47801      4.47801
+        12      0.44780      0.44780      1.34340      1.34340      4.47801      4.47801
+        16      0.44780      0.44780      1.34340      1.34340      4.47801      4.47801
+        20      0.44780      0.44780      1.34340      1.34340      4.47801      4.47801
+  (+1st = the command misses its gz step and lands one 4 ms step later)
+  final N/u: u=0.1 4.47800, u=0.3 4.47800, u=1.0 4.47801
+  time to 63 % of final: 0 ms after the step it lands on (no lag in the plugin branch used)
+
+Counterfactuals (NOT the gz plant; sensitivity only):
+  u 0.1: THR_MDL_FAC 0 -> N 0.0448 (10 % of linear); a tau 0.025 s prop lag -> 63 % on the step starting at 24 ms
+  u 0.3: THR_MDL_FAC 0 -> N 0.4030 (30 % of linear); a tau 0.025 s prop lag -> 63 % on the step starting at 24 ms
+  u 1.0: THR_MDL_FAC 0 -> N 4.4780 (100 % of linear); a tau 0.025 s prop lag -> 63 % on the step starting at 24 ms
+
+Linearity (float32 chain): N/(K u) - 1
+  u      +1e-07  N           +0 N m  dev -1.00e+00
+  u      -1e-07  N           +0 N m  dev -1.00e+00
+  u    +1.2e-07  N  +5.3725e-07 N m  dev -2.06e-04
+  u    -1.2e-07  N  -5.3725e-07 N m  dev -2.06e-04
+  u      +1e-06  N +4.47855e-06 N m  dev +1.22e-04
+  u      -1e-06  N -4.47855e-06 N m  dev +1.22e-04
+  u      +1e-05  N +4.47787e-05 N m  dev -2.92e-05
+  u      -1e-05  N -4.47787e-05 N m  dev -2.92e-05
+  u     +0.0001  N +0.000447801 N m  dev +0.00e+00
+  u     -0.0001  N -0.000447801 N m  dev +0.00e+00
+  u      +0.001  N  +0.00447805 N m  dev +9.37e-06
+  u      -0.001  N  -0.00447805 N m  dev +9.37e-06
+  u      +0.005  N   +0.0223901 N m  dev +2.16e-06
+  u      -0.005  N   -0.0223901 N m  dev +2.16e-06
+  u     +0.0185  N   +0.0828431 N m  dev +6.45e-08
+  u     -0.0185  N   -0.0828431 N m  dev +6.45e-08
+  u       +0.05  N      +0.2239 N m  dev +6.69e-07
+  u       -0.05  N      -0.2239 N m  dev +6.69e-07
+  u      +0.065  N     +0.29107 N m  dev -8.55e-07
+  u      -0.065  N     -0.29107 N m  dev -8.55e-07
+  u        +0.1  N      +0.4478 N m  dev -2.77e-07
+  u        -0.1  N      -0.4478 N m  dev -2.77e-07
+  u        +0.3  N      +1.3434 N m  dev -3.08e-07
+  u        -0.3  N      -1.3434 N m  dev -3.08e-07
+  u        +0.5  N       +2.239 N m  dev +4.31e-07
+  u        -0.5  N       -2.239 N m  dev +4.31e-07
+  u        +0.9  N      +4.0302 N m  dev -2.77e-07
+  u        -0.9  N      -4.0302 N m  dev -2.77e-07
+  u          +1  N     +4.47801 N m  dev +0.00e+00
+  u          -1  N     -4.47801 N m  dev +0.00e+00
+  |u| <= FLT_EPSILON (1.19e-7) is not rooted and its duty rounds to 1500 in float32: N = 0, the only non-linear spot; float32 duty rounding is < 2e-4 relative for |u| >= 1e-6
+
+Side motors / collective tilt yaw (FRD), rotor-drag damping, per rad/s of yaw rate:
+  thrust 0.00: tilt  +0 deg -0.0000, tilt +45 deg -0.0000, tilt +90 deg -0.0000 N m/(rad/s)
+  thrust 0.25: tilt  +0 deg -0.0107, tilt +45 deg -0.0230, tilt +90 deg -0.0352 N m/(rad/s)
+  thrust 1.00: tilt  +0 deg -0.0215, tilt +45 deg -0.0460, tilt +90 deg -0.0705 N m/(rad/s)
+  gate: throttle 0 -> 0 exactly. Compare the loop P action on the tail, 0.5 x K = 2.239 N m/(rad/s)
+
+SITL cross-checks (recorded runs, read only):
+(a) wind hold, rigid-hull-at-rest runs: u_ss = integrator (P term <= P*|r|)
+    chain3_20260925.txt                      cloudship              |r| 0.04 deg/s integ 0.0185 -> K = 4.484 (4.390..4.583) N m/unit
+    chain3_20260925.txt                      cloudship_drag         |r| 0.02 deg/s integ 0.0185 -> K = 4.484 (4.431..4.540) N m/unit
+    chain4_20260925.txt                      cloudship              |r| 0.06 deg/s integ 0.0185 -> K = 4.484 (4.350..4.628) N m/unit
+    chain5_20260925.txt                      cloudship              |r| 0.04 deg/s integ 0.0185 -> K = 4.484 (4.390..4.583) N m/unit
+    chain5_20260925.txt                      cloudship_fin          |r| 0.02 deg/s integ 0.0185 -> K = 4.484 (4.431..4.540) N m/unit
+    chain5_20260925.txt                      cloudship_am_fin_drag  |r| 0.45 deg/s integ 0.0191  excluded (not at rest / wound up)
+    chain6_20260925.txt                      cloudship              |r| 0.04 deg/s integ 0.0185 -> K = 4.484 (4.390..4.583) N m/unit
+    chain7_20260925.txt                      cloudship              |r| 0.02 deg/s integ 0.0185 -> K = 4.484 (4.431..4.540) N m/unit
+    chain7_20260925.txt                      cloudship_am_fin_drag  |r| 0.40 deg/s integ 0.0214  excluded (not at rest / wound up)
+    chain9_20260927.txt                      cloudship              |r| 0.05 deg/s integ 0.0185 -> K = 4.484 (4.370..4.606) N m/unit
+    chain_20260924.txt                       cloudship_fin          |r| 0.01 deg/s integ 0.0185 -> K = 4.484 (4.451..4.518) N m/unit
+    chain_20260924.txt                       cloudship_am_fin       |r| 0.02 deg/s integ 0.3000  excluded (not at rest / wound up)
+    chain_20260924.txt                       cloudship_am_fin_drag  |r| 0.45 deg/s integ 0.0189  excluded (not at rest / wound up)
+    gate_cloudship_drag_20260925.txt         cloudship_drag         |r| 0.03 deg/s integ 0.0185 -> K = 4.484 (4.410..4.561) N m/unit
+    variants_gz_cloudship_am_fin_drag_sitl_check.txt cloudship_am_fin_drag  |r| 0.42 deg/s integ 0.0195  excluded (not at rest / wound up)
+    variants_gz_cloudship_drag_sitl_check.txt cloudship_drag         |r| 0.02 deg/s integ 0.0185 -> K = 4.484 (4.431..4.540) N m/unit
+    variants_gz_cloudship_sitl_check.txt     cloudship              |r| 0.03 deg/s integ 0.0185 -> K = 4.484 (4.410..4.561) N m/unit
+    linear law predicts u_ss = 0.0185; a quadratic law (THR_MDL_FAC 0) would need 0.1361
+(b) Manual passthrough u = 0.5, wall-clock samples (RTF 1.00 per rtf_probe_summary.txt)
+    samples.csv  cloudship_am_fin_drag  n 10, rate -59.1..+4.4 deg/s, slope 22.27 deg/s^2, I_eff 9.7438
+        K = I*slope/u = 7.573; with the hull nRabsR term added back 3.996 N m/unit (fin moments not modelled; odd in r, the window straddles 0)
+        predicted slope with K 4.478: 13.17 deg/s^2 (quadratic law: 6.58)
+    samples_gz_cloudship_chain9.csv cloudship              n 10, rate -59.1..+4.4 deg/s, slope 22.27 deg/s^2, I_eff 5.7986
+        K = I*slope/u = 4.507; with the hull nRabsR term added back 4.507 N m/unit (fin moments not modelled; odd in r, the window straddles 0)
+        predicted slope with K 4.478: 22.12 deg/s^2 (quadratic law: 11.06)
+(c) actuator_test tail +-1 on gz_cloudship_am, sim-clock slope (rtf_probe_gz_cloudship_am.txt, 09-23)
+    tail +1: LS slope 24.8 deg/s^2 vs 26.33 predicted (I_eff 9.7438) -> K = 4.218 (-5.8 %), -0.0 -> 145.2 deg/s
+    tail -1: LS slope 25.8 deg/s^2 vs 26.33 predicted (I_eff 9.7438) -> K = 4.388 (-2.0 %), 150.0 -> -0.4 deg/s
+    mean of the two legs 25.30 deg/s^2 -> K = 4.303 (-3.9 %); opposing term 0.50 deg/s^2; endpoints then imply a 0.14 / 0.17 s late start (the released window also rose 145.4 -> 150.0, ~0.18 s of +1 after the window)
+    weak check: 0..150 deg/s is 20x the gate rate. Nothing in the actuation chain is inexact at |u| = 1 (s, duty, ref, F all exact), so the ~4 % is plant-side or the probe; unresolved here
+    rigid I 5.7986 (gz_model.yaw_inertia) + added rr 3.94525 (cloudship_am model.sdf)

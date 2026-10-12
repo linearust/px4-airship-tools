@@ -1,0 +1,25 @@
+gz_airship_vectored_independent report_band P 0.50: first rest wait, 190 rows (59.7 s)
+  t   55.46 rate  -7.17 deg/s torque +0.0091 integ -0.0533 satP 0 satN 0  released/released
+  t   57.99 rate  -7.61 deg/s torque +0.0163 integ -0.0501 satP 1 satN 0  released/released
+  t   60.52 rate  -7.06 deg/s torque +0.0115 integ -0.0501 satP 1 satN 0  released/released
+  t   63.05 rate  -7.71 deg/s torque +0.0173 integ -0.0501 satP 1 satN 0  released/released
+  t   65.58 rate  -6.97 deg/s torque +0.0107 integ -0.0501 satP 1 satN 0  released/released
+  t   68.10 rate  -7.78 deg/s torque +0.0179 integ -0.0501 satP 1 satN 0  released/released
+  t   70.63 rate  -6.92 deg/s torque +0.0103 integ -0.0501 satP 1 satN 0  released/released
+  t   73.16 rate  -7.82 deg/s torque +0.0182 integ -0.0501 satP 1 satN 0  released/released
+  t   75.69 rate  -6.89 deg/s torque +0.0101 integ -0.0501 satP 1 satN 0  released/released
+  t   78.22 rate  -7.82 deg/s torque +0.0182 integ -0.0501 satP 1 satN 0  released/released
+  t   80.75 rate  -6.91 deg/s torque +0.0103 integ -0.0501 satP 1 satN 0  released/released
+  t   83.28 rate  -7.78 deg/s torque +0.0179 integ -0.0501 satP 1 satN 0  released/released
+  t   85.80 rate  -6.97 deg/s torque +0.0107 integ -0.0501 satP 1 satN 0  released/released
+  t   88.33 rate  -7.71 deg/s torque +0.0172 integ -0.0501 satP 1 satN 0  released/released
+  t   90.86 rate  -7.05 deg/s torque +0.0115 integ -0.0501 satP 1 satN 0  released/released
+  t   93.39 rate  -7.61 deg/s torque +0.0163 integ -0.0501 satP 1 satN 0  released/released
+  t   95.92 rate  -7.16 deg/s torque +0.0125 integ -0.0501 satP 1 satN 0  released/released
+  t   98.45 rate  -7.49 deg/s torque +0.0153 integ -0.0501 satP 1 satN 0  released/released
+  t  100.97 rate  -7.30 deg/s torque +0.0136 integ -0.0501 satP 1 satN 0  released/released
+  t  103.50 rate  -7.36 deg/s torque +0.0141 integ -0.0501 satP 1 satN 0  released/released
+  t  106.03 rate  -7.43 deg/s torque +0.0147 integ -0.0501 satP 1 satN 0  released/released
+  t  108.56 rate  -7.23 deg/s torque +0.0130 integ -0.0501 satP 1 satN 0  released/released
+  t  111.09 rate  -7.55 deg/s torque +0.0158 integ -0.0501 satP 1 satN 0  released/released
+  t  113.62 rate  -7.11 deg/s torque +0.0119 integ -0.0501 satP 1 satN 0  released/released

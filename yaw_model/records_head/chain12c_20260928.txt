@@ -1,0 +1,90 @@
+=== gate gz_airship_vectored_independent_am_fin_drag run 1 ===
+gz_publish T0 1790596975.86 (samples.csv t = wall - T0)
+기체 airship_vectored_independent_am_fin_drag, 요 권한 54.00 N m, 지시 각속도 6.67 deg/s (AS_YAWRATE_MAX 15.0, MAN_DEADZONE 0.10, AS_YAWRATE_P 0.7, AS_YAWRATE_I 0.09, AS_YAWRATE_FF 1.0)
+gz_publish wall 1790596995.97-1790596996.85 clear rc 0
+gz_publish wall 1790596997.05-1790596997.94 clear rc 0
+gz_publish wall 1790596998.14-1790596999.00 clear rc 0
+gz_publish wall 1790597002.27-1790597003.13 persistent rc 0
+gz_publish wall 1790597008.22-1790597009.07 clear rc 0
+  통과  바람(외부 토크)이 기체를 민다 — 5 초 동안 0.01 -> -0.88 deg/s (1 N m 이 요 관성 321.4 kg m^2 와 요 감쇠 242 에 주는 0.87 의 절반 이상)
+gz_publish wall 1790597009.27-1790597010.13 clear rc 0
+gz_publish wall 1790597010.33-1790597011.18 clear rc 0
+  통과  Manual 에서 스틱이 곧 토크 — 토크 0.500, 각속도가 -1.0 -> 8.5 deg/s 로 계속 오른다
+  통과  Acro 가 남은 회전을 잡는다 — 9.3 -> -0.9 deg/s
+  통과  Acro: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 7.09, 최대 7.26 deg/s; 출발 -0.33 deg/s, 적분기 0.001
+  통과  Acro: 스틱을 놓으면 선다 — 7.0 -> -0.3 deg/s, 8.1 초 만에 정지
+  통과  Stabilized: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 6.99, 최대 7.42 deg/s; 출발 -0.18 deg/s, 적분기 0.000
+  통과  Stabilized: 스틱을 놓으면 선다 — 7.0 -> -0.2 deg/s, 8.0 초 만에 정지
+gz_publish wall 1790597178.81-1790597179.66 persistent rc 0
+gz_publish wall 1790597219.92-1790597220.77 clear rc 0
+  통과  바람 1 N m, I 켬: 적분기가 받아낸다 — 마지막 2 초 |각속도| 0.19 deg/s, 적분기 0.0216 (필요한 토크 0.0185)
+gz_publish wall 1790597220.97-1790597221.84 clear rc 0
+gz_publish wall 1790597222.04-1790597222.89 clear rc 0
+gz_publish wall 1790597234.04-1790597234.89 persistent rc 0
+gz_publish wall 1790597260.13-1790597260.98 clear rc 0
+  통과  바람 1 N m, I 끔: 계속 밀린다 — 마지막 2 초 |각속도| 1.16 deg/s, 적분기 0.0000 (필요한 토크 0.0185)
+gz_publish wall 1790597261.18-1790597262.03 clear rc 0
+gz_publish wall 1790597262.23-1790597263.09 clear rc 0
+gz_publish wall 1790597272.29-1790597273.14 persistent rc 0
+gz_publish wall 1790597323.35-1790597324.20 clear rc 0
+  통과  바람 0.4 N m (틸트 밴드 아래), I 켬 — 마지막 2 초 |각속도| 0.02 deg/s, 적분기 0.0071 (필요한 토크 0.0074)
+gz_publish wall 1790597324.40-1790597325.25 clear rc 0
+gz_publish wall 1790597325.45-1790597326.30 clear rc 0
+통과  바람(외부 토크)이 기체를 민다
+통과  Manual 에서 스틱이 곧 토크
+통과  Acro 가 남은 회전을 잡는다
+통과  Acro: 스틱이 지시한 각속도를 따라간다
+통과  Acro: 스틱을 놓으면 선다
+통과  Stabilized: 스틱이 지시한 각속도를 따라간다
+통과  Stabilized: 스틱을 놓으면 선다
+통과  바람 1 N m, I 켬: 적분기가 받아낸다
+통과  바람 1 N m, I 끔: 계속 밀린다
+통과  바람 0.4 N m (틸트 밴드 아래), I 켬
+통과 10 / 실패 0
+exit 0
+=== gate gz_airship_vectored_independent_am_fin_drag run 2 ===
+gz_publish T0 1790597348.58 (samples.csv t = wall - T0)
+기체 airship_vectored_independent_am_fin_drag, 요 권한 54.00 N m, 지시 각속도 6.67 deg/s (AS_YAWRATE_MAX 15.0, MAN_DEADZONE 0.10, AS_YAWRATE_P 0.7, AS_YAWRATE_I 0.09, AS_YAWRATE_FF 1.0)
+gz_publish wall 1790597368.66-1790597369.50 clear rc 0
+gz_publish wall 1790597369.70-1790597370.55 clear rc 0
+gz_publish wall 1790597370.75-1790597371.60 clear rc 0
+gz_publish wall 1790597374.85-1790597375.70 persistent rc 0
+gz_publish wall 1790597380.72-1790597381.57 clear rc 0
+  통과  바람(외부 토크)이 기체를 민다 — 5 초 동안 0.04 -> -0.82 deg/s (1 N m 이 요 관성 321.4 kg m^2 와 요 감쇠 242 에 주는 0.87 의 절반 이상)
+gz_publish wall 1790597381.77-1790597382.61 clear rc 0
+gz_publish wall 1790597382.81-1790597383.66 clear rc 0
+  통과  Manual 에서 스틱이 곧 토크 — 토크 0.500, 각속도가 -1.0 -> 8.4 deg/s 로 계속 오른다
+  통과  Acro 가 남은 회전을 잡는다 — 9.3 -> -0.9 deg/s
+  통과  Acro: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 7.09, 최대 7.27 deg/s; 출발 -0.35 deg/s, 적분기 0.001
+  통과  Acro: 스틱을 놓으면 선다 — 7.1 -> -0.3 deg/s, 8.2 초 만에 정지
+  통과  Stabilized: 스틱이 지시한 각속도를 따라간다 — 지시 6.67, 마지막 3 초 평균 6.97, 최대 7.42 deg/s; 출발 -0.26 deg/s, 적분기 0.000
+  통과  Stabilized: 스틱을 놓으면 선다 — 6.9 -> -0.3 deg/s, 7.9 초 만에 정지
+gz_publish wall 1790597550.65-1790597551.50 persistent rc 0
+gz_publish wall 1790597591.80-1790597592.65 clear rc 0
+  통과  바람 1 N m, I 켬: 적분기가 받아낸다 — 마지막 2 초 |각속도| 0.19 deg/s, 적분기 0.0216 (필요한 토크 0.0185)
+gz_publish wall 1790597592.85-1790597593.72 clear rc 0
+gz_publish wall 1790597593.92-1790597594.77 clear rc 0
+gz_publish wall 1790597605.80-1790597606.64 persistent rc 0
+gz_publish wall 1790597631.67-1790597632.52 clear rc 0
+  통과  바람 1 N m, I 끔: 계속 밀린다 — 마지막 2 초 |각속도| 1.15 deg/s, 적분기 0.0000 (필요한 토크 0.0185)
+gz_publish wall 1790597632.72-1790597633.56 clear rc 0
+gz_publish wall 1790597633.76-1790597634.61 clear rc 0
+gz_publish wall 1790597643.60-1790597644.45 persistent rc 0
+gz_publish wall 1790597694.52-1790597695.37 clear rc 0
+  통과  바람 0.4 N m (틸트 밴드 아래), I 켬 — 마지막 2 초 |각속도| 0.02 deg/s, 적분기 0.0072 (필요한 토크 0.0074)
+gz_publish wall 1790597695.57-1790597696.42 clear rc 0
+gz_publish wall 1790597696.62-1790597697.46 clear rc 0
+통과  바람(외부 토크)이 기체를 민다
+통과  Manual 에서 스틱이 곧 토크
+통과  Acro 가 남은 회전을 잡는다
+통과  Acro: 스틱이 지시한 각속도를 따라간다
+통과  Acro: 스틱을 놓으면 선다
+통과  Stabilized: 스틱이 지시한 각속도를 따라간다
+통과  Stabilized: 스틱을 놓으면 선다
+통과  바람 1 N m, I 켬: 적분기가 받아낸다
+통과  바람 1 N m, I 끔: 계속 밀린다
+통과  바람 0.4 N m (틸트 밴드 아래), I 켬
+통과 10 / 실패 0
+exit 0
+=== CHAIN DONE ===
+CHAIN EXIT 0

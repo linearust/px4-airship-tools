@@ -1,0 +1,263 @@
+
+=== vectored: gain sets with no failure outside the excluded checks, by worst normalized margin
+  P 0.70 I 0.200 LIM 0.50  worst   1.13 (vec complete / wind I off)  excluded fails: 2
+  P 0.70 I 0.200 LIM 0.30  worst   1.13 (vec complete / wind I off)  excluded fails: 2
+  P 0.70 I 0.200 LIM 0.20  worst   1.13 (vec complete / wind I off)  excluded fails: 2
+  P 0.70 I 0.200 LIM 0.15  worst   1.11 (vec rigid / Acro track)  excluded fails: 2
+  P 0.70 I 0.175 LIM 0.15  worst   1.07 (vec complete / wind I off)  excluded fails: 2
+  P 0.70 I 0.175 LIM 0.50  worst   1.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.175 LIM 0.30  worst   1.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.175 LIM 0.20  worst   1.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.80 I 0.200 LIM 0.50  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.200 LIM 0.30  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.200 LIM 0.20  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.200 LIM 0.15  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.150 LIM 0.50  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.150 LIM 0.30  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.150 LIM 0.20  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.150 LIM 0.15  worst   0.47 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.175 LIM 0.50  worst   0.33 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.175 LIM 0.30  worst   0.33 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.175 LIM 0.20  worst   0.33 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.175 LIM 0.15  worst   0.33 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.130 LIM 0.50  worst   0.27 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.130 LIM 0.30  worst   0.27 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.130 LIM 0.20  worst   0.27 (vec complete / wind I off)  excluded fails: 2
+  P 0.80 I 0.130 LIM 0.15  worst   0.27 (vec complete / wind I off)  excluded fails: 2
+  P 0.70 I 0.130 LIM 0.50  worst   0.14 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.130 LIM 0.30  worst   0.14 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.130 LIM 0.20  worst   0.14 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.130 LIM 0.15  worst   0.14 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.150 LIM 0.50  worst   0.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.150 LIM 0.30  worst   0.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.150 LIM 0.20  worst   0.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.70 I 0.150 LIM 0.15  worst   0.05 (vec rigid / Acro brake)  excluded fails: 2
+  P 0.60 I 0.200 LIM 0.15  worst   0.02 (vec rigid / Stab release)  excluded fails: 2
+  (33 of 288 sets pass)
+
+--- vectored grid (L=0.5 unless it differs): fails / worst
+  INT_LIM 0.50
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50    3F -10.74    2F -12.44     3F -7.53     3F -4.21     2F -6.15     1F -6.74     2F -6.91     2F -5.87     4F -4.26
+    0.60     3F -7.15     2F -7.81     2F -6.54     3F -4.04     2F -2.59     1F -2.77     1F -2.98     1F -1.94     1F -0.66
+    0.70     2F -5.18     2F -5.85     2F -4.83     2F -2.84     1F -0.78     0F +0.14     0F +0.05     0F +1.05     0F +1.13
+    0.80     2F -3.63     2F -4.53     2F -3.49     1F -2.10     1F -0.48     0F +0.27     0F +0.47     0F +0.33     0F +0.47
+    0.90     3F -2.22     3F -3.05     2F -2.65     2F -1.54     1F -0.27     1F -0.13     1F -0.33     2F -0.27     1F -0.07
+    1.00     4F -1.05     3F -2.21     3F -1.71     3F -0.93     2F -0.73     2F -0.73     2F -0.73     2F -0.67     2F -0.73
+    1.10     5F -1.07     4F -1.33     4F -1.33     4F -1.13     3F -1.27     3F -1.20     3F -1.20     3F -1.20     3F -1.27
+    1.20     4F -1.67     4F -1.60     4F -1.53     4F -1.60     3F -1.60     3F -1.60     3F -1.60     3F -1.67     3F -1.47
+  INT_LIM 0.30
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50    3F -10.74    2F -12.44     3F -7.53     3F -4.21     2F -6.15     1F -6.74     2F -6.91     2F -5.87     4F -4.26
+    0.60     3F -7.15     2F -7.81     2F -6.54     3F -4.04     2F -2.59     1F -2.77     1F -2.98     1F -1.94     1F -0.66
+    0.70     2F -5.18     2F -5.85     2F -4.83     2F -2.84     1F -0.78     0F +0.14     0F +0.05     0F +1.05     0F +1.13
+    0.80     2F -3.63     2F -4.53     2F -3.49     1F -2.10     1F -0.48     0F +0.27     0F +0.47     0F +0.33     0F +0.47
+    0.90     3F -2.22     3F -3.05     2F -2.65     2F -1.54     1F -0.27     1F -0.13     1F -0.33     2F -0.27     1F -0.07
+    1.00     4F -1.05     3F -2.21     3F -1.71     3F -0.93     2F -0.73     2F -0.73     2F -0.73     2F -0.67     2F -0.73
+    1.10     5F -1.07     4F -1.33     4F -1.33     4F -1.13     3F -1.27     3F -1.20     3F -1.20     3F -1.20     3F -1.27
+    1.20     4F -1.67     4F -1.60     4F -1.53     4F -1.60     3F -1.60     3F -1.60     3F -1.60     3F -1.67     3F -1.47
+  INT_LIM 0.20
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50    3F -10.74    2F -12.44     3F -7.53     3F -4.21     2F -6.15     1F -6.74     2F -6.91     2F -5.87     4F -4.20
+    0.60     3F -7.15     2F -7.81     2F -6.54     3F -4.04     2F -2.59     1F -2.77     1F -2.98     1F -1.94     1F -0.66
+    0.70     2F -5.18     2F -5.85     2F -4.83     2F -2.84     1F -0.78     0F +0.14     0F +0.05     0F +1.05     0F +1.13
+    0.80     2F -3.63     2F -4.53     2F -3.49     1F -2.10     1F -0.48     0F +0.27     0F +0.47     0F +0.33     0F +0.47
+    0.90     3F -2.22     3F -3.05     2F -2.65     2F -1.54     1F -0.27     1F -0.13     1F -0.33     2F -0.27     1F -0.07
+    1.00     4F -1.05     3F -2.21     3F -1.71     3F -0.93     2F -0.73     2F -0.73     2F -0.73     2F -0.67     2F -0.73
+    1.10     5F -1.07     4F -1.33     4F -1.33     4F -1.13     3F -1.27     3F -1.20     3F -1.20     3F -1.20     3F -1.27
+    1.20     4F -1.67     4F -1.60     4F -1.53     4F -1.60     3F -1.60     3F -1.60     3F -1.60     3F -1.67     3F -1.47
+  INT_LIM 0.15
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50    3F -10.74    2F -12.44     3F -7.53     3F -4.21     2F -6.15     1F -6.74     2F -5.38     2F -3.14     2F -0.86
+    0.60     3F -7.15     2F -7.81     2F -6.54     3F -4.04     2F -2.59     1F -2.77     1F -2.98     1F -0.73     0F +0.02
+    0.70     2F -5.18     2F -5.85     2F -4.83     2F -2.84     1F -0.78     0F +0.14     0F +0.05     0F +1.07     0F +1.11
+    0.80     2F -3.63     2F -4.53     2F -3.49     1F -2.10     1F -0.48     0F +0.27     0F +0.47     0F +0.33     0F +0.47
+    0.90     3F -2.22     3F -3.05     2F -2.65     2F -1.54     1F -0.27     1F -0.13     1F -0.33     2F -0.27     1F -0.07
+    1.00     4F -1.05     3F -2.21     3F -1.71     3F -0.93     2F -0.73     2F -0.73     2F -0.73     2F -0.67     2F -0.73
+    1.10     5F -1.07     4F -1.33     4F -1.33     4F -1.13     3F -1.27     3F -1.20     3F -1.20     3F -1.20     3F -1.27
+    1.20     4F -1.67     4F -1.60     4F -1.53     4F -1.60     3F -1.60     3F -1.60     3F -1.60     3F -1.67     3F -1.47
+
+--- vectored failing checks per set (L=0.5)
+  P 0.50 I 0.030: vec complete:Stab track, vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.50 I 0.050: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.50 I 0.070: vec rigid:Acro brake, vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.50 I 0.090: vec rigid:Acro brake, vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.50 I 0.110: vec rigid:Acro brake, vec fin (2nd case):Acro release
+  P 0.50 I 0.130: vec rigid:Acro brake
+  P 0.50 I 0.150: vec rigid:Acro brake, vec rigid:Acro track
+  P 0.50 I 0.175: vec rigid:Acro brake, vec rigid:Acro track
+  P 0.50 I 0.200: vec rigid:Acro brake, vec rigid:Acro track, vec rigid:Stab track, vec rigid:Stab release
+  P 0.60 I 0.030: vec complete:Stab track, vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.60 I 0.050: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.60 I 0.070: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.60 I 0.090: vec rigid:Acro brake, vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.60 I 0.110: vec rigid:Acro brake, vec fin (2nd case):Acro release
+  P 0.60 I 0.130: vec rigid:Acro brake
+  P 0.60 I 0.150: vec rigid:Acro brake
+  P 0.60 I 0.175: vec rigid:Acro brake
+  P 0.60 I 0.200: vec rigid:Acro brake
+  P 0.70 I 0.030: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.70 I 0.050: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.70 I 0.070: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.70 I 0.090: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.70 I 0.110: vec fin (2nd case):Acro release
+  P 0.80 I 0.030: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.80 I 0.050: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.80 I 0.070: vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.80 I 0.090: vec fin (2nd case):Acro release
+  P 0.80 I 0.110: vec fin (2nd case):Acro release
+  P 0.90 I 0.030: vec rigid:Stab track, vec complete:wind I off, vec fin (2nd case):Acro release
+  P 0.90 I 0.050: vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):Stab release
+  P 0.90 I 0.070: vec complete:wind I off, vec fin (2nd case):Acro release
+  P 0.90 I 0.090: vec complete:wind I off, vec fin (2nd case):Acro release
+  P 0.90 I 0.110: vec complete:wind I off
+  P 0.90 I 0.130: vec complete:wind I off
+  P 0.90 I 0.150: vec complete:wind I off
+  P 0.90 I 0.175: vec complete:wind I off, vec fin (2nd case):wind I off
+  P 0.90 I 0.200: vec complete:wind I off
+  P 1.00 I 0.030: vec rigid:Stab track, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.00 I 0.050: vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.00 I 0.070: vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.00 I 0.090: vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.00 I 0.110: vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.00 I 0.130: vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.00 I 0.150: vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.00 I 0.175: vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.00 I 0.200: vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.10 I 0.030: vec rigid:Stab track, vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.10 I 0.050: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.10 I 0.070: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.10 I 0.090: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.10 I 0.110: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.10 I 0.130: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.10 I 0.150: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.10 I 0.175: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.10 I 0.200: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.20 I 0.030: vec rigid:Stab track, vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.20 I 0.050: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.20 I 0.070: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.20 I 0.090: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):Acro release, vec fin (2nd case):wind I off
+  P 1.20 I 0.110: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.20 I 0.130: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.20 I 0.150: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.20 I 0.175: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+  P 1.20 I 0.200: vec rigid:wind I off, vec complete:wind I off, vec fin (2nd case):wind I off
+
+=== cloudship: gain sets with no failure outside the excluded checks, by worst normalized margin
+  P 0.70 I 0.200 LIM 0.50  worst   2.47 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.200 LIM 0.30  worst   2.47 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.200 LIM 0.20  worst   2.47 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.200 LIM 0.15  worst   2.47 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.090 LIM 0.50  worst   2.42 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.090 LIM 0.30  worst   2.42 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.090 LIM 0.20  worst   2.42 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.090 LIM 0.15  worst   2.42 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.110 LIM 0.50  worst   2.29 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.110 LIM 0.30  worst   2.29 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.110 LIM 0.20  worst   2.29 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.110 LIM 0.15  worst   2.29 (cs complete / Acro track)  excluded fails: 0
+  P 0.80 I 0.200 LIM 0.50  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.200 LIM 0.30  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.200 LIM 0.20  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.200 LIM 0.15  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.175 LIM 0.50  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.175 LIM 0.30  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.175 LIM 0.20  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.175 LIM 0.15  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.150 LIM 0.50  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.150 LIM 0.30  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.150 LIM 0.20  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.150 LIM 0.15  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.130 LIM 0.50  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.130 LIM 0.30  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.130 LIM 0.20  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.130 LIM 0.15  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.110 LIM 0.50  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.110 LIM 0.30  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.110 LIM 0.20  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.110 LIM 0.15  worst   2.20 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.090 LIM 0.50  worst   2.07 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.090 LIM 0.30  worst   2.07 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.090 LIM 0.20  worst   2.07 (cs rigid / wind I off)  excluded fails: 0
+  P 0.80 I 0.090 LIM 0.15  worst   2.07 (cs rigid / wind I off)  excluded fails: 0
+  P 0.70 I 0.175 LIM 0.50  worst   2.00 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.175 LIM 0.30  worst   2.00 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.175 LIM 0.20  worst   2.00 (cs complete / Acro track)  excluded fails: 0
+  P 0.70 I 0.175 LIM 0.15  worst   2.00 (cs complete / Acro track)  excluded fails: 0
+  (160 of 288 sets pass)
+
+--- cloudship grid (L=0.5 unless it differs): fails / worst
+  INT_LIM 0.50
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50     2F -5.03     1F -2.70     0F +0.16     1F -0.78     1F -0.98     1F -0.98     1F -1.13     2F -0.80     0F +0.63
+    0.60     2F -2.99     1F -1.71     0F +1.89     0F +0.89     0F +0.69     0F +0.56     0F +0.60     0F +0.67     0F +1.53
+    0.70     2F -1.63     1F -1.35     0F +1.53     0F +2.42     0F +2.29     0F +1.96     0F +1.64     0F +2.00     0F +2.47
+    0.80     1F -0.74     1F -0.50     0F +1.86     0F +2.07     0F +2.20     0F +2.20     0F +2.20     0F +2.20     0F +2.20
+    0.90     1F -0.04     0F +0.06     0F +1.07     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20
+    1.00     0F +0.46     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47
+    1.10     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20
+    1.20     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73
+  INT_LIM 0.30
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50     2F -5.03     1F -2.70     0F +0.16     1F -0.78     1F -0.98     1F -0.98     1F -1.13     2F -0.80     0F +0.63
+    0.60     2F -2.99     1F -1.71     0F +1.89     0F +0.89     0F +0.69     0F +0.56     0F +0.60     0F +0.67     0F +1.53
+    0.70     2F -1.63     1F -1.35     0F +1.53     0F +2.42     0F +2.29     0F +1.96     0F +1.64     0F +2.00     0F +2.47
+    0.80     1F -0.74     1F -0.50     0F +1.86     0F +2.07     0F +2.20     0F +2.20     0F +2.20     0F +2.20     0F +2.20
+    0.90     1F -0.04     0F +0.06     0F +1.07     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20
+    1.00     0F +0.46     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47
+    1.10     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20
+    1.20     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73
+  INT_LIM 0.20
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50     2F -5.03     1F -2.70     0F +0.16     1F -0.78     1F -0.98     1F -0.98     1F -1.13     2F -0.80     0F +0.63
+    0.60     2F -2.99     1F -1.71     0F +1.89     0F +0.89     0F +0.69     0F +0.56     0F +0.60     0F +0.67     0F +1.53
+    0.70     2F -1.63     1F -1.35     0F +1.53     0F +2.42     0F +2.29     0F +1.96     0F +1.64     0F +2.00     0F +2.47
+    0.80     1F -0.74     1F -0.50     0F +1.86     0F +2.07     0F +2.20     0F +2.20     0F +2.20     0F +2.20     0F +2.20
+    0.90     1F -0.04     0F +0.06     0F +1.07     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20
+    1.00     0F +0.46     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47
+    1.10     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20
+    1.20     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73
+  INT_LIM 0.15
+     P\I        0.030        0.050        0.070        0.090        0.110        0.130        0.150        0.175        0.200
+    0.50     2F -5.03     1F -2.70     0F +0.16     1F -0.78     1F -0.98     1F -0.98     1F -1.13     2F -0.80     0F +0.63
+    0.60     2F -2.99     1F -1.71     0F +1.89     0F +0.89     0F +0.69     0F +0.56     0F +0.60     0F +0.67     0F +1.53
+    0.70     2F -1.63     1F -1.35     0F +1.53     0F +2.42     0F +2.29     0F +1.96     0F +1.64     0F +2.00     0F +2.47
+    0.80     1F -0.74     1F -0.50     0F +1.86     0F +2.07     0F +2.20     0F +2.20     0F +2.20     0F +2.20     0F +2.20
+    0.90     1F -0.04     0F +0.06     0F +1.07     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20     0F +1.20
+    1.00     0F +0.46     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47     0F +0.47
+    1.10     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20     1F -0.20
+    1.20     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73     1F -0.73
+
+--- cloudship failing checks per set (L=0.5)
+  P 0.50 I 0.030: cs complete:Stab release, cs complete:wind I on
+  P 0.50 I 0.050: cs complete:Stab release
+  P 0.50 I 0.090: cs complete:Acro track
+  P 0.50 I 0.110: cs complete:Acro track
+  P 0.50 I 0.130: cs complete:Acro track
+  P 0.50 I 0.150: cs complete:Acro track
+  P 0.50 I 0.175: cs rigid:Stab release, cs complete:Acro track
+  P 0.60 I 0.030: cs complete:Stab release, cs complete:wind I on
+  P 0.60 I 0.050: cs complete:Stab release
+  P 0.70 I 0.030: cs complete:Stab release, cs complete:wind I on
+  P 0.70 I 0.050: cs complete:Stab release
+  P 0.80 I 0.030: cs complete:Stab release
+  P 0.80 I 0.050: cs complete:Stab release
+  P 0.90 I 0.030: cs complete:Stab release
+  P 1.10 I 0.030: cs rigid:wind I off
+  P 1.10 I 0.050: cs rigid:wind I off
+  P 1.10 I 0.070: cs rigid:wind I off
+  P 1.10 I 0.090: cs rigid:wind I off
+  P 1.10 I 0.110: cs rigid:wind I off
+  P 1.10 I 0.130: cs rigid:wind I off
+  P 1.10 I 0.150: cs rigid:wind I off
+  P 1.10 I 0.175: cs rigid:wind I off
+  P 1.10 I 0.200: cs rigid:wind I off
+  P 1.20 I 0.030: cs rigid:wind I off
+  P 1.20 I 0.050: cs rigid:wind I off
+  P 1.20 I 0.070: cs rigid:wind I off
+  P 1.20 I 0.090: cs rigid:wind I off
+  P 1.20 I 0.110: cs rigid:wind I off
+  P 1.20 I 0.130: cs rigid:wind I off
+  P 1.20 I 0.150: cs rigid:wind I off
+  P 1.20 I 0.175: cs rigid:wind I off
+  P 1.20 I 0.200: cs rigid:wind I off

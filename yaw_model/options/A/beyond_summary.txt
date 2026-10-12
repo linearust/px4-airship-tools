@@ -1,0 +1,512 @@
+
+==================== vec rigid (gz_airship_vectored_independent)
+  --- actuator nominal
+    P0.50 I0.09 L0.30
+        small os 38% rise 7.2 set10 45.0 set5 51.8 stop1 3.7 stop.2 8.3 under -0.62
+        half os 24% rise 5.5 set10 >60 set5 >60 stop1 7.1 stop.2 - under -1.70
+        full os 24% rise 5.5 set10 22.5 set5 >60 stop1 7.4 stop.2 - under -3.78
+        wind_gate peak 1.75 deg/s hdg 16.6 deg (at off 14.2) rec<0.2 16.1 s integ -0.019 back 1.22 deg/s 20.5 deg
+        wind_10pct peak 7.16 deg/s hdg 78.3 deg (at off 69.1) rec<0.2 34.9 s integ -0.100 back 6.60 deg/s 82.4 deg
+        gust5s peak 6.97 deg/s hdg max 35.6 deg final 11.0 deg, after-off peak 3.16 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 16% rise 5.1 set10 >60 set5 >60 stop1 2.3 stop.2 - under -1.03
+        half os 16% rise 5.2 set10 27.0 set5 >60 stop1 5.8 stop.2 - under -0.78
+        full os 16% rise 5.2 set10 20.8 set5 23.9 stop1 5.2 stop.2 27.4 under -2.75
+        wind_gate peak 1.48 deg/s hdg 14.3 deg (at off 13.8) rec<0.2 17.1 s integ -0.018 back 1.02 deg/s 18.8 deg
+        wind_10pct peak 5.94 deg/s hdg 69.9 deg (at off 68.0) rec<0.2 22.3 s integ -0.100 back 5.50 deg/s 73.4 deg
+        gust5s peak 5.89 deg/s hdg max 29.3 deg final 4.4 deg, after-off peak 2.18 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 36% rise 4.1 set10 >60 set5 >60 stop1 0.3 stop.2 - under -0.70
+        half os 24% rise 4.1 set10 50.5 set5 >60 stop1 3.3 stop.2 - under -1.92
+        full os 24% rise 4.1 set10 15.8 set5 48.6 stop1 16.1 stop.2 - under -4.36
+        wind_gate peak 1.27 deg/s hdg 8.3 deg (at off 7.0) rec<0.2 10.8 s integ -0.018 back 0.85 deg/s 9.8 deg
+        wind_10pct peak 5.25 deg/s hdg 38.2 deg (at off 32.9) rec<0.2 23.0 s integ -0.100 back 4.59 deg/s 39.9 deg
+        gust5s peak 5.25 deg/s hdg max 24.5 deg final -2.0 deg, after-off peak 3.24 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["noise", 10.0]
+    P0.50 I0.09 L0.30
+        hold noise: torque std 0.00250 max 0.0102, motor cmd std 0.0015 max 0.010, rate rms 0.009 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        hold noise: torque std 0.00350 max 0.0143, motor cmd std 0.0021 max 0.014, rate rms 0.010 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        hold noise: torque std 0.00351 max 0.0142, motor cmd std 0.0021 max 0.014, rate rms 0.014 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["rotor", 2.0]
+    P0.50 I0.09 L0.30
+        small os 38% rise 7.2 set10 45.0 set5 51.8 stop1 3.8 stop.2 8.3 under -0.63
+        half os 24% rise 5.5 set10 >60 set5 >60 stop1 7.1 stop.2 - under -1.71
+        wind_10pct peak 7.17 deg/s hdg 78.3 deg (at off 69.1) rec<0.2 34.9 s integ -0.100 back 6.62 deg/s 82.5 deg
+        gust5s peak 6.99 deg/s hdg max 35.6 deg final 10.8 deg, after-off peak 3.17 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 16% rise 5.1 set10 >60 set5 >60 stop1 2.3 stop.2 - under -1.04
+        half os 16% rise 5.1 set10 27.0 set5 >60 stop1 5.8 stop.2 - under -0.78
+        wind_10pct peak 5.95 deg/s hdg 69.9 deg (at off 68.0) rec<0.2 22.2 s integ -0.100 back 5.52 deg/s 73.4 deg
+        gust5s peak 5.90 deg/s hdg max 29.3 deg final 4.5 deg, after-off peak 2.19 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 37% rise 4.1 set10 >60 set5 >60 stop1 0.3 stop.2 - under -0.70
+        half os 24% rise 4.1 set10 50.6 set5 >60 stop1 3.3 stop.2 - under -1.92
+        wind_10pct peak 5.27 deg/s hdg 38.3 deg (at off 32.9) rec<0.2 23.0 s integ -0.100 back 4.61 deg/s 40.0 deg
+        gust5s peak 5.27 deg/s hdg max 24.5 deg final -1.9 deg, after-off peak 3.26 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["servo", 60]
+    P0.50 I0.09 L0.30
+        small os 38% rise 7.2 set10 45.0 set5 51.8 stop1 3.7 stop.2 8.3 under -0.62
+        half os 27% rise 5.5 set10 >60 set5 >60 stop1 7.1 stop.2 - under -2.23
+        wind_10pct peak 7.39 deg/s hdg 78.7 deg (at off 69.2) rec<0.2 34.9 s integ -0.100 back 6.59 deg/s 83.6 deg
+        gust5s peak 7.27 deg/s hdg max 37.3 deg final 10.3 deg, after-off peak 3.34 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 22% rise 5.2 set10 >60 set5 >60 stop1 0.0 stop.2 - under -0.90
+        half os 18% rise 5.2 set10 26.8 set5 >60 stop1 6.7 stop.2 - under -0.97
+        wind_10pct peak 6.16 deg/s hdg 70.0 deg (at off 68.1) rec<0.2 22.3 s integ -0.100 back 5.50 deg/s 73.9 deg
+        gust5s peak 6.09 deg/s hdg max 30.9 deg final 5.1 deg, after-off peak 2.35 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 44% rise 4.3 set10 >60 set5 >60 stop1 0.1 stop.2 - under -0.74
+        half os 28% rise 4.3 set10 >60 set5 >60 stop1 3.3 stop.2 - under -1.83
+        wind_10pct peak 5.71 deg/s hdg 38.7 deg (at off 33.0) rec<0.2 23.0 s integ -0.100 back 4.60 deg/s 40.8 deg
+        gust5s peak 5.71 deg/s hdg max 25.8 deg final -1.9 deg, after-off peak 3.48 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["slew", 240]
+    P0.50 I0.09 L0.30
+        small os 38% rise 7.2 set10 45.0 set5 51.8 stop1 3.7 stop.2 8.3 under -0.62
+        half os 26% rise 5.1 set10 >60 set5 >60 stop1 6.1 stop.2 - under -1.86
+        wind_10pct peak 6.75 deg/s hdg 74.6 deg (at off 65.9) rec<0.2 34.8 s integ -0.100 back 6.60 deg/s 77.8 deg
+        gust5s peak 6.63 deg/s hdg max 33.3 deg final 9.2 deg, after-off peak 3.23 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 18% rise 4.5 set10 >60 set5 >60 stop1 0.0 stop.2 - under -0.74
+        half os 17% rise 4.6 set10 24.5 set5 >60 stop1 5.1 stop.2 - under -0.82
+        wind_10pct peak 5.62 deg/s hdg 67.1 deg (at off 65.3) rec<0.2 22.4 s integ -0.100 back 5.48 deg/s 69.5 deg
+        gust5s peak 5.57 deg/s hdg max 27.5 deg final 3.2 deg, after-off peak 2.24 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 36% rise 3.6 set10 >60 set5 >60 stop1 0.2 stop.2 2.7 under -0.61
+        half os 27% rise 3.6 set10 48.0 set5 >60 stop1 3.4 stop.2 - under -1.77
+        wind_10pct peak 4.81 deg/s hdg 35.1 deg (at off 30.2) rec<0.2 22.9 s integ -0.100 back 4.57 deg/s 36.7 deg
+        gust5s peak 4.81 deg/s hdg max 22.3 deg final -1.0 deg, after-off peak 3.30 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["slew", 60]
+    P0.50 I0.09 L0.30
+        small os 38% rise 7.2 set10 45.0 set5 51.8 stop1 3.7 stop.2 8.3 under -0.62
+        half os 20% rise 6.7 set10 57.2 set5 58.0 stop1 8.9 stop.2 - under -1.34
+        wind_10pct peak 8.11 deg/s hdg 88.8 deg (at off 78.4) rec<0.2 36.0 s integ -0.100 back 6.63 deg/s 91.7 deg
+        gust5s peak 7.89 deg/s hdg max 41.7 deg final 14.7 deg, after-off peak 2.85 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 12% rise 6.2 set10 >60 set5 >60 stop1 3.5 stop.2 - under -0.80
+        half os 12% rise 6.3 set10 32.5 set5 >60 stop1 4.9 stop.2 - under -0.88
+        wind_10pct peak 6.63 deg/s hdg 78.2 deg (at off 76.1) rec<0.2 22.4 s integ -0.100 back 5.50 deg/s 81.2 deg
+        gust5s peak 6.63 deg/s hdg max 34.1 deg final 10.0 deg, after-off peak 1.94 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 32% rise 5.3 set10 >60 set5 >60 stop1 4.0 stop.2 - under -0.72
+        half os 18% rise 5.4 set10 56.3 set5 57.7 stop1 3.0 stop.2 - under -2.27
+        wind_10pct peak 6.39 deg/s hdg 47.3 deg (at off 40.9) rec<0.2 23.8 s integ -0.100 back 4.59 deg/s 46.2 deg
+        gust5s peak 6.39 deg/s hdg max 30.2 deg final 0.3 deg, after-off peak 2.91 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+
+==================== vec complete (gz_airship_vectored_independent_am_fin_drag)
+  --- actuator nominal
+    P0.50 I0.09 L0.30
+        small os 19% rise 9.6 set10 33.7 set5 39.0 stop1 8.6 stop.2 13.1 under -0.67
+        half os -3% rise 22.1 set10 23.9 set5 38.7 stop1 22.5 stop.2 27.0 under -0.66
+        full os -21% rise - set10 >60 set5 >60 stop1 39.3 stop.2 43.9 under -0.32
+        wind_gate peak 1.18 deg/s hdg 17.3 deg (at off 12.6) rec<0.2 23.7 s integ -0.017 back 0.81 deg/s 21.7 deg
+        wind_10pct peak 3.89 deg/s hdg 74.4 deg (at off 65.2) rec<0.2 32.2 s integ -0.097 back 3.59 deg/s 73.3 deg
+        gust5s peak 3.44 deg/s hdg max 22.2 deg final -0.2 deg, after-off peak 1.31 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 11% rise 9.7 set10 25.5 set5 35.9 stop1 6.3 stop.2 11.6 under -0.41
+        half os -3% rise 24.9 set10 26.3 set5 45.1 stop1 22.5 stop.2 28.2 under -0.36
+        full os -20% rise - set10 >60 set5 >60 stop1 42.0 stop.2 - under 0.15
+        wind_gate peak 1.05 deg/s hdg 15.4 deg (at off 13.0) rec<0.2 23.6 s integ -0.018 back 0.75 deg/s 20.9 deg
+        wind_10pct peak 3.54 deg/s hdg 70.4 deg (at off 66.2) rec<0.2 34.7 s integ -0.099 back 3.36 deg/s 71.6 deg
+        gust5s peak 3.21 deg/s hdg max 19.8 deg final -1.3 deg, after-off peak 1.07 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 22% rise 6.8 set10 23.7 set5 26.4 stop1 4.7 stop.2 8.4 under -0.58
+        half os 0% rise 9.9 set10 11.4 set5 13.7 stop1 12.1 stop.2 34.7 under -0.86
+        full os -20% rise - set10 >60 set5 >60 stop1 18.8 stop.2 - under -0.76
+        wind_gate peak 0.87 deg/s hdg 8.8 deg (at off 6.6) rec<0.2 15.5 s integ -0.019 back 0.63 deg/s 10.5 deg
+        wind_10pct peak 3.15 deg/s hdg 37.4 deg (at off 31.9) rec<0.2 19.1 s integ -0.102 back 2.94 deg/s 38.1 deg
+        gust5s peak 3.07 deg/s hdg max 16.5 deg final 4.4 deg, after-off peak 1.51 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["noise", 10.0]
+    P0.50 I0.09 L0.30
+        hold noise: torque std 0.00250 max 0.0103, motor cmd std 0.0015 max 0.010, rate rms 0.003 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        hold noise: torque std 0.00350 max 0.0144, motor cmd std 0.0021 max 0.014, rate rms 0.004 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        hold noise: torque std 0.00351 max 0.0145, motor cmd std 0.0021 max 0.014, rate rms 0.007 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["rotor", 2.0]
+    P0.50 I0.09 L0.30
+        small os 19% rise 9.6 set10 33.7 set5 39.0 stop1 8.6 stop.2 13.1 under -0.67
+        half os -3% rise 22.0 set10 23.8 set5 38.7 stop1 22.5 stop.2 27.0 under -0.66
+        wind_10pct peak 3.89 deg/s hdg 74.4 deg (at off 65.2) rec<0.2 32.2 s integ -0.097 back 3.60 deg/s 73.3 deg
+        gust5s peak 3.45 deg/s hdg max 22.2 deg final -0.2 deg, after-off peak 1.32 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 11% rise 9.6 set10 25.5 set5 35.8 stop1 6.3 stop.2 11.6 under -0.41
+        half os -3% rise 24.8 set10 26.3 set5 45.1 stop1 22.5 stop.2 28.1 under -0.36
+        wind_10pct peak 3.54 deg/s hdg 70.4 deg (at off 66.2) rec<0.2 34.7 s integ -0.099 back 3.37 deg/s 71.6 deg
+        gust5s peak 3.22 deg/s hdg max 19.8 deg final -1.3 deg, after-off peak 1.07 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 22% rise 6.8 set10 23.7 set5 26.4 stop1 4.7 stop.2 8.4 under -0.58
+        half os 0% rise 9.9 set10 11.4 set5 13.7 stop1 12.1 stop.2 34.6 under -0.87
+        wind_10pct peak 3.16 deg/s hdg 37.4 deg (at off 31.9) rec<0.2 35.6 s integ -0.102 back 2.95 deg/s 38.1 deg
+        gust5s peak 3.07 deg/s hdg max 16.5 deg final 4.4 deg, after-off peak 1.52 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["servo", 60]
+    P0.50 I0.09 L0.30
+        small os 21% rise 9.8 set10 34.3 set5 39.3 stop1 9.6 stop.2 13.7 under -0.74
+        half os -2% rise 21.3 set10 23.5 set5 36.6 stop1 22.9 stop.2 27.1 under -0.71
+        wind_10pct peak 3.94 deg/s hdg 74.4 deg (at off 65.3) rec<0.2 32.1 s integ -0.097 back 3.61 deg/s 74.2 deg
+        gust5s peak 3.54 deg/s hdg max 22.7 deg final -0.9 deg, after-off peak 1.35 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 12% rise 9.3 set10 27.2 set5 36.2 stop1 7.1 stop.2 11.9 under -0.46
+        half os -3% rise 24.1 set10 25.9 set5 41.8 stop1 23.0 stop.2 28.2 under -0.40
+        wind_10pct peak 3.59 deg/s hdg 70.4 deg (at off 66.3) rec<0.2 34.5 s integ -0.099 back 3.38 deg/s 72.4 deg
+        gust5s peak 3.31 deg/s hdg max 20.3 deg final -2.1 deg, after-off peak 1.09 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 24% rise 6.4 set10 24.0 set5 26.5 stop1 5.2 stop.2 8.6 under -0.64
+        half os 1% rise 9.3 set10 11.2 set5 13.4 stop1 12.1 stop.2 35.3 under -0.89
+        wind_10pct peak 3.24 deg/s hdg 37.5 deg (at off 31.9) rec<0.2 35.3 s integ -0.102 back 2.95 deg/s 38.6 deg
+        gust5s peak 3.17 deg/s hdg max 16.9 deg final 4.6 deg, after-off peak 1.56 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["slew", 240]
+    P0.50 I0.09 L0.30
+        small os 20% rise 9.0 set10 33.6 set5 38.8 stop1 8.1 stop.2 12.5 under -0.69
+        half os -3% rise 20.7 set10 22.1 set5 37.4 stop1 22.1 stop.2 26.4 under -0.69
+        wind_10pct peak 3.79 deg/s hdg 72.4 deg (at off 63.3) rec<0.2 32.0 s integ -0.097 back 3.59 deg/s 72.4 deg
+        gust5s peak 3.36 deg/s hdg max 21.2 deg final -0.8 deg, after-off peak 1.37 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 11% rise 9.3 set10 26.8 set5 36.1 stop1 5.7 stop.2 10.9 under -0.43
+        half os -3% rise 23.1 set10 24.3 set5 44.5 stop1 22.1 stop.2 27.5 under -0.38
+        wind_10pct peak 3.45 deg/s hdg 68.8 deg (at off 64.5) rec<0.2 34.5 s integ -0.099 back 3.36 deg/s 70.7 deg
+        gust5s peak 3.12 deg/s hdg max 18.9 deg final -2.0 deg, after-off peak 1.11 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 23% rise 6.4 set10 23.3 set5 25.9 stop1 4.1 stop.2 7.7 under -0.60
+        half os 1% rise 9.2 set10 10.4 set5 12.4 stop1 11.4 stop.2 32.8 under -0.93
+        wind_10pct peak 3.02 deg/s hdg 35.6 deg (at off 30.3) rec<0.2 18.9 s integ -0.102 back 2.94 deg/s 36.8 deg
+        gust5s peak 2.93 deg/s hdg max 15.5 deg final 2.5 deg, after-off peak 1.57 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["slew", 60]
+    P0.50 I0.09 L0.30
+        small os 17% rise 10.8 set10 33.8 set5 39.4 stop1 9.7 stop.2 14.4 under -0.64
+        half os -3% rise 24.6 set10 27.0 set5 41.0 stop1 23.4 stop.2 28.2 under -0.59
+        wind_10pct peak 4.11 deg/s hdg 79.3 deg (at off 70.3) rec<0.2 32.9 s integ -0.097 back 3.61 deg/s 75.2 deg
+        gust5s peak 3.61 deg/s hdg max 24.7 deg final 1.7 deg, after-off peak 1.16 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 9% rise 10.8 set10 12.6 set5 35.5 stop1 7.4 stop.2 13.0 under -0.39
+        half os -3% rise 28.0 set10 29.8 set5 46.1 stop1 23.3 stop.2 29.5 under -0.32
+        wind_10pct peak 3.74 deg/s hdg 74.8 deg (at off 70.8) rec<0.2 35.4 s integ -0.100 back 3.38 deg/s 73.4 deg
+        gust5s peak 3.38 deg/s hdg max 21.9 deg final 0.3 deg, after-off peak 0.93 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.000 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 19% rise 7.9 set10 24.5 set5 27.5 stop1 5.7 stop.2 9.8 under -0.53
+        half os -0% rise 11.8 set10 13.6 set5 16.6 stop1 13.5 stop.2 38.3 under -0.76
+        wind_10pct peak 3.49 deg/s hdg 41.9 deg (at off 36.1) rec<0.2 36.3 s integ -0.102 back 2.95 deg/s 40.6 deg
+        gust5s peak 3.31 deg/s hdg max 18.9 deg final 9.2 deg, after-off peak 1.33 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+
+==================== vec fin (2nd case) (gz_airship_vectored_independent_fin)
+  --- actuator nominal
+    P0.50 I0.09 L0.30
+        small os 14% rise 8.1 set10 >60 set5 >60 stop1 2.8 stop.2 9.9 under -0.08
+        half os 1% rise 9.9 set10 11.0 set5 13.3 stop1 10.8 stop.2 14.1 under -0.30
+        full os -3% rise 32.8 set10 33.8 set5 52.9 stop1 25.1 stop.2 34.4 under -0.43
+        wind_gate peak 1.63 deg/s hdg 15.7 deg (at off 14.1) rec<0.2 16.5 s integ -0.018 back 1.14 deg/s 21.4 deg
+        wind_10pct peak 5.54 deg/s hdg 72.1 deg (at off 69.0) rec<0.2 23.8 s integ -0.100 back 5.00 deg/s 72.0 deg
+        gust5s peak 5.48 deg/s hdg max 28.3 deg final 12.5 deg, after-off peak 2.10 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 7% rise 5.7 set10 6.4 set5 20.4 stop1 3.2 stop.2 6.4 under -0.25
+        half os -0% rise 10.6 set10 11.3 set5 14.9 stop1 11.3 stop.2 18.0 under -0.11
+        full os -3% rise 33.2 set10 33.9 set5 54.4 stop1 25.8 stop.2 36.5 under 0.02
+        wind_gate peak 1.40 deg/s hdg 13.9 deg (at off 13.7) rec<0.2 17.4 s integ -0.018 back 0.97 deg/s 20.2 deg
+        wind_10pct peak 4.83 deg/s hdg 68.5 deg (at off 68.0) rec<0.2 28.6 s integ -0.100 back 4.43 deg/s 68.4 deg
+        gust5s peak 4.82 deg/s hdg max 24.4 deg final 8.0 deg, after-off peak 1.61 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 16% rise 4.3 set10 13.8 set5 16.9 stop1 2.8 stop.2 - under -0.45
+        half os 4% rise 5.8 set10 6.5 set5 7.9 stop1 6.8 stop.2 25.9 under -0.53
+        full os 1% rise 9.7 set10 10.4 set5 28.2 stop1 12.0 stop.2 26.0 under -0.72
+        wind_gate peak 1.21 deg/s hdg 8.1 deg (at off 7.0) rec<0.2 10.9 s integ -0.018 back 0.81 deg/s 9.8 deg
+        wind_10pct peak 4.53 deg/s hdg 35.6 deg (at off 32.8) rec<0.2 23.1 s integ -0.100 back 3.93 deg/s 35.1 deg
+        gust5s peak 4.53 deg/s hdg max 21.1 deg final -2.1 deg, after-off peak 2.46 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["noise", 10.0]
+    P0.50 I0.09 L0.30
+        hold noise: torque std 0.00250 max 0.0102, motor cmd std 0.0015 max 0.010, rate rms 0.008 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        hold noise: torque std 0.00350 max 0.0143, motor cmd std 0.0021 max 0.014, rate rms 0.008 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        hold noise: torque std 0.00351 max 0.0143, motor cmd std 0.0021 max 0.014, rate rms 0.011 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["rotor", 2.0]
+    P0.50 I0.09 L0.30
+        small os 14% rise 8.1 set10 >60 set5 >60 stop1 2.8 stop.2 9.9 under -0.08
+        half os 1% rise 9.9 set10 10.9 set5 13.3 stop1 10.8 stop.2 14.1 under -0.30
+        wind_10pct peak 5.54 deg/s hdg 72.1 deg (at off 69.0) rec<0.2 23.7 s integ -0.100 back 5.01 deg/s 72.0 deg
+        gust5s peak 5.48 deg/s hdg max 28.3 deg final 12.6 deg, after-off peak 2.10 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 7% rise 5.7 set10 6.4 set5 20.4 stop1 3.2 stop.2 6.4 under -0.25
+        half os -0% rise 10.5 set10 11.3 set5 14.9 stop1 11.3 stop.2 18.0 under -0.11
+        wind_10pct peak 4.84 deg/s hdg 68.5 deg (at off 68.0) rec<0.2 28.6 s integ -0.100 back 4.44 deg/s 68.4 deg
+        gust5s peak 4.82 deg/s hdg max 24.4 deg final 8.1 deg, after-off peak 1.61 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 16% rise 4.3 set10 13.8 set5 16.9 stop1 2.8 stop.2 - under -0.47
+        half os 4% rise 5.8 set10 6.5 set5 7.9 stop1 6.8 stop.2 25.9 under -0.54
+        wind_10pct peak 4.54 deg/s hdg 35.6 deg (at off 32.8) rec<0.2 23.1 s integ -0.100 back 3.95 deg/s 35.1 deg
+        gust5s peak 4.54 deg/s hdg max 21.1 deg final -2.3 deg, after-off peak 2.47 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["servo", 60]
+    P0.50 I0.09 L0.30
+        small os 14% rise 8.1 set10 >60 set5 >60 stop1 2.4 stop.2 10.3 under -0.07
+        half os 1% rise 9.2 set10 10.4 set5 13.4 stop1 10.6 stop.2 13.6 under -0.35
+        wind_10pct peak 5.67 deg/s hdg 71.9 deg (at off 69.1) rec<0.2 23.4 s integ -0.100 back 5.07 deg/s 73.1 deg
+        gust5s peak 5.67 deg/s hdg max 29.2 deg final 12.9 deg, after-off peak 2.17 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 9% rise 5.8 set10 6.6 set5 22.3 stop1 4.0 stop.2 6.8 under -0.33
+        half os -1% rise 9.7 set10 10.4 set5 16.4 stop1 10.7 stop.2 16.9 under -0.15
+        wind_10pct peak 5.08 deg/s hdg 68.3 deg (at off 68.2) rec<0.2 27.8 s integ -0.100 back 4.50 deg/s 69.5 deg
+        gust5s peak 5.08 deg/s hdg max 25.5 deg final 7.9 deg, after-off peak 1.68 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 18% rise 4.5 set10 14.3 set5 17.1 stop1 3.4 stop.2 - under -0.63
+        half os 4% rise 5.7 set10 6.5 set5 7.1 stop1 6.7 stop.2 27.2 under -0.60
+        wind_10pct peak 4.83 deg/s hdg 35.7 deg (at off 32.9) rec<0.2 23.2 s integ -0.100 back 3.96 deg/s 35.9 deg
+        gust5s peak 4.83 deg/s hdg max 22.0 deg final -2.9 deg, after-off peak 2.55 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["slew", 240]
+    P0.50 I0.09 L0.30
+        small os 14% rise 8.1 set10 59.6 set5 >60 stop1 3.2 stop.2 9.9 under -0.09
+        half os 2% rise 8.6 set10 9.4 set5 45.8 stop1 10.1 stop.2 13.2 under -0.36
+        wind_10pct peak 5.28 deg/s hdg 69.1 deg (at off 65.9) rec<0.2 23.4 s integ -0.100 back 4.98 deg/s 70.8 deg
+        gust5s peak 5.27 deg/s hdg max 26.7 deg final 10.3 deg, after-off peak 2.21 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 8% rise 5.1 set10 5.7 set5 21.3 stop1 2.7 stop.2 5.8 under -0.27
+        half os 0% rise 8.7 set10 9.3 set5 12.7 stop1 10.2 stop.2 16.6 under -0.06
+        wind_10pct peak 4.60 deg/s hdg 65.9 deg (at off 65.4) rec<0.2 27.8 s integ -0.100 back 4.41 deg/s 67.3 deg
+        gust5s peak 4.60 deg/s hdg max 23.2 deg final 6.3 deg, after-off peak 1.69 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 17% rise 3.8 set10 13.5 set5 16.2 stop1 2.2 stop.2 - under -0.57
+        half os 5% rise 5.0 set10 5.6 set5 15.2 stop1 6.0 stop.2 28.1 under -0.64
+        wind_10pct peak 4.17 deg/s hdg 32.9 deg (at off 30.3) rec<0.2 23.1 s integ -0.100 back 3.91 deg/s 33.4 deg
+        gust5s peak 4.17 deg/s hdg max 19.5 deg final -3.7 deg, after-off peak 2.55 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+  --- actuator ["slew", 60]
+    P0.50 I0.09 L0.30
+        small os 14% rise 8.1 set10 >60 set5 >60 stop1 1.8 stop.2 7.5 under -0.48
+        half os -0% rise 12.2 set10 13.2 set5 17.2 stop1 12.2 stop.2 16.1 under -0.34
+        wind_10pct peak 6.06 deg/s hdg 79.9 deg (at off 77.1) rec<0.2 24.2 s integ -0.101 back 5.07 deg/s 74.2 deg
+        gust5s peak 6.06 deg/s hdg max 32.0 deg final 18.3 deg, after-off peak 1.78 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.09 L0.30
+        small os 5% rise 6.9 set10 7.7 set5 9.0 stop1 4.4 stop.2 7.8 under -0.22
+        half os -1% rise 13.6 set10 14.3 set5 20.6 stop1 12.9 stop.2 20.0 under -0.20
+        wind_10pct peak 5.32 deg/s hdg 75.4 deg (at off 75.3) rec<0.2 28.9 s integ -0.100 back 4.51 deg/s 70.5 deg
+        gust5s peak 5.32 deg/s hdg max 27.6 deg final 13.0 deg, after-off peak 1.34 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+    P0.70 I0.20 L0.30
+        small os 11% rise 5.7 set10 13.3 set5 16.8 stop1 3.9 stop.2 6.5 under -0.33
+        half os 2% rise 7.8 set10 8.5 set5 10.3 stop1 8.5 stop.2 22.7 under -0.40
+        wind_10pct peak 5.21 deg/s hdg 42.8 deg (at off 39.9) rec<0.2 24.1 s integ -0.100 back 3.96 deg/s 38.4 deg
+        gust5s peak 5.21 deg/s hdg max 25.0 deg final 7.7 deg, after-off peak 2.07 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0002 max 0.001, rate rms 0.001 deg/s, pod mode chg 0.0/min tilt 0.0 deg/min
+
+==================== cs rigid (gz_cloudship)
+  --- actuator nominal
+    P0.50 I0.09 L0.30
+        small os 20% rise 3.2 set10 13.8 set5 16.5 stop1 1.2 stop.2 3.3 under -0.33
+        half os 20% rise 3.2 set10 13.8 set5 16.4 stop1 3.1 stop.2 17.8 under -1.34
+        full os 20% rise 3.2 set10 13.8 set5 16.4 stop1 15.4 stop.2 19.5 under -3.01
+        wind_gate peak 1.39 deg/s hdg 12.2 deg (at off 11.8) rec<0.2 13.7 s integ -0.018 back 1.39 deg/s 12.2 deg
+        wind_10pct peak 7.50 deg/s hdg 65.7 deg (at off 63.6) rec<0.2 16.4 s integ -0.100 back 7.50 deg/s 65.7 deg
+        gust5s peak 7.50 deg/s hdg max 34.9 deg final 0.0 deg, after-off peak 4.12 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.002 deg/s, tail reversals 53.5/s
+    P0.70 I0.09 L0.30
+        small os 13% rise 2.7 set10 10.8 set5 15.5 stop1 0.9 stop.2 2.8 under -0.22
+        half os 13% rise 2.7 set10 10.8 set5 15.5 stop1 2.6 stop.2 18.3 under -0.87
+        full os 13% rise 2.7 set10 10.8 set5 15.5 stop1 13.7 stop.2 23.0 under -1.96
+        wind_gate peak 1.13 deg/s hdg 11.8 deg (at off 11.8) rec<0.2 16.0 s integ -0.018 back 1.12 deg/s 11.8 deg
+        wind_10pct peak 6.08 deg/s hdg 63.6 deg (at off 63.6) rec<0.2 24.8 s integ -0.100 back 6.07 deg/s 63.5 deg
+        gust5s peak 6.08 deg/s hdg max 28.3 deg final 0.0 deg, after-off peak 2.71 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.002 deg/s, tail reversals 53.8/s
+    P0.70 I0.20 L0.30
+        small os 21% rise 2.1 set10 9.4 set5 10.9 stop1 0.8 stop.2 8.9 under -0.36
+        half os 22% rise 2.2 set10 9.4 set5 10.9 stop1 2.1 stop.2 11.8 under -1.43
+        full os 22% rise 2.2 set10 9.4 set5 10.9 stop1 10.4 stop.2 12.7 under -3.21
+        wind_gate peak 0.97 deg/s hdg 5.6 deg (at off 5.3) rec<0.2 8.4 s integ -0.018 back 0.97 deg/s 5.6 deg
+        wind_10pct peak 5.22 deg/s hdg 30.1 deg (at off 28.6) rec<0.2 16.0 s integ -0.100 back 5.22 deg/s 30.1 deg
+        gust5s peak 5.22 deg/s hdg max 22.3 deg final 0.0 deg, after-off peak 4.08 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.002 deg/s, tail reversals 53.6/s
+  --- actuator ["noise", 10.0]
+    P0.50 I0.09 L0.30
+        hold noise: torque std 0.00250 max 0.0102, motor cmd std 0.0447 max 0.101, rate rms 0.016 deg/s, tail reversals 53.5/s
+    P0.70 I0.09 L0.30
+        hold noise: torque std 0.00351 max 0.0144, motor cmd std 0.0528 max 0.120, rate rms 0.018 deg/s, tail reversals 53.8/s
+    P0.70 I0.20 L0.30
+        hold noise: torque std 0.00351 max 0.0143, motor cmd std 0.0529 max 0.120, rate rms 0.019 deg/s, tail reversals 53.6/s
+  --- actuator ["tail_tau", 0.025]
+    P0.50 I0.09 L0.30
+        small os 20% rise 3.1 set10 13.8 set5 16.5 stop1 1.2 stop.2 3.3 under -0.34
+        half os 20% rise 3.1 set10 13.8 set5 16.4 stop1 3.1 stop.2 17.8 under -1.35
+        wind_10pct peak 7.53 deg/s hdg 65.7 deg (at off 63.6) rec<0.2 16.4 s integ -0.100 back 7.53 deg/s 65.7 deg
+        gust5s peak 7.53 deg/s hdg max 35.1 deg final 0.0 deg, after-off peak 4.16 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.5/s
+    P0.70 I0.09 L0.30
+        small os 13% rise 2.7 set10 11.1 set5 15.7 stop1 0.9 stop.2 2.8 under -0.22
+        half os 13% rise 2.7 set10 10.9 set5 15.5 stop1 2.6 stop.2 18.4 under -0.88
+        wind_10pct peak 6.11 deg/s hdg 63.6 deg (at off 63.6) rec<0.2 24.8 s integ -0.100 back 6.10 deg/s 63.6 deg
+        gust5s peak 6.11 deg/s hdg max 28.4 deg final 0.0 deg, after-off peak 2.73 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.8/s
+    P0.70 I0.20 L0.30
+        small os 22% rise 2.1 set10 9.4 set5 10.9 stop1 0.9 stop.2 9.0 under -0.36
+        half os 22% rise 2.1 set10 9.4 set5 10.9 stop1 2.1 stop.2 11.8 under -1.46
+        wind_10pct peak 5.25 deg/s hdg 30.1 deg (at off 28.6) rec<0.2 16.0 s integ -0.100 back 5.25 deg/s 30.1 deg
+        gust5s peak 5.25 deg/s hdg max 22.4 deg final 0.0 deg, after-off peak 4.12 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.002 deg/s, tail reversals 53.8/s
+  --- actuator ["tail_tau", 0.05]
+    P0.50 I0.09 L0.30
+        small os 20% rise 3.1 set10 13.8 set5 16.4 stop1 1.2 stop.2 3.3 under -0.34
+        half os 21% rise 3.1 set10 13.8 set5 16.3 stop1 3.1 stop.2 17.7 under -1.37
+        wind_10pct peak 7.57 deg/s hdg 65.7 deg (at off 63.6) rec<0.2 16.3 s integ -0.100 back 7.57 deg/s 65.7 deg
+        gust5s peak 7.57 deg/s hdg max 35.2 deg final 0.0 deg, after-off peak 4.19 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.7/s
+    P0.70 I0.09 L0.30
+        small os 14% rise 2.6 set10 11.3 set5 15.7 stop1 0.9 stop.2 2.8 under -0.22
+        half os 14% rise 2.6 set10 10.9 set5 15.5 stop1 2.6 stop.2 18.4 under -0.90
+        wind_10pct peak 6.14 deg/s hdg 63.6 deg (at off 63.6) rec<0.2 24.8 s integ -0.100 back 6.13 deg/s 63.6 deg
+        gust5s peak 6.14 deg/s hdg max 28.5 deg final 0.0 deg, after-off peak 2.76 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.7/s
+    P0.70 I0.20 L0.30
+        small os 22% rise 2.1 set10 9.4 set5 10.9 stop1 0.9 stop.2 9.0 under -0.37
+        half os 22% rise 2.1 set10 9.4 set5 10.9 stop1 2.1 stop.2 11.8 under -1.49
+        wind_10pct peak 5.29 deg/s hdg 30.1 deg (at off 28.6) rec<0.2 16.0 s integ -0.100 back 5.29 deg/s 30.1 deg
+        gust5s peak 5.29 deg/s hdg max 22.5 deg final 0.0 deg, after-off peak 4.18 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.4/s
+  --- actuator ["tail_tau", 0.1]
+    P0.50 I0.09 L0.30
+        small os 21% rise 3.0 set10 13.8 set5 16.3 stop1 1.3 stop.2 13.0 under -0.35
+        half os 21% rise 3.0 set10 13.8 set5 16.2 stop1 3.1 stop.2 17.6 under -1.41
+        wind_10pct peak 7.65 deg/s hdg 65.7 deg (at off 63.6) rec<0.2 16.1 s integ -0.100 back 7.64 deg/s 65.7 deg
+        gust5s peak 7.65 deg/s hdg max 35.5 deg final 0.0 deg, after-off peak 4.27 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.6/s
+    P0.70 I0.09 L0.30
+        small os 14% rise 2.6 set10 11.3 set5 15.7 stop1 1.0 stop.2 2.8 under -0.23
+        half os 14% rise 2.6 set10 11.0 set5 15.5 stop1 2.6 stop.2 18.4 under -0.93
+        wind_10pct peak 6.20 deg/s hdg 63.6 deg (at off 63.6) rec<0.2 24.7 s integ -0.100 back 6.18 deg/s 63.6 deg
+        gust5s peak 6.20 deg/s hdg max 28.8 deg final -0.0 deg, after-off peak 2.80 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.5/s
+    P0.70 I0.20 L0.30
+        small os 23% rise 2.0 set10 9.4 set5 10.8 stop1 0.9 stop.2 9.0 under -0.39
+        half os 23% rise 2.0 set10 9.4 set5 10.8 stop1 2.1 stop.2 11.7 under -1.56
+        wind_10pct peak 5.37 deg/s hdg 30.1 deg (at off 28.6) rec<0.2 15.9 s integ -0.100 back 5.37 deg/s 30.1 deg
+        gust5s peak 5.37 deg/s hdg max 22.8 deg final 0.0 deg, after-off peak 4.28 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.5/s
+
+==================== cs complete (gz_cloudship_am_fin_drag)
+  --- actuator nominal
+    P0.50 I0.09 L0.30
+        small os 21% rise 4.6 set10 18.5 set5 21.4 stop1 1.9 stop.2 5.1 under -0.37
+        half os 8% rise 5.2 set10 5.6 set5 30.7 stop1 5.8 stop.2 23.5 under -0.95
+        full os 5% rise 7.7 set10 8.1 set5 43.8 stop1 12.1 stop.2 29.3 under -0.71
+        wind_gate peak 1.20 deg/s hdg 12.9 deg (at off 12.0) rec<0.2 16.1 s integ -0.019 back 1.19 deg/s 12.0 deg
+        wind_10pct peak 5.92 deg/s hdg 60.3 deg (at off 52.9) rec<0.2 29.1 s integ -0.083 back 4.96 deg/s 45.0 deg
+        gust5s peak 5.91 deg/s hdg max 28.8 deg final 1.3 deg, after-off peak 2.80 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.7/s
+    P0.70 I0.09 L0.30
+        small os 14% rise 4.1 set10 15.7 set5 20.2 stop1 1.5 stop.2 4.4 under -0.24
+        half os 5% rise 4.7 set10 5.0 set5 5.8 stop1 5.0 stop.2 21.7 under -0.51
+        full os 4% rise 8.0 set10 8.3 set5 12.1 stop1 13.0 stop.2 16.8 under -0.23
+        wind_gate peak 1.00 deg/s hdg 11.9 deg (at off 11.9) rec<0.2 17.4 s integ -0.019 back 0.98 deg/s 11.0 deg
+        wind_10pct peak 5.06 deg/s hdg 54.1 deg (at off 50.1) rec<0.2 18.3 s integ -0.079 back 4.33 deg/s 42.9 deg
+        gust5s peak 5.06 deg/s hdg max 24.5 deg final 0.9 deg, after-off peak 2.04 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.7/s
+    P0.70 I0.20 L0.30
+        small os 25% rise 3.1 set10 12.8 set5 14.4 stop1 1.3 stop.2 12.5 under -0.42
+        half os 14% rise 3.3 set10 10.7 set5 13.6 stop1 3.6 stop.2 15.6 under -1.28
+        full os 8% rise 3.9 set10 4.2 set5 40.9 stop1 6.4 stop.2 18.1 under -1.19
+        wind_gate peak 0.85 deg/s hdg 6.0 deg (at off 5.6) rec<0.2 10.1 s integ -0.019 back 0.86 deg/s 5.9 deg
+        wind_10pct peak 4.35 deg/s hdg 30.6 deg (at off 27.4) rec<0.2 20.1 s integ -0.096 back 4.00 deg/s 25.3 deg
+        gust5s peak 4.35 deg/s hdg max 19.8 deg final 0.5 deg, after-off peak 3.02 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.002 deg/s, tail reversals 53.6/s
+  --- actuator ["noise", 10.0]
+    P0.50 I0.09 L0.30
+        hold noise: torque std 0.00250 max 0.0102, motor cmd std 0.0446 max 0.101, rate rms 0.013 deg/s, tail reversals 53.7/s
+    P0.70 I0.09 L0.30
+        hold noise: torque std 0.00350 max 0.0143, motor cmd std 0.0528 max 0.120, rate rms 0.014 deg/s, tail reversals 53.7/s
+    P0.70 I0.20 L0.30
+        hold noise: torque std 0.00351 max 0.0143, motor cmd std 0.0529 max 0.119, rate rms 0.016 deg/s, tail reversals 53.6/s
+  --- actuator ["tail_tau", 0.025]
+    P0.50 I0.09 L0.30
+        small os 22% rise 4.6 set10 18.5 set5 21.2 stop1 2.0 stop.2 5.1 under -0.37
+        half os 8% rise 5.1 set10 5.6 set5 30.7 stop1 5.8 stop.2 23.5 under -0.96
+        wind_10pct peak 5.93 deg/s hdg 60.4 deg (at off 53.0) rec<0.2 29.0 s integ -0.083 back 4.98 deg/s 45.0 deg
+        gust5s peak 5.92 deg/s hdg max 28.8 deg final 1.3 deg, after-off peak 2.82 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.7/s
+    P0.70 I0.09 L0.30
+        small os 14% rise 4.0 set10 15.6 set5 20.0 stop1 1.5 stop.2 4.4 under -0.24
+        half os 5% rise 4.6 set10 5.0 set5 5.7 stop1 5.0 stop.2 21.8 under -0.52
+        wind_10pct peak 5.08 deg/s hdg 54.1 deg (at off 50.2) rec<0.2 18.3 s integ -0.079 back 4.34 deg/s 42.9 deg
+        gust5s peak 5.08 deg/s hdg max 24.5 deg final 0.9 deg, after-off peak 2.05 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.7/s
+    P0.70 I0.20 L0.30
+        small os 25% rise 3.1 set10 12.8 set5 14.4 stop1 1.4 stop.2 12.5 under -0.43
+        half os 15% rise 3.3 set10 10.7 set5 13.6 stop1 3.6 stop.2 15.6 under -1.30
+        wind_10pct peak 4.37 deg/s hdg 30.7 deg (at off 27.4) rec<0.2 20.1 s integ -0.096 back 4.02 deg/s 25.3 deg
+        gust5s peak 4.37 deg/s hdg max 19.9 deg final 0.5 deg, after-off peak 3.05 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.5/s
+  --- actuator ["tail_tau", 0.05]
+    P0.50 I0.09 L0.30
+        small os 22% rise 4.5 set10 18.4 set5 21.2 stop1 2.0 stop.2 5.1 under -0.38
+        half os 8% rise 5.1 set10 5.6 set5 30.7 stop1 5.7 stop.2 23.4 under -0.97
+        wind_10pct peak 5.95 deg/s hdg 60.4 deg (at off 53.0) rec<0.2 29.0 s integ -0.083 back 5.00 deg/s 45.0 deg
+        gust5s peak 5.94 deg/s hdg max 28.9 deg final 1.3 deg, after-off peak 2.83 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.4/s
+    P0.70 I0.09 L0.30
+        small os 15% rise 4.0 set10 15.6 set5 20.0 stop1 1.5 stop.2 4.4 under -0.25
+        half os 5% rise 4.6 set10 4.9 set5 5.7 stop1 5.0 stop.2 21.8 under -0.53
+        wind_10pct peak 5.09 deg/s hdg 54.1 deg (at off 50.2) rec<0.2 18.2 s integ -0.079 back 4.35 deg/s 42.9 deg
+        gust5s peak 5.09 deg/s hdg max 24.6 deg final 0.9 deg, after-off peak 2.07 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.8/s
+    P0.70 I0.20 L0.30
+        small os 25% rise 3.0 set10 12.8 set5 14.3 stop1 1.4 stop.2 12.5 under -0.43
+        half os 15% rise 3.2 set10 10.8 set5 13.5 stop1 3.6 stop.2 15.5 under -1.33
+        wind_10pct peak 4.39 deg/s hdg 30.7 deg (at off 27.5) rec<0.2 20.0 s integ -0.096 back 4.04 deg/s 25.3 deg
+        gust5s peak 4.39 deg/s hdg max 20.0 deg final 0.5 deg, after-off peak 3.08 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.9/s
+  --- actuator ["tail_tau", 0.1]
+    P0.50 I0.09 L0.30
+        small os 22% rise 4.5 set10 18.5 set5 21.1 stop1 2.0 stop.2 5.1 under -0.38
+        half os 8% rise 5.0 set10 5.5 set5 30.7 stop1 5.7 stop.2 23.4 under -0.99
+        wind_10pct peak 5.99 deg/s hdg 60.5 deg (at off 53.2) rec<0.2 28.8 s integ -0.083 back 5.03 deg/s 45.0 deg
+        gust5s peak 5.98 deg/s hdg max 29.1 deg final 1.3 deg, after-off peak 2.87 deg/s
+        hold noise: torque std 0.00025 max 0.0010, motor cmd std 0.0141 max 0.032, rate rms 0.001 deg/s, tail reversals 53.5/s
+    P0.70 I0.09 L0.30
+        small os 15% rise 3.9 set10 15.7 set5 20.0 stop1 1.6 stop.2 4.4 under -0.25
+        half os 5% rise 4.5 set10 4.9 set5 5.7 stop1 4.9 stop.2 21.8 under -0.55
+        wind_10pct peak 5.13 deg/s hdg 54.2 deg (at off 50.3) rec<0.2 18.2 s integ -0.079 back 4.38 deg/s 42.8 deg
+        gust5s peak 5.13 deg/s hdg max 24.8 deg final 0.9 deg, after-off peak 2.09 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.6/s
+    P0.70 I0.20 L0.30
+        small os 26% rise 3.0 set10 12.8 set5 14.3 stop1 1.4 stop.2 12.6 under -0.45
+        half os 15% rise 3.2 set10 10.9 set5 13.5 stop1 3.6 stop.2 15.4 under -1.37
+        wind_10pct peak 4.44 deg/s hdg 30.8 deg (at off 27.5) rec<0.2 19.9 s integ -0.096 back 4.09 deg/s 25.4 deg
+        gust5s peak 4.44 deg/s hdg max 20.2 deg final 0.5 deg, after-off peak 3.14 deg/s
+        hold noise: torque std 0.00035 max 0.0014, motor cmd std 0.0167 max 0.038, rate rms 0.001 deg/s, tail reversals 53.5/s

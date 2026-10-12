@@ -1,0 +1,235 @@
+
+=== vectored (act ["slew", 60.0])
+  P 0.700 I 0.200 L 0.30  runs/plant [8]  worst -7.58  | lowest: vec fin (2nd case)/Acro track -7.58; vec fin (2nd case)/Acro release -1.61; vec complete/wind I off +0.00
+        not-all-pass: vec complete/wind I off 7/8, vec fin (2nd case)/Acro track 0/8, vec fin (2nd case)/Acro release 0/8 | undecided: vec rigid/Acro release, vec complete/wind I off, vec fin (2nd case)/Acro release, vec fin (2nd case)/wind I off
+  P 0.500 I 0.090 L 0.30  runs/plant [8]  worst -18.71  | lowest: vec fin (2nd case)/Acro track -18.71; vec fin (2nd case)/Stab release -2.62; vec fin (2nd case)/Acro release -1.66
+        not-all-pass: vec fin (2nd case)/Acro track 0/8, vec fin (2nd case)/Acro release 7/8, vec fin (2nd case)/Stab release 0/8 | undecided: vec fin (2nd case)/Acro release
+
+=== cloudship (act ["slew", 60.0])
+
+##### P 0.50  I 0.090  INT_LIM 0.30   (act ["slew", 60.0])
+  --- vec rigid (gz_airship_vectored_independent): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst  +1.72 band  | margin min/med/max: end +0.688/+1.334/+1.400 (band 0.4)
+    Acro track     8/8  PASS      worst  +1.01 band  | margin min/med/max: mean +1.110/+1.175/+1.200 (band 0.15); peak +0.403/+0.528/+0.553 (band 0.4)
+    Acro release   8/8  PASS      worst  +1.46 band  | margin min/med/max: release +0.218/+0.357/+0.517 (band 0.15)
+    Stab track     8/8  PASS      worst  +1.21 band  | margin min/med/max: mean +1.030/+1.055/+1.150 (band 0.15); peak +0.483/+0.558/+0.583 (band 0.4)
+    Stab release   8/8  PASS      worst  +2.13 band  | margin min/med/max: release +0.319/+0.423/+0.484 (band 0.15)
+    wind I on      8/8  PASS      worst  +5.73 band  | margin min/med/max: rate +0.860/+0.890/+0.910 (band 0.15); integ +0.008/+0.008/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +7.07 band  | margin min/med/max: rate +1.060/+1.100/+1.140 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.60 band  | margin min/med/max: rate +0.940/+0.950/+0.970 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+  --- vec complete (gz_airship_vectored_independent_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +37.36 band  | margin min/med/max: end +5.605/+5.636/+5.706 (band 0.15)
+    Acro track     8/8  PASS      worst  +7.69 band  | margin min/med/max: mean +1.153/+1.263/+1.373 (band 0.15); peak +1.943/+2.043/+2.133 (band 0.15)
+    Acro release   0/8  FAIL      worst -19.67 band  | margin min/med/max: release -2.950/-2.879/-2.850 (band 0.15)
+    Stab track     8/8  PASS      worst  +6.33 band  | margin min/med/max: mean +0.950/+0.980/+1.020 (band 0.15); peak +2.983/+3.103/+3.233 (band 0.15)
+    Stab release   0/8  FAIL      worst -12.56 band  | margin min/med/max: release -1.884/-1.807/-1.769 (band 0.15)
+    wind I on      8/8  PASS      worst  +4.65 band  | margin min/med/max: rate +0.890/+0.915/+0.930 (band 0.15); integ +0.005/+0.005/+0.005 (band 0.001)
+    wind I off     8/8  PASS      worst  +1.27 band  | margin min/med/max: rate +0.190/+0.200/+0.220 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.50 band  | margin min/med/max: rate +0.960/+0.980/+0.990 (band 0.15); integ +0.003/+0.004/+0.004 (band 0.001)
+  --- vec fin (2nd case) (gz_airship_vectored_independent_fin): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +30.37 band  | margin min/med/max: end +4.556/+4.615/+4.662 (band 0.15)
+    Acro track     0/8  FAIL      worst -18.71 band  | margin min/med/max: mean -2.807/-2.777/-2.767 (band 0.15); peak -1.867/-1.847/-1.807 (band 0.15)
+    Acro release   7/8  UNDECIDED worst  -1.66 band  | margin min/med/max: release -0.249/+0.304/+0.386 (band 0.15)
+    Stab track     8/8  PASS      worst  +5.22 band  | margin min/med/max: mean +1.050/+1.055/+1.060 (band 0.15); peak +0.783/+0.858/+0.963 (band 0.15)
+    Stab release   0/8  FAIL      worst  -2.62 band  | margin min/med/max: release -0.392/-0.284/-0.188 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.27 band  | margin min/med/max: rate +0.940/+0.960/+0.970 (band 0.15); integ +0.007/+0.008/+0.008 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.47 band  | margin min/med/max: rate +0.520/+0.540/+0.560 (band 0.15)
+    wind weak      8/8  PASS      worst  +1.60 band  | margin min/med/max: rate +0.950/+0.960/+0.970 (band 0.15); integ +0.002/+0.002/+0.002 (band 0.001)
+
+##### P 0.70  I 0.200  INT_LIM 0.30   (act ["slew", 60.0])
+  --- vec rigid (gz_airship_vectored_independent): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst  +2.14 band  | margin min/med/max: end +0.857/+1.373/+1.449 (band 0.4)
+    Acro track     8/8  PASS      worst  +1.18 band  | margin min/med/max: mean +1.220/+1.250/+1.280 (band 0.15); peak +0.473/+0.533/+0.563 (band 0.4)
+    Acro release   8/8  UNDECIDED worst  +0.25 band  | margin min/med/max: release +0.038/+0.145/+0.308 (band 0.15)
+    Stab track     8/8  PASS      worst  +1.03 band  | margin min/med/max: mean +1.210/+1.235/+1.270 (band 0.15); peak +0.413/+0.453/+0.643 (band 0.4)
+    Stab release   8/8  PASS      worst  +1.53 band  | margin min/med/max: release +0.229/+0.329/+0.412 (band 0.15)
+    wind I on      8/8  PASS      worst  +5.87 band  | margin min/med/max: rate +0.880/+0.900/+0.920 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.33 band  | margin min/med/max: rate +0.500/+0.510/+0.540 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.60 band  | margin min/med/max: rate +0.950/+0.950/+0.960 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+  --- vec complete (gz_airship_vectored_independent_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +32.64 band  | margin min/med/max: end +4.895/+4.919/+4.957 (band 0.15)
+    Acro track     8/8  PASS      worst  +3.89 band  | margin min/med/max: mean +0.583/+0.623/+0.653 (band 0.15); peak +1.493/+1.513/+1.543 (band 0.15)
+    Acro release   0/8  FAIL      worst  -9.99 band  | margin min/med/max: release -1.499/-1.317/-1.240 (band 0.15)
+    Stab track     8/8  PASS      worst  +9.53 band  | margin min/med/max: mean +1.430/+1.460/+1.470 (band 0.15); peak +2.163/+2.248/+2.293 (band 0.15)
+    Stab release   0/8  FAIL      worst  -7.85 band  | margin min/med/max: release -1.178/-1.127/-1.086 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.07 band  | margin min/med/max: rate +0.910/+0.950/+0.970 (band 0.15); integ +0.008/+0.009/+0.009 (band 0.001)
+    wind I off     7/8  UNDECIDED worst  +0.00 band  | margin min/med/max: rate +0.000/+0.010/+0.030 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.50 band  | margin min/med/max: rate +0.960/+0.970/+0.990 (band 0.15); integ +0.003/+0.003/+0.004 (band 0.001)
+  --- vec fin (2nd case) (gz_airship_vectored_independent_fin): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +33.38 band  | margin min/med/max: end +5.008/+5.096/+5.154 (band 0.15)
+    Acro track     0/8  FAIL      worst  -7.58 band  | margin min/med/max: mean -1.137/-0.812/-0.507 (band 0.15); peak -0.787/-0.752/-0.727 (band 0.15)
+    Acro release   0/8  UNDECIDED worst  -1.61 band  | margin min/med/max: release -0.241/-0.202/-0.055 (band 0.15)
+    Stab track     8/8  PASS      worst  +3.96 band  | margin min/med/max: mean +1.410/+1.430/+1.450 (band 0.15); peak +0.593/+0.633/+0.663 (band 0.15)
+    Stab release   8/8  PASS      worst  +4.94 band  | margin min/med/max: release +0.742/+0.779/+0.810 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.47 band  | margin min/med/max: rate +0.970/+0.975/+0.980 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  UNDECIDED worst  +0.87 band  | margin min/med/max: rate +0.130/+0.155/+0.170 (band 0.15)
+    wind weak      8/8  PASS      worst  +2.30 band  | margin min/med/max: rate +0.960/+0.975/+0.980 (band 0.15); integ +0.002/+0.002/+0.002 (band 0.001)
+
+=== vectored (act ["slew", 240.0])
+  P 0.700 I 0.200 L 0.30  runs/plant [8]  worst +0.81  | lowest: vec rigid/Acro release +0.81; vec complete/wind I off +1.00; vec rigid/Stab release +1.22
+        not-all-pass: none | undecided: vec rigid/Acro release, vec complete/wind I off
+
+=== cloudship (act ["slew", 240.0])
+
+##### P 0.70  I 0.200  INT_LIM 0.30   (act ["slew", 240.0])
+  --- vec rigid (gz_airship_vectored_independent): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst  +5.70 band  | margin min/med/max: end +2.279/+2.716/+2.746 (band 0.4)
+    Acro track     8/8  PASS      worst  +1.68 band  | margin min/med/max: mean +1.360/+1.510/+1.643 (band 0.15); peak +0.673/+0.718/+0.753 (band 0.4)
+    Acro release   8/8  UNDECIDED worst  +0.81 band  | margin min/med/max: release +0.122/+0.162/+0.245 (band 0.15)
+    Stab track     8/8  PASS      worst  +1.28 band  | margin min/med/max: mean +1.300/+1.385/+1.583 (band 0.15); peak +0.513/+0.543/+0.583 (band 0.4)
+    Stab release   8/8  PASS      worst  +1.22 band  | margin min/med/max: release +0.183/+0.250/+0.286 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.13 band  | margin min/med/max: rate +0.920/+0.940/+0.960 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.27 band  | margin min/med/max: rate +0.490/+0.510/+0.530 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.60 band  | margin min/med/max: rate +0.960/+0.970/+0.980 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+  --- vec complete (gz_airship_vectored_independent_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +24.60 band  | margin min/med/max: end +3.689/+3.717/+3.756 (band 0.15)
+    Acro track     8/8  PASS      worst +10.96 band  | margin min/med/max: mean +1.643/+1.653/+1.663 (band 0.15); peak +2.553/+2.573/+2.593 (band 0.15)
+    Acro release   0/8  FAIL      worst  -4.65 band  | margin min/med/max: release -0.698/-0.586/-0.535 (band 0.15)
+    Stab track     8/8  PASS      worst +10.69 band  | margin min/med/max: mean +1.603/+1.613/+1.633 (band 0.15); peak +2.533/+2.553/+2.563 (band 0.15)
+    Stab release   0/8  FAIL      worst  -4.16 band  | margin min/med/max: release -0.624/-0.549/-0.504 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.47 band  | margin min/med/max: rate +0.970/+0.980/+0.980 (band 0.15); integ +0.007/+0.007/+0.007 (band 0.001)
+    wind I off     8/8  UNDECIDED worst  +1.00 band  | margin min/med/max: rate +0.150/+0.160/+0.170 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.30 band  | margin min/med/max: rate +0.970/+0.970/+0.990 (band 0.15); integ +0.003/+0.003/+0.003 (band 0.001)
+  --- vec fin (2nd case) (gz_airship_vectored_independent_fin): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +31.19 band  | margin min/med/max: end +4.679/+4.787/+4.849 (band 0.15)
+    Acro track     8/8  PASS      worst +10.62 band  | margin min/med/max: mean +1.593/+1.623/+1.653 (band 0.15); peak +2.283/+2.328/+2.373 (band 0.15)
+    Acro release   8/8  PASS      worst  +4.76 band  | margin min/med/max: release +0.714/+0.753/+0.776 (band 0.15)
+    Stab track     8/8  PASS      worst +10.27 band  | margin min/med/max: mean +1.540/+1.560/+1.580 (band 0.15); peak +2.283/+2.303/+2.313 (band 0.15)
+    Stab release   8/8  PASS      worst  +4.54 band  | margin min/med/max: release +0.680/+0.716/+0.745 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.47 band  | margin min/med/max: rate +0.970/+0.980/+0.990 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +1.40 band  | margin min/med/max: rate +0.210/+0.235/+0.250 (band 0.15)
+    wind weak      8/8  PASS      worst  +2.40 band  | margin min/med/max: rate +0.970/+0.970/+0.990 (band 0.15); integ +0.002/+0.002/+0.002 (band 0.001)
+
+=== vectored (act ["servo", 60.0])
+  P 0.700 I 0.200 L 0.30  runs/plant [8]  worst -7.04  | lowest: vec fin (2nd case)/Acro track -7.04; vec fin (2nd case)/Acro release -2.07; vec rigid/Acro release -1.33
+        not-all-pass: vec rigid/Acro release 3/8, vec rigid/Stab release 5/8, vec complete/wind I off 6/8, vec fin (2nd case)/Acro track 0/8, vec fin (2nd case)/Acro release 0/8 | undecided: vec rigid/Acro brake, vec rigid/Acro track, vec rigid/Acro release, vec rigid/Stab release, vec complete/wind I off, vec fin (2nd case)/Acro release, vec fin (2nd case)/wind I off
+  P 0.500 I 0.090 L 0.30  runs/plant [8]  worst -17.18  | lowest: vec fin (2nd case)/Acro track -17.18; vec rigid/Acro brake -4.44; vec fin (2nd case)/wind weak +0.90
+        not-all-pass: vec rigid/Acro brake 0/8, vec fin (2nd case)/Acro track 0/8 | undecided: vec rigid/Acro track, vec fin (2nd case)/wind weak
+
+=== cloudship (act ["servo", 60.0])
+
+##### P 0.50  I 0.090  INT_LIM 0.30   (act ["servo", 60.0])
+  --- vec rigid (gz_airship_vectored_independent): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     0/8  FAIL      worst  -4.44 band  | margin min/med/max: end -1.774/-1.454/-0.542 (band 0.4)
+    Acro track     8/8  UNDECIDED worst  +0.91 band  | margin min/med/max: mean +0.880/+0.995/+1.030 (band 0.15); peak +0.363/+0.443/+0.513 (band 0.4)
+    Acro release   8/8  PASS      worst  +2.30 band  | margin min/med/max: release +0.345/+0.449/+0.502 (band 0.15)
+    Stab track     8/8  PASS      worst  +1.23 band  | margin min/med/max: mean +0.870/+0.980/+1.000 (band 0.15); peak +0.493/+0.523/+0.593 (band 0.4)
+    Stab release   8/8  PASS      worst  +2.05 band  | margin min/med/max: release +0.307/+0.428/+0.525 (band 0.15)
+    wind I on      8/8  PASS      worst  +5.73 band  | margin min/med/max: rate +0.860/+0.880/+0.910 (band 0.15); integ +0.008/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +7.13 band  | margin min/med/max: rate +1.070/+1.090/+1.110 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.60 band  | margin min/med/max: rate +0.930/+0.950/+0.960 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+  --- vec complete (gz_airship_vectored_independent_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +33.95 band  | margin min/med/max: end +5.093/+5.117/+5.158 (band 0.15)
+    Acro track     8/8  PASS      worst  +6.29 band  | margin min/med/max: mean +0.943/+1.018/+1.133 (band 0.15); peak +1.803/+1.868/+1.943 (band 0.15)
+    Acro release   0/8  FAIL      worst -19.92 band  | margin min/med/max: release -2.988/-2.940/-2.898 (band 0.15)
+    Stab track     8/8  PASS      worst  +7.00 band  | margin min/med/max: mean +1.050/+1.080/+1.110 (band 0.15); peak +2.853/+2.983/+3.083 (band 0.15)
+    Stab release   0/8  FAIL      worst -13.05 band  | margin min/med/max: release -1.957/-1.893/-1.846 (band 0.15)
+    wind I on      8/8  PASS      worst  +3.85 band  | margin min/med/max: rate +0.820/+0.865/+0.880 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+    wind I off     8/8  PASS      worst  +1.13 band  | margin min/med/max: rate +0.170/+0.200/+0.220 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.60 band  | margin min/med/max: rate +0.970/+0.980/+0.990 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+  --- vec fin (2nd case) (gz_airship_vectored_independent_fin): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +31.25 band  | margin min/med/max: end +4.687/+4.715/+4.747 (band 0.15)
+    Acro track     0/8  FAIL      worst -17.18 band  | margin min/med/max: mean -2.577/-2.462/-2.217 (band 0.15); peak -1.827/-1.802/-1.687 (band 0.15)
+    Acro release   8/8  PASS      worst  +1.23 band  | margin min/med/max: release +0.185/+0.272/+0.375 (band 0.15)
+    Stab track     8/8  PASS      worst  +4.82 band  | margin min/med/max: mean +1.030/+1.060/+1.080 (band 0.15); peak +0.723/+0.768/+0.793 (band 0.15)
+    Stab release   8/8  PASS      worst  +2.65 band  | margin min/med/max: release +0.397/+0.446/+0.489 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.47 band  | margin min/med/max: rate +0.970/+0.970/+0.980 (band 0.15); integ +0.008/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.27 band  | margin min/med/max: rate +0.490/+0.500/+0.520 (band 0.15)
+    wind weak      8/8  UNDECIDED worst  +0.90 band  | margin min/med/max: rate +0.950/+0.970/+0.980 (band 0.15); integ +0.001/+0.001/+0.001 (band 0.001)
+
+##### P 0.70  I 0.200  INT_LIM 0.30   (act ["servo", 60.0])
+  --- vec rigid (gz_airship_vectored_independent): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  UNDECIDED worst  +0.53 band  | margin min/med/max: end +0.211/+0.279/+0.712 (band 0.4)
+    Acro track     8/8  UNDECIDED worst  +0.93 band  | margin min/med/max: mean +1.503/+1.515/+1.620 (band 0.15); peak +0.373/+0.513/+0.673 (band 0.4)
+    Acro release   3/8  UNDECIDED worst  -1.33 band  | margin min/med/max: release -0.199/-0.081/+0.155 (band 0.15)
+    Stab track     8/8  PASS      worst  +1.11 band  | margin min/med/max: mean +1.280/+1.450/+1.640 (band 0.15); peak +0.443/+0.558/+0.603 (band 0.4)
+    Stab release   5/8  UNDECIDED worst  -0.35 band  | margin min/med/max: release -0.053/+0.047/+0.083 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.00 band  | margin min/med/max: rate +0.900/+0.905/+0.940 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.27 band  | margin min/med/max: rate +0.490/+0.500/+0.520 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.60 band  | margin min/med/max: rate +0.950/+0.970/+0.980 (band 0.15); integ +0.004/+0.004/+0.004 (band 0.001)
+  --- vec complete (gz_airship_vectored_independent_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +30.75 band  | margin min/med/max: end +4.612/+4.642/+4.679 (band 0.15)
+    Acro track     8/8  PASS      worst  +3.82 band  | margin min/med/max: mean +0.573/+0.623/+0.653 (band 0.15); peak +1.423/+1.458/+1.473 (band 0.15)
+    Acro release   0/8  FAIL      worst  -4.38 band  | margin min/med/max: release -0.658/-0.493/-0.380 (band 0.15)
+    Stab track     8/8  PASS      worst  +9.87 band  | margin min/med/max: mean +1.480/+1.500/+1.520 (band 0.15); peak +1.823/+1.843/+1.883 (band 0.15)
+    Stab release   0/8  FAIL      worst  -5.31 band  | margin min/med/max: release -0.797/-0.767/-0.708 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.27 band  | margin min/med/max: rate +0.940/+0.970/+0.980 (band 0.15); integ +0.007/+0.008/+0.008 (band 0.001)
+    wind I off     6/8  UNDECIDED worst  -0.07 band  | margin min/med/max: rate -0.010/+0.005/+0.020 (band 0.15)
+    wind weak      8/8  PASS      worst  +3.50 band  | margin min/med/max: rate +0.970/+0.980/+0.990 (band 0.15); integ +0.003/+0.003/+0.004 (band 0.001)
+  --- vec fin (2nd case) (gz_airship_vectored_independent_fin): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +32.41 band  | margin min/med/max: end +4.862/+4.887/+4.922 (band 0.15)
+    Acro track     0/8  FAIL      worst  -7.04 band  | margin min/med/max: mean -1.057/-0.657/-0.237 (band 0.15); peak -0.757/-0.727/-0.717 (band 0.15)
+    Acro release   0/8  UNDECIDED worst  -2.07 band  | margin min/med/max: release -0.311/-0.157/-0.128 (band 0.15)
+    Stab track     8/8  PASS      worst  +4.22 band  | margin min/med/max: mean +1.470/+1.495/+1.520 (band 0.15); peak +0.633/+0.688/+0.723 (band 0.15)
+    Stab release   8/8  PASS      worst  +4.13 band  | margin min/med/max: release +0.619/+0.663/+0.724 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.47 band  | margin min/med/max: rate +0.970/+0.980/+0.980 (band 0.15); integ +0.008/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  UNDECIDED worst  +0.87 band  | margin min/med/max: rate +0.130/+0.155/+0.170 (band 0.15)
+    wind weak      8/8  PASS      worst  +2.10 band  | margin min/med/max: rate +0.960/+0.975/+0.980 (band 0.15); integ +0.002/+0.002/+0.002 (band 0.001)
+
+=== vectored (act ["tail_tau", 0.05])
+
+=== cloudship (act ["tail_tau", 0.05])
+  P 0.700 I 0.200 L 0.30  runs/plant [8]  worst +2.20  | lowest: cs complete/Acro track +2.20; cs rigid/Acro release +2.47; cs rigid/Stab release +2.49
+        not-all-pass: none | undecided: none
+  P 0.500 I 0.090 L 0.30  runs/plant [8]  worst -0.98  | lowest: cs complete/Acro track -0.98; cs rigid/Acro release +1.40; cs rigid/Stab release +1.69
+        not-all-pass: cs complete/Acro track 2/8 | undecided: cs complete/Acro track
+
+##### P 0.50  I 0.090  INT_LIM 0.30   (act ["tail_tau", 0.05])
+  --- cs rigid (gz_cloudship): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +33.89 band  | margin min/med/max: end +5.084/+5.209/+5.278 (band 0.15)
+    Acro track     8/8  PASS      worst  +7.69 band  | margin min/med/max: mean +1.640/+1.640/+1.663 (band 0.15); peak +1.153/+1.233/+1.243 (band 0.15)
+    Acro release   8/8  PASS      worst  +1.40 band  | margin min/med/max: release +0.210/+0.384/+0.414 (band 0.15)
+    Stab track     8/8  PASS      worst  +7.76 band  | margin min/med/max: mean +1.640/+1.650/+1.660 (band 0.15); peak +1.163/+1.213/+1.243 (band 0.15)
+    Stab release   8/8  PASS      worst  +1.69 band  | margin min/med/max: release +0.253/+0.329/+0.382 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.27 band  | margin min/med/max: rate +0.940/+0.970/+0.990 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +7.40 band  | margin min/med/max: rate +1.110/+1.120/+1.140 (band 0.15)
+  --- cs complete (gz_cloudship_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +17.95 band  | margin min/med/max: end +2.692/+2.740/+2.774 (band 0.15)
+    Acro track     2/8  UNDECIDED worst  -0.98 band  | margin min/med/max: mean +0.560/+0.750/+1.020 (band 0.15); peak -0.147/-0.047/+0.053 (band 0.15)
+    Acro release   8/8  PASS      worst  +3.06 band  | margin min/med/max: release +0.460/+0.571/+0.591 (band 0.15)
+    Stab track     8/8  PASS      worst  +7.56 band  | margin min/med/max: mean +1.133/+1.228/+1.353 (band 0.15); peak +1.663/+1.723/+1.783 (band 0.15)
+    Stab release   8/8  PASS      worst  +4.71 band  | margin min/med/max: release +0.706/+0.738/+0.795 (band 0.15)
+    wind I on      8/8  PASS      worst  +3.73 band  | margin min/med/max: rate +0.560/+0.580/+0.600 (band 0.15); integ +0.006/+0.006/+0.007 (band 0.001)
+    wind I off     8/8  PASS      worst  +6.80 band  | margin min/med/max: rate +1.020/+1.055/+1.090 (band 0.15)
+
+##### P 0.70  I 0.200  INT_LIM 0.30   (act ["tail_tau", 0.05])
+  --- cs rigid (gz_cloudship): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +39.16 band  | margin min/med/max: end +5.874/+5.930/+5.995 (band 0.15)
+    Acro track     8/8  PASS      worst  +7.56 band  | margin min/med/max: mean +1.653/+1.662/+1.663 (band 0.15); peak +1.133/+1.163/+1.173 (band 0.15)
+    Acro release   8/8  PASS      worst  +2.47 band  | margin min/med/max: release +0.371/+0.411/+0.510 (band 0.15)
+    Stab track     8/8  PASS      worst  +7.22 band  | margin min/med/max: mean +1.643/+1.657/+1.663 (band 0.15); peak +1.083/+1.153/+1.193 (band 0.15)
+    Stab release   8/8  PASS      worst  +2.49 band  | margin min/med/max: release +0.374/+0.409/+0.456 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.47 band  | margin min/med/max: rate +0.970/+0.970/+0.980 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.33 band  | margin min/med/max: rate +0.500/+0.520/+0.530 (band 0.15)
+  --- cs complete (gz_cloudship_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +37.02 band  | margin min/med/max: end +5.553/+5.636/+5.677 (band 0.15)
+    Acro track     8/8  PASS      worst  +2.20 band  | margin min/med/max: mean +0.330/+0.390/+0.470 (band 0.15); peak +0.503/+0.558/+0.673 (band 0.15)
+    Acro release   8/8  PASS      worst  +3.02 band  | margin min/med/max: release +0.453/+0.503/+0.569 (band 0.15)
+    Stab track     8/8  PASS      worst  +7.36 band  | margin min/med/max: mean +1.103/+1.153/+1.223 (band 0.15); peak +1.263/+1.298/+1.333 (band 0.15)
+    Stab release   8/8  PASS      worst  +2.59 band  | margin min/med/max: release +0.389/+0.449/+0.505 (band 0.15)
+    wind I on      8/8  PASS      worst  +5.47 band  | margin min/med/max: rate +0.820/+0.830/+0.840 (band 0.15); integ +0.008/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +6.60 band  | margin min/med/max: rate +0.990/+1.080/+1.140 (band 0.15)
+
+=== vectored (act ["tail_tau", 0.1])
+
+=== cloudship (act ["tail_tau", 0.1])
+  P 0.700 I 0.200 L 0.30  runs/plant [8]  worst +2.17  | lowest: cs complete/Stab release +2.17; cs complete/Acro track +2.33; cs rigid/Acro release +2.55
+        not-all-pass: none | undecided: none
+
+##### P 0.70  I 0.200  INT_LIM 0.30   (act ["tail_tau", 0.1])
+  --- cs rigid (gz_cloudship): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +39.18 band  | margin min/med/max: end +5.877/+5.935/+5.996 (band 0.15)
+    Acro track     8/8  PASS      worst  +7.02 band  | margin min/med/max: mean +1.653/+1.662/+1.663 (band 0.15); peak +1.053/+1.098/+1.113 (band 0.15)
+    Acro release   8/8  PASS      worst  +2.55 band  | margin min/med/max: release +0.382/+0.424/+0.513 (band 0.15)
+    Stab track     8/8  PASS      worst  +6.82 band  | margin min/med/max: mean +1.643/+1.657/+1.663 (band 0.15); peak +1.023/+1.083/+1.113 (band 0.15)
+    Stab release   8/8  PASS      worst  +2.59 band  | margin min/med/max: release +0.389/+0.416/+0.461 (band 0.15)
+    wind I on      8/8  PASS      worst  +6.40 band  | margin min/med/max: rate +0.960/+0.970/+0.980 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +3.33 band  | margin min/med/max: rate +0.500/+0.520/+0.530 (band 0.15)
+  --- cs complete (gz_cloudship_am_fin_drag): 8 runs, seeds [1, 2, 3, 4, 5, 6, 7, 8]
+    Acro brake     8/8  PASS      worst +37.35 band  | margin min/med/max: end +5.602/+5.698/+5.742 (band 0.15)
+    Acro track     8/8  PASS      worst  +2.33 band  | margin min/med/max: mean +0.350/+0.405/+0.490 (band 0.15); peak +0.553/+0.608/+0.723 (band 0.15)
+    Acro release   8/8  PASS      worst  +2.73 band  | margin min/med/max: release +0.409/+0.450/+0.560 (band 0.15)
+    Stab track     8/8  PASS      worst  +7.42 band  | margin min/med/max: mean +1.113/+1.153/+1.233 (band 0.15); peak +1.243/+1.273/+1.303 (band 0.15)
+    Stab release   8/8  PASS      worst  +2.17 band  | margin min/med/max: release +0.326/+0.403/+0.459 (band 0.15)
+    wind I on      8/8  PASS      worst  +5.47 band  | margin min/med/max: rate +0.820/+0.830/+0.840 (band 0.15); integ +0.009/+0.009/+0.009 (band 0.001)
+    wind I off     8/8  PASS      worst  +6.53 band  | margin min/med/max: rate +0.980/+1.060/+1.110 (band 0.15)

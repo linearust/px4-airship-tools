@@ -1,0 +1,73 @@
+PASS  stick 0.5 -> 6.667 deg/s (the gate's setpoint)  -- 6.666667 deg/s
+PASS  stick inside the deadzone -> 0
+PASS  full stick -> AS_YAWRATE_MAX
+PASS  NaN stick -> 0
+PASS  vectored: propulsiveYaw
+PASS  cloudship: propulsiveYaw
+PASS  collective without tail keeps the loop open
+PASS  loop closes in Acro/Stabilized/Altctl/Posctl, open in Manual/auto  -- {'manual': False, 'acro': True, 'stabilized': True, 'altctl': True, 'posctl': True, 'auto': False, 'termination': False}
+PASS  disarmed or sticks lost -> loop open
+PASS  torque uses the integrator from before the step
+PASS  I step = i_factor * I * e * dt  -- i_factor 0.999179
+PASS  integrator clamps at AS_YR_INT_LIM
+PASS  positive saturation freezes growth
+PASS  positive saturation still lets it fall
+PASS  negative saturation freezes falling
+PASS  no output clipping
+PASS  Acro -> Stabilized keeps the integrator (loop stays closed)
+PASS  -> Manual resets it on the first open cycle
+PASS  Manual torque is the stick
+PASS  disarm resets it
+PASS  invalid sticks reset it
+PASS  Acro and Stabilized are the same loop
+PASS  first cycle dt clamps to 20 ms (_last_run starts at 0)
+PASS  then dt = 4 ms
+PASS  status published every second 4 ms cycle (>= 5 ms rule)  -- [0, 1, 0, 1, 0, 1, 0, 1, 0]
+PASS  vectored: swing shortfall reaches the controller on the cycle after  -- [False, True, True, True, True, True]
+PASS  FullYawIsTheExactCouple (:222)
+PASS  SaturationClampsAndReports (:272)
+PASS  SwingShortfallIsSaturation (:1686)
+PASS  TiltRateLimited (:1559)
+PASS  SteerBandShortfallIsNotSaturation (:1599)
+PASS  HysteresisBandReversalIsNotSaturation (:1708)
+PASS  SwingContinuedInBandIsSaturation (:1735)
+PASS  OnePodHeldInBandIsNotSaturation (:1780)
+PASS  CollectiveYawShortfallStandsInSteerBand (:1823)
+PASS  TailServesCollectiveYaw / TailReverseNeedsConfiguration (:688, :710)
+PASS  Cloudship: tail saturates only past |yaw| > 1 + 1e-4  -- [0.0, 0.0, 0.0, 1.0, -1.0, 1.0]
+PASS  vectored: gate.compose() adapter == SitlYawChain, 3000 ticks
+PASS  cloudship: gate.compose() adapter == SitlYawChain, 3000 ticks
+PASS  integ reads None until the loop first closes
+  samples_gz_airship_vectored_independent_chain9.csv: 877 closed-loop rows, |torque - (P e + I)| median 0.00014 p95 0.00047 max 0.00107; Manual rows torque == stick 39/39; integrator fit over 725 intervals: sim/wall = 0.9964, residual rms 6.00e-05 vs step rms 1.44e-03
+PASS  replay samples_gz_airship_vectored_independent_chain9.csv: torque = P*(sp - rate) + I on 95 % of rows  -- p95 0.00047
+PASS  replay samples_gz_airship_vectored_independent_chain9.csv: Manual is the passthrough
+PASS  replay samples_gz_airship_vectored_independent_chain9.csv: dI = I*e*dt with sim/wall within 0.9..1.1  -- sim/wall 0.9964
+  samples_gz_airship_vectored_independent_fin_chain9.csv: 831 closed-loop rows, |torque - (P e + I)| median 0.00013 p95 0.00047 max 0.00113; Manual rows torque == stick 39/39; integrator fit over 681 intervals: sim/wall = 0.9952, residual rms 1.57e-05 vs step rms 7.88e-04
+PASS  replay samples_gz_airship_vectored_independent_fin_chain9.csv: torque = P*(sp - rate) + I on 95 % of rows  -- p95 0.00047
+PASS  replay samples_gz_airship_vectored_independent_fin_chain9.csv: Manual is the passthrough
+PASS  replay samples_gz_airship_vectored_independent_fin_chain9.csv: dI = I*e*dt with sim/wall within 0.9..1.1  -- sim/wall 0.9952
+  samples_gz_cloudship_am_fin_drag_20260925.csv: 650 closed-loop rows, |torque - (P e + I)| median 0.00013 p95 0.00045 max 0.00143; Manual rows torque == stick 39/39; integrator fit over 531 intervals: sim/wall = 0.9948, residual rms 2.21e-05 vs step rms 1.13e-03
+PASS  replay samples_gz_cloudship_am_fin_drag_20260925.csv: torque = P*(sp - rate) + I on 95 % of rows  -- p95 0.00045
+PASS  replay samples_gz_cloudship_am_fin_drag_20260925.csv: Manual is the passthrough
+PASS  replay samples_gz_cloudship_am_fin_drag_20260925.csv: dI = I*e*dt with sim/wall within 0.9..1.1  -- sim/wall 0.9948
+  samples_gz_cloudship_chain9.csv: 634 closed-loop rows, |torque - (P e + I)| median 0.00014 p95 0.00044 max 0.00110; Manual rows torque == stick 39/39; integrator fit over 515 intervals: sim/wall = 0.9954, residual rms 1.64e-05 vs step rms 7.32e-04
+PASS  replay samples_gz_cloudship_chain9.csv: torque = P*(sp - rate) + I on 95 % of rows  -- p95 0.00044
+PASS  replay samples_gz_cloudship_chain9.csv: Manual is the passthrough
+PASS  replay samples_gz_cloudship_chain9.csv: dI = I*e*dt with sim/wall within 0.9..1.1  -- sim/wall 0.9954
+  rate-driven samples_gz_airship_vectored_independent_chain9.csv (vectored): integrator |model - SITL| median 0.00029 p95 0.00065 max 0.00291 (|I| up to 0.1120); torque p95 0.00081 max 0.00275 over 916 rows; 33 row intervals with a yaw saturation flag
+PASS  rate-driven samples_gz_airship_vectored_independent_chain9.csv: integrator within 0.1 x its range on 95 % of rows  -- p95 0.00065 vs range 0.1120
+  rate-driven samples_gz_airship_vectored_independent_fin_chain9.csv (vectored): integrator |model - SITL| median 0.00018 p95 0.00045 max 0.00153 (|I| up to 0.0518); torque p95 0.00071 max 0.00179 over 870 rows; 33 row intervals with a yaw saturation flag
+PASS  rate-driven samples_gz_airship_vectored_independent_fin_chain9.csv: integrator within 0.1 x its range on 95 % of rows  -- p95 0.00045 vs range 0.0518
+  rate-driven samples_gz_cloudship_am_fin_drag_20260925.csv (cloudship): integrator |model - SITL| median 0.00029 p95 0.00045 max 0.00051 (|I| up to 0.0530); torque p95 0.00066 max 0.00144 over 689 rows; 0 row intervals with a yaw saturation flag
+PASS  rate-driven samples_gz_cloudship_am_fin_drag_20260925.csv: integrator within 0.1 x its range on 95 % of rows  -- p95 0.00045 vs range 0.0530
+  rate-driven samples_gz_cloudship_chain9.csv (cloudship): integrator |model - SITL| median 0.00021 p95 0.00052 max 0.00058 (|I| up to 0.0319); torque p95 0.00070 max 0.00138 over 673 rows; 0 row intervals with a yaw saturation flag
+PASS  rate-driven samples_gz_cloudship_chain9.csv: integrator within 0.1 x its range on 95 % of rows  -- p95 0.00052 vs range 0.0319
+PASS  vectored replay rejects every anti-windup mutation (>= 10x worse)  -- model 0.00065; no anti-windup 0.06318, held-by-choice reported as saturation 0.03084, tilt slew 60 deg/s instead of 120 0.03567
+PASS  ulog 2026-09-25/14_34_05.ulg: integrator p99 7.2e-05, torque p99 9.4e-05 (< 1e-3); yaw saturation sign 1661/1662
+PASS  ulog 2026-09-25/14_39_53.ulg: integrator p99 9.0e-05, torque p99 9.0e-05 (< 1e-3); yaw saturation sign 1721/1721
+PASS  ulog 2026-09-25/14_45_54.ulg: integrator p99 1.3e-04, torque p99 1.3e-04 (< 1e-3); yaw saturation sign 1296/1296
+PASS  ulog 2026-09-25/14_50_29.ulg: integrator p99 8.7e-05, torque p99 8.7e-05 (< 1e-3); yaw saturation sign 1308/1308
+PASS  ulog 2026-09-27/08_31_54.ulg: integrator p99 4.3e-05, torque p99 4.3e-05 (< 1e-3); yaw saturation sign 1299/1299
+PASS  ulog 2026-09-27/08_36_30.ulg: integrator p99 9.7e-05, torque p99 9.7e-05 (< 1e-3); yaw saturation sign 1661/1662
+
+0 failed

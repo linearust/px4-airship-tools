@@ -1,0 +1,70 @@
+== 1) mine vs option D ensemble.jsonl, matched members
+  restore:0.7:full   200 matched members, max |diff| over all judged numbers 0, status disagreements 0
+  none:0.7:lite       60 matched members, max |diff| over all judged numbers 0, status disagreements 0
+
+== 2) restore - none, paired (mine, full ensemble): change of each margin, min / max over members
+  vec rigid    (12 pairs)
+     brake.m +0.00..+0.01
+     Atrack.m_peak -0.00..+0.00
+     Atrack.m_mean -0.00..+0.00
+     Strack.m_peak -0.02..+0.03
+     Strack.m_mean -0.05..+0.07
+     Arel.m -0.95..+0.00
+     Srel.m -0.63..+0.31
+     wOn.m_rate -0.03..+0.02
+     wOn.m_integ -0.0000..+0.0000
+     wOff.m_rate -0.04..+0.02
+     wWk.m_rate -0.02..+0.01
+     wWk.m_integ -0.0000..+0.0000
+  vec complete (12 pairs)
+     brake.m +0.00..+0.00
+     Atrack.m_peak -0.00..+0.00
+     Atrack.m_mean +0.00..+0.00
+     Strack.m_peak -0.07..+0.01
+     Strack.m_mean +0.04..+0.07
+     Arel.m n/a
+     Srel.m n/a
+     wOn.m_rate -0.12..-0.06
+     wOn.m_integ -0.0006..+0.0002
+     wOff.m_rate -0.01..+0.03
+     wWk.m_rate -0.04..+0.01
+     wWk.m_integ -0.0003..-0.0002
+  cs rigid     (12 pairs)
+     brake.m +0.00..+0.00
+     Atrack.m_peak -0.00..+0.00
+     Atrack.m_mean -0.00..+0.00
+     Strack.m_peak -0.00..+0.03
+     Strack.m_mean -0.00..+0.01
+     Arel.m +0.00..+0.00
+     Srel.m -0.01..+0.00
+     wOn.m_rate -0.01..+0.00
+     wOn.m_integ -0.0000..+0.0000
+     wOff.m_rate -0.00..+0.01
+     wWk.m_rate n/a
+     wWk.m_integ n/a
+  cs complete  (12 pairs)
+     brake.m +0.00..+0.01
+     Atrack.m_peak -0.01..+0.00
+     Atrack.m_mean -0.01..+0.00
+     Strack.m_peak +0.02..+0.10
+     Strack.m_mean +0.02..+0.05
+     Arel.m +0.32..+0.95
+     Srel.m +1.90..+2.85
+     wOn.m_rate -0.13..-0.09
+     wOn.m_integ -0.0039..-0.0022
+     wOff.m_rate -0.20..-0.14
+     wWk.m_rate n/a
+     wWk.m_integ n/a
+  vec fin      (12 pairs)
+     brake.m +0.00..+0.00
+     Atrack.m_peak -0.01..+0.02
+     Atrack.m_mean -0.00..+0.00
+     Strack.m_peak +0.02..+0.07
+     Strack.m_mean -0.12..-0.07
+     Arel.m n/a
+     Srel.m +5.05..+5.38 [5 n/a]
+     wOn.m_rate -0.01..+0.01
+     wOn.m_integ -0.0006..-0.0005
+     wOff.m_rate -0.03..+0.00
+     wWk.m_rate -0.02..+0.02
+     wWk.m_integ -0.0004..-0.0003

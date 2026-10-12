@@ -1,0 +1,28 @@
+
+=== vectored
+  P 0.700 I 0.200: 0F worst +1.13 (vec complete/wind I off) 
+        vec rigid: Acro track +1.21, Stab track +1.21 | vec complete: wind I off +1.13, wind weak +3.50 | vec fin (2nd case): wind I off +1.67, wind weak +2.60
+  P 0.700 I 0.200: 0F worst +0.93 (vec complete/wind I off) 
+        vec rigid: Acro release +0.99, Stab track +1.13 | vec complete: wind I off +0.93, wind weak +3.50 | vec fin (2nd case): wind I off +1.67, wind weak +2.60
+  P 0.700 I 0.250: 1F worst -1.01 (vec rigid/Acro release) FAILS vec rigid:Acro release
+        vec rigid: Acro release -1.01, Acro track +0.43 | vec complete: wind I off +0.93, wind weak +3.50 | vec fin (2nd case): wind I off +1.73, wind weak +2.70
+  P 0.800 I 0.300: 2F worst -0.98 (vec rigid/Stab release) FAILS vec rigid:Acro release, vec rigid:Stab release
+        vec rigid: Stab release -0.98, Acro release -0.87 | vec complete: wind I off +0.53, wind weak +3.60 | vec fin (2nd case): wind I off +1.00, wind weak +2.90
+  P 0.700 I 0.300: 2F worst -2.07 (vec rigid/Stab release) FAILS vec rigid:Acro release, vec rigid:Stab release
+        vec rigid: Stab release -2.07, Acro release -1.39 | vec complete: wind I off +1.13, wind weak +3.50 | vec fin (2nd case): wind I off +1.87, wind weak +2.70
+  P 0.700 I 0.400: 4F worst -3.61 (vec rigid/Stab release) FAILS vec rigid:Acro track, vec rigid:Acro release, vec rigid:Stab track, vec rigid:Stab release
+        vec rigid: Stab release -3.61, Acro release -3.09 | vec complete: wind I off +1.00, wind weak +3.40 | vec fin (2nd case): Acro release +1.26, wind I off +1.80
+
+=== cloudship
+  P 0.700 I 0.200: 0F worst +2.47 (cs complete/Acro track) 
+        cs rigid: Stab release +2.74, Acro release +3.05 | cs complete: Acro track +2.47, Stab release +2.98
+  P 0.700 I 0.200: 0F worst +2.47 (cs complete/Acro track) 
+        cs rigid: Stab release +2.74, Acro release +3.05 | cs complete: Acro track +2.47, Stab release +3.02
+  P 0.800 I 0.300: 0F worst +1.85 (cs complete/Stab release) 
+        cs rigid: wind I off +2.20, Stab release +5.62 | cs complete: Stab release +1.85, Acro release +2.21
+  P 0.700 I 0.400: 0F worst +1.71 (cs complete/Acro release) 
+        cs rigid: wind I off +3.47, Acro track +3.96 | cs complete: Acro release +1.71, Stab release +1.82
+  P 0.700 I 0.250: 0F worst +1.45 (cs complete/Stab release) 
+        cs rigid: wind I off +3.47, Stab release +4.29 | cs complete: Stab release +1.45, Acro release +2.39
+  P 0.700 I 0.300: 0F worst +1.29 (cs complete/Stab release) 
+        cs rigid: wind I off +3.47, Acro release +5.58 | cs complete: Stab release +1.29, Acro release +1.62

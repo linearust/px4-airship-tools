@@ -1,0 +1,50 @@
+vec rigid    P0.50 I0.09 FF0.00 gust   rest: peak 1.81 rec 28.1 integ/need 1.00 tq_hp 2.51e-04 | turn: base 7.54 (drift5s -0.002) dev -2.85 rec 60.0 dev_end -0.87 integ -0.009->0.019 | jitter 4.26e-04
+vec rigid    P0.65 I0.07 FF0.00 0.25   sp 2.50 t90 6.2 peak 3.12 over 25% ss 2.19 tq 0.013 integ 0.009 | r0 3.05 rel 5.9 under -0.33 end -0.15
+vec rigid    P0.65 I0.07 FF0.00 0.5    sp 6.67 t90 6.3 peak 7.78 over 17% ss 7.44 tq -0.008 integ -0.004 | r0 7.49 rel 5.8 under -1.52 end 0.51
+vec rigid    P0.65 I0.07 FF0.00 1.0    sp 15.00 t90 6.3 peak 17.38 over 16% ss 14.76 tq 0.014 integ 0.013 | r0 14.91 rel 6.0 under -2.42 end 0.35
+vec rigid    P0.65 I0.07 FF0.00 gust   rest: peak 1.67 rec 20.6 integ/need 0.99 tq_hp 3.27e-04 | turn: base 6.01 (drift5s -0.002) dev -1.22 rec 60.0 dev_end 0.66 integ 0.004->0.018 | jitter 5.66e-04
+vec rigid    P0.70 I0.09 FF0.00 gust   rest: peak 1.58 rec 16.9 integ/need 0.99 tq_hp 3.52e-04 | turn: base 6.63 (drift5s -0.953) dev 0.76 rec 17.4 dev_end 0.03 integ 0.008->0.018 | jitter 6.19e-04
+vec complete P0.50 I0.09 FF0.00 gust   rest: peak 1.25 rec 45.2 integ/need 0.93 tq_hp 2.51e-04 | turn: base 6.64 (drift5s -0.011) dev -0.45 rec 27.3 dev_end -0.02 integ 0.105->0.122 | jitter 3.88e-04
+vec complete P0.65 I0.07 FF0.00 0.25   sp 2.50 t90 13.0 peak 2.68 over 7% ss 2.49 tq 0.015 integ 0.015 | r0 2.49 rel 9.9 under -0.44 end -0.22
+vec complete P0.65 I0.07 FF0.00 0.5    sp 6.67 t90 33.3 peak 6.66 over -0% ss 6.55 tq 0.101 integ 0.100 | r0 6.56 rel 31.5 under -0.15 end -0.03
+vec complete P0.65 I0.07 FF0.00 1.0    sp 15.00 t90 - peak 12.04 over -20% ss 11.91 tq 0.335 integ 0.300 | r0 11.90 rel never under 2.17 end 2.29
+vec complete P0.65 I0.07 FF0.00 gust   rest: peak 1.21 rec 27.3 integ/need 0.99 tq_hp 3.26e-04 | turn: base 6.59 (drift5s -0.012) dev -0.44 rec 27.3 dev_end -0.02 integ 0.103->0.120 | jitter 5.05e-04
+vec complete P0.65 I0.07 FF1.00 0.25   sp 2.50 t90 4.7 peak 3.57 over 43% ss 2.50 tq 0.015 integ -0.029 | r0 2.49 rel 3.8 under -1.56 end -0.75
+vec complete P0.65 I0.07 FF1.00 0.5    sp 6.67 t90 5.8 peak 7.26 over 9% ss 6.74 tq 0.107 integ -0.009 | r0 6.72 rel 7.5 under -1.37 end -0.70
+vec complete P0.65 I0.07 FF1.00 1.0    sp 15.00 t90 45.5 peak 14.30 over -5% ss 14.16 tq 0.476 integ 0.209 | r0 14.22 rel never under 1.26 end 1.39
+vec complete P0.65 I0.07 FF1.00 gust   rest: peak 1.21 rec 27.3 integ/need 0.99 tq_hp 3.26e-04 | turn: base 6.69 (drift5s -0.005) dev -0.47 rec 38.4 dev_end -0.10 integ -0.010->0.004 | jitter 1.03e-03
+vec complete P0.70 I0.09 FF0.00 gust   rest: peak 1.11 rec 24.0 integ/need 0.97 tq_hp 3.52e-04 | turn: base 6.63 (drift5s -0.010) dev -0.43 rec 27.3 dev_end -0.02 integ 0.105->0.122 | jitter 5.44e-04
+cs rigid     P0.65 I0.07 FF0.00 0.25   sp 2.50 t90 3.1 peak 2.87 over 15% ss 2.50 tq -0.000 integ -0.000 | r0 2.50 rel 1.7 under -0.40 end 0.07
+cs rigid     P0.65 I0.07 FF0.00 0.5    sp 6.67 t90 3.2 peak 7.55 over 13% ss 6.67 tq -0.000 integ -0.000 | r0 6.67 rel 2.9 under -0.92 end 0.07
+cs rigid     P0.65 I0.07 FF0.00 1.0    sp 15.00 t90 3.2 peak 16.92 over 13% ss 15.00 tq -0.000 integ -0.000 | r0 15.01 rel 3.5 under -1.94 end 0.06
+cs rigid     P0.65 I0.07 FF0.00 gust   rest: peak 1.30 rec 20.2 integ/need 1.00 tq_hp 3.27e-04 | turn: base 6.67 (drift5s -0.001) dev -1.29 rec 20.6 dev_end -0.00 integ -0.000->0.018 | jitter 5.07e-04
+cs complete  P0.50 I0.09 FF0.00 gust   rest: peak 1.30 rec 16.5 integ/need 1.02 tq_hp 2.51e-04 | turn: base 6.67 (drift5s -0.090) dev -1.15 rec 59.9 dev_end -0.12 integ 0.018->0.035 | jitter 3.88e-04
+cs complete  P0.65 I0.07 FF0.00 0.25   sp 2.50 t90 4.8 peak 2.86 over 14% ss 2.49 tq 0.002 integ 0.002 | r0 2.48 rel 2.7 under -0.43 end 0.07
+cs complete  P0.65 I0.07 FF0.00 0.5    sp 6.67 t90 5.7 peak 7.07 over 6% ss 6.88 tq 0.014 integ 0.015 | r0 6.81 rel 5.6 under -0.59 end 0.06
+cs complete  P0.65 I0.07 FF0.00 1.0    sp 15.00 t90 11.0 peak 15.69 over 5% ss 14.91 tq 0.085 integ 0.084 | r0 15.32 rel 12.4 under -0.30 end 0.07
+cs complete  P0.65 I0.07 FF0.00 gust   rest: peak 1.19 rec 21.2 integ/need 0.98 tq_hp 3.27e-04 | turn: base 6.64 (drift5s -0.104) dev -1.05 rec 36.4 dev_end -0.11 integ 0.017->0.034 | jitter 5.05e-04
+cs complete  P0.65 I0.07 FF0.05 0.25   sp 2.50 t90 4.3 peak 2.93 over 17% ss 2.49 tq 0.002 integ -0.000 | r0 2.48 rel 2.5 under -0.53 end 0.07
+cs complete  P0.65 I0.07 FF0.05 0.5    sp 6.67 t90 5.0 peak 7.13 over 7% ss 6.89 tq 0.013 integ 0.009 | r0 6.79 rel 4.9 under -0.78 end 0.07
+cs complete  P0.65 I0.07 FF0.05 1.0    sp 15.00 t90 8.5 peak 15.73 over 5% ss 14.95 tq 0.084 integ 0.071 | r0 15.45 rel 10.7 under -0.40 end 0.06
+cs complete  P0.65 I0.07 FF0.05 gust   rest: peak 1.19 rec 21.2 integ/need 0.98 tq_hp 3.27e-04 | turn: base 6.64 (drift5s -0.078) dev -1.06 rec 35.2 dev_end -0.13 integ 0.011->0.028 | jitter 5.28e-04
+cs complete  P0.70 I0.09 FF0.00 gust   rest: peak 1.11 rec 17.5 integ/need 1.00 tq_hp 3.52e-04 | turn: base 6.66 (drift5s -0.069) dev -0.98 rec 59.9 dev_end -0.14 integ 0.017->0.035 | jitter 5.44e-04
+vec fin      P0.65 I0.07 FF0.00 0.25   sp 2.50 t90 7.1 peak 2.68 over 7% ss 2.47 tq 0.006 integ 0.006 | r0 2.47 rel 4.4 under -0.22 end -0.02
+vec fin      P0.65 I0.07 FF0.00 0.5    sp 6.67 t90 12.8 peak 6.87 over 3% ss 6.68 tq 0.042 integ 0.043 | r0 6.63 rel 13.4 under -0.34 end -0.19
+vec fin      P0.65 I0.07 FF0.00 1.0    sp 15.00 t90 38.3 peak 14.78 over -1% ss 14.60 tq 0.212 integ 0.209 | r0 14.70 rel 34.9 under 0.51 end 0.63
+vec fin      P0.65 I0.07 FF0.00 gust   rest: peak 1.59 rec 20.8 integ/need 0.99 tq_hp 3.27e-04 | turn: base 6.67 (drift5s -0.034) dev -0.70 rec 30.3 dev_end -0.04 integ 0.044->0.061 | jitter 5.05e-04
+vec fin      P0.65 I0.07 FF0.30 0.25   sp 2.50 t90 4.1 peak 3.06 over 22% ss 2.47 tq 0.006 integ -0.007 | r0 2.47 rel 3.1 under -0.74 end -0.30
+vec fin      P0.65 I0.07 FF0.30 0.5    sp 6.67 t90 5.1 peak 7.06 over 6% ss 6.65 tq 0.043 integ 0.008 | r0 6.60 rel 5.9 under -0.42 end -0.04
+vec fin      P0.65 I0.07 FF0.30 1.0    sp 15.00 t90 30.5 peak 14.90 over -1% ss 14.76 tq 0.215 integ 0.135 | r0 14.82 rel 26.9 under 0.18 end 0.31
+vec fin      P0.65 I0.07 FF0.30 gust   rest: peak 1.59 rec 20.8 integ/need 0.99 tq_hp 3.27e-04 | turn: base 6.70 (drift5s -0.022) dev -0.73 rec 32.3 dev_end -0.07 integ 0.009->0.026 | jitter 6.50e-04
+vec complete P0.65 I0.07 FF0.00 0.5   {"phys_slew": 60.0} sp 6.67 t90 32.6 peak 6.65 over -0% ss 6.54 tq 0.101 integ 0.100 | r0 6.56 rel 32.3 under -0.14 end -0.02
+vec complete P0.65 I0.07 FF1.00 0.5   {"phys_slew": 60.0} sp 6.67 t90 6.2 peak 7.26 over 9% ss 6.76 tq 0.107 integ -0.009 | r0 6.75 rel 7.8 under -1.47 end -0.80
+vec fin      P0.65 I0.07 FF0.00 0.5   {"phys_slew": 60.0} sp 6.67 t90 12.4 peak 6.82 over 2% ss 6.69 tq 0.043 integ 0.043 | r0 6.65 rel 13.0 under -0.31 end -0.15
+vec fin      P0.65 I0.07 FF0.30 0.5   {"phys_slew": 60.0} sp 6.67 t90 5.4 peak 6.99 over 5% ss 6.68 tq 0.043 integ 0.008 | r0 6.65 rel 6.3 under -0.58 end 0.00
+vec complete P0.65 I0.07 FF0.00 0.5   {"slew": 240.0} sp 6.67 t90 31.5 peak 6.67 over 0% ss 6.56 tq 0.101 integ 0.100 | r0 6.57 rel 31.1 under -0.20 end -0.07
+vec complete P0.65 I0.07 FF1.00 0.5   {"slew": 240.0} sp 6.67 t90 5.4 peak 7.34 over 10% ss 6.74 tq 0.107 integ -0.009 | r0 6.71 rel 7.0 under -1.45 end -0.71
+vec fin      P0.65 I0.07 FF0.00 0.5   {"slew": 240.0} sp 6.67 t90 11.0 peak 6.91 over 4% ss 6.67 tq 0.042 integ 0.042 | r0 6.61 rel 12.0 under -0.35 end -0.20
+vec fin      P0.65 I0.07 FF0.30 0.5   {"slew": 240.0} sp 6.67 t90 4.6 peak 7.21 over 8% ss 6.62 tq 0.043 integ 0.008 | r0 6.57 rel 5.2 under -0.51 end -0.06
+vec complete P0.65 I0.07 FF0.00 0.5   {"slew": 60.0} sp 6.67 t90 35.8 peak 6.63 over -1% ss 6.52 tq 0.101 integ 0.100 | r0 6.54 rel 32.5 under -0.04 end 0.08
+vec complete P0.65 I0.07 FF1.00 0.5   {"slew": 60.0} sp 6.67 t90 6.6 peak 7.10 over 7% ss 6.74 tq 0.107 integ -0.009 | r0 6.74 rel 8.6 under -1.23 end -0.70
+vec fin      P0.65 I0.07 FF0.00 0.5   {"slew": 60.0} sp 6.67 t90 16.4 peak 6.80 over 2% ss 6.69 tq 0.043 integ 0.043 | r0 6.66 rel 14.9 under -0.31 end -0.17
+vec fin      P0.65 I0.07 FF0.30 0.5   {"slew": 60.0} sp 6.67 t90 6.1 peak 6.87 over 3% ss 6.68 tq 0.043 integ 0.008 | r0 6.66 rel 7.2 under -0.33 end -0.02

@@ -1,0 +1,193 @@
+diff -ruN a/src/lib/rate_control/rate_control.cpp b/src/lib/rate_control/rate_control.cpp
+--- a/src/lib/rate_control/rate_control.cpp	2026-09-27 19:57:56.557542475 +0900
++++ b/src/lib/rate_control/rate_control.cpp	2026-09-27 19:58:27.102653798 +0900
+@@ -117,6 +117,13 @@
+ 	}
+ }
+ 
++void RateControl::setIntegral(size_t axis, float value)
++{
++	if (axis < 3 && PX4_ISFINITE(value)) {
++		_rate_int(axis) = math::constrain(value, -_lim_int(axis), _lim_int(axis));
++	}
++}
++
+ void RateControl::getRateControlStatus(rate_ctrl_status_s &rate_ctrl_status)
+ {
+ 	rate_ctrl_status.rollspeed_integ = _rate_int(0);
+diff -ruN a/src/lib/rate_control/rate_control.hpp b/src/lib/rate_control/rate_control.hpp
+--- a/src/lib/rate_control/rate_control.hpp	2026-09-27 19:57:56.544382481 +0900
++++ b/src/lib/rate_control/rate_control.hpp	2026-09-27 19:58:27.102557834 +0900
+@@ -115,6 +115,14 @@
+ 	}
+ 
+ 	/**
++	 * Set the integral term of one axis, within the integrator limit
++	 * @param axis roll 0 / pitch 1 / yaw 2
++	 * @param value integral term, in the unit of the torque output; ignored if not finite
++	 * @see _rate_int
++	 */
++	void setIntegral(size_t axis, float value);
++
++	/**
+ 	 * Get status message of controller for logging/debugging
+ 	 * @param rate_ctrl_status status message to fill with internal states
+ 	 */
+diff -ruN a/src/lib/rate_control/rate_control_test.cpp b/src/lib/rate_control/rate_control_test.cpp
+--- a/src/lib/rate_control/rate_control_test.cpp	2026-09-27 19:57:56.574355412 +0900
++++ b/src/lib/rate_control/rate_control_test.cpp	2026-09-27 19:58:27.102697983 +0900
+@@ -42,3 +42,18 @@
+ 	Vector3f torque = rate_control.update(Vector3f(), Vector3f(), Vector3f(), 0.f, false);
+ 	EXPECT_EQ(torque, Vector3f());
+ }
++
++TEST(RateControlTest, SetIntegralIsClampedAndOutputNextCycle)
++{
++	RateControl rate_control;
++	rate_control.setIntegratorLimit(Vector3f(0.f, 0.f, 0.3f));
++	rate_control.setIntegral(2, 0.1f);
++	// the integral term is output as is: zero error, zero gains
++	EXPECT_FLOAT_EQ(rate_control.update(Vector3f(), Vector3f(), Vector3f(), 0.004f, false)(2), 0.1f);
++	rate_control.setIntegral(2, -0.5f);
++	EXPECT_FLOAT_EQ(rate_control.update(Vector3f(), Vector3f(), Vector3f(), 0.004f, false)(2), -0.3f);
++	rate_control.setIntegral(2, NAN);
++	EXPECT_FLOAT_EQ(rate_control.update(Vector3f(), Vector3f(), Vector3f(), 0.004f, false)(2), -0.3f);
++	rate_control.setIntegral(3, 0.2f);	// no such axis: nothing changes
++	EXPECT_FLOAT_EQ(rate_control.update(Vector3f(), Vector3f(), Vector3f(), 0.004f, false)(2), -0.3f);
++}
+diff -ruN a/src/modules/airship_att_control/airship_att_control.hpp b/src/modules/airship_att_control/airship_att_control.hpp
+--- a/src/modules/airship_att_control/airship_att_control.hpp	2026-09-27 19:57:56.592308264 +0900
++++ b/src/modules/airship_att_control/airship_att_control.hpp	2026-09-27 19:58:27.142942169 +0900
+@@ -111,6 +111,13 @@
+ 	/** Integrator state for logging */
+ 	void publishRateControlStatus();
+ 
++	/**
++	 * Keep the yaw integrator's stick-centred trim across a stick deflection:
++	 * remember it when the stick leaves the centre band, put it back when the
++	 * stick returns. Call before controlYawRate() on every closed-loop cycle.
++	 */
++	void restoreYawTrim(float yaw_rate_sp);
++
+ 	RateControl _rate_control; ///< yaw axis only: roll and pitch gains stay zero
+ 
+ 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
+@@ -132,6 +139,8 @@
+ 	float _yaw_rate_max{0.f};		///< AS_YAWRATE_MAX [rad/s]
+ 	bool _propulsive_yaw{true};	///< propulsiveYaw(): the yaw rate loop may close on this allocator configuration
+ 	bool _yaw_loop_was_active{false};	///< the yaw rate loop was closed on the previous cycle
++	float _yaw_rate_sp_prev{0.f};	///< yaw rate setpoint of the previous closed-loop cycle [rad/s]
++	float _yaw_trim{0.f};		///< yaw integrator when the stick last left the centre band
+ 
+ 	perf_counter_t _loop_perf;
+ 
+diff -ruN a/src/modules/airship_att_control/airship_att_control_main.cpp b/src/modules/airship_att_control/airship_att_control_main.cpp
+--- a/src/modules/airship_att_control/airship_att_control_main.cpp	2026-09-27 19:57:56.619489484 +0900
++++ b/src/modules/airship_att_control/airship_att_control_main.cpp	2026-09-27 20:22:42.821740000 +0900
+@@ -193,6 +193,27 @@
+ 	}
+ }
+ 
++void AirshipAttitudeControl::restoreYawTrim(const float yaw_rate_sp)
++{
++	// With the stick centred the yaw integrator holds the trim: wind, a thrust
++	// or buoyancy asymmetry. While the stick turns the hull it also comes to
++	// hold the hull's yaw damping at the commanded rate. That part is I times
++	// the heading the hull lags the integrated setpoint by, so left in place
++	// after a release it turns the hull on by that heading (about 60 degrees
++	// after a half-stick turn of the damped vectored hull at AS_YAWRATE_I 0.09)
++	// before it unwinds. Drop it and keep the trim.
++	if (airship_manual_input::yawStickDeflected(yaw_rate_sp, _yaw_rate_sp_prev)) {
++		rate_ctrl_status_s rate_ctrl_status{};
++		_rate_control.getRateControlStatus(rate_ctrl_status);
++		_yaw_trim = rate_ctrl_status.yawspeed_integ;
++
++	} else if (airship_manual_input::yawStickReleased(yaw_rate_sp, _yaw_rate_sp_prev, _param_man_deadzone.get())) {
++		_rate_control.setIntegral(2, _yaw_trim);
++	}
++
++	_yaw_rate_sp_prev = yaw_rate_sp;
++}
++
+ void
+ AirshipAttitudeControl::Run()
+ {
+@@ -235,6 +256,14 @@
+ 			updateSaturationStatus();
+ 			const float yaw_rate_sp = airship_manual_input::yawRateSetpoint(_manual_control_setpoint.yaw,
+ 						  _param_man_deadzone.get(), _yaw_rate_max);
++
++			if (!_yaw_loop_was_active) {
++				// the integrator starts from zero (it was cleared when the loop opened)
++				_yaw_rate_sp_prev = 0.f;
++				_yaw_trim = 0.f;
++			}
++
++			restoreYawTrim(yaw_rate_sp);
+ 			torque(2) = controlYawRate(Vector3f{angular_velocity.xyz}, yaw_rate_sp, dt);
+ 
+ 			if (new_sticks) {
+diff -ruN a/src/modules/airship_att_control/airship_manual_input.hpp b/src/modules/airship_att_control/airship_manual_input.hpp
+--- a/src/modules/airship_att_control/airship_manual_input.hpp	2026-09-27 19:57:56.649476803 +0900
++++ b/src/modules/airship_att_control/airship_manual_input.hpp	2026-09-27 20:22:42.821555359 +0900
+@@ -92,6 +92,28 @@
+ }
+ 
+ /**
++ * The yaw stick left the centre band this cycle: the rate setpoint is not zero
++ * and was zero on the previous closed-loop cycle.
++ */
++inline bool yawStickDeflected(float yaw_rate_sp, float yaw_rate_sp_prev)
++{
++	return yaw_rate_sp != 0.f && yaw_rate_sp_prev == 0.f;
++}
++
++/**
++ * The yaw stick came back into the centre band this cycle (yawRateSetpoint()
++ * is exactly zero there), or crossed it between two samples. A crossing counts
++ * only with a deadzone: without one a stick that dithers about the centre
++ * would change sign on every sample, and with MAN_DEADZONE 0 only an exactly
++ * centred stick is a release.
++ */
++inline bool yawStickReleased(float yaw_rate_sp, float yaw_rate_sp_prev, float deadzone)
++{
++	return (yaw_rate_sp == 0.f && yaw_rate_sp_prev != 0.f)
++	       || (deadzone > 0.f && yaw_rate_sp * yaw_rate_sp_prev < 0.f);
++}
++
++/**
+  * Whether the pilot is in command: armed with valid manual input.
+  *
+  * The sticks stay live in every armed mode; lost or never-published input
+diff -ruN a/src/modules/airship_att_control/AirshipManualInputTest.cpp b/src/modules/airship_att_control/AirshipManualInputTest.cpp
+--- a/src/modules/airship_att_control/AirshipManualInputTest.cpp	2026-09-27 19:57:56.669490515 +0900
++++ b/src/modules/airship_att_control/AirshipManualInputTest.cpp	2026-09-27 20:22:42.821676239 +0900
+@@ -98,6 +98,28 @@
+ 	EXPECT_FLOAT_EQ(yawRateSetpoint(-kDeadzone, kDeadzone, kMaxRate), 0.f);
+ }
+ 
++TEST(AirshipManualInputTest, StickEventsAreTheDeadzoneEdges)
++{
++	const float out = yawRateSetpoint(0.5f, kDeadzone, kMaxRate);
++	const float in = yawRateSetpoint(0.05f, kDeadzone, kMaxRate);
++	const float back = yawRateSetpoint(-0.5f, kDeadzone, kMaxRate);
++
++	EXPECT_TRUE(yawStickDeflected(out, in));
++	EXPECT_FALSE(yawStickDeflected(out, out));
++	EXPECT_FALSE(yawStickDeflected(in, in));
++	EXPECT_TRUE(yawStickReleased(in, out, kDeadzone));
++	EXPECT_FALSE(yawStickReleased(in, in, kDeadzone));
++	EXPECT_FALSE(yawStickReleased(out, out, kDeadzone));
++	// a reversal that skips the band is a release, and not a new deflection
++	EXPECT_TRUE(yawStickReleased(back, out, kDeadzone));
++	EXPECT_FALSE(yawStickDeflected(back, out));
++	// the band edge itself is centred
++	EXPECT_TRUE(yawStickReleased(yawRateSetpoint(-kDeadzone, kDeadzone, kMaxRate), back, kDeadzone));
++	// without a deadzone a sign change is dither about the centre, not a release
++	EXPECT_FALSE(yawStickReleased(yawRateSetpoint(-0.001f, 0.f, kMaxRate), yawRateSetpoint(0.001f, 0.f, kMaxRate), 0.f));
++	EXPECT_TRUE(yawStickReleased(yawRateSetpoint(0.f, 0.f, kMaxRate), yawRateSetpoint(0.001f, 0.f, kMaxRate), 0.f));
++}
++
+ TEST(AirshipManualInputTest, LinearAndContinuousOutsideDeadzone)
+ {
+ 	// Just outside the band the output leaves zero continuously

@@ -1,0 +1,36 @@
+
+## rel0.5  variant ['alloc_slew', 240.0]
+  vec rigid    none     s1  overshoot_pct 17.37  t90 5.22  integ_at_release -0.0001  hold1 4.08  hold03 24.32  coast 13.93  back_peak 1.28  dpsi_end 7.77  max_abs_dpsi 13.93  rate_end 0.30  integ0 -0.0003  integ_end -0.0135  u_step_at_release 0.0003  n_release 0
+  vec rigid    restore  s1  overshoot_pct 17.37  t90 5.22  integ_at_release -0.0001  hold1 4.10  hold03 24.32  coast 13.95  back_peak 1.27  dpsi_end 7.80  max_abs_dpsi 13.95  rate_end 0.35  integ0 -0.0002  integ_end -0.0136  u_step_at_release 0.0003  n_release 1
+  vec complete none     s1  overshoot_pct -5.64  t90 24.28  integ_at_release 0.0896  hold1 20.58  hold03 25.24  coast 64.57  back_peak 0.37  dpsi_end 56.65  max_abs_dpsi 64.57  rate_end -0.15  integ0 0.0894  integ_end 0.0026  u_step_at_release 0.0004  n_release 0
+  vec complete restore  s1  overshoot_pct -5.64  t90 24.28  integ_at_release 0.0896  hold1 7.00  hold03 49.60  coast 23.43  back_peak 1.12  dpsi_end -2.44  max_abs_dpsi 23.43  rate_end 0.53  integ0 -0.0000  integ_end 0.0101  u_step_at_release 0.0003  n_release 1
+  vec fin      none     s1  overshoot_pct -0.38  t90 9.36  integ_at_release 0.0393  hold1 8.76  hold03 13.66  coast 28.56  back_peak 0.40  dpsi_end 24.97  max_abs_dpsi 28.56  rate_end 0.55  integ0 0.0393  integ_end 0.0064  u_step_at_release 0.0003  n_release 0
+  vec fin      restore  s1  overshoot_pct -0.38  t90 9.36  integ_at_release 0.0393  hold1 4.04  hold03 24.54  coast 14.27  back_peak 0.77  dpsi_end -1.60  max_abs_dpsi 14.27  rate_end -0.10  integ0 -0.0000  integ_end 0.0092  u_step_at_release 0.0003  n_release 1
+
+## rel0.5  variant ['alloc_slew', 60.0]
+  vec rigid    none     s1  overshoot_pct 12.15  t90 7.02  integ_at_release -0.0069  hold1 3.58  hold03 24.40  coast 12.32  back_peak 1.52  dpsi_end -3.04  max_abs_dpsi 12.32  rate_end 0.23  integ0 -0.0071  integ_end -0.0089  u_step_at_release 0.0003  n_release 0
+  vec rigid    restore  s1  overshoot_pct 12.15  t90 7.02  integ_at_release -0.0069  hold1 4.02  hold03 26.20  coast 13.64  back_peak 1.25  dpsi_end 4.07  max_abs_dpsi 13.64  rate_end 0.35  integ0 -0.0002  integ_end -0.0119  u_step_at_release 0.0003  n_release 1
+  vec complete none     s1  overshoot_pct -6.26  t90 29.88  integ_at_release 0.0877  hold1 21.66  hold03 26.80  coast 66.35  back_peak 0.29  dpsi_end 60.28  max_abs_dpsi 66.35  rate_end -0.12  integ0 0.0875  integ_end 0.0015  u_step_at_release 0.0004  n_release 0
+  vec complete restore  s1  overshoot_pct -6.26  t90 29.88  integ_at_release 0.0877  hold1 8.70  hold03 49.44  coast 30.03  back_peak 0.91  dpsi_end 7.95  max_abs_dpsi 30.03  rate_end 0.49  integ0 -0.0000  integ_end 0.0090  u_step_at_release 0.0003  n_release 1
+  vec fin      none     s1  overshoot_pct -1.97  t90 14.34  integ_at_release 0.0389  hold1 11.78  hold03 17.28  coast 39.50  back_peak 0.25  dpsi_end 32.12  max_abs_dpsi 39.50  rate_end -0.16  integ0 0.0389  integ_end 0.0126  u_step_at_release 0.0003  n_release 0
+  vec fin      restore  s1  overshoot_pct -1.97  t90 14.34  integ_at_release 0.0389  hold1 5.84  hold03 19.78  coast 22.51  back_peak 0.53  dpsi_end 13.89  max_abs_dpsi 22.51  rate_end -0.0399  integ0 -0.0000  integ_end 0.0022  u_step_at_release 0.0003  n_release 1
+
+## rel0.5  variant ['servo', 60.0]
+  vec rigid    none     s1  overshoot_pct 18.34  t90 5.96  integ_at_release -0.0016  hold1 4.00  hold03 never  coast 13.45  back_peak 1.31  dpsi_end 6.67  max_abs_dpsi 13.45  rate_end 0.24  integ0 -0.0018  integ_end -0.0142  u_step_at_release 0.0003  n_release 0
+  vec rigid    restore  s1  overshoot_pct 18.34  t90 5.96  integ_at_release -0.0016  hold1 4.10  hold03 never  coast 13.79  back_peak 1.28  dpsi_end 7.63  max_abs_dpsi 13.79  rate_end 0.51  integ0 -0.0002  integ_end -0.0139  u_step_at_release 0.0003  n_release 1
+  vec complete none     s1  overshoot_pct -5.36  t90 25.98  integ_at_release 0.0901  hold1 21.52  hold03 25.88  coast 66.50  back_peak 0.37  dpsi_end 58.74  max_abs_dpsi 66.50  rate_end -0.14  integ0 0.0899  integ_end 0.0020  u_step_at_release 0.0004  n_release 0
+  vec complete restore  s1  overshoot_pct -5.36  t90 25.98  integ_at_release 0.0901  hold1 7.80  hold03 43.82  coast 27.76  back_peak 1.18  dpsi_end 4.17  max_abs_dpsi 27.76  rate_end 0.41  integ0 -0.0000  integ_end 0.0049  u_step_at_release 0.0003  n_release 1
+  vec fin      none     s1  overshoot_pct -1.13  t90 10.44  integ_at_release 0.0399  hold1 9.76  hold03 14.38  coast 33.53  back_peak 0.24  dpsi_end 25.95  max_abs_dpsi 33.53  rate_end -0.14  integ0 0.0398  integ_end 0.0124  u_step_at_release 0.0003  n_release 0
+  vec fin      restore  s1  overshoot_pct -1.13  t90 10.44  integ_at_release 0.0399  hold1 5.12  hold03 25.70  coast 20.53  back_peak 0.93  dpsi_end 7.10  max_abs_dpsi 20.53  rate_end 0.0002  integ0 -0.0000  integ_end 0.0023  u_step_at_release 0.0003  n_release 1
+
+## rel0.5  variant ['tail_tau', 0.05]
+  cs rigid     none     s1  overshoot_pct 13.56  t90 2.90  integ_at_release -0.0000  hold1 2.60  hold03 16.54  coast 9.13  back_peak 0.91  dpsi_end -0.21  max_abs_dpsi 9.14  rate_end 0.0044  integ0 -0.0002  integ_end -0.0000  u_step_at_release 0.0004  n_release 0
+  cs rigid     restore  s1  overshoot_pct 13.56  t90 2.90  integ_at_release -0.0000  hold1 2.60  hold03 16.54  coast 9.14  back_peak 0.91  dpsi_end -0.18  max_abs_dpsi 9.14  rate_end 0.0044  integ0 -0.0002  integ_end -0.0000  u_step_at_release 0.0004  n_release 1
+  cs complete  none     s1  overshoot_pct 4.86  t90 4.96  integ_at_release 0.0142  hold1 4.52  hold03 19.42  coast 15.55  back_peak 0.69  dpsi_end 8.33  max_abs_dpsi 15.55  rate_end 0.0053  integ0 0.0140  integ_end 0.0008  u_step_at_release 0.0004  n_release 0
+  cs complete  restore  s1  overshoot_pct 4.86  t90 4.96  integ_at_release 0.0142  hold1 3.60  hold03 20.34  coast 12.52  back_peak 1.18  dpsi_end -0.43  max_abs_dpsi 12.52  rate_end 0.0005  integ0 -0.0002  integ_end 0.0004  u_step_at_release 0.0004  n_release 1
+
+## rel0.5  variant ['tail_tau', 0.1]
+  cs rigid     none     s1  overshoot_pct 14.05  t90 2.88  integ_at_release -0.0000  hold1 2.60  hold03 15.78  coast 9.35  back_peak 0.95  dpsi_end -0.21  max_abs_dpsi 9.35  rate_end 0.0088  integ0 -0.0003  integ_end -0.0000  u_step_at_release 0.0004  n_release 0
+  cs rigid     restore  s1  overshoot_pct 14.05  t90 2.88  integ_at_release -0.0000  hold1 2.60  hold03 15.78  coast 9.36  back_peak 0.94  dpsi_end -0.18  max_abs_dpsi 9.36  rate_end 0.0087  integ0 -0.0002  integ_end -0.0000  u_step_at_release 0.0004  n_release 1
+  cs complete  none     s1  overshoot_pct 4.92  t90 4.92  integ_at_release 0.0142  hold1 4.50  hold03 19.38  coast 15.72  back_peak 0.71  dpsi_end 8.33  max_abs_dpsi 15.72  rate_end 0.0054  integ0 0.0140  integ_end 0.0008  u_step_at_release 0.0004  n_release 0
+  cs complete  restore  s1  overshoot_pct 4.92  t90 4.92  integ_at_release 0.0142  hold1 3.60  hold03 20.32  coast 12.76  back_peak 1.20  dpsi_end -0.44  max_abs_dpsi 12.76  rate_end 0.0007  integ0 -0.0002  integ_end 0.0004  u_step_at_release 0.0004  n_release 1

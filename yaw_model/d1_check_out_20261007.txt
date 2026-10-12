@@ -1,0 +1,151 @@
+Increment-1 step 2, 2026-10-07: the corrected schedule (policies.schedule_d1) on the model (d1_check.py)
+468 records, 0 errors
+
+=== Regression: 2527 and 2522, release drift in all (deg) and the 120 s excursion (deg), D1 vs 0c ===
+drift "in all" = heading change over 120 s + I(120 s)/K_I (0c's "to rest"); "-" where 0c's validity test fails
+--- 2527 2.5 m/s stick +1.0 20 s
+  HEAD: r last 5 s 3.59, I at release +0.300, release 120 s +121.5, in all +191.0
+  D1             perfect: cap 4.27 I +0.001 all +2.9 exc 2.7 | ground_W0: cap 4.26 I +0.001 all +2.8 exc 2.7 | ground_W2_head: cap 0.86 I +0.021 all +13.6 exc 8.4 | pitot_bias_ms: cap 3.54 I +0.001 all +2.3 exc 2.3 | perfect/k x0.7: cap 5.85 I +0.042 all +28.9 exc 18.7 | perfect/k x2: cap 2.25 I -0.050 all -30.4 exc 18.8
+  D1+RESTORE     perfect: cap 4.27 I +0.001 all +2.1 exc 2.4 | ground_W0: cap 4.26 I +0.001 all +2.1 exc 2.4 | ground_W2_head: cap 0.86 I +0.021 all -0.0 exc 0.1 | pitot_bias_ms: cap 3.54 I +0.001 all +1.8 exc 2.1 | perfect/k x0.7: cap 5.85 I +0.042 all +2.2 exc 2.5 | perfect/k x2: cap 2.25 I -0.050 all +2.0 exc 2.3
+  SCHED+RESTORE  perfect: cap 3.59 I +0.000 all +1.8 exc 2.1 | ground_W0: cap 3.58 I +0.000 all +1.8 exc 2.1 | ground_W2_head: cap 1.70 I +0.040 all +0.3 exc 0.4 | pitot_bias_ms: cap 2.98 I +0.000 all +1.6 exc 1.8 | perfect/k x0.7: cap 4.92 I +0.034 all +1.9 exc 2.2 | perfect/k x2: cap 1.88 I -0.043 all +1.7 exc 2.0
+  SCHED_CB       perfect: cap 3.59 I +0.000 all +2.1 exc 2.1 | ground_W0: cap 3.58 I +0.000 all +2.0 exc 2.1 | ground_W2_head: cap 1.70 I +0.040 all +25.7 exc 16.6 | pitot_bias_ms: cap 2.98 I +0.000 all +1.7 exc 1.8 | perfect/k x0.7: cap 4.92 I +0.034 all +23.9 exc 15.5 | perfect/k x2: cap 1.88 I -0.043 all -25.6 exc 15.7
+--- 2527 2.5 m/s stick +0.5 20 s
+  HEAD: r last 5 s 1.67, I at release +0.154, release 120 s +62.0, in all +98.2
+  D1             perfect: cap 4.63 I -0.000 all +0.9 exc 1.3 | ground_W0: cap 4.59 I -0.001 all +0.8 exc 1.3 | ground_W2_head: cap 0.86 I +0.009 all +6.0 exc 3.7 | pitot_bias_ms: cap 2.85 I -0.000 all +0.5 exc 0.8 | perfect/k x0.7: cap 6.35 I +0.018 all +13.0 exc 8.5 | perfect/k x2: cap 2.43 I -0.024 all -14.5 exc 8.5
+  D1+RESTORE     perfect: cap 4.63 I -0.000 all +1.1 exc 1.3 | ground_W0: cap 4.59 I -0.001 all +1.1 exc 1.3 | ground_W2_head: cap 0.86 I +0.009 all -0.0 exc 0.1 | pitot_bias_ms: cap 2.85 I -0.000 all +0.7 exc 0.9 | perfect/k x0.7: cap 6.35 I +0.018 all +1.2 exc 1.4 | perfect/k x2: cap 2.43 I -0.024 all +1.0 exc 1.2
+  SCHED+RESTORE  perfect: cap 4.17 I -0.000 all +1.0 exc 1.2 | ground_W0: cap 4.10 I -0.000 all +1.0 exc 1.2 | ground_W2_head: cap 1.84 I +0.020 all -0.0 exc 0.1 | pitot_bias_ms: cap 3.01 I -0.000 all +0.8 exc 0.9 | perfect/k x0.7: cap 5.50 I +0.015 all +1.0 exc 1.2 | perfect/k x2: cap 2.49 I -0.021 all +1.0 exc 1.2
+  SCHED_CB       perfect: cap 4.17 I -0.000 all +0.9 exc 1.2 | ground_W0: cap 4.10 I -0.000 all +0.7 exc 1.1 | ground_W2_head: cap 1.84 I +0.020 all +12.5 exc 7.7 | pitot_bias_ms: cap 3.01 I -0.000 all +0.7 exc 0.9 | perfect/k x0.7: cap 5.50 I +0.015 all +10.9 exc 7.2 | perfect/k x2: cap 2.49 I -0.021 all -12.3 exc 7.1
+--- 2527 2.5 m/s stick +1.0 300 s
+  HEAD: r last 5 s 3.85, I at release +0.300, release 120 s +122.5, in all +191.0
+  D1             perfect: cap 4.63 I +0.031 all +22.2 exc 14.8 | ground_W0: cap 4.63 I +0.031 all +22.2 exc 14.8 | ground_W2_head: cap 0.42 I +0.074 all - exc 30.9 | pitot_bias_ms: cap 1.74 I +0.054 all +34.7 exc 23.2 | perfect/k x0.7: cap 6.06 I +0.088 all - exc 37.3 | perfect/k x2: cap 1.96 I -0.192 all -121.6 exc 76.9
+  D1+RESTORE     perfect: cap 4.63 I +0.031 all +2.4 exc 2.8 | ground_W0: cap 4.63 I +0.031 all +2.4 exc 2.8 | ground_W2_head: cap 0.42 I +0.074 all +0.4 exc 0.5 | pitot_bias_ms: cap 1.74 I +0.054 all +1.0 exc 1.2 | perfect/k x0.7: cap 6.06 I +0.088 all +2.5 exc 2.9 | perfect/k x2: cap 1.96 I -0.192 all +1.1 exc 1.3
+  SCHED+RESTORE  perfect: cap 4.46 I +0.047 all +2.3 exc 2.7 | ground_W0: cap 4.46 I +0.047 all +2.3 exc 2.7 | ground_W2_head: cap 1.09 I +0.138 all +0.6 exc 0.7 | pitot_bias_ms: cap 3.15 I +0.100 all +1.7 exc 2.0 | perfect/k x0.7: cap 4.99 I +0.251 all +2.5 exc 2.9 | perfect/k x2: cap 3.38 I -0.300 all +2.2 exc 2.5
+  SCHED_CB       perfect: cap 4.46 I +0.047 all +32.0 exc 21.3 | ground_W0: cap 4.46 I +0.047 all +32.0 exc 21.2 | ground_W2_head: cap 0.92 I +0.111 all +71.0 exc 45.2 | pitot_bias_ms: cap 3.15 I +0.100 all +63.9 exc 42.0 | perfect/k x0.7: cap 4.99 I +0.251 all +159.8 exc 101.6 | perfect/k x2: cap 3.38 I -0.300 all -189.0 exc 118.9
+--- 2527 4.0 m/s stick +1.0 20 s
+  HEAD: r last 5 s 2.44, I at release +0.300, release 120 s +90.3, in all +191.0
+  D1             perfect: cap 2.95 I +0.001 all +1.9 exc 1.6 | ground_W0: cap 2.94 I +0.001 all +1.7 exc 1.5 | ground_W2_head: cap 0.54 I +0.015 all +9.2 exc 4.3 | pitot_bias_ms: cap 2.95 I +0.001 all +1.8 exc 1.5 | perfect/k x0.7: cap 4.11 I +0.015 all +10.9 exc 5.7 | perfect/k x2: cap 1.52 I -0.036 all -21.9 exc 9.4
+  D1+RESTORE     perfect: cap 2.95 I +0.001 all +1.2 exc 1.3 | ground_W0: cap 2.94 I +0.001 all +1.2 exc 1.3 | ground_W2_head: cap 0.54 I +0.015 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.95 I +0.001 all +1.2 exc 1.3 | perfect/k x0.7: cap 4.11 I +0.015 all +1.2 exc 1.3 | perfect/k x2: cap 1.52 I -0.036 all +1.1 exc 1.2
+  SCHED+RESTORE  perfect: cap 2.43 I +0.001 all +1.0 exc 1.1 | ground_W0: cap 2.42 I +0.001 all +1.0 exc 1.1 | ground_W2_head: cap 1.08 I +0.029 all -0.0 exc 0.1 | pitot_bias_ms: cap 2.20 I +0.001 all +0.9 exc 1.0 | perfect/k x0.7: cap 3.38 I +0.025 all +1.0 exc 1.2 | perfect/k x2: cap 1.25 I -0.030 all +0.9 exc 1.1
+  SCHED_CB       perfect: cap 2.43 I +0.001 all +1.5 exc 1.3 | ground_W0: cap 2.42 I +0.001 all +1.3 exc 1.2 | ground_W2_head: cap 1.08 I +0.029 all +18.5 exc 8.5 | pitot_bias_ms: cap 2.20 I +0.001 all +1.3 exc 1.1 | perfect/k x0.7: cap 3.38 I +0.025 all +17.3 exc 8.6 | perfect/k x2: cap 1.25 I -0.030 all -18.3 exc 7.8
+--- 2527 4.0 m/s stick +0.5 20 s
+  HEAD: r last 5 s 1.12, I at release +0.167, release 120 s +50.5, in all +107.1
+  D1             perfect: cap 2.93 I +0.000 all +0.7 exc 0.7 | ground_W0: cap 2.92 I +0.000 all +0.7 exc 0.7 | ground_W2_head: cap 0.54 I +0.006 all +4.1 exc 1.9 | pitot_bias_ms: cap 2.93 I +0.000 all +0.7 exc 0.7 | perfect/k x0.7: cap 4.08 I +0.014 all +9.3 exc 4.7 | perfect/k x2: cap 1.51 I -0.017 all -10.0 exc 4.3
+  D1+RESTORE     perfect: cap 2.93 I +0.000 all +0.6 exc 0.7 | ground_W0: cap 2.92 I +0.000 all +0.6 exc 0.7 | ground_W2_head: cap 0.54 I +0.006 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.93 I +0.000 all +0.6 exc 0.7 | perfect/k x0.7: cap 4.08 I +0.014 all +0.6 exc 0.7 | perfect/k x2: cap 1.51 I -0.017 all +0.6 exc 0.7
+  SCHED+RESTORE  perfect: cap 2.41 I +0.000 all +0.5 exc 0.6 | ground_W0: cap 2.40 I +0.000 all +0.5 exc 0.6 | ground_W2_head: cap 1.07 I +0.013 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.19 I +0.000 all +0.5 exc 0.6 | perfect/k x0.7: cap 3.35 I +0.011 all +0.6 exc 0.6 | perfect/k x2: cap 1.24 I -0.014 all +0.5 exc 0.6
+  SCHED_CB       perfect: cap 2.41 I +0.000 all +0.6 exc 0.6 | ground_W0: cap 2.40 I +0.000 all +0.6 exc 0.6 | ground_W2_head: cap 1.07 I +0.013 all +8.2 exc 3.8 | pitot_bias_ms: cap 2.19 I +0.000 all +0.6 exc 0.6 | perfect/k x0.7: cap 3.35 I +0.011 all +7.7 exc 3.9 | perfect/k x2: cap 1.24 I -0.014 all -8.3 exc 3.5
+--- 2527 4.0 m/s stick +1.0 300 s
+  HEAD: r last 5 s 2.63, I at release +0.300, release 120 s +91.1, in all +191.0
+  D1             perfect: cap 3.17 I +0.006 all +5.0 exc 3.1 | ground_W0: cap 3.17 I +0.006 all +4.9 exc 3.1 | ground_W2_head: cap 0.40 I +0.101 all +64.2 exc 29.8 | pitot_bias_ms: cap 3.17 I +0.008 all +6.2 exc 3.7 | perfect/k x0.7: cap 4.41 I +0.015 all +11.1 exc 6.0 | perfect/k x2: cap 1.61 I -0.300 all -190.3 exc 89.4
+  D1+RESTORE     perfect: cap 3.17 I +0.006 all +1.3 exc 1.5 | ground_W0: cap 3.17 I +0.006 all +1.3 exc 1.5 | ground_W2_head: cap 0.40 I +0.101 all -0.0 exc 0.1 | pitot_bias_ms: cap 3.17 I +0.008 all +1.3 exc 1.5 | perfect/k x0.7: cap 4.41 I +0.015 all +1.4 exc 1.5 | perfect/k x2: cap 1.61 I -0.300 all +0.9 exc 1.0
+  SCHED+RESTORE  perfect: cap 2.59 I +0.003 all +1.1 exc 1.3 | ground_W0: cap 2.59 I +0.003 all +1.1 exc 1.3 | ground_W2_head: cap 1.07 I +0.126 all +0.6 exc 0.7 | pitot_bias_ms: cap 2.32 I +0.003 all +1.0 exc 1.1 | perfect/k x0.7: cap 3.63 I +0.174 all +1.4 exc 1.5 | perfect/k x2: cap 1.31 I -0.272 all +0.7 exc 0.8
+  SCHED_CB       perfect: cap 2.59 I +0.003 all +2.8 exc 2.0 | ground_W0: cap 2.59 I +0.003 all +2.8 exc 2.0 | ground_W2_head: cap 1.07 I +0.117 all +75.4 exc 35.5 | pitot_bias_ms: cap 2.32 I +0.003 all +2.9 exc 2.0 | perfect/k x0.7: cap 3.63 I +0.174 all +111.0 exc 53.4 | perfect/k x2: cap 1.31 I -0.272 all -172.6 exc 80.8
+--- 2527 6.0 m/s stick +1.0 20 s
+  HEAD: r last 5 s 1.67, I at release +0.300, release 120 s +66.5, in all +191.9
+  D1             perfect: cap 2.19 I +0.000 all +0.8 exc 0.9 | ground_W0: cap 2.18 I +0.000 all +0.8 exc 0.9 | ground_W2_head: cap 0.43 I +0.010 all +6.5 exc 2.2 | pitot_bias_ms: cap 2.18 I +0.000 all +0.8 exc 0.9 | perfect/k x0.7: cap 3.09 I +0.000 all +0.8 exc 0.9 | perfect/k x2: cap 1.10 I -0.023 all -14.1 exc 4.2
+  D1+RESTORE     perfect: cap 2.19 I +0.000 all +0.8 exc 0.9 | ground_W0: cap 2.18 I +0.000 all +0.8 exc 0.9 | ground_W2_head: cap 0.43 I +0.010 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.18 I +0.000 all +0.8 exc 0.9 | perfect/k x0.7: cap 3.09 I +0.000 all +0.8 exc 0.9 | perfect/k x2: cap 1.10 I -0.023 all +0.8 exc 0.9
+  SCHED+RESTORE  perfect: cap 1.65 I +0.001 all +0.7 exc 0.7 | ground_W0: cap 1.65 I +0.001 all +0.7 exc 0.7 | ground_W2_head: cap 1.07 I +0.026 all -0.0 exc 0.1 | pitot_bias_ms: cap 1.57 I +0.001 all +0.7 exc 0.7 | perfect/k x0.7: cap 2.32 I +0.017 all +0.7 exc 0.8 | perfect/k x2: cap 0.84 I -0.021 all +0.7 exc 0.7
+  SCHED_CB       perfect: cap 1.65 I +0.001 all +1.2 exc 0.9 | ground_W0: cap 1.65 I +0.001 all +1.2 exc 0.9 | ground_W2_head: cap 0.85 I +0.020 all +13.0 exc 4.4 | pitot_bias_ms: cap 1.57 I +0.001 all +1.2 exc 0.9 | perfect/k x0.7: cap 2.32 I +0.017 all +11.8 exc 4.5 | perfect/k x2: cap 0.84 I -0.021 all -13.0 exc 3.9
+--- 2527 6.0 m/s stick +0.5 20 s
+  HEAD: r last 5 s 0.77, I at release +0.176, release 120 s +38.8, in all +112.9
+  D1             perfect: cap 1.98 I +0.000 all +0.8 exc 0.6 | ground_W0: cap 1.98 I +0.000 all +0.8 exc 0.6 | ground_W2_head: cap 0.43 I +0.005 all +2.9 exc 1.0 | pitot_bias_ms: cap 1.98 I +0.000 all +0.8 exc 0.6 | perfect/k x0.7: cap 2.78 I +0.010 all +7.0 exc 2.7 | perfect/k x2: cap 1.01 I -0.012 all -7.0 exc 2.0
+  D1+RESTORE     perfect: cap 1.98 I +0.000 all +0.5 exc 0.6 | ground_W0: cap 1.98 I +0.000 all +0.5 exc 0.6 | ground_W2_head: cap 0.43 I +0.005 all -0.0 exc 0.0 | pitot_bias_ms: cap 1.98 I +0.000 all +0.5 exc 0.6 | perfect/k x0.7: cap 2.78 I +0.010 all +0.5 exc 0.6 | perfect/k x2: cap 1.01 I -0.012 all +0.5 exc 0.5
+  SCHED+RESTORE  perfect: cap 1.63 I +0.000 all +0.5 exc 0.5 | ground_W0: cap 1.63 I +0.000 all +0.5 exc 0.5 | ground_W2_head: cap 1.07 I +0.011 all -0.0 exc 0.0 | pitot_bias_ms: cap 1.56 I +0.000 all +0.5 exc 0.5 | perfect/k x0.7: cap 2.29 I +0.008 all +0.5 exc 0.5 | perfect/k x2: cap 0.83 I -0.010 all +0.5 exc 0.5
+  SCHED_CB       perfect: cap 1.63 I +0.000 all +0.7 exc 0.6 | ground_W0: cap 1.63 I +0.000 all +0.7 exc 0.6 | ground_W2_head: cap 0.85 I +0.009 all +5.8 exc 2.0 | pitot_bias_ms: cap 1.56 I +0.000 all +0.7 exc 0.6 | perfect/k x0.7: cap 2.29 I +0.008 all +5.8 exc 2.3 | perfect/k x2: cap 0.83 I -0.010 all -5.8 exc 1.6
+--- 2527 6.0 m/s stick +1.0 300 s
+  HEAD: r last 5 s 1.72, I at release +0.300, release 120 s +66.7, in all +191.9
+  D1             perfect: cap 2.38 I +0.000 all +0.9 exc 1.0 | ground_W0: cap 2.38 I +0.000 all +0.9 exc 1.0 | ground_W2_head: cap 0.54 I +0.085 all +54.0 exc 18.5 | pitot_bias_ms: cap 2.38 I +0.000 all +0.9 exc 1.0 | perfect/k x0.7: cap 3.38 I +0.000 all +1.0 exc 1.1 | perfect/k x2: cap 1.04 I -0.268 all -170.6 exc 58.3
+  D1+RESTORE     perfect: cap 2.38 I +0.000 all +0.9 exc 1.0 | ground_W0: cap 2.38 I +0.000 all +0.9 exc 1.0 | ground_W2_head: cap 0.54 I +0.085 all -0.0 exc 0.1 | pitot_bias_ms: cap 2.38 I +0.000 all +0.9 exc 1.0 | perfect/k x0.7: cap 3.38 I +0.000 all +1.0 exc 1.1 | perfect/k x2: cap 1.04 I -0.268 all +0.6 exc 0.7
+  SCHED+RESTORE  perfect: cap 1.69 I +0.008 all +0.7 exc 0.8 | ground_W0: cap 1.69 I +0.008 all +0.7 exc 0.8 | ground_W2_head: cap 1.07 I +0.101 all +0.6 exc 0.6 | pitot_bias_ms: cap 1.61 I +0.008 all +0.7 exc 0.8 | perfect/k x0.7: cap 2.38 I +0.017 all +0.7 exc 0.8 | perfect/k x2: cap 0.85 I -0.222 all +0.6 exc 0.6
+  SCHED_CB       perfect: cap 1.69 I +0.008 all +5.9 exc 2.5 | ground_W0: cap 1.69 I +0.008 all +5.9 exc 2.5 | ground_W2_head: cap 1.07 I +0.098 all +62.8 exc 21.8 | pitot_bias_ms: cap 1.61 I +0.008 all +5.9 exc 2.5 | perfect/k x0.7: cap 2.38 I +0.017 all +11.8 exc 4.5 | perfect/k x2: cap 0.85 I -0.222 all -140.7 exc 47.9
+--- 2522 2.5 m/s stick +1.0 20 s
+  HEAD: r last 5 s 3.07, I at release +0.300, release 120 s +134.0, in all +191.0
+  D1             perfect: cap 4.35 I -0.005 all -2.7 exc 1.8 | ground_W0: cap 4.34 I -0.005 all -2.7 exc 1.8 | ground_W2_head: cap 0.85 I +0.021 all +13.4 exc 8.7 | pitot_bias_ms: cap 3.62 I -0.004 all -2.1 exc 1.6 | perfect/k x0.7: cap 6.09 I +0.039 all +25.2 exc 16.4 | perfect/k x2: cap 2.22 I -0.060 all -37.1 exc 22.7
+  D1+RESTORE     perfect: cap 4.35 I -0.005 all +0.7 exc 1.8 | ground_W0: cap 4.34 I -0.005 all +0.7 exc 1.8 | ground_W2_head: cap 0.85 I +0.021 all -0.0 exc 0.1 | pitot_bias_ms: cap 3.62 I -0.004 all +0.6 exc 1.6 | perfect/k x0.7: cap 6.09 I +0.039 all +0.8 exc 1.9 | perfect/k x2: cap 2.22 I -0.060 all +0.7 exc 1.7
+  SCHED+RESTORE  perfect: cap 3.70 I -0.005 all +0.6 exc 1.6 | ground_W0: cap 3.69 I -0.005 all +0.6 exc 1.6 | ground_W2_head: cap 1.87 I +0.043 all -0.0 exc 0.2 | pitot_bias_ms: cap 3.10 I -0.004 all +0.5 exc 1.3 | perfect/k x0.7: cap 5.19 I +0.033 all +0.7 exc 1.7 | perfect/k x2: cap 1.89 I -0.050 all +0.6 exc 1.5
+  SCHED_CB       perfect: cap 3.70 I -0.005 all -2.3 exc 1.6 | ground_W0: cap 3.69 I -0.005 all -2.3 exc 1.6 | ground_W2_head: cap 1.87 I +0.043 all +27.2 exc 17.9 | pitot_bias_ms: cap 3.10 I -0.004 all -1.7 exc 1.3 | perfect/k x0.7: cap 5.19 I +0.033 all +21.0 exc 13.9 | perfect/k x2: cap 1.89 I -0.050 all -31.2 exc 19.4
+--- 2522 2.5 m/s stick +0.5 20 s
+  HEAD: r last 5 s 1.42, I at release +0.163, release 120 s +70.9, in all +103.5
+  D1             perfect: cap 4.75 I -0.003 all -1.3 exc 0.9 | ground_W0: cap 4.71 I -0.003 all -1.4 exc 0.9 | ground_W2_head: cap 0.83 I +0.011 all +6.9 exc 2.7 | pitot_bias_ms: cap 3.02 I -0.002 all -1.1 exc 0.6 | perfect/k x0.7: cap 6.68 I +0.019 all +11.8 exc 8.0 | perfect/k x2: cap 2.41 I -0.028 all -17.5 exc 11.1
+  D1+RESTORE     perfect: cap 4.75 I -0.003 all +0.3 exc 0.9 | ground_W0: cap 4.71 I -0.003 all +0.3 exc 0.9 | ground_W2_head: cap 0.83 I +0.011 all -0.0 exc 0.0 | pitot_bias_ms: cap 3.02 I -0.002 all -0.0 exc 0.6 | perfect/k x0.7: cap 6.68 I +0.019 all +0.3 exc 1.0 | perfect/k x2: cap 2.41 I -0.028 all +0.3 exc 0.8
+  SCHED+RESTORE  perfect: cap 4.13 I -0.002 all +0.2 exc 0.8 | ground_W0: cap 4.03 I -0.002 all +0.2 exc 0.8 | ground_W2_head: cap 1.69 I +0.019 all -0.0 exc 0.1 | pitot_bias_ms: cap 3.17 I -0.001 all -0.0 exc 0.6 | perfect/k x0.7: cap 5.70 I +0.015 all +0.3 exc 0.8 | perfect/k x2: cap 2.23 I -0.023 all +0.2 exc 0.7
+  SCHED_CB       perfect: cap 4.13 I -0.002 all -1.1 exc 0.8 | ground_W0: cap 4.03 I -0.002 all -1.2 exc 0.8 | ground_W2_head: cap 1.69 I +0.019 all +12.0 exc 7.7 | pitot_bias_ms: cap 3.17 I -0.001 all -0.9 exc 0.6 | perfect/k x0.7: cap 5.70 I +0.015 all +9.8 exc 6.7 | perfect/k x2: cap 2.23 I -0.023 all -14.5 exc 9.2
+--- 2522 2.5 m/s stick +1.0 300 s
+  HEAD: r last 5 s 3.08, I at release +0.300, release 120 s +123.6, in all +191.0
+  D1             perfect: cap 4.71 I -0.046 all -27.8 exc 17.1 | ground_W0: cap 4.71 I -0.046 all -27.8 exc 17.1 | ground_W2_head: cap 0.43 I +0.074 all +47.3 exc 30.6 | pitot_bias_ms: cap 3.27 I -0.019 all -11.5 exc 6.9 | perfect/k x0.7: cap 6.65 I +0.141 all +89.6 exc 58.7 | perfect/k x2: cap 2.39 I -0.300 all -190.3 exc 121.6
+  D1+RESTORE     perfect: cap 4.71 I -0.046 all +0.8 exc 2.1 | ground_W0: cap 4.71 I -0.046 all +0.8 exc 2.1 | ground_W2_head: cap 0.43 I +0.074 all -0.0 exc 0.2 | pitot_bias_ms: cap 3.27 I -0.019 all +0.5 exc 1.4 | perfect/k x0.7: cap 6.65 I +0.141 all +1.1 exc 2.6 | perfect/k x2: cap 2.39 I -0.300 all +0.5 exc 1.4
+  SCHED+RESTORE  perfect: cap 3.88 I -0.037 all +0.7 exc 1.7 | ground_W0: cap 3.88 I -0.037 all +0.7 exc 1.7 | ground_W2_head: cap 1.07 I +0.138 all -0.0 exc 0.4 | pitot_bias_ms: cap 3.15 I -0.019 all +0.5 exc 1.3 | perfect/k x0.7: cap 5.48 I +0.213 all +1.0 exc 2.4 | perfect/k x2: cap 1.97 I -0.300 all +0.3 exc 1.0
+  SCHED_CB       perfect: cap 3.88 I -0.037 all -22.8 exc 14.1 | ground_W0: cap 3.88 I -0.037 all -22.8 exc 14.1 | ground_W2_head: cap 0.91 I +0.111 all +70.8 exc 45.8 | pitot_bias_ms: cap 3.15 I -0.019 all -11.1 exc 6.6 | perfect/k x0.7: cap 5.48 I +0.213 all +135.6 exc 88.2 | perfect/k x2: cap 1.97 I -0.300 all -190.5 exc 121.8
+--- 2522 4.0 m/s stick +1.0 20 s
+  HEAD: r last 5 s 2.02, I at release +0.300, release 120 s +103.4, in all +191.0
+  D1             perfect: cap 3.02 I -0.003 all -1.8 exc 0.8 | ground_W0: cap 3.01 I -0.004 all -2.0 exc 0.8 | ground_W2_head: cap 0.53 I +0.014 all +9.1 exc 4.4 | pitot_bias_ms: cap 3.02 I -0.003 all -1.9 exc 0.8 | perfect/k x0.7: cap 4.29 I +0.029 all +18.2 exc 9.4 | perfect/k x2: cap 1.53 I -0.042 all -26.2 exc 12.5
+  D1+RESTORE     perfect: cap 3.02 I -0.003 all +0.3 exc 0.9 | ground_W0: cap 3.01 I -0.004 all +0.3 exc 0.9 | ground_W2_head: cap 0.53 I +0.014 all -0.0 exc 0.0 | pitot_bias_ms: cap 3.02 I -0.003 all +0.3 exc 0.9 | perfect/k x0.7: cap 4.29 I +0.029 all +0.3 exc 0.9 | perfect/k x2: cap 1.53 I -0.042 all +0.3 exc 0.8
+  SCHED+RESTORE  perfect: cap 2.50 I -0.003 all +0.3 exc 0.7 | ground_W0: cap 2.49 I -0.003 all +0.3 exc 0.7 | ground_W2_head: cap 1.07 I +0.028 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.26 I -0.003 all +0.2 exc 0.6 | perfect/k x0.7: cap 3.55 I +0.024 all +0.3 exc 0.7 | perfect/k x2: cap 1.26 I -0.035 all +0.2 exc 0.7
+  SCHED_CB       perfect: cap 2.50 I -0.003 all -1.5 exc 0.7 | ground_W0: cap 2.49 I -0.003 all -1.6 exc 0.7 | ground_W2_head: cap 1.07 I +0.028 all +17.8 exc 8.7 | pitot_bias_ms: cap 2.26 I -0.003 all -1.4 exc 0.6 | perfect/k x0.7: cap 3.55 I +0.024 all +15.1 exc 7.9 | perfect/k x2: cap 1.26 I -0.035 all -21.7 exc 10.4
+--- 2522 4.0 m/s stick +0.5 20 s
+  HEAD: r last 5 s 0.95, I at release +0.173, release 120 s +57.1, in all +110.2
+  D1             perfect: cap 3.04 I -0.002 all -1.0 exc 0.4 | ground_W0: cap 3.03 I -0.002 all -1.0 exc 0.4 | ground_W2_head: cap 0.53 I +0.007 all +4.5 exc 1.2 | pitot_bias_ms: cap 3.04 I -0.002 all -1.0 exc 0.4 | perfect/k x0.7: cap 4.31 I +0.013 all +8.3 exc 4.3 | perfect/k x2: cap 1.53 I -0.019 all -11.9 exc 5.7
+  D1+RESTORE     perfect: cap 3.04 I -0.002 all -0.0 exc 0.4 | ground_W0: cap 3.03 I -0.002 all -0.0 exc 0.4 | ground_W2_head: cap 0.53 I +0.007 all -0.0 exc 0.0 | pitot_bias_ms: cap 3.04 I -0.002 all -0.0 exc 0.4 | perfect/k x0.7: cap 4.31 I +0.013 all -0.0 exc 0.4 | perfect/k x2: cap 1.53 I -0.019 all -0.0 exc 0.4
+  SCHED+RESTORE  perfect: cap 2.50 I -0.001 all -0.0 exc 0.3 | ground_W0: cap 2.49 I -0.001 all -0.0 exc 0.3 | ground_W2_head: cap 1.07 I +0.013 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.26 I -0.001 all -0.0 exc 0.3 | perfect/k x0.7: cap 3.54 I +0.011 all -0.0 exc 0.3 | perfect/k x2: cap 1.26 I -0.016 all -0.0 exc 0.3
+  SCHED_CB       perfect: cap 2.50 I -0.001 all -0.8 exc 0.3 | ground_W0: cap 2.49 I -0.001 all -0.9 exc 0.3 | ground_W2_head: cap 1.05 I +0.013 all +8.2 exc 3.9 | pitot_bias_ms: cap 2.26 I -0.001 all -0.7 exc 0.3 | perfect/k x0.7: cap 3.54 I +0.011 all +6.8 exc 3.5 | perfect/k x2: cap 1.26 I -0.016 all -9.8 exc 4.7
+--- 2522 4.0 m/s stick +1.0 300 s
+  HEAD: r last 5 s 1.98, I at release +0.300, release 120 s +92.8, in all +191.0
+  D1             perfect: cap 2.98 I -0.032 all -20.2 exc 9.3 | ground_W0: cap 2.98 I -0.032 all -20.2 exc 9.3 | ground_W2_head: cap 0.40 I +0.100 all +63.5 exc 30.8 | pitot_bias_ms: cap 2.99 I -0.031 all -19.1 exc 8.8 | perfect/k x0.7: cap 4.22 I +0.143 all +91.3 exc 44.7 | perfect/k x2: cap 1.50 I -0.300 all -190.7 exc 91.6
+  D1+RESTORE     perfect: cap 2.98 I -0.032 all +0.3 exc 0.8 | ground_W0: cap 2.98 I -0.032 all +0.3 exc 0.8 | ground_W2_head: cap 0.40 I +0.100 all -0.0 exc 0.1 | pitot_bias_ms: cap 2.99 I -0.031 all +0.3 exc 0.8 | perfect/k x0.7: cap 4.22 I +0.143 all +0.4 exc 1.0 | perfect/k x2: cap 1.50 I -0.300 all +0.2 exc 0.5
+  SCHED+RESTORE  perfect: cap 2.45 I -0.027 all +0.2 exc 0.7 | ground_W0: cap 2.45 I -0.027 all +0.2 exc 0.7 | ground_W2_head: cap 1.07 I +0.120 all -0.0 exc 0.3 | pitot_bias_ms: cap 2.23 I -0.023 all +0.2 exc 0.6 | perfect/k x0.7: cap 3.48 I +0.198 all +0.3 exc 0.9 | perfect/k x2: cap 1.24 I -0.294 all -0.0 exc 0.4
+  SCHED_CB       perfect: cap 2.45 I -0.027 all -16.6 exc 7.7 | ground_W0: cap 2.45 I -0.027 all -16.6 exc 7.7 | ground_W2_head: cap 1.07 I +0.110 all +70.1 exc 34.2 | pitot_bias_ms: cap 2.23 I -0.023 all -14.3 exc 6.6 | perfect/k x0.7: cap 3.48 I +0.198 all +126.2 exc 61.6 | perfect/k x2: cap 1.24 I -0.294 all -186.9 exc 89.8
+--- 2522 6.0 m/s stick +1.0 20 s
+  HEAD: r last 5 s 1.37, I at release +0.300, release 120 s +76.4, in all +191.0
+  D1             perfect: cap 2.06 I -0.002 all -1.2 exc 0.4 | ground_W0: cap 2.05 I -0.002 all -1.3 exc 0.4 | ground_W2_head: cap 0.43 I +0.010 all +6.1 exc 2.2 | pitot_bias_ms: cap 2.06 I -0.002 all -1.3 exc 0.4 | perfect/k x0.7: cap 2.93 I +0.021 all +13.1 exc 5.1 | perfect/k x2: cap 1.04 I -0.029 all -18.5 exc 6.6
+  D1+RESTORE     perfect: cap 2.06 I -0.002 all +0.1 exc 0.4 | ground_W0: cap 2.05 I -0.002 all +0.1 exc 0.4 | ground_W2_head: cap 0.43 I +0.010 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.06 I -0.002 all +0.1 exc 0.4 | perfect/k x0.7: cap 2.93 I +0.021 all +0.1 exc 0.4 | perfect/k x2: cap 1.04 I -0.029 all +0.1 exc 0.4
+  SCHED+RESTORE  perfect: cap 1.69 I -0.002 all +0.1 exc 0.3 | ground_W0: cap 1.69 I -0.002 all +0.1 exc 0.3 | ground_W2_head: cap 1.07 I +0.024 all -0.0 exc 0.0 | pitot_bias_ms: cap 1.61 I -0.002 all +0.1 exc 0.3 | perfect/k x0.7: cap 2.41 I +0.017 all +0.1 exc 0.3 | perfect/k x2: cap 0.85 I -0.024 all +0.1 exc 0.3
+  SCHED_CB       perfect: cap 1.69 I -0.002 all -1.0 exc 0.3 | ground_W0: cap 1.69 I -0.002 all -1.1 exc 0.3 | ground_W2_head: cap 0.85 I +0.019 all +12.1 exc 4.5 | pitot_bias_ms: cap 1.61 I -0.002 all -1.0 exc 0.3 | perfect/k x0.7: cap 2.41 I +0.017 all +10.8 exc 4.2 | perfect/k x2: cap 0.85 I -0.024 all -15.2 exc 5.4
+--- 2522 6.0 m/s stick +0.5 20 s
+  HEAD: r last 5 s 0.65, I at release +0.180, release 120 s +43.8, in all +114.3
+  D1             perfect: cap 2.03 I -0.001 all -0.6 exc 0.2 | ground_W0: cap 2.03 I -0.001 all -0.7 exc 0.2 | ground_W2_head: cap 0.43 I +0.004 all +2.8 exc 1.0 | pitot_bias_ms: cap 2.03 I -0.001 all -0.6 exc 0.2 | perfect/k x0.7: cap 2.89 I +0.009 all +5.9 exc 2.3 | perfect/k x2: cap 1.02 I -0.013 all -8.3 exc 2.9
+  D1+RESTORE     perfect: cap 2.03 I -0.001 all -0.0 exc 0.2 | ground_W0: cap 2.03 I -0.001 all -0.0 exc 0.2 | ground_W2_head: cap 0.43 I +0.004 all -0.0 exc 0.0 | pitot_bias_ms: cap 2.03 I -0.001 all -0.0 exc 0.2 | perfect/k x0.7: cap 2.89 I +0.009 all -0.0 exc 0.2 | perfect/k x2: cap 1.02 I -0.013 all -0.0 exc 0.2
+  SCHED+RESTORE  perfect: cap 1.67 I -0.001 all -0.0 exc 0.1 | ground_W0: cap 1.67 I -0.001 all -0.0 exc 0.1 | ground_W2_head: cap 1.07 I +0.011 all -0.0 exc 0.0 | pitot_bias_ms: cap 1.59 I -0.001 all -0.0 exc 0.1 | perfect/k x0.7: cap 2.37 I +0.008 all -0.0 exc 0.1 | perfect/k x2: cap 0.84 I -0.011 all -0.0 exc 0.1
+  SCHED_CB       perfect: cap 1.67 I -0.001 all -0.5 exc 0.1 | ground_W0: cap 1.67 I -0.001 all -0.5 exc 0.1 | ground_W2_head: cap 0.85 I +0.008 all +5.4 exc 2.0 | pitot_bias_ms: cap 1.59 I -0.001 all -0.5 exc 0.1 | perfect/k x0.7: cap 2.37 I +0.008 all +4.8 exc 1.9 | perfect/k x2: cap 0.84 I -0.011 all -6.9 exc 0.1
+--- 2522 6.0 m/s stick +1.0 300 s
+  HEAD: r last 5 s 1.34, I at release +0.300, release 120 s +69.2, in all +191.0
+  D1             perfect: cap 2.00 I -0.024 all -14.8 exc 5.1 | ground_W0: cap 2.00 I -0.024 all -14.8 exc 5.1 | ground_W2_head: cap 0.54 I +0.078 all +49.7 exc 18.0 | pitot_bias_ms: cap 2.00 I -0.023 all -14.4 exc 4.9 | perfect/k x0.7: cap 2.84 I +0.145 all +92.5 exc 33.7 | perfect/k x2: cap 1.01 I -0.296 all -188.4 exc 67.4
+  D1+RESTORE     perfect: cap 2.00 I -0.024 all +0.1 exc 0.4 | ground_W0: cap 2.00 I -0.024 all +0.1 exc 0.4 | ground_W2_head: cap 0.54 I +0.078 all -0.0 exc 0.1 | pitot_bias_ms: cap 2.00 I -0.023 all +0.1 exc 0.4 | perfect/k x0.7: cap 2.84 I +0.145 all +0.2 exc 0.4 | perfect/k x2: cap 1.01 I -0.296 all -0.0 exc 0.2
+  SCHED+RESTORE  perfect: cap 1.65 I -0.019 all +0.1 exc 0.3 | ground_W0: cap 1.65 I -0.019 all +0.1 exc 0.3 | ground_W2_head: cap 1.07 I +0.084 all -0.0 exc 0.2 | pitot_bias_ms: cap 1.57 I -0.018 all -0.0 exc 0.3 | perfect/k x0.7: cap 2.34 I +0.171 all +0.1 exc 0.4 | perfect/k x2: cap 0.83 I -0.244 all -0.0 exc 0.2
+  SCHED_CB       perfect: cap 1.65 I -0.019 all -12.2 exc 4.2 | ground_W0: cap 1.65 I -0.019 all -12.2 exc 4.2 | ground_W2_head: cap 1.07 I +0.081 all +51.3 exc 18.7 | pitot_bias_ms: cap 1.57 I -0.018 all -11.3 exc 3.9 | perfect/k x0.7: cap 2.34 I +0.171 all +108.6 exc 39.5 | perfect/k x2: cap 0.83 I -0.244 all -155.2 exc 55.5
+
+=== Worst |release in all| per policy and source (deg) ===
+  D1             ground_W0       k x1      27.8  at 2522 2.5 m/s +1.0 300 s
+  D1             ground_W2_head  k x1      64.2  at 2527 4.0 m/s +1.0 300 s
+  D1             perfect         k x0.7    92.5  at 2522 6.0 m/s +1.0 300 s
+  D1             perfect         k x1      27.8  at 2522 2.5 m/s +1.0 300 s
+  D1             perfect         k x2     190.7  at 2522 4.0 m/s +1.0 300 s
+  D1             pitot_bias_ms   k x1      34.7  at 2527 2.5 m/s +1.0 300 s
+  D1+RESTORE     ground_W0       k x1       2.4  at 2527 2.5 m/s +1.0 300 s
+  D1+RESTORE     ground_W2_head  k x1       0.4  at 2527 2.5 m/s +1.0 300 s
+  D1+RESTORE     perfect         k x0.7     2.5  at 2527 2.5 m/s +1.0 300 s
+  D1+RESTORE     perfect         k x1       2.4  at 2527 2.5 m/s +1.0 300 s
+  D1+RESTORE     perfect         k x2       2.0  at 2527 2.5 m/s +1.0 20 s
+  D1+RESTORE     pitot_bias_ms   k x1       1.8  at 2527 2.5 m/s +1.0 20 s
+  SCHED+RESTORE  ground_W0       k x1       2.3  at 2527 2.5 m/s +1.0 300 s
+  SCHED+RESTORE  ground_W2_head  k x1       0.6  at 2527 4.0 m/s +1.0 300 s
+  SCHED+RESTORE  perfect         k x0.7     2.5  at 2527 2.5 m/s +1.0 300 s
+  SCHED+RESTORE  perfect         k x1       2.3  at 2527 2.5 m/s +1.0 300 s
+  SCHED+RESTORE  perfect         k x2       2.2  at 2527 2.5 m/s +1.0 300 s
+  SCHED+RESTORE  pitot_bias_ms   k x1       1.7  at 2527 2.5 m/s +1.0 300 s
+  SCHED_CB       ground_W0       k x1      32.0  at 2527 2.5 m/s +1.0 300 s
+  SCHED_CB       ground_W2_head  k x1      75.4  at 2527 4.0 m/s +1.0 300 s
+  SCHED_CB       perfect         k x0.7   159.8  at 2527 2.5 m/s +1.0 300 s
+  SCHED_CB       perfect         k x1      32.0  at 2527 2.5 m/s +1.0 300 s
+  SCHED_CB       perfect         k x2     190.5  at 2522 2.5 m/s +1.0 300 s
+  SCHED_CB       pitot_bias_ms   k x1      63.9  at 2527 2.5 m/s +1.0 300 s
+
+=== Acceptance table for SITL step 1c (D1+RESTORE, ground speed W 0, from straight flight) ===
+plant u stick | HEAD: r5 I_rel rel120 | D1+RESTORE: cap ff r5 I_rel rel120 r+10/+60/+120 exc stall/fin
+  2527       2.0 +1.0 | 4.17 +0.300 +135.1 | cap 2.08 ff 4.82 r5 1.41 I +0.022 rel +1.0 r -0.00/-0.00/-0.00 exc 1.1 fin 0.37
+  2527       4.0 +1.0 | 2.44 +0.300 +90.3 | cap 2.94 ff 16.58 r5 2.89 I +0.001 rel +1.2 r -0.00/-0.00/-0.00 exc 1.3 fin 0.35
+  2527       4.0 +0.5 | 1.12 +0.167 +50.5 | cap 2.92 ff 16.66 r5 1.30 I +0.000 rel +0.7 r -0.00/-0.00/-0.00 exc 0.7 fin 0.16
+  2522       2.0 +1.0 | 3.66 +0.300 +145.5 | cap 2.10 ff 4.17 r5 1.40 I +0.023 rel +0.7 r +0.00/-0.00/-0.00 exc 0.7 fin 0.34
+  2522       4.0 +1.0 | 2.02 +0.300 +103.4 | cap 3.01 ff 16.18 r5 3.11 I -0.004 rel +0.9 r +0.00/+0.00/+0.00 exc 0.9 fin 0.35
+  2522       4.0 +0.5 | 0.95 +0.173 +57.1 | cap 3.03 ff 16.09 r5 1.40 I -0.002 rel +0.4 r +0.00/-0.00/+0.00 exc 0.4 fin 0.17
+  2512/khold 2.0 +1.0 | 1.39 +0.300 +88.0 | cap 0.54 ff 7.29 r5 0.16 I +0.007 rel -1.4 r +0.01/+0.01/+0.01 exc 2.2 fin 0.26
+  2512/khold 4.0 +1.0 | 0.66 +0.300 +66.6 | cap 1.29 ff 37.61 r5 1.36 I -0.011 rel -6.4 r +0.02/+0.02/+0.02 exc 8.6 fin 0.60
+  2512/khold 4.0 +0.5 | 0.38 +0.200 +36.0 | cap 1.14 ff 42.77 r5 0.52 I -0.004 rel -2.4 r +0.01/+0.01/+0.00 exc 3.1 fin 0.21

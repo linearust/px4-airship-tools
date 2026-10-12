@@ -1,0 +1,25 @@
+
+== gz_airship_vectored_independent P 0.50 I 0.09, anti-windup lets |I| shrink: True
+  실패  Acro 가 남은 회전을 잡는다 — 27.9 -> -7.7 deg/s
+  통과  Acro: 스틱을 놓으면 선다 — 5.8 -> -2.0 deg/s, 4.7 초 만에 정지
+  통과  Stabilized: 스틱을 놓으면 선다 — 6.3 -> -1.7 deg/s, 5.0 초 만에 정지
+
+== gz_airship_vectored_independent P 0.70 I 0.09, anti-windup lets |I| shrink: True
+  통과  Acro: 스틱을 놓으면 선다 — 6.5 -> -1.1 deg/s, 3.8 초 만에 정지
+  통과  Stabilized: 스틱을 놓으면 선다 — 6.3 -> -1.4 deg/s, 4.1 초 만에 정지
+
+== gz_airship_vectored_independent_am_fin_drag P 0.50 I 0.09, anti-windup lets |I| shrink: True
+  실패  Acro: 스틱을 놓으면 선다 — 6.3 -> 2.8 deg/s, 창이 끝날 때까지 계속 내려간다 (마지막 3 초 -0.21 deg/s^2)
+  실패  Stabilized: 스틱을 놓으면 선다 — 6.3 -> 2.7 deg/s, 창이 끝날 때까지 계속 내려간다 (마지막 3 초 -0.20 deg/s^2)
+
+== gz_airship_vectored_independent_am_fin_drag P 0.70 I 0.09, anti-windup lets |I| shrink: True
+  실패  Acro: 스틱을 놓으면 선다 — 6.2 -> 2.5 deg/s, 창이 끝날 때까지 계속 내려간다 (마지막 3 초 -0.16 deg/s^2)
+  실패  Stabilized: 스틱을 놓으면 선다 — 6.2 -> 2.4 deg/s, 창이 끝날 때까지 계속 내려간다 (마지막 3 초 -0.16 deg/s^2)
+
+== gz_airship_vectored_independent_fin P 0.50 I 0.09, anti-windup lets |I| shrink: True
+  실패  Acro: 스틱을 놓으면 선다 — 7.0 -> 0.3 deg/s, 10.1 초 만에 정지
+  통과  Stabilized: 스틱을 놓으면 선다 — 6.5 -> 0.0 deg/s, 8.5 초 만에 정지
+
+== gz_airship_vectored_independent_fin P 0.70 I 0.09, anti-windup lets |I| shrink: True
+  통과  Acro: 스틱을 놓으면 선다 — 6.9 -> 0.5 deg/s, 9.5 초 만에 정지
+  통과  Stabilized: 스틱을 놓으면 선다 — 6.5 -> 0.2 deg/s, 7.9 초 만에 정지

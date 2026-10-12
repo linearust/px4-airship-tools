@@ -1,0 +1,512 @@
+Option C outside the gate (loop driven directly, noise-free unless stated; from rest, no Manual phase).
+
+1. Stick steps from rest, Acro. push 60 s then release 40 s.
+   push: peak deg/s, overshoot %, 10-90 rise s, hold = first entry into +-10 % that holds 5 s, end = mean / std of the last 10 s, integ = integrator at the end of the push
+   release: gate-style = first |r| < 1 held 1.5 s (s), for good = last time |r| >= 1 (s), under = most negative rate, r@5s / r@10s
+  gz_airship_vectored_independent (vec rigid), stick 0.25 -> 2.50 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  3.10 (+24.2 %) rise 5.5 hold   -   end  1.59/0.19 integ 0.013 | release gate-style 7.7 for good 7.7 under -0.60 r@5  2.12 r@10  0.27
+    P 0.50 I 0.09 b 0.694 | peak  3.09 (+23.4 %) rise 6.8 hold   -   end  1.49/0.02 integ 0.018 | release gate-style 11.8 for good 11.8 under -0.70 r@5  1.60 r@10  1.59
+    P 0.70 I 0.09 b 1.000 | peak  2.90 (+16.2 %) rise 5.2 hold   -   end  1.71/0.10 integ -0.002 | release gate-style 1.4 for good 1.4 under -0.44 r@5 -0.01 r@10 -0.39
+    P 0.70 I 0.09 b 0.900 | peak  2.81 (+12.4 %) rise 5.7 hold   -   end  2.77/0.04 integ -0.013 | release gate-style 1.7 for good 22.4 under -1.06 r@5 -0.56 r@10 -1.02
+    P 0.70 I 0.09 b 0.800 | peak  2.73 ( +9.3 %) rise 6.8 hold 7.7 end  2.71/0.02 integ -0.006 | release gate-style 3.5 for good 3.5 under -0.72 r@5  0.28 r@10 -0.66
+    P 0.70 I 0.20 b 1.000 | peak  3.15 (+25.8 %) rise 4.1 hold   -   end  2.46/0.51 integ -0.004 | release gate-style 1.5 for good 1.5 under -0.71 r@5 -0.38 r@10 -0.66
+    P 0.70 I 0.20 b 0.900 | peak  3.15 (+25.9 %) rise 4.4 hold   -   end  2.61/0.50 integ -0.004 | release gate-style 1.5 for good 1.5 under -0.70 r@5 -0.37 r@10 -0.64
+    P 0.70 I 0.20 b 0.800 | peak  3.10 (+24.0 %) rise 4.7 hold   -   end  2.77/0.41 integ -0.004 | release gate-style 1.5 for good 1.5 under -0.72 r@5 -0.40 r@10 -0.67
+  gz_airship_vectored_independent (vec rigid), stick 0.50 -> 6.67 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  8.27 (+24.1 %) rise 5.5 hold 25.2 end  6.67/0.61 integ 0.010 | release gate-style 7.2 for good 24.9 under -1.69 r@5  3.01 r@10 -0.71
+    P 0.50 I 0.09 b 0.694 | peak  7.82 (+17.3 %) rise 7.0 hold 29.9 end  6.35/0.57 integ 0.030 | release gate-style 8.9 for good 29.1 under -1.23 r@5  4.10 r@10  0.45
+    P 0.70 I 0.09 b 1.000 | peak  7.74 (+16.1 %) rise 5.2 hold 27.1 end  6.18/0.05 integ 0.013 | release gate-style 5.2 for good 5.2 under -0.82 r@5  1.14 r@10 -0.55
+    P 0.70 I 0.09 b 0.900 | peak  7.49 (+12.3 %) rise 5.7 hold 31.1 end  6.07/0.05 integ 0.020 | release gate-style 6.6 for good 6.6 under -0.57 r@5  1.85 r@10 -0.04
+    P 0.70 I 0.09 b 0.800 | peak  7.28 ( +9.2 %) rise 6.8 hold 7.7 end  5.93/0.04 integ 0.023 | release gate-style 6.1 for good 6.1 under -0.53 r@5  1.64 r@10 -0.10
+    P 0.70 I 0.20 b 1.000 | peak  8.28 (+24.2 %) rise 4.1 hold 16.8 end  6.57/0.53 integ -0.003 | release gate-style 3.2 for good 14.4 under -1.96 r@5 -0.80 r@10 -1.84
+    P 0.70 I 0.20 b 0.900 | peak  8.12 (+21.9 %) rise 4.4 hold 17.3 end  6.49/0.46 integ 0.007 | release gate-style 3.5 for good 14.6 under -1.72 r@5 -0.36 r@10 -1.61
+    P 0.70 I 0.20 b 0.800 | peak  7.99 (+19.9 %) rise 4.8 hold 17.6 end  6.66/0.53 integ 0.012 | release gate-style 3.7 for good 14.8 under -1.59 r@5 -0.13 r@10 -1.50
+  gz_airship_vectored_independent (vec rigid), stick 1.00 -> 15.00 deg/s
+    P 0.50 I 0.09 b 1.000 | peak 18.60 (+24.0 %) rise 5.5 hold 22.5 end 15.00/0.59 integ 0.010 | release gate-style 24.7 for good 24.7 under -3.88 r@5  5.66 r@10 -2.12
+    P 0.50 I 0.09 b 0.694 | peak 17.59 (+17.2 %) rise 7.0 hold 24.3 end 14.59/0.35 integ 0.054 | release gate-style 9.4 for good 26.3 under -2.68 r@5  8.11 r@10  0.49
+    P 0.70 I 0.09 b 1.000 | peak 17.42 (+16.1 %) rise 5.2 hold 20.8 end 14.78/0.11 integ 0.007 | release gate-style 5.2 for good 22.4 under -2.75 r@5  1.33 r@10 -2.38
+    P 0.70 I 0.09 b 0.900 | peak 16.85 (+12.3 %) rise 5.7 hold 22.6 end 14.68/0.11 integ 0.028 | release gate-style 5.9 for good 22.7 under -2.05 r@5  2.45 r@10 -1.50
+    P 0.70 I 0.09 b 0.800 | peak 16.38 ( +9.2 %) rise 6.8 hold 7.8 end 14.61/0.09 integ 0.047 | release gate-style 7.0 for good 24.5 under -1.51 r@5  3.46 r@10 -0.69
+    P 0.70 I 0.20 b 1.000 | peak 18.63 (+24.2 %) rise 4.1 hold 15.9 end 14.58/0.28 integ 0.003 | release gate-style 16.1 for good 16.1 under -4.36 r@5 -1.45 r@10 -4.13
+    P 0.70 I 0.20 b 0.900 | peak 18.27 (+21.8 %) rise 4.4 hold 16.0 end 14.74/0.45 integ 0.018 | release gate-style 16.2 for good 16.2 under -3.99 r@5 -0.80 r@10 -3.78
+    P 0.70 I 0.20 b 0.800 | peak 17.98 (+19.8 %) rise 4.8 hold 16.9 end 14.75/0.44 integ 0.036 | release gate-style 16.3 for good 16.3 under -3.60 r@5 -0.00 r@10 -3.41
+
+  gz_airship_vectored_independent_am_fin_drag (vec complete), stick 0.25 -> 2.50 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  2.73 ( +9.2 %) rise 11.0 hold 12.8 end  2.51/0.01 integ 0.014 | release gate-style 9.8 for good 9.8 under -0.68 r@5  1.95 r@10  0.96
+    P 0.50 I 0.09 b 0.694 | peak  2.70 ( +7.8 %) rise 11.9 hold 14.7 end  2.52/0.01 integ 0.021 | release gate-style 12.0 for good 12.0 under -0.68 r@5  1.96 r@10  1.45
+    P 0.70 I 0.09 b 1.000 | peak  2.63 ( +5.1 %) rise 10.7 hold 12.2 end  2.51/0.01 integ 0.014 | release gate-style 8.1 for good 8.1 under -0.38 r@5  1.63 r@10  0.69
+    P 0.70 I 0.09 b 0.900 | peak  2.60 ( +4.0 %) rise 11.7 hold 13.3 end  2.51/0.01 integ 0.017 | release gate-style 9.0 for good 9.0 under -0.38 r@5  1.84 r@10  0.83
+    P 0.70 I 0.09 b 0.800 | peak  2.58 ( +3.2 %) rise 12.8 hold 14.5 end  2.51/0.01 integ 0.021 | release gate-style 9.9 for good 9.9 under -0.39 r@5  1.96 r@10  0.99
+    P 0.70 I 0.20 b 1.000 | peak  2.90 (+15.9 %) rise 7.1 hold 22.6 end  2.50/0.00 integ 0.014 | release gate-style 6.2 for good 6.2 under -0.68 r@5  1.35 r@10  0.07
+    P 0.70 I 0.20 b 0.900 | peak  2.88 (+15.1 %) rise 7.4 hold 22.7 end  2.50/0.00 integ 0.018 | release gate-style 6.6 for good 6.6 under -0.67 r@5  1.44 r@10  0.15
+    P 0.70 I 0.20 b 0.800 | peak  2.86 (+14.4 %) rise 7.7 hold 22.9 end  2.49/0.00 integ 0.021 | release gate-style 6.9 for good 6.9 under -0.67 r@5  1.52 r@10  0.23
+  gz_airship_vectored_independent_am_fin_drag (vec complete), stick 0.50 -> 6.67 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  6.48 ( -2.8 %) rise 22.1 hold 23.9 end  6.45/0.02 integ 0.100 | release gate-style 22.6 for good 22.6 under -0.67 r@5  4.54 r@10  3.21
+    P 0.50 I 0.09 b 0.694 | peak  6.45 ( -3.2 %) rise 24.8 hold 27.1 end  6.42/0.02 integ 0.117 | release gate-style 24.9 for good 24.9 under -0.66 r@5  4.91 r@10  3.66
+    P 0.70 I 0.09 b 1.000 | peak  6.45 ( -3.2 %) rise 24.9 hold 26.4 end  6.41/0.02 integ 0.098 | release gate-style 22.7 for good 22.7 under -0.37 r@5  4.10 r@10  2.85
+    P 0.70 I 0.09 b 0.900 | peak  6.44 ( -3.5 %) rise 26.8 hold 28.4 end  6.39/0.02 integ 0.106 | release gate-style 24.0 for good 24.0 under -0.37 r@5  4.27 r@10  3.02
+    P 0.70 I 0.09 b 0.800 | peak  6.42 ( -3.7 %) rise 28.4 hold 30.1 end  6.38/0.02 integ 0.113 | release gate-style 25.2 for good 25.2 under -0.36 r@5  4.43 r@10  3.22
+    P 0.70 I 0.20 b 1.000 | peak  6.69 ( +0.4 %) rise 9.9 hold 11.4 end  6.63/0.01 integ 0.106 | release gate-style 12.1 for good 12.1 under -0.86 r@5  3.87 r@10  1.78
+    P 0.70 I 0.20 b 0.900 | peak  6.68 ( +0.2 %) rise 10.4 hold 12.0 end  6.63/0.01 integ 0.115 | release gate-style 12.6 for good 12.6 under -0.85 r@5  3.94 r@10  1.95
+    P 0.70 I 0.20 b 0.800 | peak  6.67 ( +0.0 %) rise 10.9 hold 12.6 end  6.62/0.01 integ 0.123 | release gate-style 13.0 for good 13.0 under -0.84 r@5  4.03 r@10  2.11
+  gz_airship_vectored_independent_am_fin_drag (vec complete), stick 1.00 -> 15.00 deg/s
+    P 0.50 I 0.09 b 1.000 | peak 11.81 (-21.3 %) rise   -   hold   -   end 11.80/0.01 integ 0.300 | release gate-style   -   for good 39.4 under  0.89 r@5  8.74 r@10  7.22
+    P 0.50 I 0.09 b 0.694 | peak 11.18 (-25.4 %) rise   -   hold   -   end 11.18/0.01 integ 0.300 | release gate-style   -   for good 39.5 under  0.91 r@5  8.74 r@10  7.25
+    P 0.70 I 0.09 b 1.000 | peak 11.97 (-20.2 %) rise   -   hold   -   end 11.96/0.01 integ 0.300 | release gate-style   -   for good   -   under  1.47 r@5  8.22 r@10  6.76
+    P 0.70 I 0.09 b 0.900 | peak 11.70 (-22.0 %) rise   -   hold   -   end 11.69/0.01 integ 0.300 | release gate-style   -   for good   -   under  1.48 r@5  8.22 r@10  6.77
+    P 0.70 I 0.09 b 0.800 | peak 11.43 (-23.8 %) rise   -   hold   -   end 11.42/0.00 integ 0.300 | release gate-style   -   for good   -   under  1.49 r@5  8.22 r@10  6.79
+    P 0.70 I 0.20 b 1.000 | peak 12.04 (-19.7 %) rise   -   hold   -   end 11.95/0.02 integ 0.300 | release gate-style 18.8 for good 18.8 under -0.76 r@5  7.12 r@10  4.31
+    P 0.70 I 0.20 b 0.900 | peak 11.78 (-21.5 %) rise   -   hold   -   end 11.69/0.02 integ 0.300 | release gate-style 18.9 for good 18.9 under -0.76 r@5  7.12 r@10  4.33
+    P 0.70 I 0.20 b 0.800 | peak 11.51 (-23.2 %) rise   -   hold   -   end 11.42/0.02 integ 0.300 | release gate-style 18.9 for good 18.9 under -0.76 r@5  7.12 r@10  4.35
+
+  gz_cloudship (cld rigid), stick 0.25 -> 2.50 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  3.00 (+20.1 %) rise 3.1 hold 13.8 end  2.50/0.00 integ 0.000 | release gate-style 1.9 for good 1.9 under -0.50 r@5 -0.21 r@10 -0.46
+    P 0.50 I 0.09 b 0.694 | peak  2.73 ( +9.3 %) rise 4.7 hold 5.1 end  2.50/0.00 integ 0.007 | release gate-style 2.8 for good 2.7 under -0.23 r@5  0.28 r@10 -0.23
+    P 0.70 I 0.09 b 1.000 | peak  2.83 (+13.1 %) rise 2.7 hold 10.9 end  2.50/0.00 integ 0.000 | release gate-style 1.5 for good 1.5 under -0.33 r@5 -0.22 r@10 -0.28
+    P 0.70 I 0.09 b 0.900 | peak  2.70 ( +8.0 %) rise 3.3 hold 3.5 end  2.50/0.00 integ 0.003 | release gate-style 1.7 for good 1.7 under -0.20 r@5 -0.04 r@10 -0.19
+    P 0.70 I 0.09 b 0.800 | peak  2.59 ( +3.7 %) rise 4.1 hold 4.3 end  2.50/0.00 integ 0.006 | release gate-style 2.0 for good 2.0 under -0.09 r@5  0.14 r@10 -0.09
+    P 0.70 I 0.20 b 1.000 | peak  3.04 (+21.5 %) rise 2.2 hold 9.4 end  2.50/0.00 integ 0.000 | release gate-style 1.3 for good 1.3 under -0.54 r@5 -0.52 r@10 -0.20
+    P 0.70 I 0.20 b 0.900 | peak  2.94 (+17.5 %) rise 2.4 hold 9.2 end  2.50/0.00 integ 0.003 | release gate-style 1.5 for good 1.5 under -0.44 r@5 -0.40 r@10 -0.20
+    P 0.70 I 0.20 b 0.800 | peak  2.86 (+14.3 %) rise 2.8 hold 9.0 end  2.50/0.00 integ 0.006 | release gate-style 1.7 for good 1.7 under -0.36 r@5 -0.28 r@10 -0.19
+  gz_cloudship (cld rigid), stick 0.50 -> 6.67 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  8.01 (+20.1 %) rise 3.1 hold 13.8 end  6.67/0.01 integ 0.000 | release gate-style 3.1 for good 11.7 under -1.34 r@5 -0.57 r@10 -1.23
+    P 0.50 I 0.09 b 0.694 | peak  7.29 ( +9.3 %) rise 4.7 hold 5.1 end  6.67/0.00 integ 0.018 | release gate-style 4.6 for good 4.6 under -0.62 r@5  0.74 r@10 -0.61
+    P 0.70 I 0.09 b 1.000 | peak  7.54 (+13.1 %) rise 2.7 hold 10.9 end  6.67/0.01 integ 0.000 | release gate-style 2.6 for good 2.6 under -0.87 r@5 -0.58 r@10 -0.75
+    P 0.70 I 0.09 b 0.900 | peak  7.20 ( +8.0 %) rise 3.3 hold 3.5 end  6.67/0.01 integ 0.008 | release gate-style 3.1 for good 3.1 under -0.53 r@5 -0.10 r@10 -0.50
+    P 0.70 I 0.09 b 0.800 | peak  6.91 ( +3.7 %) rise 4.1 hold 4.3 end  6.67/0.01 integ 0.016 | release gate-style 3.7 for good 3.7 under -0.24 r@5  0.37 r@10 -0.24
+    P 0.70 I 0.20 b 1.000 | peak  8.10 (+21.5 %) rise 2.2 hold 9.4 end  6.67/0.01 integ 0.000 | release gate-style 2.2 for good 8.2 under -1.43 r@5 -1.38 r@10 -0.55
+    P 0.70 I 0.20 b 0.900 | peak  7.83 (+17.5 %) rise 2.4 hold 9.2 end  6.67/0.01 integ 0.008 | release gate-style 2.4 for good 7.6 under -1.17 r@5 -1.06 r@10 -0.52
+    P 0.70 I 0.20 b 0.800 | peak  7.62 (+14.3 %) rise 2.8 hold 9.0 end  6.67/0.01 integ 0.016 | release gate-style 2.7 for good 2.7 under -0.95 r@5 -0.74 r@10 -0.50
+  gz_cloudship (cld rigid), stick 1.00 -> 15.00 deg/s
+    P 0.50 I 0.09 b 1.000 | peak 18.01 (+20.1 %) rise 3.1 hold 13.8 end 15.00/0.01 integ 0.000 | release gate-style 15.4 for good 15.4 under -3.01 r@5 -1.28 r@10 -2.77
+    P 0.50 I 0.09 b 0.694 | peak 16.39 ( +9.3 %) rise 4.7 hold 5.1 end 15.00/0.01 integ 0.040 | release gate-style 5.5 for good 14.3 under -1.38 r@5  1.67 r@10 -1.37
+    P 0.70 I 0.09 b 1.000 | peak 16.97 (+13.1 %) rise 2.7 hold 10.9 end 15.00/0.02 integ 0.000 | release gate-style 13.7 for good 13.7 under -1.96 r@5 -1.31 r@10 -1.70
+    P 0.70 I 0.09 b 0.900 | peak 16.20 ( +8.0 %) rise 3.3 hold 3.5 end 15.00/0.01 integ 0.018 | release gate-style 3.8 for good 11.1 under -1.20 r@5 -0.24 r@10 -1.12
+    P 0.70 I 0.09 b 0.800 | peak 15.55 ( +3.7 %) rise 4.1 hold 4.3 end 15.00/0.01 integ 0.037 | release gate-style 4.8 for good 4.8 under -0.55 r@5  0.83 r@10 -0.54
+    P 0.70 I 0.20 b 1.000 | peak 18.23 (+21.5 %) rise 2.2 hold 9.4 end 15.00/0.02 integ 0.000 | release gate-style 10.4 for good 10.4 under -3.21 r@5 -3.12 r@10 -1.23
+    P 0.70 I 0.20 b 0.900 | peak 17.62 (+17.5 %) rise 2.4 hold 9.2 end 15.00/0.01 integ 0.018 | release gate-style 10.4 for good 10.4 under -2.64 r@5 -2.39 r@10 -1.18
+    P 0.70 I 0.20 b 0.800 | peak 17.15 (+14.3 %) rise 2.8 hold 9.0 end 15.00/0.01 integ 0.037 | release gate-style 10.3 for good 10.3 under -2.15 r@5 -1.66 r@10 -1.12
+
+  gz_cloudship_am_fin_drag (cld complete), stick 0.25 -> 2.50 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  2.97 (+18.9 %) rise 4.7 hold 17.9 end  2.53/0.00 integ 0.002 | release gate-style 3.2 for good 3.2 under -0.50 r@5  0.39 r@10 -0.44
+    P 0.50 I 0.09 b 0.694 | peak  2.79 (+11.5 %) rise 6.3 hold 16.5 end  2.52/0.00 integ 0.009 | release gate-style 4.3 for good 4.3 under -0.32 r@5  0.81 r@10 -0.11
+    P 0.70 I 0.09 b 1.000 | peak  2.81 (+12.4 %) rise 4.2 hold 14.3 end  2.52/0.00 integ 0.002 | release gate-style 2.5 for good 2.5 under -0.32 r@5  0.22 r@10 -0.30
+    P 0.70 I 0.09 b 0.900 | peak  2.72 ( +8.8 %) rise 4.9 hold 5.2 end  2.52/0.00 integ 0.005 | release gate-style 2.9 for good 2.9 under -0.22 r@5  0.39 r@10 -0.18
+    P 0.70 I 0.09 b 0.800 | peak  2.64 ( +5.5 %) rise 5.7 hold 6.1 end  2.52/0.00 integ 0.008 | release gate-style 3.3 for good 3.3 under -0.15 r@5  0.55 r@10 -0.06
+    P 0.70 I 0.20 b 1.000 | peak  3.07 (+22.8 %) rise 3.1 hold 12.6 end  2.51/0.00 integ 0.002 | release gate-style 2.1 for good 2.1 under -0.60 r@5 -0.23 r@10 -0.52
+    P 0.70 I 0.20 b 0.900 | peak  3.00 (+20.1 %) rise 3.4 hold 12.6 end  2.51/0.00 integ 0.005 | release gate-style 2.3 for good 2.3 under -0.53 r@5 -0.09 r@10 -0.48
+    P 0.70 I 0.20 b 0.800 | peak  2.94 (+17.6 %) rise 3.7 hold 12.6 end  2.51/0.00 integ 0.008 | release gate-style 2.6 for good 2.6 under -0.46 r@5  0.04 r@10 -0.45
+  gz_cloudship_am_fin_drag (cld complete), stick 0.50 -> 6.67 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  7.19 ( +7.8 %) rise 5.2 hold 5.6 end  6.60/0.04 integ 0.018 | release gate-style 5.8 for good 5.8 under -0.95 r@5  1.49 r@10 -0.64
+    P 0.50 I 0.09 b 0.694 | peak  7.00 ( +5.0 %) rise 7.2 hold 7.8 end  6.56/0.04 integ 0.036 | release gate-style 7.9 for good 7.9 under -0.59 r@5  2.56 r@10  0.25
+    P 0.70 I 0.09 b 1.000 | peak  6.99 ( +4.8 %) rise 4.7 hold 5.0 end  6.60/0.04 integ 0.018 | release gate-style 5.0 for good 5.0 under -0.52 r@5  1.01 r@10 -0.40
+    P 0.70 I 0.09 b 0.900 | peak  6.94 ( +4.2 %) rise 5.5 hold 5.9 end  6.58/0.03 integ 0.026 | release gate-style 5.9 for good 5.9 under -0.32 r@5  1.43 r@10 -0.07
+    P 0.70 I 0.09 b 0.800 | peak  6.91 ( +3.6 %) rise 6.7 hold 7.1 end  6.57/0.02 integ 0.034 | release gate-style 7.0 for good 7.0 under -0.19 r@5  1.85 r@10  0.26
+    P 0.70 I 0.20 b 1.000 | peak  7.63 (+14.4 %) rise 3.3 hold 10.7 end  6.69/0.04 integ 0.018 | release gate-style 3.6 for good 11.1 under -1.28 r@5 -0.20 r@10 -1.19
+    P 0.70 I 0.20 b 0.900 | peak  7.47 (+12.1 %) rise 3.6 hold 10.3 end  6.69/0.04 integ 0.026 | release gate-style 4.0 for good 10.8 under -1.12 r@5  0.14 r@10 -1.09
+    P 0.70 I 0.20 b 0.800 | peak  7.33 (+10.0 %) rise 4.0 hold 4.4 end  6.68/0.04 integ 0.034 | release gate-style 4.3 for good 9.9 under -1.00 r@5  0.49 r@10 -1.00
+  gz_cloudship_am_fin_drag (cld complete), stick 1.00 -> 15.00 deg/s
+    P 0.50 I 0.09 b 1.000 | peak 15.79 ( +5.3 %) rise 7.7 hold 8.1 end 14.66/0.18 integ 0.085 | release gate-style 12.1 for good 12.1 under -0.71 r@5  5.92 r@10  2.11
+    P 0.50 I 0.09 b 0.694 | peak 15.70 ( +4.7 %) rise 12.0 hold 12.6 end 14.63/0.18 integ 0.124 | release gate-style 14.9 for good 14.9 under -0.61 r@5  7.41 r@10  3.60
+    P 0.70 I 0.09 b 1.000 | peak 15.64 ( +4.3 %) rise 7.9 hold 8.3 end 14.70/0.16 integ 0.085 | release gate-style 13.0 for good 13.0 under -0.23 r@5  4.85 r@10  1.99
+    P 0.70 I 0.09 b 0.900 | peak 15.58 ( +3.9 %) rise 10.7 hold 11.0 end 14.68/0.17 integ 0.102 | release gate-style 14.7 for good 14.7 under -0.19 r@5  5.45 r@10  2.59
+    P 0.70 I 0.09 b 0.800 | peak 15.53 ( +3.6 %) rise 12.4 hold 12.9 end 14.66/0.17 integ 0.120 | release gate-style 16.2 for good 16.2 under -0.17 r@5  6.06 r@10  3.15
+    P 0.70 I 0.20 b 1.000 | peak 16.20 ( +8.0 %) rise 3.9 hold 4.2 end 14.83/0.15 integ 0.089 | release gate-style 6.4 for good 13.3 under -1.19 r@5  2.70 r@10 -1.08
+    P 0.70 I 0.20 b 0.900 | peak 16.11 ( +7.4 %) rise 4.4 hold 4.7 end 14.81/0.16 integ 0.108 | release gate-style 7.0 for good 13.1 under -1.06 r@5  3.34 r@10 -0.79
+    P 0.70 I 0.20 b 0.800 | peak 16.02 ( +6.8 %) rise 4.9 hold 5.3 end 14.80/0.17 integ 0.126 | release gate-style 7.6 for good 7.6 under -0.95 r@5  3.96 r@10 -0.49
+
+  gz_airship_vectored_independent_fin (vec fin (2nd case)), stick 0.25 -> 2.50 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  2.72 ( +8.9 %) rise 6.6 hold 7.6 end  2.49/0.00 integ 0.005 | release gate-style 5.2 for good 5.1 under -0.48 r@5  1.05 r@10 -0.19
+    P 0.50 I 0.09 b 0.694 | peak  2.69 ( +7.7 %) rise 7.9 hold 9.2 end  2.50/0.00 integ 0.012 | release gate-style 7.4 for good 7.3 under -0.54 r@5  1.96 r@10  0.19
+    P 0.70 I 0.09 b 1.000 | peak  2.61 ( +4.6 %) rise 5.9 hold 6.7 end  2.49/0.01 integ 0.005 | release gate-style 4.0 for good 4.0 under -0.20 r@5  0.69 r@10 -0.08
+    P 0.70 I 0.09 b 0.900 | peak  2.57 ( +2.7 %) rise 7.3 hold 8.1 end  2.49/0.01 integ 0.008 | release gate-style 4.4 for good 4.4 under -0.13 r@5  0.83 r@10  0.05
+    P 0.70 I 0.09 b 0.800 | peak  2.55 ( +1.9 %) rise 8.7 hold 9.7 end  2.50/0.01 integ 0.011 | release gate-style 5.0 for good 5.0 under -0.09 r@5  0.99 r@10  0.15
+    P 0.70 I 0.20 b 1.000 | peak  2.81 (+12.4 %) rise 4.5 hold 12.4 end  2.49/0.00 integ 0.005 | release gate-style 3.6 for good 3.6 under -0.46 r@5  0.41 r@10 -0.46
+    P 0.70 I 0.20 b 0.900 | peak  2.77 (+10.6 %) rise 5.0 hold 12.2 end  2.49/0.00 integ 0.008 | release gate-style 3.9 for good 3.9 under -0.41 r@5  0.55 r@10 -0.39
+    P 0.70 I 0.20 b 0.800 | peak  2.74 ( +9.6 %) rise 5.4 hold 6.3 end  2.49/0.00 integ 0.011 | release gate-style 4.2 for good 4.2 under -0.38 r@5  0.67 r@10 -0.34
+  gz_airship_vectored_independent_fin (vec fin (2nd case)), stick 0.50 -> 6.67 deg/s
+    P 0.50 I 0.09 b 1.000 | peak  6.74 ( +1.2 %) rise 9.9 hold 11.0 end  6.55/0.07 integ 0.046 | release gate-style 10.8 for good 10.8 under -0.31 r@5  3.56 r@10  1.25
+    P 0.50 I 0.09 b 0.694 | peak  6.66 ( -0.1 %) rise 12.6 hold 14.0 end  6.49/0.07 integ 0.064 | release gate-style 13.8 for good 13.8 under -0.41 r@5  3.75 r@10  2.55
+    P 0.70 I 0.09 b 1.000 | peak  6.64 ( -0.3 %) rise 10.6 hold 11.3 end  6.55/0.06 integ 0.045 | release gate-style 11.3 for good 11.3 under -0.11 r@5  2.81 r@10  1.25
+    P 0.70 I 0.09 b 0.900 | peak  6.62 ( -0.7 %) rise 12.3 hold 13.1 end  6.52/0.06 integ 0.053 | release gate-style 12.9 for good 12.9 under -0.14 r@5  3.11 r@10  1.57
+    P 0.70 I 0.09 b 0.800 | peak  6.60 ( -1.0 %) rise 13.9 hold 14.9 end  6.49/0.06 integ 0.061 | release gate-style 12.9 for good 12.9 under -0.15 r@5  3.66 r@10  1.62
+    P 0.70 I 0.20 b 1.000 | peak  6.95 ( +4.2 %) rise 5.8 hold 6.5 end  6.72/0.04 integ 0.046 | release gate-style 6.8 for good 6.8 under -0.53 r@5  2.17 r@10 -0.22
+    P 0.70 I 0.20 b 0.900 | peak  6.91 ( +3.7 %) rise 6.1 hold 7.0 end  6.71/0.04 integ 0.055 | release gate-style 7.4 for good 7.4 under -0.49 r@5  2.48 r@10 -0.04
+    P 0.70 I 0.20 b 0.800 | peak  6.90 ( +3.5 %) rise 7.0 hold 7.9 end  6.71/0.05 integ 0.063 | release gate-style 7.8 for good 7.8 under -0.47 r@5  2.74 r@10  0.09
+  gz_airship_vectored_independent_fin (vec fin (2nd case)), stick 1.00 -> 15.00 deg/s
+    P 0.50 I 0.09 b 1.000 | peak 14.55 ( -3.0 %) rise 32.8 hold 33.8 end 14.33/0.09 integ 0.208 | release gate-style 25.1 for good 25.1 under -0.11 r@5  8.55 r@10  5.64
+    P 0.50 I 0.09 b 0.694 | peak 14.41 ( -3.9 %) rise 34.8 hold 36.1 end 14.25/0.06 integ 0.245 | release gate-style 28.4 for good 28.4 under  0.17 r@5  9.68 r@10  6.77
+    P 0.70 I 0.09 b 1.000 | peak 14.49 ( -3.4 %) rise 33.2 hold 33.9 end 14.29/0.09 integ 0.203 | release gate-style 25.8 for good 25.8 under  0.11 r@5  7.45 r@10  5.00
+    P 0.70 I 0.09 b 0.900 | peak 14.43 ( -3.8 %) rise 34.3 hold 35.2 end 14.25/0.08 integ 0.220 | release gate-style 27.2 for good 27.2 under  0.12 r@5  7.95 r@10  5.47
+    P 0.70 I 0.09 b 0.800 | peak 14.37 ( -4.2 %) rise 35.4 hold 36.3 end 14.20/0.07 integ 0.237 | release gate-style 28.7 for good 28.7 under  0.18 r@5  8.43 r@10  5.93
+    P 0.70 I 0.20 b 1.000 | peak 15.14 ( +1.0 %) rise 9.7 hold 10.5 end 14.94/0.12 integ 0.222 | release gate-style 12.0 for good 12.0 under -0.72 r@5  5.80 r@10  2.26
+    P 0.70 I 0.20 b 0.900 | peak 15.15 ( +1.0 %) rise 10.5 hold 11.4 end 14.93/0.12 integ 0.240 | release gate-style 12.9 for good 12.9 under -0.73 r@5  6.19 r@10  2.51
+    P 0.70 I 0.20 b 0.800 | peak 15.15 ( +1.0 %) rise 10.8 hold 11.7 end 14.91/0.13 integ 0.259 | release gate-style 13.4 for good 13.3 under -0.75 r@5  6.64 r@10  2.84
+
+2. Actuator sensitivity: the stick 0.5 step under a slower / faster actuator.
+   slew X = CA_AIRSHIP_TLT_R matched to an X deg/s servo; servo 60 = a 60 deg/s servo with TLT_R left at 120; tail_tau X = a first-order lag X s on the Cloudship tail rotor (gz has none; 0.025 = the model's own counterfactual prop lag)
+  gz_airship_vectored_independent (vec rigid) nominal actuator
+    P 0.50 I 0.09 b 1.000 | peak  8.27 (+24.1 %) hold 25.2 end  6.67/0.61 | release gate-style 7.2 for good 24.9 under -1.69
+    P 0.50 I 0.09 b 0.694 | peak  7.82 (+17.3 %) hold 29.9 end  6.35/0.57 | release gate-style 8.9 for good 29.1 under -1.23
+    P 0.70 I 0.09 b 1.000 | peak  7.74 (+16.1 %) hold 27.1 end  6.18/0.05 | release gate-style 5.2 for good 5.2 under -0.82
+    P 0.70 I 0.09 b 0.900 | peak  7.49 (+12.3 %) hold 31.1 end  6.07/0.05 | release gate-style 6.6 for good 6.6 under -0.57
+    P 0.70 I 0.09 b 0.800 | peak  7.28 ( +9.2 %) hold 7.7 end  5.93/0.04 | release gate-style 6.1 for good 6.1 under -0.53
+    P 0.70 I 0.20 b 1.000 | peak  8.28 (+24.2 %) hold 16.8 end  6.57/0.53 | release gate-style 3.2 for good 14.4 under -1.96
+    P 0.70 I 0.20 b 0.900 | peak  8.12 (+21.9 %) hold 17.3 end  6.49/0.46 | release gate-style 3.5 for good 14.6 under -1.72
+    P 0.70 I 0.20 b 0.800 | peak  7.99 (+19.9 %) hold 17.6 end  6.66/0.53 | release gate-style 3.7 for good 14.8 under -1.59
+  gz_airship_vectored_independent (vec rigid) act servo 60
+    P 0.50 I 0.09 b 1.000 | peak  8.47 (+27.0 %) hold 25.7 end  6.93/0.66 | release gate-style 7.1 for good 24.8 under -2.21
+    P 0.50 I 0.09 b 0.694 | peak  7.94 (+19.1 %) hold   -   end  6.41/0.66 | release gate-style 8.8 for good 28.4 under -1.51
+    P 0.70 I 0.09 b 1.000 | peak  7.90 (+18.6 %) hold 26.9 end  6.15/0.05 | release gate-style 5.9 for good 5.9 under -0.76
+    P 0.70 I 0.09 b 0.900 | peak  7.62 (+14.4 %) hold 30.9 end  6.01/0.04 | release gate-style 7.4 for good 7.4 under -0.74
+    P 0.70 I 0.09 b 0.800 | peak  7.42 (+11.3 %) hold 7.4 end  5.95/0.03 | release gate-style 6.6 for good 6.6 under -0.44
+    P 0.70 I 0.20 b 1.000 | peak  8.51 (+27.6 %) hold 17.4 end  6.28/0.45 | release gate-style 3.3 for good 15.1 under -1.83
+    P 0.70 I 0.20 b 0.900 | peak  8.36 (+25.4 %) hold 17.7 end  6.38/0.49 | release gate-style 3.5 for good 15.5 under -1.67
+    P 0.70 I 0.20 b 0.800 | peak  8.20 (+23.0 %) hold 18.2 end  6.43/0.55 | release gate-style 3.8 for good 16.0 under -1.53
+  gz_airship_vectored_independent (vec rigid) act slew 240
+    P 0.50 I 0.09 b 1.000 | peak  8.38 (+25.7 %) hold 23.5 end  7.09/0.57 | release gate-style 6.1 for good 22.9 under -1.85
+    P 0.50 I 0.09 b 0.694 | peak  7.88 (+18.3 %) hold 27.5 end  6.79/0.65 | release gate-style 7.8 for good 26.6 under -1.33
+    P 0.70 I 0.09 b 1.000 | peak  7.82 (+17.3 %) hold 24.8 end  6.21/0.02 | release gate-style 5.1 for good 5.1 under -0.81
+    P 0.70 I 0.09 b 0.900 | peak  7.56 (+13.4 %) hold 28.5 end  6.13/0.12 | release gate-style 6.7 for good 6.7 under -0.59
+    P 0.70 I 0.09 b 0.800 | peak  7.34 (+10.1 %) hold 6.8 end  5.96/0.01 | release gate-style 6.9 for good 6.9 under -0.40
+    P 0.70 I 0.20 b 1.000 | peak  8.44 (+26.6 %) hold 15.3 end  6.16/0.15 | release gate-style 3.4 for good 14.0 under -1.77
+    P 0.70 I 0.20 b 0.900 | peak  8.27 (+24.0 %) hold 15.6 end  6.21/0.25 | release gate-style 3.6 for good 14.3 under -1.59
+    P 0.70 I 0.20 b 0.800 | peak  8.12 (+21.8 %) hold 16.3 end  6.23/0.26 | release gate-style 4.0 for good 14.8 under -1.42
+  gz_airship_vectored_independent (vec rigid) act slew 60
+    P 0.50 I 0.09 b 1.000 | peak  7.98 (+19.6 %) hold 28.8 end  6.12/0.31 | release gate-style 8.9 for good 29.4 under -1.34
+    P 0.50 I 0.09 b 0.694 | peak  7.63 (+14.5 %) hold   -   end  5.85/0.03 | release gate-style 10.4 for good 10.4 under -0.89
+    P 0.70 I 0.09 b 1.000 | peak  7.47 (+12.1 %) hold 33.3 end  6.05/0.03 | release gate-style 4.9 for good 4.9 under -0.87
+    P 0.70 I 0.09 b 0.900 | peak  7.25 ( +8.8 %) hold 7.9 end  5.92/0.03 | release gate-style 5.0 for good 5.0 under -0.79
+    P 0.70 I 0.09 b 0.800 | peak  7.09 ( +6.3 %) hold 9.2 end  6.29/0.46 | release gate-style 4.7 for good 4.7 under -0.91
+    P 0.70 I 0.20 b 1.000 | peak  7.88 (+18.2 %) hold 19.7 end  7.25/0.23 | release gate-style 3.0 for good 15.6 under -2.35
+    P 0.70 I 0.20 b 0.900 | peak  7.77 (+16.5 %) hold 20.4 end  7.19/0.24 | release gate-style 3.2 for good 15.7 under -2.11
+    P 0.70 I 0.20 b 0.800 | peak  7.70 (+15.5 %) hold 21.1 end  7.27/0.16 | release gate-style 3.4 for good 15.9 under -1.96
+
+  gz_airship_vectored_independent_am_fin_drag (vec complete) nominal actuator
+    P 0.50 I 0.09 b 1.000 | peak  6.48 ( -2.8 %) hold 23.9 end  6.45/0.02 | release gate-style 22.6 for good 22.6 under -0.67
+    P 0.50 I 0.09 b 0.694 | peak  6.45 ( -3.2 %) hold 27.1 end  6.42/0.02 | release gate-style 24.9 for good 24.9 under -0.66
+    P 0.70 I 0.09 b 1.000 | peak  6.45 ( -3.2 %) hold 26.4 end  6.41/0.02 | release gate-style 22.7 for good 22.7 under -0.37
+    P 0.70 I 0.09 b 0.900 | peak  6.44 ( -3.5 %) hold 28.4 end  6.39/0.02 | release gate-style 24.0 for good 24.0 under -0.37
+    P 0.70 I 0.09 b 0.800 | peak  6.42 ( -3.7 %) hold 30.1 end  6.38/0.02 | release gate-style 25.2 for good 25.2 under -0.36
+    P 0.70 I 0.20 b 1.000 | peak  6.69 ( +0.4 %) hold 11.4 end  6.63/0.01 | release gate-style 12.1 for good 12.1 under -0.86
+    P 0.70 I 0.20 b 0.900 | peak  6.68 ( +0.2 %) hold 12.0 end  6.63/0.01 | release gate-style 12.6 for good 12.6 under -0.85
+    P 0.70 I 0.20 b 0.800 | peak  6.67 ( +0.0 %) hold 12.6 end  6.62/0.01 | release gate-style 13.0 for good 13.0 under -0.84
+  gz_airship_vectored_independent_am_fin_drag (vec complete) act servo 60
+    P 0.50 I 0.09 b 1.000 | peak  6.50 ( -2.5 %) hold 23.5 end  6.47/0.02 | release gate-style 23.0 for good 23.0 under -0.71
+    P 0.50 I 0.09 b 0.694 | peak  6.47 ( -3.0 %) hold 27.1 end  6.44/0.02 | release gate-style 25.4 for good 25.4 under -0.71
+    P 0.70 I 0.09 b 1.000 | peak  6.48 ( -2.9 %) hold 26.0 end  6.44/0.02 | release gate-style 23.1 for good 23.1 under -0.40
+    P 0.70 I 0.09 b 0.900 | peak  6.46 ( -3.1 %) hold 28.0 end  6.42/0.02 | release gate-style 24.5 for good 24.5 under -0.41
+    P 0.70 I 0.09 b 0.800 | peak  6.44 ( -3.4 %) hold 29.9 end  6.40/0.02 | release gate-style 25.7 for good 25.7 under -0.40
+    P 0.70 I 0.20 b 1.000 | peak  6.71 ( +0.7 %) hold 11.2 end  6.64/0.00 | release gate-style 12.1 for good 12.1 under -0.89
+    P 0.70 I 0.20 b 0.900 | peak  6.70 ( +0.5 %) hold 11.6 end  6.64/0.01 | release gate-style 12.5 for good 12.5 under -0.88
+    P 0.70 I 0.20 b 0.800 | peak  6.69 ( +0.3 %) hold 12.2 end  6.63/0.01 | release gate-style 13.0 for good 13.0 under -0.88
+  gz_airship_vectored_independent_am_fin_drag (vec complete) act slew 240
+    P 0.50 I 0.09 b 1.000 | peak  6.49 ( -2.7 %) hold 22.2 end  6.45/0.02 | release gate-style 22.1 for good 22.1 under -0.70
+    P 0.50 I 0.09 b 0.694 | peak  6.46 ( -3.2 %) hold 25.8 end  6.42/0.02 | release gate-style 24.5 for good 24.5 under -0.70
+    P 0.70 I 0.09 b 1.000 | peak  6.46 ( -3.2 %) hold 24.3 end  6.41/0.02 | release gate-style 22.3 for good 22.3 under -0.39
+    P 0.70 I 0.09 b 0.900 | peak  6.44 ( -3.4 %) hold 26.5 end  6.40/0.02 | release gate-style 23.6 for good 23.6 under -0.39
+    P 0.70 I 0.09 b 0.800 | peak  6.42 ( -3.7 %) hold 28.6 end  6.38/0.02 | release gate-style 24.8 for good 24.8 under -0.39
+    P 0.70 I 0.20 b 1.000 | peak  6.72 ( +0.9 %) hold 10.4 end  6.63/0.02 | release gate-style 11.4 for good 11.4 under -0.93
+    P 0.70 I 0.20 b 0.900 | peak  6.70 ( +0.6 %) hold 10.9 end  6.63/0.02 | release gate-style 11.9 for good 11.8 under -0.92
+    P 0.70 I 0.20 b 0.800 | peak  6.69 ( +0.4 %) hold 11.5 end  6.62/0.02 | release gate-style 12.3 for good 12.3 under -0.90
+  gz_airship_vectored_independent_am_fin_drag (vec complete) act slew 60
+    P 0.50 I 0.09 b 1.000 | peak  6.48 ( -2.8 %) hold 27.0 end  6.45/0.02 | release gate-style 23.5 for good 23.5 under -0.60
+    P 0.50 I 0.09 b 0.694 | peak  6.45 ( -3.3 %) hold 29.8 end  6.41/0.02 | release gate-style 25.8 for good 25.8 under -0.59
+    P 0.70 I 0.09 b 1.000 | peak  6.45 ( -3.2 %) hold 29.9 end  6.41/0.02 | release gate-style 23.5 for good 23.5 under -0.33
+    P 0.70 I 0.09 b 0.900 | peak  6.43 ( -3.5 %) hold 31.5 end  6.39/0.02 | release gate-style 24.8 for good 24.8 under -0.32
+    P 0.70 I 0.09 b 0.800 | peak  6.42 ( -3.8 %) hold 32.9 end  6.37/0.03 | release gate-style 26.1 for good 26.1 under -0.30
+    P 0.70 I 0.20 b 1.000 | peak  6.66 ( -0.1 %) hold 13.6 end  6.64/0.00 | release gate-style 13.5 for good 13.5 under -0.76
+    P 0.70 I 0.20 b 0.900 | peak  6.66 ( -0.1 %) hold 14.1 end  6.63/0.00 | release gate-style 14.0 for good 14.0 under -0.75
+    P 0.70 I 0.20 b 0.800 | peak  6.65 ( -0.2 %) hold 14.6 end  6.63/0.00 | release gate-style 14.4 for good 14.4 under -0.74
+
+  gz_cloudship (cld rigid) nominal actuator
+    P 0.50 I 0.09 b 1.000 | peak  8.01 (+20.1 %) hold 13.8 end  6.67/0.01 | release gate-style 3.1 for good 11.7 under -1.34
+    P 0.50 I 0.09 b 0.694 | peak  7.29 ( +9.3 %) hold 5.1 end  6.67/0.00 | release gate-style 4.6 for good 4.6 under -0.62
+    P 0.70 I 0.09 b 1.000 | peak  7.54 (+13.1 %) hold 10.9 end  6.67/0.01 | release gate-style 2.6 for good 2.6 under -0.87
+    P 0.70 I 0.09 b 0.900 | peak  7.20 ( +8.0 %) hold 3.5 end  6.67/0.01 | release gate-style 3.1 for good 3.1 under -0.53
+    P 0.70 I 0.09 b 0.800 | peak  6.91 ( +3.7 %) hold 4.3 end  6.67/0.01 | release gate-style 3.7 for good 3.7 under -0.24
+    P 0.70 I 0.20 b 1.000 | peak  8.10 (+21.5 %) hold 9.4 end  6.67/0.01 | release gate-style 2.2 for good 8.2 under -1.43
+    P 0.70 I 0.20 b 0.900 | peak  7.83 (+17.5 %) hold 9.2 end  6.67/0.01 | release gate-style 2.4 for good 7.6 under -1.17
+    P 0.70 I 0.20 b 0.800 | peak  7.62 (+14.3 %) hold 9.0 end  6.67/0.01 | release gate-style 2.7 for good 2.7 under -0.95
+  gz_cloudship (cld rigid) act tail_tau 0.025
+    P 0.50 I 0.09 b 1.000 | peak  8.02 (+20.3 %) hold 13.8 end  6.67/0.01 | release gate-style 3.1 for good 11.7 under -1.35
+    P 0.50 I 0.09 b 0.694 | peak  7.30 ( +9.4 %) hold 5.1 end  6.67/0.00 | release gate-style 4.6 for good 4.6 under -0.62
+    P 0.70 I 0.09 b 1.000 | peak  7.56 (+13.4 %) hold 10.9 end  6.67/0.01 | release gate-style 2.6 for good 2.6 under -0.88
+    P 0.70 I 0.09 b 0.900 | peak  7.21 ( +8.2 %) hold 3.5 end  6.67/0.01 | release gate-style 3.1 for good 3.1 under -0.54
+    P 0.70 I 0.09 b 0.800 | peak  6.92 ( +3.8 %) hold 4.3 end  6.67/0.01 | release gate-style 3.7 for good 3.7 under -0.25
+    P 0.70 I 0.20 b 1.000 | peak  8.13 (+22.0 %) hold 9.4 end  6.67/0.01 | release gate-style 2.1 for good 8.2 under -1.46
+    P 0.70 I 0.20 b 0.900 | peak  7.86 (+17.9 %) hold 9.2 end  6.67/0.01 | release gate-style 2.4 for good 7.7 under -1.20
+    P 0.70 I 0.20 b 0.800 | peak  7.64 (+14.6 %) hold 9.0 end  6.67/0.01 | release gate-style 2.7 for good 2.7 under -0.97
+  gz_cloudship (cld rigid) act tail_tau 0.05
+    P 0.50 I 0.09 b 1.000 | peak  8.04 (+20.6 %) hold 13.8 end  6.67/0.01 | release gate-style 3.1 for good 11.7 under -1.37
+    P 0.50 I 0.09 b 0.694 | peak  7.31 ( +9.6 %) hold 5.1 end  6.67/0.00 | release gate-style 4.6 for good 4.6 under -0.63
+    P 0.70 I 0.09 b 1.000 | peak  7.57 (+13.6 %) hold 11.0 end  6.67/0.01 | release gate-style 2.6 for good 2.6 under -0.90
+    P 0.70 I 0.09 b 0.900 | peak  7.22 ( +8.3 %) hold 3.4 end  6.67/0.01 | release gate-style 3.0 for good 3.0 under -0.55
+    P 0.70 I 0.09 b 0.800 | peak  6.92 ( +3.8 %) hold 4.3 end  6.67/0.01 | release gate-style 3.7 for good 3.7 under -0.25
+    P 0.70 I 0.20 b 1.000 | peak  8.17 (+22.5 %) hold 9.4 end  6.67/0.01 | release gate-style 2.1 for good 8.2 under -1.49
+    P 0.70 I 0.20 b 0.900 | peak  7.89 (+18.3 %) hold 9.2 end  6.67/0.01 | release gate-style 2.4 for good 7.8 under -1.22
+    P 0.70 I 0.20 b 0.800 | peak  7.66 (+14.9 %) hold 9.0 end  6.67/0.01 | release gate-style 2.7 for good 2.7 under -0.99
+
+  gz_cloudship_am_fin_drag (cld complete) nominal actuator
+    P 0.50 I 0.09 b 1.000 | peak  7.19 ( +7.8 %) hold 5.6 end  6.60/0.04 | release gate-style 5.8 for good 5.8 under -0.95
+    P 0.50 I 0.09 b 0.694 | peak  7.00 ( +5.0 %) hold 7.8 end  6.56/0.04 | release gate-style 7.9 for good 7.9 under -0.59
+    P 0.70 I 0.09 b 1.000 | peak  6.99 ( +4.8 %) hold 5.0 end  6.60/0.04 | release gate-style 5.0 for good 5.0 under -0.52
+    P 0.70 I 0.09 b 0.900 | peak  6.94 ( +4.2 %) hold 5.9 end  6.58/0.03 | release gate-style 5.9 for good 5.9 under -0.32
+    P 0.70 I 0.09 b 0.800 | peak  6.91 ( +3.6 %) hold 7.1 end  6.57/0.02 | release gate-style 7.0 for good 7.0 under -0.19
+    P 0.70 I 0.20 b 1.000 | peak  7.63 (+14.4 %) hold 10.7 end  6.69/0.04 | release gate-style 3.6 for good 11.1 under -1.28
+    P 0.70 I 0.20 b 0.900 | peak  7.47 (+12.1 %) hold 10.3 end  6.69/0.04 | release gate-style 4.0 for good 10.8 under -1.12
+    P 0.70 I 0.20 b 0.800 | peak  7.33 (+10.0 %) hold 4.4 end  6.68/0.04 | release gate-style 4.3 for good 9.9 under -1.00
+  gz_cloudship_am_fin_drag (cld complete) act tail_tau 0.025
+    P 0.50 I 0.09 b 1.000 | peak  7.20 ( +7.9 %) hold 5.6 end  6.60/0.04 | release gate-style 5.7 for good 5.7 under -0.96
+    P 0.50 I 0.09 b 0.694 | peak  7.00 ( +5.0 %) hold 7.8 end  6.56/0.04 | release gate-style 7.9 for good 7.9 under -0.60
+    P 0.70 I 0.09 b 1.000 | peak  6.99 ( +4.8 %) hold 5.0 end  6.60/0.04 | release gate-style 5.0 for good 5.0 under -0.52
+    P 0.70 I 0.09 b 0.900 | peak  6.94 ( +4.2 %) hold 5.9 end  6.59/0.03 | release gate-style 5.9 for good 5.8 under -0.32
+    P 0.70 I 0.09 b 0.800 | peak  6.91 ( +3.6 %) hold 7.1 end  6.57/0.02 | release gate-style 7.0 for good 7.0 under -0.19
+    P 0.70 I 0.20 b 1.000 | peak  7.65 (+14.7 %) hold 10.8 end  6.69/0.04 | release gate-style 3.6 for good 11.2 under -1.30
+    P 0.70 I 0.20 b 0.900 | peak  7.49 (+12.4 %) hold 10.3 end  6.69/0.04 | release gate-style 3.9 for good 10.8 under -1.14
+    P 0.70 I 0.20 b 0.800 | peak  7.35 (+10.2 %) hold 9.1 end  6.68/0.04 | release gate-style 4.3 for good 10.2 under -1.02
+  gz_cloudship_am_fin_drag (cld complete) act tail_tau 0.05
+    P 0.50 I 0.09 b 1.000 | peak  7.20 ( +8.1 %) hold 5.6 end  6.60/0.04 | release gate-style 5.7 for good 5.7 under -0.97
+    P 0.50 I 0.09 b 0.694 | peak  7.00 ( +5.0 %) hold 7.7 end  6.56/0.04 | release gate-style 7.9 for good 7.9 under -0.60
+    P 0.70 I 0.09 b 1.000 | peak  6.99 ( +4.9 %) hold 5.0 end  6.60/0.04 | release gate-style 5.0 for good 5.0 under -0.53
+    P 0.70 I 0.09 b 0.900 | peak  6.95 ( +4.2 %) hold 5.8 end  6.59/0.03 | release gate-style 5.8 for good 5.8 under -0.33
+    P 0.70 I 0.09 b 0.800 | peak  6.91 ( +3.7 %) hold 7.1 end  6.57/0.02 | release gate-style 6.9 for good 6.9 under -0.19
+    P 0.70 I 0.20 b 1.000 | peak  7.66 (+15.0 %) hold 10.8 end  6.69/0.04 | release gate-style 3.6 for good 11.2 under -1.33
+    P 0.70 I 0.20 b 0.900 | peak  7.51 (+12.6 %) hold 10.4 end  6.69/0.04 | release gate-style 3.9 for good 10.9 under -1.16
+    P 0.70 I 0.20 b 0.800 | peak  7.36 (+10.4 %) hold 9.5 end  6.68/0.04 | release gate-style 4.3 for good 10.3 under -1.03
+
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) nominal actuator
+    P 0.50 I 0.09 b 1.000 | peak  6.74 ( +1.2 %) hold 11.0 end  6.55/0.07 | release gate-style 10.8 for good 10.8 under -0.31
+    P 0.50 I 0.09 b 0.694 | peak  6.66 ( -0.1 %) hold 14.0 end  6.49/0.07 | release gate-style 13.8 for good 13.8 under -0.41
+    P 0.70 I 0.09 b 1.000 | peak  6.64 ( -0.3 %) hold 11.3 end  6.55/0.06 | release gate-style 11.3 for good 11.3 under -0.11
+    P 0.70 I 0.09 b 0.900 | peak  6.62 ( -0.7 %) hold 13.1 end  6.52/0.06 | release gate-style 12.9 for good 12.9 under -0.14
+    P 0.70 I 0.09 b 0.800 | peak  6.60 ( -1.0 %) hold 14.9 end  6.49/0.06 | release gate-style 12.9 for good 12.9 under -0.15
+    P 0.70 I 0.20 b 1.000 | peak  6.95 ( +4.2 %) hold 6.5 end  6.72/0.04 | release gate-style 6.8 for good 6.8 under -0.53
+    P 0.70 I 0.20 b 0.900 | peak  6.91 ( +3.7 %) hold 7.0 end  6.71/0.04 | release gate-style 7.4 for good 7.4 under -0.49
+    P 0.70 I 0.20 b 0.800 | peak  6.90 ( +3.5 %) hold 7.9 end  6.71/0.05 | release gate-style 7.8 for good 7.8 under -0.47
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) act servo 60
+    P 0.50 I 0.09 b 1.000 | peak  6.73 ( +1.0 %) hold 10.4 end  6.56/0.06 | release gate-style 10.7 for good 10.7 under -0.36
+    P 0.50 I 0.09 b 0.694 | peak  6.65 ( -0.2 %) hold 13.8 end  6.50/0.06 | release gate-style 14.2 for good 14.2 under -0.51
+    P 0.70 I 0.09 b 1.000 | peak  6.62 ( -0.7 %) hold 10.4 end  6.56/0.03 | release gate-style 10.7 for good 10.7 under -0.15
+    P 0.70 I 0.09 b 0.900 | peak  6.60 ( -0.9 %) hold 13.3 end  6.54/0.04 | release gate-style 12.5 for good 12.5 under -0.18
+    P 0.70 I 0.09 b 0.800 | peak  6.59 ( -1.2 %) hold 15.1 end  6.52/0.04 | release gate-style 13.7 for good 13.7 under -0.21
+    P 0.70 I 0.20 b 1.000 | peak  6.93 ( +3.9 %) hold 6.5 end  6.69/0.03 | release gate-style 6.7 for good 6.7 under -0.60
+    P 0.70 I 0.20 b 0.900 | peak  6.89 ( +3.4 %) hold 6.9 end  6.69/0.03 | release gate-style 7.2 for good 7.2 under -0.53
+    P 0.70 I 0.20 b 0.800 | peak  6.87 ( +3.1 %) hold 7.4 end  6.69/0.03 | release gate-style 7.8 for good 7.8 under -0.47
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) act slew 240
+    P 0.50 I 0.09 b 1.000 | peak  6.81 ( +2.1 %) hold 9.4 end  6.57/0.09 | release gate-style 10.1 for good 10.1 under -0.37
+    P 0.50 I 0.09 b 0.694 | peak  6.69 ( +0.3 %) hold 12.7 end  6.50/0.09 | release gate-style 13.3 for good 13.3 under -0.45
+    P 0.70 I 0.09 b 1.000 | peak  6.68 ( +0.2 %) hold 9.4 end  6.56/0.07 | release gate-style 10.3 for good 10.3 under -0.06
+    P 0.70 I 0.09 b 0.900 | peak  6.65 ( -0.2 %) hold 11.2 end  6.53/0.07 | release gate-style 11.9 for good 11.9 under -0.09
+    P 0.70 I 0.09 b 0.800 | peak  6.63 ( -0.6 %) hold 13.2 end  6.50/0.07 | release gate-style 12.0 for good 12.0 under -0.10
+    P 0.70 I 0.20 b 1.000 | peak  7.03 ( +5.4 %) hold 5.6 end  6.75/0.04 | release gate-style 6.0 for good 6.0 under -0.64
+    P 0.70 I 0.20 b 0.900 | peak  6.99 ( +4.8 %) hold 6.1 end  6.74/0.05 | release gate-style 6.5 for good 6.5 under -0.56
+    P 0.70 I 0.20 b 0.800 | peak  6.95 ( +4.2 %) hold 6.7 end  6.74/0.05 | release gate-style 7.0 for good 7.0 under -0.52
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) act slew 60
+    P 0.50 I 0.09 b 1.000 | peak  6.65 ( -0.3 %) hold 13.2 end  6.52/0.05 | release gate-style 12.0 for good 12.0 under -0.27
+    P 0.50 I 0.09 b 0.694 | peak  6.61 ( -0.9 %) hold 16.3 end  6.47/0.05 | release gate-style 14.9 for good 14.9 under -0.37
+    P 0.70 I 0.09 b 1.000 | peak  6.59 ( -1.1 %) hold 14.3 end  6.54/0.03 | release gate-style 13.0 for good 13.0 under -0.20
+    P 0.70 I 0.09 b 0.900 | peak  6.57 ( -1.4 %) hold 16.2 end  6.51/0.03 | release gate-style 13.8 for good 13.8 under -0.23
+    P 0.70 I 0.09 b 0.800 | peak  6.55 ( -1.7 %) hold 18.0 end  6.49/0.03 | release gate-style 14.2 for good 14.2 under -0.23
+    P 0.70 I 0.20 b 1.000 | peak  6.80 ( +1.9 %) hold 8.5 end  6.66/0.03 | release gate-style 8.5 for good 8.5 under -0.40
+    P 0.70 I 0.20 b 0.900 | peak  6.79 ( +1.9 %) hold 9.3 end  6.66/0.03 | release gate-style 8.9 for good 8.9 under -0.39
+    P 0.70 I 0.20 b 0.800 | peak  6.79 ( +1.9 %) hold 9.7 end  6.66/0.04 | release gate-style 9.3 for good 9.3 under -0.37
+
+3. Wind steps: a world-z couple of scale x (authority / 54) N m stepped on after 40 s at the stick, held 60 s.
+   peak = worst deviation from the pre-wind rate (deg/s), recover = last time |dev| > 0.5 deg/s (s), integ before -> end
+  gz_airship_vectored_independent (vec rigid) wind x1 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.76 at   6.0 s, recover 14.1, end dev +0.01, integ 0.0000 -> 0.0186
+    P 0.50 I 0.09 b 0.694 | tau 1.000 N m, base  0.00, peak dev  -1.76 at   6.0 s, recover 14.1, end dev +0.01, integ 0.0000 -> 0.0186
+    P 0.70 I 0.09 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.49 at   5.2 s, recover 13.6, end dev -0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 0.900 | tau 1.000 N m, base  0.00, peak dev  -1.49 at   5.2 s, recover 13.6, end dev -0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 0.800 | tau 1.000 N m, base  0.00, peak dev  -1.49 at   5.2 s, recover 13.6, end dev -0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.27 at   4.5 s, recover 9.1, end dev +0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 0.900 | tau 1.000 N m, base  0.00, peak dev  -1.27 at   4.5 s, recover 9.1, end dev +0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 0.800 | tau 1.000 N m, base  0.00, peak dev  -1.27 at   4.5 s, recover 9.1, end dev +0.01, integ 0.0000 -> 0.0185
+  gz_airship_vectored_independent (vec rigid) wind x5 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -6.66 at   5.5 s, recover 31.5, end dev -0.03, integ 0.0000 -> 0.0928
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base  0.00, peak dev  -6.66 at   5.5 s, recover 31.5, end dev -0.03, integ 0.0000 -> 0.0928
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -5.53 at   5.3 s, recover 20.4, end dev -0.05, integ 0.0000 -> 0.0926
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base  0.00, peak dev  -5.53 at   5.3 s, recover 20.4, end dev -0.05, integ 0.0000 -> 0.0926
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base  0.00, peak dev  -5.53 at   5.3 s, recover 20.4, end dev -0.05, integ 0.0000 -> 0.0926
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -4.91 at   3.7 s, recover 19.9, end dev -0.04, integ 0.0000 -> 0.0926
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base  0.00, peak dev  -4.91 at   3.7 s, recover 19.9, end dev -0.04, integ 0.0000 -> 0.0926
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base  0.00, peak dev  -4.91 at   3.7 s, recover 19.9, end dev -0.04, integ 0.0000 -> 0.0926
+  gz_airship_vectored_independent (vec rigid) wind x5 at stick 0.5
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base  6.01, peak dev  -6.03 at   5.7 s, recover   -  , end dev +0.69, integ 0.0012 -> 0.0928
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base  5.88, peak dev  -6.34 at   5.6 s, recover   -  , end dev +0.81, integ 0.0137 -> 0.1106
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base  6.18, peak dev  -5.24 at   4.4 s, recover   -  , end dev +0.51, integ -0.0018 -> 0.0926
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base  6.13, peak dev  -5.46 at   4.4 s, recover   -  , end dev +0.55, integ 0.0020 -> 0.1007
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base  7.19, peak dev  -7.02 at   5.6 s, recover   -  , end dev -0.52, integ 0.0028 -> 0.1088
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base  6.57, peak dev  -3.58 at   4.2 s, recover 20.3, end dev +0.11, integ 0.0126 -> 0.0926
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base  6.59, peak dev  -3.61 at   4.2 s, recover 20.2, end dev +0.09, integ 0.0207 -> 0.1007
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base  6.36, peak dev  -3.24 at   4.2 s, recover 22.1, end dev +0.32, integ 0.0314 -> 0.1089
+  gz_airship_vectored_independent (vec rigid) wind x5 at stick 1.0
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base 14.39, peak dev  -6.13 at   5.8 s, recover   -  , end dev +0.69, integ 0.0011 -> 0.0928
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base 14.38, peak dev  -6.25 at   5.8 s, recover   -  , end dev +0.67, integ 0.0394 -> 0.1329
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base 14.78, peak dev  -5.46 at   4.4 s, recover 19.2, end dev +0.28, integ -0.0001 -> 0.0926
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base 14.68, peak dev  -5.39 at   4.4 s, recover 35.1, end dev +0.38, integ 0.0178 -> 0.1109
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base 14.61, peak dev  -5.39 at   4.4 s, recover 40.1, end dev +0.44, integ 0.0347 -> 0.1292
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base 15.42, peak dev  -4.49 at   4.3 s, recover 37.6, end dev -0.35, integ 0.0057 -> 0.0926
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base 15.17, peak dev  -4.07 at   4.3 s, recover 16.9, end dev -0.12, integ 0.0274 -> 0.1109
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base 15.14, peak dev  -4.04 at   4.3 s, recover 18.5, end dev -0.09, integ 0.0457 -> 0.1292
+
+  gz_airship_vectored_independent_am_fin_drag (vec complete) wind x1 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.19 at  10.7 s, recover 19.9, end dev -0.06, integ 0.0000 -> 0.0173
+    P 0.50 I 0.09 b 0.694 | tau 1.000 N m, base  0.00, peak dev  -1.19 at  10.7 s, recover 19.9, end dev -0.06, integ 0.0000 -> 0.0173
+    P 0.70 I 0.09 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.07 at   9.5 s, recover 18.6, end dev -0.00, integ 0.0000 -> 0.0181
+    P 0.70 I 0.09 b 0.900 | tau 1.000 N m, base  0.00, peak dev  -1.07 at   9.5 s, recover 18.6, end dev -0.00, integ 0.0000 -> 0.0181
+    P 0.70 I 0.09 b 0.800 | tau 1.000 N m, base  0.00, peak dev  -1.07 at   9.5 s, recover 18.6, end dev -0.00, integ 0.0000 -> 0.0181
+    P 0.70 I 0.20 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -0.87 at   7.5 s, recover 12.6, end dev +0.02, integ 0.0000 -> 0.0190
+    P 0.70 I 0.20 b 0.900 | tau 1.000 N m, base  0.00, peak dev  -0.87 at   7.5 s, recover 12.6, end dev +0.02, integ 0.0000 -> 0.0190
+    P 0.70 I 0.20 b 0.800 | tau 1.000 N m, base  0.00, peak dev  -0.87 at   7.5 s, recover 12.6, end dev +0.02, integ 0.0000 -> 0.0190
+  gz_airship_vectored_independent_am_fin_drag (vec complete) wind x5 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -3.67 at   8.2 s, recover 46.7, end dev +0.04, integ 0.0000 -> 0.0895
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base  0.00, peak dev  -3.67 at   8.2 s, recover 46.7, end dev +0.04, integ 0.0000 -> 0.0895
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -3.33 at   7.8 s, recover 30.8, end dev +0.08, integ 0.0000 -> 0.0919
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base  0.00, peak dev  -3.33 at   7.8 s, recover 30.8, end dev +0.08, integ 0.0000 -> 0.0919
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base  0.00, peak dev  -3.33 at   7.8 s, recover 30.8, end dev +0.08, integ 0.0000 -> 0.0919
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -2.97 at   6.6 s, recover 31.3, end dev +0.05, integ 0.0000 -> 0.0942
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base  0.00, peak dev  -2.97 at   6.6 s, recover 31.3, end dev +0.05, integ 0.0000 -> 0.0942
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base  0.00, peak dev  -2.97 at   6.6 s, recover 31.3, end dev +0.05, integ 0.0000 -> 0.0942
+  gz_airship_vectored_independent_am_fin_drag (vec complete) wind x5 at stick 0.5
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base  6.32, peak dev  -2.09 at   7.3 s, recover 30.4, end dev +0.18, integ 0.0927 -> 0.1904
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base  6.26, peak dev  -2.08 at   7.3 s, recover 29.5, end dev +0.24, integ 0.1083 -> 0.2082
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base  6.24, peak dev  -1.91 at   7.1 s, recover 29.6, end dev +0.20, integ 0.0890 -> 0.1880
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base  6.21, peak dev  -1.91 at   7.1 s, recover 29.0, end dev +0.24, integ 0.0958 -> 0.1960
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base  6.17, peak dev  -1.90 at   7.1 s, recover 28.5, end dev +0.28, integ 0.1026 -> 0.2041
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base  6.64, peak dev  -1.75 at   5.4 s, recover 19.4, end dev -0.01, integ 0.1035 -> 0.1969
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base  6.63, peak dev  -1.75 at   5.4 s, recover 19.4, end dev -0.01, integ 0.1115 -> 0.2050
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base  6.63, peak dev  -1.75 at   5.4 s, recover 19.4, end dev -0.00, integ 0.1195 -> 0.2131
+  gz_airship_vectored_independent_am_fin_drag (vec complete) wind x5 at stick 1.0
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base 11.71, peak dev  -1.47 at  35.2 s, recover   -  , end dev -1.46, integ 0.3000 -> 0.3000
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base 11.08, peak dev  -1.57 at  41.3 s, recover   -  , end dev -1.54, integ 0.3000 -> 0.3000
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base 11.86, peak dev  -1.34 at  35.0 s, recover   -  , end dev -1.33, integ 0.3000 -> 0.3000
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base 11.62, peak dev  -1.40 at  39.2 s, recover   -  , end dev -1.39, integ 0.3000 -> 0.3000
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base 11.35, peak dev  -1.44 at   9.7 s, recover   -  , end dev -1.43, integ 0.3000 -> 0.3000
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base 11.88, peak dev  -1.38 at  23.5 s, recover   -  , end dev -1.37, integ 0.3000 -> 0.3000
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base 11.60, peak dev  -1.40 at  25.6 s, recover   -  , end dev -1.39, integ 0.3000 -> 0.3000
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base 11.32, peak dev  -1.42 at  27.8 s, recover   -  , end dev -1.41, integ 0.3000 -> 0.3000
+
+  gz_cloudship (cld rigid) wind x1 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 0.083 N m, base  0.00, peak dev  -1.39 at   4.1 s, recover 11.0, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.50 I 0.09 b 0.694 | tau 0.083 N m, base  0.00, peak dev  -1.39 at   4.1 s, recover 11.0, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 1.000 | tau 0.083 N m, base  0.00, peak dev  -1.13 at   3.7 s, recover 10.9, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 0.900 | tau 0.083 N m, base  0.00, peak dev  -1.13 at   3.7 s, recover 10.9, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 0.800 | tau 0.083 N m, base  0.00, peak dev  -1.13 at   3.7 s, recover 10.9, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 1.000 | tau 0.083 N m, base  0.00, peak dev  -0.97 at   2.9 s, recover 6.3, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 0.900 | tau 0.083 N m, base  0.00, peak dev  -0.97 at   2.9 s, recover 6.3, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 0.800 | tau 0.083 N m, base  0.00, peak dev  -0.97 at   2.9 s, recover 6.3, end dev +0.00, integ 0.0000 -> 0.0185
+  gz_cloudship (cld rigid) wind x5 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 0.415 N m, base  0.00, peak dev  -6.95 at   4.1 s, recover 15.1, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.50 I 0.09 b 0.694 | tau 0.415 N m, base  0.00, peak dev  -6.95 at   4.1 s, recover 15.1, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.70 I 0.09 b 1.000 | tau 0.415 N m, base  0.00, peak dev  -5.63 at   3.7 s, recover 19.6, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.70 I 0.09 b 0.900 | tau 0.415 N m, base  0.00, peak dev  -5.63 at   3.7 s, recover 19.6, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.70 I 0.09 b 0.800 | tau 0.415 N m, base  0.00, peak dev  -5.63 at   3.7 s, recover 19.6, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.70 I 0.20 b 1.000 | tau 0.415 N m, base  0.00, peak dev  -4.83 at   2.9 s, recover 9.4, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.70 I 0.20 b 0.900 | tau 0.415 N m, base  0.00, peak dev  -4.83 at   2.9 s, recover 9.4, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.70 I 0.20 b 0.800 | tau 0.415 N m, base  0.00, peak dev  -4.83 at   2.9 s, recover 9.4, end dev +0.00, integ 0.0000 -> 0.0924
+  gz_cloudship (cld rigid) wind x5 at stick 0.5
+    P 0.50 I 0.09 b 1.000 | tau 0.415 N m, base  6.66, peak dev  -6.94 at   4.1 s, recover 15.1, end dev +0.00, integ 0.0000 -> 0.0924
+    P 0.50 I 0.09 b 0.694 | tau 0.415 N m, base  6.66, peak dev  -6.94 at   4.1 s, recover 15.1, end dev +0.01, integ 0.0178 -> 0.1102
+    P 0.70 I 0.09 b 1.000 | tau 0.415 N m, base  6.67, peak dev  -5.64 at   3.7 s, recover 19.8, end dev -0.01, integ 0.0000 -> 0.0924
+    P 0.70 I 0.09 b 0.900 | tau 0.415 N m, base  6.67, peak dev  -5.64 at   3.7 s, recover 19.8, end dev -0.00, integ 0.0082 -> 0.1006
+    P 0.70 I 0.09 b 0.800 | tau 0.415 N m, base  6.67, peak dev  -5.64 at   3.7 s, recover 19.8, end dev -0.00, integ 0.0163 -> 0.1087
+    P 0.70 I 0.20 b 1.000 | tau 0.415 N m, base  6.67, peak dev  -4.82 at   2.9 s, recover 9.3, end dev -0.00, integ -0.0000 -> 0.0924
+    P 0.70 I 0.20 b 0.900 | tau 0.415 N m, base  6.67, peak dev  -4.82 at   2.9 s, recover 9.3, end dev -0.00, integ 0.0081 -> 0.1006
+    P 0.70 I 0.20 b 0.800 | tau 0.415 N m, base  6.67, peak dev  -4.82 at   2.9 s, recover 9.3, end dev -0.00, integ 0.0163 -> 0.1087
+  gz_cloudship (cld rigid) wind x5 at stick 1.0
+    P 0.50 I 0.09 b 1.000 | tau 0.415 N m, base 14.99, peak dev  -6.93 at   4.0 s, recover 15.2, end dev +0.01, integ 0.0000 -> 0.0924
+    P 0.50 I 0.09 b 0.694 | tau 0.415 N m, base 14.99, peak dev  -6.93 at   4.0 s, recover 15.1, end dev +0.01, integ 0.0401 -> 0.1325
+    P 0.70 I 0.09 b 1.000 | tau 0.415 N m, base 15.01, peak dev  -5.66 at   3.6 s, recover 19.9, end dev -0.01, integ 0.0000 -> 0.0924
+    P 0.70 I 0.09 b 0.900 | tau 0.415 N m, base 15.01, peak dev  -5.65 at   3.6 s, recover 19.9, end dev -0.00, integ 0.0184 -> 0.1108
+    P 0.70 I 0.09 b 0.800 | tau 0.415 N m, base 15.00, peak dev  -5.65 at   3.6 s, recover 19.9, end dev -0.00, integ 0.0367 -> 0.1291
+    P 0.70 I 0.20 b 1.000 | tau 0.415 N m, base 15.00, peak dev  -4.82 at   3.0 s, recover 9.3, end dev +0.00, integ -0.0000 -> 0.0924
+    P 0.70 I 0.20 b 0.900 | tau 0.415 N m, base 15.00, peak dev  -4.82 at   3.0 s, recover 9.3, end dev +0.00, integ 0.0183 -> 0.1108
+    P 0.70 I 0.20 b 0.800 | tau 0.415 N m, base 15.00, peak dev  -4.82 at   3.0 s, recover 9.3, end dev +0.00, integ 0.0366 -> 0.1291
+
+  gz_cloudship_am_fin_drag (cld complete) wind x1 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 0.083 N m, base  0.00, peak dev  -1.20 at   5.7 s, recover 13.2, end dev -0.00, integ 0.0000 -> 0.0189
+    P 0.50 I 0.09 b 0.694 | tau 0.083 N m, base  0.00, peak dev  -1.20 at   5.7 s, recover 13.2, end dev -0.00, integ 0.0000 -> 0.0189
+    P 0.70 I 0.09 b 1.000 | tau 0.083 N m, base  0.00, peak dev  -1.01 at   5.2 s, recover 12.7, end dev -0.00, integ 0.0000 -> 0.0186
+    P 0.70 I 0.09 b 0.900 | tau 0.083 N m, base  0.00, peak dev  -1.01 at   5.2 s, recover 12.7, end dev -0.00, integ 0.0000 -> 0.0186
+    P 0.70 I 0.09 b 0.800 | tau 0.083 N m, base  0.00, peak dev  -1.01 at   5.2 s, recover 12.7, end dev -0.00, integ 0.0000 -> 0.0186
+    P 0.70 I 0.20 b 1.000 | tau 0.083 N m, base  0.00, peak dev  -0.85 at   3.9 s, recover 7.7, end dev -0.00, integ 0.0000 -> 0.0193
+    P 0.70 I 0.20 b 0.900 | tau 0.083 N m, base  0.00, peak dev  -0.85 at   3.9 s, recover 7.7, end dev -0.00, integ 0.0000 -> 0.0193
+    P 0.70 I 0.20 b 0.800 | tau 0.083 N m, base  0.00, peak dev  -0.85 at   3.9 s, recover 7.7, end dev -0.00, integ 0.0000 -> 0.0193
+  gz_cloudship_am_fin_drag (cld complete) wind x5 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 0.415 N m, base  0.00, peak dev  -5.52 at   5.3 s, recover 26.6, end dev +0.01, integ 0.0000 -> 0.0782
+    P 0.50 I 0.09 b 0.694 | tau 0.415 N m, base  0.00, peak dev  -5.52 at   5.3 s, recover 26.6, end dev +0.01, integ 0.0000 -> 0.0782
+    P 0.70 I 0.09 b 1.000 | tau 0.415 N m, base  0.00, peak dev  -4.72 at   4.9 s, recover 17.2, end dev +0.02, integ 0.0000 -> 0.0742
+    P 0.70 I 0.09 b 0.900 | tau 0.415 N m, base  0.00, peak dev  -4.72 at   4.9 s, recover 17.2, end dev +0.02, integ 0.0000 -> 0.0742
+    P 0.70 I 0.09 b 0.800 | tau 0.415 N m, base  0.00, peak dev  -4.72 at   4.9 s, recover 17.2, end dev +0.02, integ 0.0000 -> 0.0742
+    P 0.70 I 0.20 b 1.000 | tau 0.415 N m, base  0.00, peak dev  -4.04 at   3.8 s, recover 16.8, end dev +0.00, integ 0.0000 -> 0.0894
+    P 0.70 I 0.20 b 0.900 | tau 0.415 N m, base  0.00, peak dev  -4.04 at   3.8 s, recover 16.8, end dev +0.00, integ 0.0000 -> 0.0894
+    P 0.70 I 0.20 b 0.800 | tau 0.415 N m, base  0.00, peak dev  -4.04 at   3.8 s, recover 16.8, end dev +0.00, integ 0.0000 -> 0.0894
+  gz_cloudship_am_fin_drag (cld complete) wind x5 at stick 0.5
+    P 0.50 I 0.09 b 1.000 | tau 0.415 N m, base  6.64, peak dev  -7.34 at  52.7 s, recover   -  , end dev -6.00, integ 0.0134 -> 0.3000
+    P 0.50 I 0.09 b 0.694 | tau 0.415 N m, base  6.76, peak dev  -7.65 at  50.2 s, recover   -  , end dev -6.04, integ 0.0310 -> 0.3000
+    P 0.70 I 0.09 b 1.000 | tau 0.415 N m, base  6.68, peak dev  -7.18 at  53.5 s, recover   -  , end dev -6.29, integ 0.0142 -> 0.3000
+    P 0.70 I 0.09 b 0.900 | tau 0.415 N m, base  6.71, peak dev  -7.29 at  52.3 s, recover   -  , end dev -6.22, integ 0.0221 -> 0.3000
+    P 0.70 I 0.09 b 0.800 | tau 0.415 N m, base  6.74, peak dev  -7.43 at  51.2 s, recover   -  , end dev -6.17, integ 0.0302 -> 0.3000
+    P 0.70 I 0.20 b 1.000 | tau 0.415 N m, base  6.49, peak dev -14.36 at  54.0 s, recover   -  , end dev -2.91, integ 0.0152 -> 0.3000
+    P 0.70 I 0.20 b 0.900 | tau 0.415 N m, base  6.51, peak dev -14.55 at  54.6 s, recover   -  , end dev -3.37, integ 0.0230 -> 0.3000
+    P 0.70 I 0.20 b 0.800 | tau 0.415 N m, base  6.53, peak dev -14.70 at  55.0 s, recover   -  , end dev -4.08, integ 0.0307 -> 0.3000
+  gz_cloudship_am_fin_drag (cld complete) wind x5 at stick 1.0
+    P 0.50 I 0.09 b 1.000 | tau 0.415 N m, base 14.98, peak dev  -3.33 at   5.9 s, recover 57.7, end dev +0.06, integ 0.0851 -> 0.1664
+    P 0.50 I 0.09 b 0.694 | tau 0.415 N m, base 14.75, peak dev  -3.14 at   4.7 s, recover 59.6, end dev +0.44, integ 0.1246 -> 0.2077
+    P 0.70 I 0.09 b 1.000 | tau 0.415 N m, base 14.97, peak dev  -3.00 at   5.6 s, recover 56.7, end dev -0.09, integ 0.0832 -> 0.1666
+    P 0.70 I 0.09 b 0.900 | tau 0.415 N m, base 14.82, peak dev  -2.82 at   5.0 s, recover 57.8, end dev +0.18, integ 0.1010 -> 0.1851
+    P 0.70 I 0.09 b 0.800 | tau 0.415 N m, base 14.70, peak dev  -2.74 at   4.6 s, recover 58.8, end dev +0.36, integ 0.1186 -> 0.2038
+    P 0.70 I 0.20 b 1.000 | tau 0.415 N m, base 15.55, peak dev  -3.45 at   4.2 s, recover   -  , end dev -1.11, integ 0.0807 -> 0.1726
+    P 0.70 I 0.20 b 0.900 | tau 0.415 N m, base 15.47, peak dev  -3.28 at   4.3 s, recover   -  , end dev -1.04, integ 0.1001 -> 0.1903
+    P 0.70 I 0.20 b 0.800 | tau 0.415 N m, base 15.38, peak dev  -3.10 at   4.3 s, recover   -  , end dev -0.98, integ 0.1196 -> 0.2080
+
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) wind x1 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.64 at   6.2 s, recover 14.0, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.50 I 0.09 b 0.694 | tau 1.000 N m, base  0.00, peak dev  -1.64 at   6.2 s, recover 14.0, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.42 at   5.3 s, recover 13.6, end dev -0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 0.900 | tau 1.000 N m, base  0.00, peak dev  -1.42 at   5.3 s, recover 13.6, end dev -0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.09 b 0.800 | tau 1.000 N m, base  0.00, peak dev  -1.42 at   5.3 s, recover 13.6, end dev -0.01, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 1.000 | tau 1.000 N m, base  0.00, peak dev  -1.22 at   4.6 s, recover 8.9, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 0.900 | tau 1.000 N m, base  0.00, peak dev  -1.22 at   4.6 s, recover 8.9, end dev +0.00, integ 0.0000 -> 0.0185
+    P 0.70 I 0.20 b 0.800 | tau 1.000 N m, base  0.00, peak dev  -1.22 at   4.6 s, recover 8.9, end dev +0.00, integ 0.0000 -> 0.0185
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) wind x5 at stick 0.0
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -5.22 at   5.4 s, recover 21.4, end dev -0.02, integ 0.0000 -> 0.0929
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base  0.00, peak dev  -5.22 at   5.4 s, recover 21.4, end dev -0.02, integ 0.0000 -> 0.0929
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -4.55 at   5.2 s, recover 24.0, end dev -0.01, integ 0.0000 -> 0.0928
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base  0.00, peak dev  -4.55 at   5.2 s, recover 24.0, end dev -0.01, integ 0.0000 -> 0.0928
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base  0.00, peak dev  -4.55 at   5.2 s, recover 24.0, end dev -0.01, integ 0.0000 -> 0.0928
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base  0.00, peak dev  -4.26 at   3.6 s, recover 12.5, end dev -0.02, integ 0.0000 -> 0.0927
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base  0.00, peak dev  -4.26 at   3.6 s, recover 12.5, end dev -0.02, integ 0.0000 -> 0.0927
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base  0.00, peak dev  -4.26 at   3.6 s, recover 12.5, end dev -0.02, integ 0.0000 -> 0.0927
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) wind x5 at stick 0.5
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base  6.39, peak dev  -3.95 at   5.3 s, recover 23.3, end dev +0.06, integ 0.0398 -> 0.1336
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base  6.40, peak dev  -4.02 at   5.3 s, recover 23.8, end dev +0.07, integ 0.0561 -> 0.1512
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base  6.41, peak dev  -3.41 at   5.3 s, recover 25.3, end dev +0.07, integ 0.0391 -> 0.1330
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base  6.40, peak dev  -3.43 at   5.3 s, recover 25.4, end dev +0.09, integ 0.0464 -> 0.1410
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base  6.39, peak dev  -3.44 at   5.3 s, recover 25.5, end dev +0.10, integ 0.0538 -> 0.1491
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base  6.48, peak dev  -2.89 at   3.7 s, recover 12.9, end dev +0.11, integ 0.0441 -> 0.1381
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base  6.47, peak dev  -2.90 at   3.7 s, recover 12.9, end dev +0.12, integ 0.0520 -> 0.1462
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base  6.47, peak dev  -2.90 at   3.7 s, recover 12.9, end dev +0.12, integ 0.0598 -> 0.1543
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) wind x5 at stick 1.0
+    P 0.50 I 0.09 b 1.000 | tau 5.000 N m, base 14.02, peak dev  -2.06 at   3.9 s, recover   -  , end dev +0.55, integ 0.1876 -> 0.3000
+    P 0.50 I 0.09 b 0.694 | tau 5.000 N m, base 13.71, peak dev  -1.84 at   3.8 s, recover 17.9, end dev -0.19, integ 0.2230 -> 0.3000
+    P 0.70 I 0.09 b 1.000 | tau 5.000 N m, base 13.91, peak dev  -1.94 at   3.8 s, recover   -  , end dev +0.71, integ 0.1797 -> 0.3000
+    P 0.70 I 0.09 b 0.900 | tau 5.000 N m, base 13.78, peak dev  -1.86 at   3.8 s, recover 18.2, end dev +0.40, integ 0.1951 -> 0.3000
+    P 0.70 I 0.09 b 0.800 | tau 5.000 N m, base 13.64, peak dev  -1.79 at   3.8 s, recover 17.5, end dev +0.09, integ 0.2105 -> 0.3000
+    P 0.70 I 0.20 b 1.000 | tau 5.000 N m, base 15.12, peak dev  -2.25 at   3.8 s, recover   -  , end dev -0.53, integ 0.2143 -> 0.3000
+    P 0.70 I 0.20 b 0.900 | tau 5.000 N m, base 15.12, peak dev  -2.24 at   3.8 s, recover   -  , end dev -0.97, integ 0.2325 -> 0.3000
+    P 0.70 I 0.20 b 0.800 | tau 5.000 N m, base 15.11, peak dev  -2.22 at   3.8 s, recover   -  , end dev -1.42, integ 0.2507 -> 0.3000
+
+4. Torque-command noise with gz gyro noise (8.7e-4 rad/s), 20 s after 40 s of steady flight: std of vehicle_torque_setpoint z (normalized), total and above ~1 Hz
+  gz_airship_vectored_independent (vec rigid) stick 0.0: P0.5 I0.09 b1.00 0.00025/0.00025; P0.5 I0.09 b0.69 0.00025/0.00025; P0.7 I0.09 b1.00 0.00035/0.00035; P0.7 I0.09 b0.90 0.00035/0.00035; P0.7 I0.09 b0.80 0.00035/0.00035; P0.7 I0.20 b1.00 0.00035/0.00035; P0.7 I0.20 b0.90 0.00035/0.00035; P0.7 I0.20 b0.80 0.00035/0.00035
+  gz_airship_vectored_independent (vec rigid) stick 0.5: P0.5 I0.09 b1.00 0.00482/0.00031; P0.5 I0.09 b0.69 0.00481/0.00028; P0.7 I0.09 b1.00 0.00448/0.00049; P0.7 I0.09 b0.90 0.00548/0.00047; P0.7 I0.09 b0.80 0.00685/0.00044; P0.7 I0.20 b1.00 0.00736/0.00048; P0.7 I0.20 b0.90 0.00748/0.00048; P0.7 I0.20 b0.80 0.00766/0.00043
+  gz_airship_vectored_independent_am_fin_drag (vec complete) stick 0.0: P0.5 I0.09 b1.00 0.00025/0.00025; P0.5 I0.09 b0.69 0.00025/0.00025; P0.7 I0.09 b1.00 0.00035/0.00035; P0.7 I0.09 b0.90 0.00035/0.00035; P0.7 I0.09 b0.80 0.00035/0.00035; P0.7 I0.20 b1.00 0.00035/0.00035; P0.7 I0.20 b0.90 0.00035/0.00035; P0.7 I0.20 b0.80 0.00035/0.00035
+  gz_airship_vectored_independent_am_fin_drag (vec complete) stick 0.5: P0.5 I0.09 b1.00 0.00195/0.00025; P0.5 I0.09 b0.69 0.00222/0.00025; P0.7 I0.09 b1.00 0.00211/0.00035; P0.7 I0.09 b0.90 0.00226/0.00035; P0.7 I0.09 b0.80 0.00240/0.00035; P0.7 I0.20 b1.00 0.00093/0.00035; P0.7 I0.20 b0.90 0.00098/0.00035; P0.7 I0.20 b0.80 0.00103/0.00035
+  gz_cloudship (cld rigid) stick 0.0: P0.5 I0.09 b1.00 0.00025/0.00025; P0.5 I0.09 b0.69 0.00025/0.00025; P0.7 I0.09 b1.00 0.00035/0.00035; P0.7 I0.09 b0.90 0.00035/0.00035; P0.7 I0.09 b0.80 0.00035/0.00035; P0.7 I0.20 b1.00 0.00035/0.00035; P0.7 I0.20 b0.90 0.00035/0.00035; P0.7 I0.20 b0.80 0.00035/0.00035
+  gz_cloudship (cld rigid) stick 0.5: P0.5 I0.09 b1.00 0.00025/0.00025; P0.5 I0.09 b0.69 0.00025/0.00025; P0.7 I0.09 b1.00 0.00036/0.00035; P0.7 I0.09 b0.90 0.00036/0.00035; P0.7 I0.09 b0.80 0.00036/0.00035; P0.7 I0.20 b1.00 0.00036/0.00035; P0.7 I0.20 b0.90 0.00036/0.00035; P0.7 I0.20 b0.80 0.00036/0.00035
+  gz_cloudship_am_fin_drag (cld complete) stick 0.0: P0.5 I0.09 b1.00 0.00025/0.00025; P0.5 I0.09 b0.69 0.00025/0.00025; P0.7 I0.09 b1.00 0.00035/0.00035; P0.7 I0.09 b0.90 0.00035/0.00035; P0.7 I0.09 b0.80 0.00035/0.00035; P0.7 I0.20 b1.00 0.00035/0.00035; P0.7 I0.20 b0.90 0.00035/0.00035; P0.7 I0.20 b0.80 0.00035/0.00035
+  gz_cloudship_am_fin_drag (cld complete) stick 0.5: P0.5 I0.09 b1.00 0.00089/0.00025; P0.5 I0.09 b0.69 0.00145/0.00025; P0.7 I0.09 b1.00 0.00075/0.00035; P0.7 I0.09 b0.90 0.00096/0.00035; P0.7 I0.09 b0.80 0.00122/0.00035; P0.7 I0.20 b1.00 0.00067/0.00035; P0.7 I0.20 b0.90 0.00065/0.00035; P0.7 I0.20 b0.80 0.00064/0.00035
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) stick 0.0: P0.5 I0.09 b1.00 0.00025/0.00025; P0.5 I0.09 b0.69 0.00025/0.00025; P0.7 I0.09 b1.00 0.00035/0.00035; P0.7 I0.09 b0.90 0.00035/0.00035; P0.7 I0.09 b0.80 0.00035/0.00035; P0.7 I0.20 b1.00 0.00035/0.00035; P0.7 I0.20 b0.90 0.00035/0.00035; P0.7 I0.20 b0.80 0.00035/0.00035
+  gz_airship_vectored_independent_fin (vec fin (2nd case)) stick 0.5: P0.5 I0.09 b1.00 0.00133/0.00025; P0.5 I0.09 b0.69 0.00186/0.00025; P0.7 I0.09 b1.00 0.00109/0.00035; P0.7 I0.09 b0.90 0.00130/0.00035; P0.7 I0.09 b0.80 0.00152/0.00035; P0.7 I0.20 b1.00 0.00104/0.00035; P0.7 I0.20 b0.90 0.00102/0.00035; P0.7 I0.20 b0.80 0.00101/0.00035

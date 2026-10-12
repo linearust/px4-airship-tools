@@ -1,0 +1,42 @@
+vec rigid P 0.50 I 0.09
+   b 1.0: overshoot  27.8 %  rise10-90   4.8 s  in +-10% after  20.5 s  release: |r|<1 deg/s for good after  18.7 s; extra integrator at the release P(1-b)r_sp = 0.0000
+   b 0.9: overshoot  24.7 %  rise10-90   5.2 s  in +-10% after  20.6 s  release: |r|<1 deg/s for good after  18.6 s; extra integrator at the release P(1-b)r_sp = 0.0058
+   b 0.8: overshoot  22.0 %  rise10-90   5.7 s  in +-10% after  20.7 s  release: |r|<1 deg/s for good after  18.5 s; extra integrator at the release P(1-b)r_sp = 0.0116
+   b 0.7: overshoot  19.7 %  rise10-90   6.2 s  in +-10% after  20.9 s  release: |r|<1 deg/s for good after  18.4 s; extra integrator at the release P(1-b)r_sp = 0.0175
+   b 0.6: overshoot  17.8 %  rise10-90   6.7 s  in +-10% after  21.1 s  release: |r|<1 deg/s for good after  18.2 s; extra integrator at the release P(1-b)r_sp = 0.0233
+   b 0.5: overshoot  16.3 %  rise10-90   7.3 s  in +-10% after  21.4 s  release: |r|<1 deg/s for good after  17.9 s; extra integrator at the release P(1-b)r_sp = 0.0291
+vec rigid P 0.70 I 0.09
+   b 1.0: overshoot  19.3 %  rise10-90   4.3 s  in +-10% after  18.6 s  release: |r|<1 deg/s for good after  15.5 s; extra integrator at the release P(1-b)r_sp = 0.0000
+   b 0.9: overshoot  15.1 %  rise10-90   4.9 s  in +-10% after  17.8 s  release: |r|<1 deg/s for good after  12.8 s; extra integrator at the release P(1-b)r_sp = 0.0081
+   b 0.8: overshoot  11.5 %  rise10-90   5.6 s  in +-10% after  16.3 s  release: |r|<1 deg/s for good after   5.4 s; extra integrator at the release P(1-b)r_sp = 0.0163
+   b 0.7: overshoot   8.6 %  rise10-90   6.5 s  in +-10% after   7.0 s  release: |r|<1 deg/s for good after   6.2 s; extra integrator at the release P(1-b)r_sp = 0.0244
+   b 0.6: overshoot   6.3 %  rise10-90   7.5 s  in +-10% after   8.0 s  release: |r|<1 deg/s for good after   7.2 s; extra integrator at the release P(1-b)r_sp = 0.0326
+   b 0.5: overshoot   4.7 %  rise10-90   8.5 s  in +-10% after   9.2 s  release: |r|<1 deg/s for good after   8.2 s; extra integrator at the release P(1-b)r_sp = 0.0407
+vec rigid P 0.50 I 0.20
+   b 1.0: overshoot  39.4 %  rise10-90   3.5 s  in +-10% after  22.6 s  release: |r|<1 deg/s for good after  13.8 s; extra integrator at the release P(1-b)r_sp = 0.0000
+   b 0.9: overshoot  37.5 %  rise10-90   3.7 s  in +-10% after  22.4 s  release: |r|<1 deg/s for good after  13.9 s; extra integrator at the release P(1-b)r_sp = 0.0058
+   b 0.8: overshoot  35.7 %  rise10-90   3.8 s  in +-10% after  22.3 s  release: |r|<1 deg/s for good after  14.1 s; extra integrator at the release P(1-b)r_sp = 0.0116
+   b 0.7: overshoot  34.2 %  rise10-90   4.0 s  in +-10% after  21.9 s  release: |r|<1 deg/s for good after  14.2 s; extra integrator at the release P(1-b)r_sp = 0.0175
+   b 0.6: overshoot  32.9 %  rise10-90   4.2 s  in +-10% after  15.3 s  release: |r|<1 deg/s for good after  14.4 s; extra integrator at the release P(1-b)r_sp = 0.0233
+   b 0.5: overshoot  31.8 %  rise10-90   4.4 s  in +-10% after  15.5 s  release: |r|<1 deg/s for good after  14.6 s; extra integrator at the release P(1-b)r_sp = 0.0291
+cld rigid P 0.50 I 0.09
+   b 1.0: overshoot  20.0 %  rise10-90   3.2 s  in +-10% after  13.8 s  release: |r|<1 deg/s for good after  11.7 s; extra integrator at the release P(1-b)r_sp = 0.0000
+   b 0.9: overshoot  15.9 %  rise10-90   3.6 s  in +-10% after  13.4 s  release: |r|<1 deg/s for good after  10.4 s; extra integrator at the release P(1-b)r_sp = 0.0058
+   b 0.8: overshoot  12.4 %  rise10-90   4.1 s  in +-10% after  12.6 s  release: |r|<1 deg/s for good after   4.0 s; extra integrator at the release P(1-b)r_sp = 0.0116
+   b 0.7: overshoot   9.5 %  rise10-90   4.7 s  in +-10% after   5.1 s  release: |r|<1 deg/s for good after   4.6 s; extra integrator at the release P(1-b)r_sp = 0.0175
+   b 0.6: overshoot   7.2 %  rise10-90   5.4 s  in +-10% after   5.9 s  release: |r|<1 deg/s for good after   5.2 s; extra integrator at the release P(1-b)r_sp = 0.0233
+   b 0.5: overshoot   5.6 %  rise10-90   6.2 s  in +-10% after   6.7 s  release: |r|<1 deg/s for good after   6.0 s; extra integrator at the release P(1-b)r_sp = 0.0291
+cld rigid P 0.70 I 0.09
+   b 1.0: overshoot  13.1 %  rise10-90   2.7 s  in +-10% after  11.1 s  release: |r|<1 deg/s for good after   2.6 s; extra integrator at the release P(1-b)r_sp = 0.0000
+   b 0.9: overshoot   7.9 %  rise10-90   3.3 s  in +-10% after   3.5 s  release: |r|<1 deg/s for good after   3.1 s; extra integrator at the release P(1-b)r_sp = 0.0081
+   b 0.8: overshoot   3.6 %  rise10-90   4.1 s  in +-10% after   4.3 s  release: |r|<1 deg/s for good after   3.7 s; extra integrator at the release P(1-b)r_sp = 0.0163
+   b 0.7: overshoot   0.7 %  rise10-90   5.3 s  in +-10% after   5.5 s  release: |r|<1 deg/s for good after   4.7 s; extra integrator at the release P(1-b)r_sp = 0.0244
+   b 0.6: overshoot  -0.0 %  rise10-90   6.8 s  in +-10% after   7.2 s  release: |r|<1 deg/s for good after   5.9 s; extra integrator at the release P(1-b)r_sp = 0.0326
+   b 0.5: overshoot  -0.0 %  rise10-90   8.6 s  in +-10% after   9.0 s  release: |r|<1 deg/s for good after   7.4 s; extra integrator at the release P(1-b)r_sp = 0.0407
+cld rigid P 0.50 I 0.20
+   b 1.0: overshoot  30.4 %  rise10-90   2.4 s  in +-10% after  10.3 s  release: |r|<1 deg/s for good after   9.5 s; extra integrator at the release P(1-b)r_sp = 0.0000
+   b 0.9: overshoot  27.6 %  rise10-90   2.6 s  in +-10% after  10.4 s  release: |r|<1 deg/s for good after   9.5 s; extra integrator at the release P(1-b)r_sp = 0.0058
+   b 0.8: overshoot  25.1 %  rise10-90   2.8 s  in +-10% after  10.5 s  release: |r|<1 deg/s for good after   9.6 s; extra integrator at the release P(1-b)r_sp = 0.0116
+   b 0.7: overshoot  23.0 %  rise10-90   3.0 s  in +-10% after  10.6 s  release: |r|<1 deg/s for good after   9.6 s; extra integrator at the release P(1-b)r_sp = 0.0175
+   b 0.6: overshoot  21.2 %  rise10-90   3.3 s  in +-10% after  10.8 s  release: |r|<1 deg/s for good after   9.7 s; extra integrator at the release P(1-b)r_sp = 0.0233
+   b 0.5: overshoot  19.8 %  rise10-90   3.5 s  in +-10% after  10.9 s  release: |r|<1 deg/s for good after   9.7 s; extra integrator at the release P(1-b)r_sp = 0.0291

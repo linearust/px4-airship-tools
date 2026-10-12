@@ -1,0 +1,84 @@
+step: rise 10-90 % [s], t90 [s], peak [deg/s], overshoot [%], ts10 = last exit from +-10 % sp [s],
+      ess = mean(r) - sp over the last 10 s [deg/s], rel = gate settle rule from release [s],
+      rel10 = last exit from 0.1 sp after release [s], under = most negative rate after release
+wind: gust at rest: peak |r|, rec = last exit from 0.25 deg/s [s], integ/needed at 60 s;
+      gust in a 6.67 deg/s turn: peak deviation, recovery to 0.25 deg/s [s]
+noise: high-pass torque rms at rest / in the turn (gyro noise) / in the turn with stick jitter 0.002
+
+cs complete  P 0.65 I 0.070 FF 0.00 {"ffq": 0.8594}
+   stick 0.25 sp  2.50  rise 4.2 t90 4.5 peak 2.91 over 16%  ts10 19.1 ess +0.03 | rel 2.7 rel10 20.0 under -0.45
+   stick 0.5  sp  6.67  rise 4.1 t90 4.4 peak 7.22 over 8%  ts10 4.5 ess -0.06 | rel 4.6 rel10 17.1 under -0.89
+   stick 1.0  sp 15.00  rise 3.9 t90 4.2 peak 16.29 over 9%  ts10 4.3 ess -0.21 | rel 8.6 rel10 7.5 under -0.59
+
+vec fin      P 0.65 I 0.070 FF 0.00 {"ffq": 2.578}
+   stick 0.25 sp  2.50  rise 5.2 t90 5.8 peak 2.77 over 11%  ts10 20.3 ess -0.01 | rel 3.8 rel10 28.4 under -0.41
+   stick 0.5  sp  6.67  rise 4.5 t90 5.1 peak 7.06 over 6%  ts10 5.1 ess -0.04 | rel 6.3 rel10 7.2 under -0.41
+   stick 1.0  sp 15.00  rise 4.3 t90 4.7 peak 15.02 over 0%  ts10 4.8 ess -0.17 | rel 9.4 rel10 7.9 under -0.52
+
+vec complete P 0.65 I 0.070 FF 0.00 {"ffq": 8.594}
+   stick 0.25 sp  2.50  rise 7.0 t90 8.1 peak 2.92 over 17%  ts10 36.7 ess +0.04 | rel 6.0 rel10 40.0 under -0.67
+   stick 0.5  sp  6.67  rise 5.1 t90 5.8 peak 7.26 over 9%  ts10 5.9 ess +0.14 | rel 7.9 rel10 40.0 under -1.29
+   stick 1.0  sp 15.00  rise 3.2 t90 3.6 peak 15.90 over 6%  ts10 3.6 ess +0.39 | rel 7.5 rel10 30.7 under -2.18
+
+vec rigid    P 0.65 I 0.070 FF 0.00 
+   stick 0.25 sp  2.50  rise 5.6 t90 6.2 peak 2.99 over 20%  ts10 60.0 ess +0.27 | rel 1.4 rel10 40.0 under -1.21
+   stick 0.5  sp  6.67  rise 5.5 t90 6.3 peak 7.78 over 17%  ts10 59.4 ess -0.56 | rel 5.2 rel10 40.0 under -0.98
+   stick 1.0  sp 15.00  rise 5.5 t90 6.3 peak 17.38 over 16%  ts10 24.1 ess -0.24 | rel 5.6 rel10 22.8 under -2.71
+   wind  rest: peak 1.67 rec 20.6 integ/need 0.99 | turn: dev -1.42 rec 40.0
+   noise torque hp rms: rest 3.27e-04 turn 4.23e-04 turn+stick jitter 5.77e-04
+
+vec complete P 0.65 I 0.070 FF 0.00 
+   stick 0.25 sp  2.50  rise 11.5 t90 13.0 peak 2.68 over 7%  ts10 15.2 ess +0.02 | rel 9.8 rel10 40.0 under -0.45
+   stick 0.5  sp  6.67  rise 31.8 t90 33.3 peak 6.39 over -4%  ts10 40.5 ess -0.41 | rel 30.3 rel10 32.4 under -0.25
+   stick 1.0  sp 15.00  rise - t90 - peak 12.04 over -20%  ts10 60.0 ess -3.07 | rel - rel10 40.0 under 2.17
+   wind  rest: peak 1.21 rec 27.3 integ/need 0.99 | turn: dev +0.36 rec 40.0
+   noise torque hp rms: rest 3.26e-04 turn 3.23e-04 turn+stick jitter 5.10e-04
+
+vec complete P 0.65 I 0.070 FF 1.00 
+   stick 0.25 sp  2.50  rise 4.1 t90 4.7 peak 3.57 over 43%  ts10 46.9 ess +0.10 | rel 3.8 rel10 40.0 under -1.52
+   stick 0.5  sp  6.67  rise 5.1 t90 5.8 peak 7.26 over 9%  ts10 5.9 ess +0.14 | rel 7.9 rel10 40.0 under -1.29
+   stick 1.0  sp 15.00  rise 44.8 t90 45.5 peak 13.79 over -8%  ts10 51.6 ess -1.37 | rel - rel10 34.1 under 1.09
+   wind  rest: peak 1.21 rec 27.3 integ/need 0.99 | turn: dev -0.52 rec 40.0
+   noise torque hp rms: rest 3.26e-04 turn 3.23e-04 turn+stick jitter 1.05e-03
+
+cs rigid     P 0.65 I 0.070 FF 0.00 
+   stick 0.25 sp  2.50  rise 3.0 t90 3.1 peak 2.87 over 15%  ts10 14.0 ess +0.00 | rel 1.6 rel10 14.5 under -0.41
+   stick 0.5  sp  6.67  rise 3.0 t90 3.2 peak 7.55 over 13%  ts10 13.0 ess +0.00 | rel 2.9 rel10 12.4 under -0.90
+   stick 1.0  sp 15.00  rise 3.0 t90 3.2 peak 16.92 over 13%  ts10 12.0 ess +0.00 | rel 3.5 rel10 12.1 under -1.90
+   wind  rest: peak 1.30 rec 20.2 integ/need 1.00 | turn: dev -1.34 rec 20.5
+   noise torque hp rms: rest 3.27e-04 turn 3.26e-04 turn+stick jitter 5.12e-04
+
+cs complete  P 0.65 I 0.070 FF 0.00 
+   stick 0.25 sp  2.50  rise 4.5 t90 4.8 peak 2.86 over 14%  ts10 17.3 ess +0.03 | rel 3.0 rel10 19.3 under -0.38
+   stick 0.5  sp  6.67  rise 5.4 t90 5.7 peak 7.07 over 6%  ts10 5.7 ess -0.10 | rel 5.8 rel10 6.7 under -0.47
+   stick 1.0  sp 15.00  rise 10.7 t90 11.0 peak 15.62 over 4%  ts10 11.3 ess -0.37 | rel 16.4 rel10 14.3 under -0.25
+   wind  rest: peak 1.19 rec 21.2 integ/need 0.98 | turn: dev +0.97 rec 40.0
+   noise torque hp rms: rest 3.27e-04 turn 3.23e-04 turn+stick jitter 5.10e-04
+
+cs complete  P 0.65 I 0.070 FF 0.05 
+   stick 0.25 sp  2.50  rise 4.0 t90 4.3 peak 2.93 over 17%  ts10 19.1 ess +0.03 | rel 2.7 rel10 20.7 under -0.47
+   stick 0.5  sp  6.67  rise 4.6 t90 5.0 peak 7.13 over 7%  ts10 5.0 ess -0.08 | rel 5.1 rel10 5.8 under -0.66
+   stick 1.0  sp 15.00  rise 8.1 t90 8.5 peak 15.67 over 4%  ts10 9.2 ess -0.34 | rel 14.6 rel10 12.8 under -0.28
+   wind  rest: peak 1.19 rec 21.2 integ/need 0.98 | turn: dev +0.97 rec 40.0
+   noise torque hp rms: rest 3.27e-04 turn 3.23e-04 turn+stick jitter 5.34e-04
+
+cs complete  P 0.65 I 0.070 FF 0.10 
+   stick 0.25 sp  2.50  rise 3.7 t90 4.0 peak 3.01 over 20%  ts10 21.3 ess +0.03 | rel 2.4 rel10 20.9 under -0.55
+   stick 0.5  sp  6.67  rise 4.1 t90 4.4 peak 7.22 over 8%  ts10 4.5 ess -0.06 | rel 4.6 rel10 17.1 under -0.89
+   stick 1.0  sp 15.00  rise 5.9 t90 6.2 peak 15.74 over 5%  ts10 6.8 ess -0.31 | rel 13.0 rel10 11.2 under -0.32
+   wind  rest: peak 1.19 rec 21.2 integ/need 0.98 | turn: dev +0.97 rec 40.0
+   noise torque hp rms: rest 3.27e-04 turn 3.23e-04 turn+stick jitter 5.58e-04
+
+vec fin      P 0.65 I 0.070 FF 0.00 
+   stick 0.25 sp  2.50  rise 6.5 t90 7.1 peak 2.68 over 7%  ts10 8.1 ess -0.00 | rel 4.4 rel10 8.2 under -0.23
+   stick 0.5  sp  6.67  rise 12.0 t90 12.8 peak 6.63 over -1%  ts10 14.4 ess -0.21 | rel 13.9 rel10 16.8 under -0.22
+   stick 1.0  sp 15.00  rise 37.5 t90 38.3 peak 14.16 over -6%  ts10 39.5 ess -1.06 | rel 32.9 rel10 28.3 under 0.38
+   wind  rest: peak 1.59 rec 20.8 integ/need 0.99 | turn: dev -0.64 rec 40.0
+   noise torque hp rms: rest 3.27e-04 turn 3.23e-04 turn+stick jitter 5.11e-04
+
+vec fin      P 0.65 I 0.070 FF 0.30 
+   stick 0.25 sp  2.50  rise 3.7 t90 4.1 peak 3.06 over 22%  ts10 27.0 ess -0.01 | rel 3.0 rel10 40.0 under -0.77
+   stick 0.5  sp  6.67  rise 4.5 t90 5.1 peak 7.06 over 6%  ts10 5.1 ess -0.04 | rel 6.3 rel10 7.2 under -0.41
+   stick 1.0  sp 15.00  rise 30.0 t90 30.5 peak 14.54 over -3%  ts10 31.6 ess -0.71 | rel 26.2 rel10 21.3 under 0.13
+   wind  rest: peak 1.59 rec 20.8 integ/need 0.99 | turn: dev -0.61 rec 13.4
+   noise torque hp rms: rest 3.27e-04 turn 3.23e-04 turn+stick jitter 6.60e-04

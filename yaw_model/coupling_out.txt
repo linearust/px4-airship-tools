@@ -1,0 +1,68 @@
+== A. roll/yaw product of inertia: pole-zero pair against the loop crossover
+   r/N = (Ixx s^2 + K)/(s [Izz (Ixx s^2 + K) - Ixz^2 s^2]): zero at sqrt(K/Ixx), pole at
+   sqrt(K/(Ixx - Ixz^2/Izz)); zero below pole = collocated (torque and rate on one axis).
+   gz_airship_vectored_independent              K 576.3 N m/rad, Ixx 43.339, Ixz 20.0700, Izz 129.150: zero 3.647, pole 3.785 rad/s (period 1.723 s), crossover(P 0.5) 0.209 rad/s, |G| change there 2.4e-04
+   gz_airship_vectored_independent_am_fin_drag  K 576.3 N m/rad, Ixx 77.584, Ixz 20.0700, Izz 321.394: zero 2.725, pole 2.748 rad/s (period 2.305 s), crossover(P 0.5) 0.084 rad/s, |G| change there 1.5e-05
+   gz_cloudship                                 K 35.4 N m/rad, Ixx 2.387, Ixz 0.3874, Izz 5.799: zero 3.851, pole 3.872 rad/s (period 1.632 s), crossover(P 0.5) 0.386 rad/s, |G| change there 1.1e-04
+   gz_cloudship_am_fin_drag                     K 35.4 N m/rad, Ixx 3.181, Ixz 0.3874, Izz 9.744: zero 3.335, pole 3.343 rad/s (period 1.884 s), crossover(P 0.5) 0.230 rad/s, |G| change there 2.3e-05
+   Roll periods agree with added_mass_check (chain5:21 1.659/1.723 s, :22 2.297 s, :33 1.628 s, :34 1.886 s).
+
+== B. planar 3-DOF (u, v, r of the link origin) against the 1-DOF plant
+   rates in deg/s, z-up; "1-DOF f0/f1/f2" = broadside fin share 0/1/2. The 3-DOF has no roll, so its
+   fins act only where the drift makes forward . v > 0 at the fin (LiftDrag.cc:312).
+   Cloudship  wind 1 N m couple, 4.75 s, u0 0                      3-DOF r   19.419 | 1-DOF f0   20.331 f1   19.841 f2   19.380 | end u +0.007 v +0.006, peak |u| 0.007 |v| 0.006 m/s, peak Munk 0.0002 N m
+   vectored   wind 1 N m couple, 4.75 s, u0 0                      3-DOF r    0.821 | 1-DOF f0    0.832 f1    0.827 f2    0.821 | end u +0.000 v +0.000, peak |u| 0.000 |v| 0.000 m/s, peak Munk 0.0000 N m
+   Cloudship  tail force 1.177 N, 3 s from rest                    3-DOF r  -28.694 | 1-DOF f0  -29.555 f1  -28.890 f2  -28.262 | end u -0.214 v +0.211, peak |u| 0.214 |v| 0.211 m/s, peak Munk 0.2226 N m
+   Cloudship  tail force 1.177 N, 20 s from rest                   3-DOF r  -38.294 | 1-DOF f0  -38.011 f1  -36.272 f2  -34.752 | end u +0.021 v -0.090, peak |u| 0.560 |v| 0.212 m/s, peak Munk 0.3662 N m
+   vectored   hold couple 4.597 N m, 35 s, r0 6.67, u0 0.00        3-DOF r    5.995 | 1-DOF f0    7.903 f1    6.670 f2    5.878 | end u +0.124 v -0.015, peak |u| 0.137 |v| 0.043 m/s, peak Munk 0.1453 N m
+   vectored   release N = 0, 12 s, r0 6.67, u0 0.00                3-DOF r    2.400 | 1-DOF f0    3.254 f1    2.696 f2    2.301 | end u +0.020 v +0.022, peak |u| 0.020 |v| 0.022 m/s, peak Munk 0.0168 N m
+   vectored   hold couple 4.597 N m, 35 s, r0 6.67, u0 0.02        3-DOF r    5.998 | 1-DOF f0    7.903 f1    6.670 f2    5.878 | end u +0.115 v -0.011, peak |u| 0.124 |v| 0.033 m/s, peak Munk 0.1085 N m
+   vectored   release N = 0, 12 s, r0 6.67, u0 0.02                3-DOF r    2.386 | 1-DOF f0    3.254 f1    2.696 f2    2.301 | end u +0.033 v +0.014, peak |u| 0.033 |v| 0.014 m/s, peak Munk 0.0179 N m
+   vectored   hold couple 4.597 N m, 35 s, r0 6.67, u0 0.15        3-DOF r    5.987 | 1-DOF f0    7.903 f1    6.670 f2    5.878 | end u +0.048 v +0.016, peak |u| 0.150 |v| 0.029 m/s, peak Munk 0.1166 N m
+   vectored   release N = 0, 12 s, r0 6.67, u0 0.15                3-DOF r    2.349 | 1-DOF f0    3.254 f1    2.696 f2    2.301 | end u +0.121 v -0.034, peak |u| 0.150 |v| 0.034 m/s, peak Munk 0.1555 N m
+   Cloudship  hold by tail 0.0398 N, 35 s, r0 6.67, u0 0.00        3-DOF r    7.019 | 1-DOF f0    6.986 f1    6.670 f2    6.393 | end u -0.063 v +0.017, peak |u| 0.078 |v| 0.026 m/s, peak Munk 0.0065 N m
+   Cloudship  release N = 0, 12 s, r0 6.67, u0 0.00                3-DOF r    3.582 | 1-DOF f0    3.857 f1    3.704 f2    3.562 | end u +0.005 v +0.003, peak |u| 0.005 |v| 0.003 m/s, peak Munk 0.0001 N m
+   Cloudship  hold by tail 0.0398 N, 35 s, r0 6.67, u0 0.02        3-DOF r    6.966 | 1-DOF f0    6.986 f1    6.670 f2    6.393 | end u -0.081 v +0.020, peak |u| 0.094 |v| 0.036 m/s, peak Munk 0.0103 N m
+   Cloudship  release N = 0, 12 s, r0 6.67, u0 0.02                3-DOF r    3.573 | 1-DOF f0    3.857 f1    3.704 f2    3.562 | end u +0.016 v -0.007, peak |u| 0.020 |v| 0.007 m/s, peak Munk 0.0006 N m
+   Cloudship  hold by tail 0.0398 N, 35 s, r0 6.67, u0 0.10        3-DOF r    6.827 | 1-DOF f0    6.986 f1    6.670 f2    6.393 | end u -0.130 v +0.033, peak |u| 0.147 |v| 0.075 m/s, peak Munk 0.0287 N m
+   Cloudship  release N = 0, 12 s, r0 6.67, u0 0.10                3-DOF r    3.793 | 1-DOF f0    3.857 f1    3.704 f2    3.562 | end u +0.063 v -0.045, peak |u| 0.100 |v| 0.045 m/s, peak Munk 0.0144 N m
+   Cloudship tail force from rest, r_dot per newton: 3-DOF -0.19417 vs 1-DOF -0.19520 (ratio 0.9947): the added sway
+   mass sits at the hull centre x = 0 (cloudship_am/model.sdf:118) and the centre of mass at 0.02197.
+
+== C. bounded by hand
+   vectored: yaw part of the 6x6 added-mass Coriolis = -(m_y - m_x) u v - (xq + yp)(p u - q v) + (pp - qq) p q
+     at u 0.15 v 0.05 m/s, p q 0.01 rad/s: Munk 0.285 N m, cross products <= 0.159 N m (xq + yp = -77.953, pp - qq = -32.440); the 6.67 deg/s hold torque is 4.597 N m
+   Cloudship: yaw part of the 6x6 added-mass Coriolis = -(m_y - m_x) u v - (xq + yp)(p u - q v) + (pp - qq) p q
+     at u 0.10 v 0.05 m/s, p q 0.02 rad/s: Munk 0.025 N m, cross products <= 0.013 N m (xq + yp = -4.424, pp - qq = 0.030); the 6.67 deg/s hold torque is 0.076 N m
+   hull drag cross terms (xQabsU, yPabsV, mUabsU, mQabsU, kVabsV, kPabsV; drag SDF lines 35-40 / 37-42):
+     all in the x, y, k, m rows; the n row is nRabsR alone (plants.build_from_sdf asserts it), so they
+     reach yaw only through sway and roll, i.e. through the Munk and cross products above.
+   vectored rotor drag at 6.67 deg/s, full rotor speed: pods at 0/180 deg 2.43e-07 N m, at +-90 deg 0.0127 N m
+   vectored rotor drag at 27.80 deg/s, full rotor speed: pods at 0/180 deg 1.01e-06 N m, at +-90 deg 0.0528 N m
+   vectored reaction couple, MulticopterMotorModel.cc:655-656: 0.288 N m per pod at 18 N, about the prop
+     axis: roll at tilt 0/180 (the turn in place), yaw only while a pod passes +-90 in a slew (0.5 % of 54 N m)
+   Cloudship: rod props at zero collective in a turn in place give nothing; the tail is a GenericMotorModel
+     force_polynomial (GenericMotorModel.cpp:741-788): no drag, torque polynomial zero (:458).
+   thrust has no inflow term in either plugin (MulticopterMotorModel.cc:579-589; the airship_fixed flight
+     check matches u(t) = u0 + a t to 0.3 %% at 3 m/s, sitl_out/chain9_20260927.txt:9).
+
+== D. the vertical fins against surge drift at the fins (plugin replica, both fins see the drift)
+   replica self-test (vectored, u 1 m/s, r 0.01 rad/s): 231.34 N m/(rad/s) against K_d = 229.81 (chain5:18 229.81)
+   gz_airship_vectored_independent_am_fin_drag: fin yaw moment [N m], hull for scale
+       r deg/s     bs x1     bs x2   u 0.005    u 0.02    u 0.05    u 0.15 |      hull
+          0.50    0.0074    0.0149    0.0139    0.0142    0.0281    0.1979 |    0.0184
+          1.00    0.0297    0.0595    0.0573    0.0540    0.0614    0.2107 |    0.0736
+          2.80    0.2332    0.4664    0.4597    0.4431    0.4248    0.4974 |    0.5769
+          6.67    1.3233    2.6465    2.6303    2.5849    2.5094    2.3992 |    3.2737
+         15.00    6.6923   13.3846   13.3478   13.2405   13.0413   12.5224 |   16.5564
+   gz_cloudship_am_fin_drag: fin yaw moment [N m], hull for scale
+       r deg/s     bs x1     bs x2   u 0.005    u 0.02    u 0.05    u 0.15 |      hull
+          0.50    0.0000    0.0001    0.0001    0.0003    0.0018    0.0052 |    0.0004
+          1.00    0.0002    0.0003    0.0003    0.0005    0.0020    0.0107 |    0.0015
+          2.80    0.0012    0.0024    0.0023    0.0024    0.0036    0.0181 |    0.0121
+          6.67    0.0068    0.0135    0.0134    0.0132    0.0138    0.0258 |    0.0689
+         15.00    0.0342    0.0685    0.0681    0.0673    0.0668    0.0747 |    0.3487
+   Reading: at the gate rates a forward drift of a few cm/s turns both fins on and the moment is about
+   the two-fin broadside; below ~1 deg/s the flow at the fin attaches and the moment becomes K_d u r,
+   linear in r and proportional to the drift, which the hull (quadratic) does not have. A backward drift
+   switches both fins off (LiftDrag.cc:312).

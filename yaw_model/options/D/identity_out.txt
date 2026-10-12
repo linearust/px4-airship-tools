@@ -1,0 +1,10 @@
+gz_airship_vectored_independent               noise False lines SAME rows SAME (938 rows)  통과 9 / 실패 1
+gz_airship_vectored_independent               noise True  lines SAME rows SAME (938 rows)  통과 9 / 실패 1
+gz_airship_vectored_independent_am_fin_drag   noise False lines SAME rows SAME (973 rows)  통과 8 / 실패 2
+gz_airship_vectored_independent_am_fin_drag   noise True  lines SAME rows SAME (973 rows)  통과 8 / 실패 2
+gz_cloudship                                  noise False lines SAME rows SAME (687 rows)  통과 9 / 실패 0
+gz_cloudship                                  noise True  lines SAME rows SAME (686 rows)  통과 9 / 실패 0
+gz_cloudship_am_fin_drag                      noise False lines SAME rows SAME (706 rows)  통과 8 / 실패 1
+gz_cloudship_am_fin_drag                      noise True  lines SAME rows SAME (707 rows)  통과 8 / 실패 1
+gz_airship_vectored_independent_fin           noise False lines SAME rows SAME (889 rows)  통과 8 / 실패 2
+gz_airship_vectored_independent_fin           noise True  lines SAME rows SAME (890 rows)  통과 8 / 실패 2

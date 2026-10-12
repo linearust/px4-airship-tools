@@ -1,0 +1,270 @@
+Reproduction of the SITL yaw gate by the closed-loop model (plant: 1dof, gains: controller.DEFAULT_PARAMS)
+  record chain7_20260925.txt                                                md5 5ef61e58cc3b92b4b1cb4a730fe833de
+  record chain9_20260927.txt                                                md5 3ac453016273887fd025e87543ac6ceb
+  record samples_gz_airship_vectored_independent_am_fin_drag_chain9.csv     md5 a83db123b2cabb1b654d709811b052d2
+  record samples_gz_airship_vectored_independent_chain9.csv                 md5 cd4d601dc7edb49ffced3d07df713404
+  record samples_gz_airship_vectored_independent_fin_chain9.csv             md5 2a9f359dd31720ce6ae72cb2032e1b28
+  record samples_gz_cloudship_am_fin_drag_chain7.csv                        md5 0483caee95c030be81c00ea97fc94060
+  record samples_gz_cloudship_am_fin_drag_chain9.csv                        md5 e4fc6af8ef51bda84dbdf55bd816d1cd
+  record samples_gz_cloudship_chain9.csv                                    md5 4af447332bfa371759e3c92b82b5c3bd
+
+=== gz_airship_vectored_independent   model status 1 (937 rows; chain7 9/10, chain9 9/10)
+  check         field        chain7    chain9     model  d(model)  gate tolerance (sitl_check.py)     flags
+  wind check    start         -0.00      0.01      0.00     -0.01                                     
+  wind check    end           -2.09     -2.11     -2.10     -0.01  0.5 x expected, :314               
+  wind check    VERDICT        pass      pass      pass     agree
+  Manual        torque       0.5000    0.5000    0.5000    0.0000  0.02, :324                         
+  Manual        start         -2.70     -2.60     -2.60      0.10                                     
+  Manual        end           23.50     23.30     24.20      0.90                                     >spread(0.20)
+  Manual        VERDICT        pass      pass      pass     agree
+  Acro brake    start         27.80     27.70     28.10      0.40                                     >spread(0.10)
+  Acro brake    end           -7.70     -7.60     -7.30      0.40  |r| < 6.0, :371                    >spread(0.10)
+  Acro brake    VERDICT        FAIL      FAIL      FAIL     agree
+  Acro track    mean           6.00      6.05      6.03      0.03  0.25 sp = 1.667, :402              
+  Acro track    peak           8.84      8.84      8.47     -0.37  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.00)
+  Acro track    start          0.68      0.61      0.17     -0.51                                     >spread(0.07)
+  Acro track    integ0      -0.0000   -0.0010   -0.0000    0.0010                                     
+  Acro track    VERDICT        pass      pass      pass     agree
+  Acro release  start          5.80      5.70      6.00      0.30                                     >spread(0.10)
+  Acro release  end           -2.00     -2.00     -1.80      0.20                                     >spread(0.00)
+  Acro release  settle         4.70      4.80      4.70     -0.10  < 10.0 s, :425                     
+  Acro release  slope             -         -         -         -                                     
+  Acro release  VERDICT        pass      pass      pass     agree
+  Stab track    mean           6.10      6.00      6.04     -0.06  0.25 sp = 1.667, :402              
+  Stab track    peak           8.78      8.75      8.53     -0.25  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.03)
+  Stab track    start          0.14      0.35      0.01     -0.34                                     >spread(0.21)
+  Stab track    integ0       0.0000   -0.0000   -0.0000   -0.0000                                     
+  Stab track    VERDICT        pass      pass      pass     agree
+  Stab release  start          6.30      6.00      6.00     -0.30                                     
+  Stab release  end           -1.70     -1.90     -1.80     -0.10                                     
+  Stab release  settle         5.10      5.10      4.70     -0.40  < 10.0 s, :425                     >spread(0.00)
+  Stab release  slope             -         -         -         -                                     
+  Stab release  VERDICT        pass      pass      pass     agree
+  wind I on     rate           0.10      0.09      0.05     -0.05  < 1.0, :443                        >spread(0.01)
+  wind I on     integ        0.0179    0.0179    0.0179    0.0000  0.5 needed, :443                   
+  wind I on     VERDICT        pass      pass      pass     agree
+  wind I off    rate           2.08      2.09      2.10      0.02  > 1.0, :443                        >spread(0.01)
+  wind I off    integ        0.0000    0.0000    0.0000    0.0000                                     
+  wind I off    VERDICT        pass      pass      pass     agree
+  wind weak     rate           0.06      0.04      0.01     -0.05  < 1.0, :443                        >spread(0.02)
+  wind weak     integ        0.0073    0.0073    0.0074    0.0001  0.5 needed, :443                   
+  wind weak     VERDICT        pass      pass      pass     agree
+  time series vs chain9 (samples_gz_airship_vectored_independent_chain9.csv): per phase, index-aligned rows, model - record
+    phase                                       n   m/r   rate rms/max/mean deg/s  torque rms/max/mean        integ rms/max/mean        
+    정지 확인                                      10 10/10  0.03/0.05/-0.00          0.0000/0.0000/+0.0000      -                         
+    바람 확인 기준                                    7  7/7   0.02/0.04/-0.01          0.0000/0.0000/+0.0000      -                         
+    바람 확인                                      16 16/16  0.02/0.05/+0.00          0.0000/0.0000/+0.0000      -                         
+    Manual 통과                                  10 10/10  0.43/0.91/+0.20          0.0000/0.0000/+0.0000      -                         
+    Acro 제동                                    48 48/48  0.36/0.76/+0.08          0.0032/0.0066/-0.0010      0.0005/0.0010/-0.0003     
+    정지 대기                                      42 42/42  0.31/0.50/-0.04          0.0029/0.0064/-0.0006      0.0011/0.0028/-0.0009     
+    출발                                          1  1/1   0.44/0.44/-0.44          0.0039/0.0039/+0.0039      0.0003/0.0003/+0.0003     
+    Acro 추종                                   111 111/111  0.25/0.49/+0.01          0.0023/0.0048/-0.0000      0.0005/0.0008/+0.0001     
+    Acro 놓음                                    38 38/38  0.22/0.37/+0.00          0.0091/0.0550/+0.0011      0.0004/0.0006/-0.0004     
+    정지 대기 #2                                   42 42/42  0.25/0.61/-0.11          0.0028/0.0063/+0.0016      0.0011/0.0026/+0.0007     
+    출발 #2                                       1  1/1   0.35/0.35/-0.35          0.0033/0.0033/+0.0033      0.0001/0.0001/+0.0001     
+    Stabilized 추종                             111 111/111  0.15/0.28/-0.00          0.0014/0.0026/+0.0002      0.0003/0.0005/+0.0002     
+    Stabilized 놓음                              38 38/38  0.15/0.26/-0.01          0.0014/0.0025/-0.0001      0.0002/0.0003/-0.0002     
+    바람 1 N m, I 켬: 적분기가 받아낸다                  127 127/127  0.13/0.25/-0.01          0.0011/0.0020/+0.0001      0.0001/0.0003/+0.0000     
+    바람 1 N m, I 켬: 적분기가 받아낸다 회복                32 32/32  0.11/0.18/-0.00          0.0010/0.0018/+0.0001      0.0001/0.0002/+0.0001     
+    바람 1 N m, I 끔: 계속 밀린다                      79 80/79  0.10/0.19/+0.00          0.0009/0.0017/+0.0001      0.0000/0.0000/+0.0000     
+    바람 1 N m, I 끔: 계속 밀린다 회복                   32 32/32  0.08/0.16/-0.01          0.0008/0.0015/+0.0001      0.0000/0.0000/+0.0000     
+    바람 0.4 N m (틸트 밴드 아래), I 켬                158 159/158  0.07/0.19/+0.00          0.0006/0.0013/+0.0000      0.0001/0.0001/+0.0001     
+    바람 0.4 N m (틸트 밴드 아래), I 켬 회복              32 32/32  0.06/0.14/-0.00          0.0005/0.0008/+0.0001      0.0001/0.0001/+0.0001     
+
+=== gz_airship_vectored_independent_am_fin_drag   model status 1 (967 rows; chain7 8/10, chain9 8/10)
+  check         field        chain7    chain9     model  d(model)  gate tolerance (sitl_check.py)     flags
+  wind check    start         -0.01      0.00      0.00      0.01                                     
+  wind check    end           -0.86     -0.82     -0.82      0.04  0.5 x expected, :314               
+  wind check    VERDICT        pass      pass      pass     agree
+  Manual        torque       0.5000    0.5000    0.5000    0.0000  0.02, :324                         
+  Manual        start         -1.00     -1.10     -1.00      0.10                                     
+  Manual        end            8.60      8.50      8.70      0.20                                     >spread(0.10)
+  Manual        VERDICT        pass      pass      pass     agree
+  Acro brake    start          9.40      9.30      9.80      0.50                                     >spread(0.10)
+  Acro brake    end           -1.00     -1.00     -1.30     -0.30  |r| < 6.0, :371                    >spread(0.00)
+  Acro brake    VERDICT        pass      pass      pass     agree
+  Acro track    mean           6.23      6.23      6.52      0.29  0.25 sp = 1.667, :402              >spread(0.00)
+  Acro track    peak           6.29      6.29      6.53      0.24  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.00)
+  Acro track    start         -0.35     -0.32     -0.18      0.17                                     >spread(0.03)
+  Acro track    integ0       0.0010    0.0010    0.0000   -0.0010                                     
+  Acro track    VERDICT        pass      pass      pass     agree
+  Acro release  start          6.30      6.30      6.50      0.20                                     >spread(0.00)
+  Acro release  end            2.80      2.70      2.90      0.20                                     >spread(0.10)
+  Acro release  settle            -         -         -         -  < 10.0 s, :425                     
+  Acro release  slope         -0.22     -0.21     -0.18      0.04                                     >spread(0.01)
+  Acro release  VERDICT        FAIL      FAIL      FAIL     agree
+  Stab track    mean           6.25      6.24      6.46      0.22  0.25 sp = 1.667, :402              >spread(0.01)
+  Stab track    peak           6.28      6.29      6.48      0.20  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.01)
+  Stab track    start          0.15      0.14      0.14     -0.01                                     
+  Stab track    integ0      -0.0000   -0.0000   -0.0000    0.0000                                     
+  Stab track    VERDICT        pass      pass      pass     agree
+  Stab release  start          6.30      6.30      6.50      0.20                                     >spread(0.00)
+  Stab release  end            2.70      2.70      2.80      0.10                                     >spread(0.00)
+  Stab release  settle            -         -         -         -  < 10.0 s, :425                     
+  Stab release  slope         -0.19     -0.21     -0.18      0.03                                     >spread(0.02)
+  Stab release  VERDICT        FAIL      FAIL      FAIL     agree
+  wind I on     rate           0.22      0.20      0.38      0.18  < 1.0, :443                        >spread(0.02)
+  wind I on     integ        0.0254    0.0255    0.0257    0.0003  0.5 needed, :443                   
+  wind I on     VERDICT        pass      pass      pass     agree
+  wind I off    rate           1.37      1.35      1.43      0.08  > 1.0, :443                        >spread(0.02)
+  wind I off    integ        0.0000    0.0000    0.0000    0.0000                                     
+  wind I off    VERDICT        pass      pass      pass     agree
+  wind weak     rate           0.02      0.01      0.02      0.01  < 1.0, :443                        
+  wind weak     integ        0.0070    0.0070    0.0066   -0.0004  0.5 needed, :443                   
+  wind weak     VERDICT        pass      pass      pass     agree
+  time series vs chain9 (samples_gz_airship_vectored_independent_am_fin_drag_chain9.csv): per phase, index-aligned rows, model - record
+    phase                                       n   m/r   rate rms/max/mean deg/s  torque rms/max/mean        integ rms/max/mean        
+    정지 확인                                      10 10/10  0.03/0.05/+0.01          0.0000/0.0000/+0.0000      -                         
+    바람 확인 기준                                    7  7/7   0.02/0.04/+0.01          0.0000/0.0000/+0.0000      -                         
+    바람 확인                                      16 16/16  0.02/0.04/+0.00          0.0000/0.0000/+0.0000      -                         
+    Manual 통과                                  10 10/10  0.12/0.24/+0.09          0.0000/0.0000/+0.0000      -                         
+    Acro 제동                                    48 48/48  0.34/0.64/+0.21          0.0054/0.0074/-0.0052      0.0038/0.0050/-0.0034     
+    정지 대기                                      77 79/77  0.46/0.68/-0.43          0.0087/0.0146/+0.0074      0.0057/0.0092/+0.0037     
+    출발                                          1  1/1   0.15/0.15/+0.15          0.0016/0.0016/-0.0016      0.0002/0.0002/-0.0002     
+    Acro 추종                                   111 111/111  0.58/0.99/+0.55          0.0096/0.0165/-0.0067      0.0085/0.0146/-0.0019     
+    Acro 놓음                                    38 38/39  0.11/0.27/+0.01          0.0147/0.0165/-0.0146      0.0145/0.0151/-0.0145     
+    정지 대기 #2                                   35 35/43  0.49/0.65/-0.44          0.0035/0.0083/-0.0028      0.0068/0.0092/-0.0066     
+    출발 #2                                       1  1/1   0.00/0.00/-0.00          0.0000/0.0000/-0.0000      0.0001/0.0001/+0.0001     
+    Stabilized 추종                             111 111/111  0.24/0.37/+0.21          0.0074/0.0128/-0.0059      0.0056/0.0110/-0.0041     
+    Stabilized 놓음                              37 38/37  0.13/0.22/+0.11          0.0122/0.0135/-0.0122      0.0112/0.0118/-0.0112     
+    바람 1 N m, I 켬: 적분기가 받아낸다                  127 127/127  0.40/0.83/-0.15          0.0040/0.0091/+0.0028      0.0036/0.0061/+0.0015     
+    바람 1 N m, I 켬: 적분기가 받아낸다 회복                32 32/32  0.12/0.19/+0.11          0.0023/0.0029/-0.0023      0.0014/0.0019/-0.0013     
+    바람 1 N m, I 끔: 계속 밀린다                      79 80/79  0.07/0.13/-0.01          0.0006/0.0012/+0.0001      0.0000/0.0000/+0.0000     
+    바람 1 N m, I 끔: 계속 밀린다 회복                   32 32/32  0.09/0.16/-0.08          0.0008/0.0014/+0.0007      0.0000/0.0000/+0.0000     
+    바람 0.4 N m (틸트 밴드 아래), I 켬                159 159/159  0.04/0.13/+0.01          0.0007/0.0016/+0.0003      0.0006/0.0009/+0.0003     
+    바람 0.4 N m (틸트 밴드 아래), I 켬 회복              32 32/32  0.03/0.07/+0.00          0.0004/0.0009/-0.0002      0.0002/0.0003/-0.0002     
+
+=== gz_cloudship   model status 0 (688 rows; chain7 9/9, chain9 9/9)
+  check         field        chain7    chain9     model  d(model)  gate tolerance (sitl_check.py)     flags
+  wind check    start          0.10      0.10      0.00     -0.10                                     >spread(0.00)
+  wind check    end          -46.58    -46.81    -46.82     -0.24  0.5 x expected, :314               
+  wind check    VERDICT        pass      pass      pass     agree
+  Manual        torque       0.5000    0.5000    0.5000    0.0000  0.02, :324                         
+  Manual        start        -59.00    -59.10    -58.40      0.70                                     >spread(0.10)
+  Manual        end            3.90      4.40      3.80     -0.60                                     >spread(0.50)
+  Manual        VERDICT        pass      pass      pass     agree
+  Acro brake    start         11.20     11.80     11.00     -0.80                                     >spread(0.60)
+  Acro brake    end           -0.80     -0.90     -0.90     -0.10  |r| < 6.0, :371                    
+  Acro brake    VERDICT        pass      pass      pass     agree
+  Acro track    mean           6.65      6.66      6.65     -0.01  0.25 sp = 1.667, :402              
+  Acro track    peak           8.17      8.11      8.04     -0.13  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.06)
+  Acro track    start         -0.10     -0.07     -0.15     -0.08                                     >spread(0.03)
+  Acro track    integ0       0.0000    0.0000    0.0000    0.0000                                     
+  Acro track    VERDICT        pass      pass      pass     agree
+  Acro release  start          6.60      6.60      6.70      0.10                                     >spread(0.00)
+  Acro release  end           -1.00     -0.90     -1.00     -0.10                                     
+  Acro release  settle         3.20      3.20      3.20      0.00  < 10.0 s, :425                     
+  Acro release  slope             -         -         -         -                                     
+  Acro release  VERDICT        pass      pass      pass     agree
+  Stab track    mean           6.64      6.65      6.65      0.01  0.25 sp = 1.667, :402              
+  Stab track    peak           8.15      8.18      8.06     -0.12  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.03)
+  Stab track    start         -0.18     -0.16     -0.19     -0.03                                     >spread(0.02)
+  Stab track    integ0       0.0000    0.0000    0.0000    0.0000                                     
+  Stab track    VERDICT        pass      pass      pass     agree
+  Stab release  start          6.70      6.70      6.70      0.00                                     
+  Stab release  end           -0.90     -0.90     -1.00     -0.10                                     >spread(0.00)
+  Stab release  settle         3.20      3.20      3.20      0.00  < 10.0 s, :425                     
+  Stab release  slope             -         -         -         -                                     
+  Stab release  VERDICT        pass      pass      pass     agree
+  wind I on     rate           0.02      0.05      0.00     -0.05  < 1.0, :443                        >spread(0.03)
+  wind I on     integ        0.0185    0.0185    0.0185    0.0000  0.5 needed, :443                   
+  wind I on     VERDICT        pass      pass      pass     agree
+  wind I off    rate           2.13      2.11      2.12      0.01  > 1.0, :443                        
+  wind I off    integ        0.0000    0.0000    0.0000    0.0000                                     
+  wind I off    VERDICT        pass      pass      pass     agree
+  time series vs chain9 (samples_gz_cloudship_chain9.csv): per phase, index-aligned rows, model - record
+    phase                                       n   m/r   rate rms/max/mean deg/s  torque rms/max/mean        integ rms/max/mean        
+    정지 확인                                      10 10/10  0.06/0.11/-0.06          0.0000/0.0000/+0.0000      -                         
+    바람 확인 기준                                    7  7/7   0.07/0.10/-0.06          0.0000/0.0000/+0.0000      -                         
+    바람 확인                                      16 16/16  0.23/0.56/+0.15          0.0000/0.0000/+0.0000      -                         
+    Manual 통과                                  10 10/10  0.48/0.69/-0.27          0.1581/0.5000/-0.0500      -                         
+    Acro 제동                                    48 48/48  0.23/0.80/-0.01          0.0020/0.0066/+0.0009      0.0011/0.0019/+0.0010     
+    정지 대기                                      11 11/12  0.09/0.18/+0.01          0.0008/0.0017/-0.0001      0.0001/0.0001/-0.0000     
+    출발                                          1  1/1   0.08/0.08/-0.08          0.0007/0.0007/+0.0007      0.0000/0.0000/-0.0000     
+    Acro 추종                                   111 111/111  0.07/0.19/+0.00          0.0007/0.0016/+0.0000      0.0001/0.0003/+0.0001     
+    Acro 놓음                                    38 38/39  0.06/0.12/-0.01          0.0005/0.0009/+0.0001      0.0001/0.0002/-0.0001     
+    정지 대기 #2                                   14 15/14  0.05/0.09/-0.04          0.0004/0.0007/+0.0001      0.0003/0.0004/-0.0003     
+    출발 #2                                       1  1/1   0.03/0.03/-0.03          0.0003/0.0003/+0.0003      0.0000/0.0000/-0.0000     
+    Stabilized 추종                             111 111/111  0.07/0.16/-0.00          0.0056/0.0588/-0.0005      0.0001/0.0003/+0.0000     
+    Stabilized 놓음                              38 38/39  0.05/0.09/-0.00          0.0004/0.0009/-0.0000      0.0001/0.0001/-0.0001     
+    바람 0.082963 N m, I 켬: 적분기가 받아낸다           127 127/127  0.04/0.11/-0.00          0.0004/0.0010/+0.0000      0.0001/0.0003/-0.0000     
+    바람 0.082963 N m, I 켬: 적분기가 받아낸다 회복         32 32/32  0.05/0.11/+0.01          0.0004/0.0009/+0.0000      0.0001/0.0001/+0.0001     
+    바람 0.082963 N m, I 끔: 계속 밀린다               80 80/80  0.04/0.09/+0.00          0.0004/0.0011/-0.0000      0.0000/0.0000/+0.0000     
+    바람 0.082963 N m, I 끔: 계속 밀린다 회복            32 32/32  0.04/0.10/-0.01          0.0004/0.0009/+0.0001      0.0000/0.0000/+0.0000     
+
+=== gz_cloudship_am_fin_drag   model status 0 (723 rows; chain7 8/9, chain9 8/9)
+  check         field        chain7    chain9     model  d(model)  gate tolerance (sitl_check.py)     flags
+  wind check    start          0.00      0.05      0.00     -0.05                                     
+  wind check    end          -19.87    -20.01    -19.82      0.19  0.5 x expected, :314               >spread(0.14)
+  wind check    VERDICT        pass      pass      pass     agree
+  Manual        torque       0.5000    0.5000    0.5000    0.0000  0.02, :324                         
+  Manual        start        -21.60    -21.70    -21.60      0.10                                     
+  Manual        end           16.50     16.80     16.40     -0.40                                     >spread(0.30)
+  Manual        VERDICT        pass      pass      pass     agree
+  Acro brake    start         19.60     19.80     19.60     -0.20                                     
+  Acro brake    end           -3.40     -3.50     -3.00      0.50  |r| < 6.0, :371                    >spread(0.10)
+  Acro brake    VERDICT        pass      pass      pass     agree
+  Acro track    mean           5.73      5.64      6.69      1.05  0.25 sp = 1.667, :402              >spread(0.09)
+  Acro track    peak           9.42      9.54      7.30     -2.24  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.12)
+  Acro track    start         -0.54     -0.62     -0.11      0.51                                     >spread(0.08)
+  Acro track    integ0       0.0010    0.0010    0.0000   -0.0010                                     
+  Acro track    VERDICT        FAIL      FAIL      pass  DISAGREE
+  Acro release  start          5.30      5.20      6.70      1.50                                     >spread(0.10)
+  Acro release  end           -1.10     -1.10     -0.90      0.20                                     >spread(0.00)
+  Acro release  settle         4.10      4.10      6.00      1.90  < 10.0 s, :425                     >spread(0.00)
+  Acro release  slope             -         -         -         -                                     
+  Acro release  VERDICT        pass      pass      pass     agree
+  Stab track    mean           7.12      7.16      6.69     -0.47  0.25 sp = 1.667, :402              >spread(0.04)
+  Stab track    peak           7.59      7.59      7.33     -0.26  < 1.4 sp: 0.4 sp = 2.667, :403     >spread(0.00)
+  Stab track    start         -0.36     -0.36     -0.26      0.10                                     >spread(0.00)
+  Stab track    integ0       0.0010    0.0010    0.0000   -0.0010                                     
+  Stab track    VERDICT        pass      pass      pass     agree
+  Stab release  start          7.30      7.30      6.70     -0.60                                     >spread(0.00)
+  Stab release  end           -0.40     -0.40     -0.90     -0.50                                     >spread(0.00)
+  Stab release  settle         7.60      7.90      6.00     -1.90  < 10.0 s, :425                     >spread(0.30)
+  Stab release  slope             -         -         -         -                                     
+  Stab release  VERDICT        pass      pass      pass     agree
+  wind I on     rate           0.40      0.42      0.01     -0.41  < 1.0, :443                        >spread(0.02)
+  wind I on     integ        0.0214    0.0211    0.0183   -0.0031  0.5 needed, :443                   
+  wind I on     VERDICT        pass      pass      pass     agree
+  wind I off    rate           2.07      2.12      1.95     -0.17  > 1.0, :443                        >spread(0.05)
+  wind I off    integ        0.0000    0.0000    0.0000    0.0000                                     
+  wind I off    VERDICT        pass      pass      pass     agree
+  time series vs chain7 (samples_gz_cloudship_am_fin_drag_chain7.csv): per phase, index-aligned rows, model - record
+    phase                                       n   m/r   rate rms/max/mean deg/s  torque rms/max/mean        integ rms/max/mean        
+    정지 확인                                      10 10/10  0.06/0.11/-0.05          0.0000/0.0000/+0.0000      -                         
+    바람 확인 기준                                    7  7/7   0.03/0.07/-0.02          0.0000/0.0000/+0.0000      -                         
+    바람 확인                                      16 16/16  0.05/0.11/+0.02          0.0000/0.0000/+0.0000      -                         
+    Manual 통과                                  10 10/10  0.15/0.21/-0.13          0.0000/0.0000/+0.0000      -                         
+    Acro 제동                                    48 48/48  1.11/1.70/+1.00          0.0232/0.0285/-0.0219      0.0156/0.0238/-0.0134     
+    정지 대기                                      23 30/23  0.37/0.62/-0.22          0.0219/0.0271/-0.0216      0.0236/0.0244/-0.0235     
+    출발                                          1  1/1   0.43/0.43/+0.43          0.0041/0.0041/-0.0041      0.0004/0.0004/-0.0004     
+    Acro 추종                                   111 111/111  1.31/2.59/-0.14          0.0179/0.0276/-0.0055      0.0135/0.0224/-0.0067     
+    Acro 놓음                                    38 38/38  1.11/1.51/+1.03          0.0138/0.0169/-0.0134      0.0075/0.0120/-0.0044     
+    정지 대기 #2                                   21 31/21  0.24/0.40/-0.16          0.0105/0.0138/-0.0103      0.0117/0.0122/-0.0117     
+    출발 #2                                       1  1/1   0.10/0.10/+0.10          0.0011/0.0011/-0.0011      0.0002/0.0002/-0.0002     
+    Stabilized 추종                             111 111/111  0.25/0.62/+0.04          0.0038/0.0077/-0.0029      0.0029/0.0053/-0.0025     
+    Stabilized 놓음                              38 38/38  0.81/1.01/-0.80          0.0127/0.0171/+0.0119      0.0067/0.0121/+0.0048     
+    바람 0.082963 N m, I 켬: 적분기가 받아낸다           127 127/127  0.34/0.48/+0.28          0.0091/0.0163/+0.0053      0.0100/0.0149/+0.0078     
+    바람 0.082963 N m, I 켬: 적분기가 받아낸다 회복         32 32/32  0.35/0.44/+0.34          0.0104/0.0116/-0.0103      0.0076/0.0097/-0.0074     
+    바람 0.082963 N m, I 끔: 계속 밀린다               80 80/80  0.87/1.14/+0.81          0.0076/0.0099/-0.0071      0.0000/0.0000/+0.0000     
+    바람 0.082963 N m, I 끔: 계속 밀린다 회복            32 32/32  0.38/0.49/-0.36          0.0033/0.0046/+0.0032      0.0000/0.0000/+0.0000     
+  time series vs chain9 (samples_gz_cloudship_am_fin_drag_chain9.csv): per phase, index-aligned rows, model - record
+    phase                                       n   m/r   rate rms/max/mean deg/s  torque rms/max/mean        integ rms/max/mean        
+    정지 확인                                      10 10/10  0.04/0.06/+0.02          0.0000/0.0000/+0.0000      -                         
+    바람 확인 기준                                    7  7/7   0.05/0.10/+0.02          0.0000/0.0000/+0.0000      -                         
+    바람 확인                                      16 16/16  0.10/0.18/+0.10          0.0000/0.0000/+0.0000      -                         
+    Manual 통과                                  10 10/10  0.33/0.46/-0.31          0.1581/0.5000/-0.0500      -                         
+    Acro 제동                                    48 48/48  1.14/1.82/+1.03          0.0239/0.0299/-0.0224      0.0159/0.0249/-0.0136     
+    정지 대기                                      23 30/23  0.35/0.57/-0.18          0.0236/0.0287/-0.0233      0.0249/0.0256/-0.0249     
+    출발                                          1  1/1   0.50/0.50/+0.50          0.0048/0.0048/-0.0048      0.0005/0.0005/-0.0005     
+    Acro 추종                                   111 111/111  1.37/2.69/-0.14          0.0188/0.0293/-0.0061      0.0143/0.0237/-0.0073     
+    Acro 놓음                                    38 38/39  1.08/1.53/+0.98          0.0138/0.0163/-0.0136      0.0076/0.0120/-0.0050     
+    정지 대기 #2                                   20 31/20  0.28/0.45/-0.23          0.0103/0.0134/-0.0101      0.0120/0.0127/-0.0120     
+    출발 #2                                       1  1/1   0.11/0.11/+0.11          0.0011/0.0011/-0.0011      0.0001/0.0001/-0.0001     
+    Stabilized 추종                             111 111/112  0.27/0.62/+0.05          0.0040/0.0079/-0.0030      0.0030/0.0055/-0.0025     
+    Stabilized 놓음                              38 38/39  0.84/1.01/-0.83          0.0132/0.0171/+0.0124      0.0070/0.0125/+0.0051     
+    바람 0.082963 N m, I 켬: 적분기가 받아낸다           127 127/128  0.34/0.49/+0.28          0.0091/0.0160/+0.0056      0.0100/0.0149/+0.0080     
+    바람 0.082963 N m, I 켬: 적분기가 받아낸다 회복         32 32/32  0.35/0.46/+0.34          0.0102/0.0115/-0.0102      0.0073/0.0094/-0.0071     
+    바람 0.082963 N m, I 끔: 계속 밀린다               79 80/79  0.86/1.13/+0.81          0.0075/0.0100/-0.0071      0.0000/0.0000/+0.0000     
+    바람 0.082963 N m, I 끔: 계속 밀린다 회복            32 32/32  0.35/0.48/-0.33          0.0031/0.0043/+0.0029      0.0000/0.0000/+0.0000     

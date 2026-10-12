@@ -1,0 +1,39 @@
+40 jobs, 40 to run
+done
+90 jobs, 90 to run
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/xcheck_D/xbeyond.py", line 184, in run
+    r['m'] = scen(job['scen'], job['target'], job['rule'], job['P'], job['seed'],
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/xcheck_D/xbeyond.py", line 97, in scen
+    S = float(name[3:])
+        ^^^^^^^^^^^^^^^
+ValueError: could not convert string to float: 'wind+'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-h-dev-PX4-Autopilot/1e48cf6c-455a-42ab-ba26-91399c708d3c/scratchpad/yaw_model/options/xcheck_D/xbeyond.py", line 208, in <module>
+    for r in pool.imap_unordered(run, todo):
+  File "/usr/lib/python3.12/multiprocessing/pool.py", line 873, in next
+    raise value
+ValueError: could not convert string to float: 'wind+'
+30 jobs, 30 to run
+done
+6 jobs, 6 to run
+done
+6 jobs, 6 to run
+done
+6 jobs, 6 to run
+done
+4 jobs, 4 to run
+done
+4 jobs, 4 to run
+done
+ALLDONE
