@@ -21,7 +21,6 @@ indexes by actuator number and no motor count is assumed anywhere.
 import os
 import re
 import subprocess
-import threading
 import time
 
 TRACE = os.environ.get('GZ_LINK_TRACE') == '1'   # print every publish with its wall-clock span
@@ -53,34 +52,60 @@ def topic(name, count=1, timeout=25):
     return done.stdout if done.returncode == 0 else None
 
 
-def publish(name, kind, payload, timeout=10, tries=3):
-    """True when `gz topic` accepted the message; False after `tries`.
+_node = None
+_publishers = {}
 
-    The return code used to be ignored, and a wrench clear that gz never took
-    left the previous wind case's torque on the hull: the next case then held
-    the rate at zero with an integrator at exactly twice the torque it should
-    have needed (2026-09-24, the vectored airship's gate). A publish that
-    fails is retried, and a caller that gets False has something to report.
+
+def _publisher(name, message_type, wait=10.0):
+    """A publisher on `name` that lives as long as the process and is handed
+    out only once the simulator's subscriber is connected to it, or None when
+    none turned up within `wait` s (no world up, or one without the
+    ApplyLinkWrench system).
+
+    `gz topic -p` was a publisher that lived about 0.8 s: the subscriber had
+    to discover it inside that, and the exit code could not tell whether it
+    did. A clear lost that way left the previous wind case's torque on the
+    hull, and the next case then held the rate at zero with an integrator at
+    exactly twice the torque it should have needed (2026-09-24, and again
+    2026-10-12 on the vectored airship's gate).
     """
-    for attempt in range(tries):
-        start = time.time()
+    global _node
 
-        try:
-            done = subprocess.run(['gz', 'topic', '-t', name, '-m', kind, '-p', payload],
-                                  capture_output=True, text=True, timeout=timeout)
-        except (subprocess.TimeoutExpired, FileNotFoundError):
-            done = None
+    try:
+        import gz.transport13 as transport
+    except ImportError:
+        raise SystemExit('gz 파이썬 전송 바인딩이 없다: python3-gz-transport13 과 python3-gz-msgs10')
 
-        if TRACE:
-            print('gz_publish wall %.2f-%.2f %s rc %s' % (start, time.time(), name.rsplit('/', 1)[-1],
-                                                          None if done is None else done.returncode), flush=True)
+    if _node is None:
+        _node = transport.Node()
 
-        if done is not None and done.returncode == 0:
-            return True
+    publisher = _publishers.get(name)
 
-        time.sleep(1.0)
+    if publisher is None:
+        publisher = _node.advertise(name, message_type)
+        _publishers[name] = publisher
 
-    return False
+    deadline = time.time() + wait
+
+    while not publisher.has_connections():
+        if time.time() > deadline:
+            return None
+
+        time.sleep(0.05)
+
+    return publisher
+
+
+def publish(name, message):
+    """True when a connected subscriber took the message."""
+    start = time.time()
+    publisher = _publisher(name, type(message))
+    ok = publisher is not None and publisher.publish(message)
+
+    if TRACE:
+        print('gz_publish wall %.2f-%.2f %s %s' % (start, time.time(), name.rsplit('/', 1)[-1], ok), flush=True)
+
+    return ok
 
 
 def messages(text):
@@ -206,7 +231,12 @@ def motor_speed(index):
     return None if speeds is None or len(speeds) <= index else speeds[index]
 
 
-_repeats = None    # the thread still sending the repeats of the last clear
+def _entity(model):
+    from gz.msgs10.entity_pb2 import Entity
+    entity = Entity()
+    entity.name = model
+    entity.type = Entity.MODEL
+    return entity
 
 
 def wrench(torque_nm):
@@ -219,77 +249,40 @@ def wrench(torque_nm):
     as well (aero_moment_check.py's probe world is the example), so the two go
     together or not at all.
 
-    Waits for the repeats of the last clear first: one landing after this
-    push would clear it.
-
-    Published once. publish() re-sends after a timeout or a non-zero exit,
-    and gz may already have taken the message by then (the CLI publishes
-    about 0.8 s in, then tears down); a second persistent wrench adds. A
-    caller that must have the push judges by its effect and re-pushes after
-    a clear (sitl_check.wind_case), so False here means not confirmed, not
-    absent.
+    Published once, to a connected subscriber: persistent wrenches add, so a
+    repeat would double it. A caller that must have the push still judges by
+    its effect and re-pushes after a clear (sitl_check.wind_case); False here
+    means the simulator had no subscriber to take it.
     """
-    _finish_clear()
+    from gz.msgs10.entity_wrench_pb2 import EntityWrench
     model, world = _target()
-    return publish('/world/%s/wrench/persistent' % world, 'gz.msgs.EntityWrench',
-                   'entity: {name: "%s", type: MODEL}, wrench: {torque: {z: %f}}'
-                   % (model, torque_nm), tries=1)
-
-
-def _clear_once():
-    model, world = _target()
-    return publish('/world/%s/wrench/clear' % world, 'gz.msgs.Entity', 'name: "%s", type: MODEL' % model)
-
-
-def _finish_clear():
-    global _repeats
-
-    if _repeats is not None:
-        _repeats.join()
-        _repeats = None
+    message = EntityWrench()
+    message.entity.CopyFrom(_entity(model))
+    message.wrench.torque.z = torque_nm
+    return publish('/world/%s/wrench/persistent' % world, message)
 
 
 def push_up(force_n):
     """A persistent vertical force on the hull, N, positive up (gz's world z).
     The same message and the same rules as wrench(): published once, adds to
     any other persistent wrench, removed by wrench_clear()."""
-    _finish_clear()
+    from gz.msgs10.entity_wrench_pb2 import EntityWrench
     model, world = _target()
-    return publish('/world/%s/wrench/persistent' % world, 'gz.msgs.EntityWrench',
-                   'entity: {name: "%s", type: MODEL}, wrench: {force: {z: %f}}'
-                   % (model, force_n), tries=1)
+    message = EntityWrench()
+    message.entity.CopyFrom(_entity(model))
+    message.wrench.force.z = force_n
+    return publish('/world/%s/wrench/persistent' % world, message)
 
 
-def wrench_clear(times=3):
-    """Clear every persistent wrench on the model.
+def wrench_clear(times=1):
+    """Clear every persistent wrench on the model: idempotent, sent `times`
+    times in a row. From a live publisher a clear costs no wall clock, so
+    nothing after it moves in time (three CLI calls in a row used to shift
+    every check after a wind case: 2026-09-28, chain12)."""
+    model, world = _target()
+    ok = True
 
-    `gz topic -p` exits 0 even when the simulator never took the message (a
-    short-lived publisher can leave before the subscriber has discovered it),
-    so the return code cannot tell a dropped clear, and a dropped one leaves
-    the push on for the rest of the run: persistent wrenches add, so every
-    later wind case then holds the sum (2026-09-28: the Cloudship's integrator
-    at 0.2418, which is (1 + 0.083) N m, against 0.0185 needed). A clear is
-    idempotent, so it is sent `times` times; a push is sent once, because a
-    repeated push would add.
+    for _ in range(times):
+        ok = publish('/world/%s/wrench/clear' % world, _entity(model)) and ok
 
-    Only the first is sent before this returns, and its result is the return
-    value. The others go out from a thread: each `gz topic` call costs wall
-    clock, and three in a row moved everything after the clear. After the
-    wind check the Cloudship's complete plant then entered the Manual check
-    3.6 s after the push instead of 1.2 s, at -14.3 instead of -21.7 deg/s,
-    and every Acro check after it started from a different state (2026-09-28,
-    chain12: the Acro peak 9.46 against 8.96-9.02 before). wrench() waits for
-    the repeats before the next push.
-    """
-    global _repeats
-    _finish_clear()
-    ok = _clear_once()
-
-    def repeat():
-        for _ in range(times - 1):
-            time.sleep(0.2)
-            _clear_once()
-
-    _repeats = threading.Thread(target=repeat)
-    _repeats.start()
     return ok
