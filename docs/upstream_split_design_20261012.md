@@ -117,7 +117,7 @@ upstream 사용자가 날리는 것은 완전 플랜트여야 한다. 그러면 
 - **비용 재추정.** 2·3 단계 (한 증분): 2~3 일 + gz 시간, 순서는 (1) gz_model 두 집 + rigid 토큰 → (2) variant_check 두 집 (뒤의 모든 것의 게이트) → (3) 생성기 오버레이 모드
   + 시험 → (4) 플랜트 레지스트리 (S3) → (5) gz_run.sh 실행 경로 (S4) → (6) 트림 커밋 → (7) SITL 재기준선. (2) 와 (5) 가 통과하기 전에 SITL 을 돌리지 않는다.
 
-## 7. 실행 기록과 다음 단계의 구체 목록 (2026-10-13 00:05)
+## 7. 실행 기록과 다음 단계의 구체 목록 (2026-10-12 23:05)
 
 **(1) 끝남 — 브랜치 `split/step1` (worktree `~/dev/px4-airship-tools-split`, 푸시됨; 체인이 끝나면 main 에 병합).**
 `gz_model`: `OVERLAY`(env `AIRSHIP_OVERLAY`, 기본 `<repo>/overlay`), `MODEL_HOMES`/`AIRFRAME_HOMES` = [오버레이, 트리], `model_dir`/`has_model`/`model_names`/
