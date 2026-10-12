@@ -78,11 +78,11 @@ def _model_name():
 MODEL_NAME = _model_name()
 MODEL = '%s_%s' % (MODEL_NAME, INSTANCE)
 
-if not os.path.isdir(os.path.join(gz_model.GZ_MODELS, MODEL_NAME)):
+if not gz_model.has_model(MODEL_NAME):
     raise SystemExit(
         '%s 라는 모델이 %s 아래에 없다. GZ_TARGET/PX4_GZ_ENTITY 를 확인한다.\n'
         '이름을 못 맞히면 모든 렌치가 없는 엔티티로 가고 검사는 그 정적을 측정한다.'
-        % (MODEL_NAME, gz_model.GZ_MODELS))
+        % (MODEL_NAME, ', '.join(gz_model.MODEL_HOMES)))
 
 # One line of `param show -a`. It prints three flag columns with single spaces
 # between them ("%c %c %c %s": used / unsaved-or-changed / readonly), so the

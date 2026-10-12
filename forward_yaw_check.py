@@ -164,10 +164,9 @@ ROOTFS = os.path.join(gz_model.ROOT, 'build/px4_sitl_default/rootfs')
 # The fin plants: every model whose name carries the scheme's _fin token. The
 # defect is the fins' damping growing with speed, so the finless members
 # (2520, 2510) have nothing to show here; the plan keeps them as the unchanged
-# reference of the next increment. Read from the models directory, so a
-# generated family (airship_family_gen.py) is a plant the moment it exists.
-ALLOWED = tuple(sorted(n for n in os.listdir(gz_model.GZ_MODELS)
-                       if 'fin' in gz_model.family_tokens(n) if os.path.isfile(os.path.join(gz_model.GZ_MODELS, n, 'model.sdf'))))
+# reference of the next increment. Read from the model homes, so a generated
+# family (airship_family_gen.py) is a plant the moment it exists.
+ALLOWED = tuple(n for n in gz_model.model_names() if 'fin' in gz_model.family_tokens(n))
 
 # (low, high) speed per plant, m/s. Default legs: full stick at both, half
 # stick at the high speed, right (positive) yaw. The vectored airship flies the

@@ -230,7 +230,8 @@ def test_added_mass_reads():
             d12['munk'] == 0.0 and d12['m_x'] == d12['m_y'] and near(d17['munk'], 4.923, 0.001),
             '2512 %.3f, 2517 %.3f' % (d12['munk'], d17['munk']))
     family = gz_model.family(CS_ALL)
-    kept = gz_model.GZ_MODELS
+    sources = {name: os.path.join(gz_model.model_dir(name), 'model.sdf') for name in family}
+    kept = gz_model.MODEL_HOMES
     outcomes = {}
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -241,7 +242,7 @@ def test_added_mass_reads():
             this edits the element, not the text)."""
             for name in family:
                 os.makedirs(os.path.join(tmp, name), exist_ok=True)
-                shutil.copy(os.path.join(kept, name, 'model.sdf'), os.path.join(tmp, name, 'model.sdf'))
+                shutil.copy(sources[name], os.path.join(tmp, name, 'model.sdf'))
 
             path = os.path.join(tmp, family[0], 'model.sdf')
             doc = ET.parse(path)
@@ -261,7 +262,7 @@ def test_added_mass_reads():
             return 1
 
         try:
-            gz_model.GZ_MODELS = tmp
+            gz_model.MODEL_HOMES = [tmp]
 
             for drop, call in (('yy', lambda: gz_model.lateral_derivatives(CS_ALL)),
                                ('xx', lambda: gz_model.surge_mass(CS_ALL)),
@@ -276,7 +277,7 @@ def test_added_mass_reads():
                 except LookupError:
                     outcomes[drop] = 'LookupError'
         finally:
-            gz_model.GZ_MODELS = kept
+            gz_model.MODEL_HOMES = kept
 
     verdict('_am 기체의 fluid_added_mass 에서 yy, xx, rr 이나 블록 전체가 빠지면 0 으로 읽지 않고 멈춘다 (가속 방식도)',
             all(v == 'LookupError' for v in outcomes.values()) and len(outcomes) == 4, str(outcomes))

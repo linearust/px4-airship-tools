@@ -14,12 +14,11 @@ import gate  # noqa
 
 RHO = 1.225
 STICK, DZ = 0.5, 0.1
-POSIX = os.path.join(gz_model.ROOT, 'ROMFS/px4fmu_common/init.d-posix/airframes')
 
 def bare_airframe(vehicle):
-    for f in os.listdir(POSIX):
-        if f.endswith('_gz_' + vehicle):
-            return os.path.join('ROMFS/px4fmu_common/init.d-posix/airframes', f)
+    for f, path in gz_model.airframe_files():
+        if f.endswith('_gz_' + gz_model.bare(vehicle)):
+            return path
     raise LookupError(vehicle)
 
 class Plant:

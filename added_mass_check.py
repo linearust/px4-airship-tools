@@ -102,7 +102,7 @@ import time
 
 import gz_link
 import gz_model
-from gz_model import GZ_MODELS, GZ_PLUGINS, RHO_AIR
+from gz_model import GZ_PLUGINS, MODEL_HOMES, RHO_AIR
 from report import note, summary, verdict
 
 VEHICLE = sys.argv[sys.argv.index('--vehicle') + 1] if '--vehicle' in sys.argv else 'cloudship'
@@ -152,7 +152,7 @@ def probe(model, wrench, seconds, release_after=None):
     with tempfile.TemporaryDirectory() as tmp:
         world = os.path.join(tmp, 'probe.sdf')
         open(world, 'w').write(WORLD % {'world': WORLD_NAME, 'rho': RHO_AIR, 'model': model})
-        env = dict(os.environ, GZ_SIM_RESOURCE_PATH=GZ_MODELS, GZ_IP='127.0.0.1',
+        env = dict(os.environ, GZ_SIM_RESOURCE_PATH=':'.join(MODEL_HOMES), GZ_IP='127.0.0.1',
                    GZ_SIM_SYSTEM_PLUGIN_PATH=GZ_PLUGINS)
         server = subprocess.Popen(['gz', 'sim', '-s', '-r', world], env=env,
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -414,7 +414,7 @@ def main():
         note('gz 월드가 이미 떠 있다. 이 검사는 자기 월드를 띄운다')
         return 2
 
-    missing = [m for m in MODELS if not os.path.isdir(os.path.join(gz_model.GZ_MODELS, m))]
+    missing = [m for m in MODELS if not gz_model.has_model(m)]
 
     if missing:
         # airship_fixed carries its fins as actuators and has no _fin member,

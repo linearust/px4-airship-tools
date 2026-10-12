@@ -84,6 +84,7 @@ import glob
 import math
 import os
 import re
+import sys
 
 import yaml
 
@@ -140,8 +141,14 @@ DEFAULT_PARAMS = {name: float(yaml_default(path, name)) for name, path in PARAM_
 # and a later `param set-default` of the same name wins, as in the shell.
 # ---------------------------------------------------------------------------
 
+_BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+if _BENCH not in sys.path:
+    sys.path.insert(0, _BENCH)
+
+import gz_model  # noqa: E402  the homes of a posix airframe (overlay, tree)
+
 ROMFS = os.path.join(PX4, 'ROMFS/px4fmu_common')
-POSIX_AIRFRAMES = os.path.join(ROMFS, 'init.d-posix/airframes')
 _SOURCE = re.compile(r'^\s*\.\s+\$\{R\}etc/(\S+)\s*$')
 _SET_DEFAULT = re.compile(r'^\s*param set-default (\w+) (\S+)')
 _SIM_MODEL = re.compile(r'^\s*PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=(\S+)\}')
@@ -149,7 +156,7 @@ _SIM_MODEL = re.compile(r'^\s*PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=(\S+)\}')
 
 def airframe_file(number):
     """The posix airframe file of one SYS_AUTOSTART number, exactly one."""
-    found = glob.glob(os.path.join(POSIX_AIRFRAMES, '%d_*' % int(number)))
+    found = [p for home in gz_model.AIRFRAME_HOMES for p in glob.glob(os.path.join(home, '%d_*' % int(number)))]
 
     if len(found) != 1:
         raise LookupError('posix airframe %s: %d files (%s)' % (number, len(found), found))
@@ -169,7 +176,7 @@ def airframe_walk(path, _depth=0):
             m = _SOURCE.match(line)
 
             if m:
-                yield from airframe_walk(os.path.join(ROMFS, m.group(1)), _depth + 1)
+                yield from airframe_walk(gz_model.sourced_path(m.group(1)), _depth + 1)
                 continue
 
             m = _SET_DEFAULT.match(line)
@@ -217,7 +224,7 @@ def airframe_for_model(model):
     prefix), exactly one. Cached per process: the files are read once."""
     hits, unread = [], []
 
-    for path in sorted(glob.glob(os.path.join(POSIX_AIRFRAMES, '[0-9]*_*'))):
+    for _, path in gz_model.airframe_files():        # both homes, by file name
         number = int(os.path.basename(path).split('_')[0])
 
         # Some airframes source a build-generated defaults file before they

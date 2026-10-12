@@ -38,7 +38,7 @@ import time
 
 import gz_link
 import gz_model
-from gz_model import GZ_MODELS, GZ_PLUGINS, named, sdf, zof
+from gz_model import GZ_PLUGINS, MODEL_HOMES, model_dir, named, sdf, zof
 from report import note, summary, verdict
 # Each vehicle is the model that carries base_link first, then whatever else
 # adds mass to it. One entry is one airframe's worth of files, however many
@@ -192,7 +192,7 @@ def variant_models(aero_model, tmp, keep_cross):
     """Copy the aero model out, optionally with the cross terms deleted."""
     name = 'probe'
     dst = os.path.join(tmp, name)
-    shutil.copytree(os.path.join(GZ_MODELS, aero_model), dst)
+    shutil.copytree(model_dir(aero_model), dst)
     text = open(os.path.join(dst, 'model.sdf')).read()
     if not keep_cross:
         text = re.sub(r'\s*<(xQabsU|yPabsV|mUabsU|mQabsU|kVabsV|kPabsV)>[^<]*</\1>', '', text)
@@ -251,7 +251,7 @@ def settle(aero_model, keep_cross, wrench, settle_s):
 def _settle(tmp, wrench, settle_s):
     world = os.path.join(tmp, 'probe_world.sdf')
     open(world, 'w').write(WORLD)
-    env = dict(os.environ, GZ_SIM_RESOURCE_PATH=tmp + ':' + GZ_MODELS, GZ_IP='127.0.0.1',
+    env = dict(os.environ, GZ_SIM_RESOURCE_PATH=':'.join([tmp] + MODEL_HOMES), GZ_IP='127.0.0.1',
                GZ_SIM_SYSTEM_PLUGIN_PATH=GZ_PLUGINS)
     server = subprocess.Popen(['gz', 'sim', '-s', '-r', world], env=env,
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

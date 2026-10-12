@@ -90,7 +90,7 @@ import xml.etree.ElementTree as ET
 import fin_basis
 import gz_model
 import hull_basis
-from gz_model import AIRFRAMES, CMAKE_POSIX, FLIGHT_AIRFRAMES, GZ_MODELS, HYDRO_FILE, LIFT_DRAG_FILE, ROOT, RHO_AIR
+from gz_model import CMAKE_POSIX, FLIGHT_AIRFRAMES, HYDRO_FILE, LIFT_DRAG_FILE, ROOT, RHO_AIR
 from report import note, summary, verdict
 
 TOKENS = gz_model.SCHEME_TOKENS
@@ -170,7 +170,8 @@ def vehicle_file_twins():
 
 TWINS = dict(vehicle_file_twins(), **TWINS)
 DOCS = os.path.join(ROOT, 'docs/en/sim_gazebo_gz/index.md')
-LTA = os.path.join(GZ_MODELS, '..', 'worlds', 'lta.sdf')
+WORLDS = os.path.join(ROOT, 'Tools/simulation/gz/worlds')
+LTA = os.path.join(WORLDS, 'lta.sdf')
 
 
 def split(name):
@@ -198,7 +199,7 @@ def airframe_number(name):
 
 def posix_airframes(vehicle):
     """The posix gz airframe files of a vehicle's bare model."""
-    return [f for f in os.listdir(AIRFRAMES) if re.match(r'\d+_gz_%s$' % re.escape(vehicle), f)]
+    return [f for f, _ in gz_model.airframe_files() if re.match(r'\d+_gz_%s$' % re.escape(vehicle), f)]
 
 
 def body_of(vehicle):
@@ -221,8 +222,7 @@ def has_actuator_fins(vehicle):
 
 def models():
     """Every airship model directory, by the scheme's vehicles."""
-    return sorted(d for d in os.listdir(GZ_MODELS)
-                  if os.path.isfile(os.path.join(GZ_MODELS, d, 'model.sdf')) and split(d))
+    return [d for d in gz_model.model_names() if split(d)]
 
 
 def off_scheme():
@@ -231,14 +231,14 @@ def off_scheme():
     split() rejects would otherwise vanish from every other fact."""
     found = []
 
-    for d in sorted(os.listdir(GZ_MODELS)):
+    for d in gz_model.model_names():
         if d.endswith('_base') or d.endswith('_base_am'):
             continue                                   # a body, judged by fact 10
 
         if any(d.startswith(v + '_') for v in DECADE) and not split(d):
             found.append('models/' + d)
 
-    for f in sorted(os.listdir(AIRFRAMES)):
+    for f, _ in gz_model.airframe_files():
         if '_gz_' in f:
             model = f.split('_gz_', 1)[1]
 
@@ -296,10 +296,10 @@ def stable_bodies():
     and its header makes no such promise."""
     out = {}
 
-    for name in sorted(os.listdir(GZ_MODELS)):
-        path = os.path.join(GZ_MODELS, name, 'model.sdf')
+    for name in gz_model.model_names():
+        path = os.path.join(gz_model.model_dir(name), 'model.sdf')
 
-        if not name.endswith('_base') or not os.path.isfile(path):
+        if not name.endswith('_base'):
             continue
 
         found = re.search(r"restore\s+at\s+least\s+([\d.]+)\s+x\s+the\s+hull's\s+potential-flow\s+Munk\s+moment", open(path).read())
@@ -372,7 +372,7 @@ def main():
         body = body_of(v)
         copies.append((body, body + '_am') if body else (v, v + '_am'))
 
-    copies = sorted(set(c for c in copies if os.path.isfile(os.path.join(GZ_MODELS, c[1], 'model.sdf'))))
+    copies = sorted(set(c for c in copies if gz_model.has_model(c[1])))
     bad, carriers = [], {}
 
     for original, copy in copies:
@@ -404,7 +404,7 @@ def main():
         return canonical(m)
 
     for v in vehicles:
-        if body_of(v) and os.path.isfile(os.path.join(GZ_MODELS, v + '_am', 'model.sdf')):
+        if body_of(v) and gz_model.has_model(v + '_am'):
             if propulsion(v, v) != propulsion(v + '_am', v):
                 bad.append('%s_am 의 추진 블록이 %s 의 것과 다르다' % (v, v))
 
@@ -435,7 +435,7 @@ def main():
 
     for v in vehicles:
         if has_actuator_fins(v):
-            bearers = [v] + ([v + '_am'] if os.path.isfile(os.path.join(GZ_MODELS, v + '_am', 'model.sdf')) else [])
+            bearers = [v] + ([v + '_am'] if gz_model.has_model(v + '_am') else [])
         else:
             bearers = [n for n in names if split(n)[0] == v and split(n)[1][-1:] == ['fin']]   # the block lives where the token is last
 
@@ -582,13 +582,14 @@ def main():
     for name in names:
         number = airframe_number(name)
         airframe = '%d_gz_%s' % (number, name)
-        path = os.path.join(AIRFRAMES, airframe)
 
         for spawn in [name] + ['%s_%d' % (name, i) for i in range(4)]:
             if '%s::base_link' % spawn not in enabled:
                 missing.append(spawn)
 
-        if not os.path.isfile(path):
+        try:
+            path = gz_model.airframe_path(airframe)
+        except LookupError:
             wrong.append('%s 없음' % airframe)
             continue
 
@@ -603,7 +604,7 @@ def main():
         if not re.search(r'`make px4_sitl gz_%s`\s*\|\s*%d\s*\|' % (re.escape(name), number), docs):
             wrong.append('docs 표에 gz_%s = %d 가 없다' % (name, number))
 
-    others = sorted(f for f in os.listdir(AIRFRAMES) if '_gz_' in f and split(f.split('_gz_', 1)[1]) and
+    others = sorted(f for f, _ in gz_model.airframe_files() if '_gz_' in f and split(f.split('_gz_', 1)[1]) and
                     f not in ['%d_gz_%s' % (airframe_number(n), n) for n in names])
     verdict('lta 월드가 모든 기체를 bare 와 _0.._3 로 띄운다', not missing, ', '.join(missing) if missing else '%d 항목' % (5 * len(names)))
     verdict('에어프레임 번호가 십의 자리 = 기체, 일의 자리 = 물리 마스크이고 CMake 와 docs 가 따른다',
@@ -657,7 +658,7 @@ def main():
 
     # 10. _base: a plugin-free body wrapped by at least one model, never an
     #     airframe (x500_base, omniquad_base: upstream's own shape).
-    all_dirs = sorted(d for d in os.listdir(GZ_MODELS) if os.path.isfile(os.path.join(GZ_MODELS, d, 'model.sdf')))
+    all_dirs = gz_model.model_names()
     includers = {}
 
     for d in all_dirs:
@@ -685,7 +686,7 @@ def main():
         if not includers.get(b):
             bad.append('%s 를 감싸는 모델이 없다' % b)
 
-        if any(f.endswith('_gz_' + b) for f in os.listdir(AIRFRAMES)):
+        if any(f.endswith('_gz_' + b) for f, _ in gz_model.airframe_files()):
             bad.append('%s 에 에어프레임이 있다' % b)
 
         if gz_model.sdf(b).findall('plugin'):
@@ -702,9 +703,9 @@ def main():
     bad = []
 
     for name in names:
-        path = os.path.join(AIRFRAMES, '%d_gz_%s' % (airframe_number(name), name))
-
-        if not os.path.isfile(path):
+        try:
+            path = gz_model.airframe_path('%d_gz_%s' % (airframe_number(name), name))
+        except LookupError:
             continue
 
         m = re.search(r'^# @name (.+)$', open(path).read(), re.M)
@@ -727,8 +728,8 @@ def main():
 
     # 12. make targets: two gz airframes may not produce one target, the way
     #     CMake would hit it (gz_<model>[_<world>] joined by _, never parsed).
-    worlds = [w[:-4] for w in os.listdir(os.path.join(GZ_MODELS, '..', 'worlds')) if w.endswith('.sdf')]
-    models_all = [f.split('_gz_', 1)[1] for f in os.listdir(AIRFRAMES) if '_gz_' in f]
+    worlds = [w[:-4] for w in os.listdir(WORLDS) if w.endswith('.sdf')]
+    models_all = [f.split('_gz_', 1)[1] for f, _ in gz_model.airframe_files() if '_gz_' in f]
     targets = {}
 
     for m in models_all:
@@ -744,10 +745,10 @@ def main():
     #     is in a table decade, with the classic twin at x9.
     bad = []
 
-    for d, label in ((AIRFRAMES, 'posix'), (FLIGHT_AIRFRAMES, 'flight')):
+    for files, label in (([f for f, _ in gz_model.airframe_files()], 'posix'), (os.listdir(FLIGHT_AIRFRAMES), 'flight')):
         nums = {}
 
-        for f in os.listdir(d):
+        for f in files:
             m = re.match(r'(25\d\d)_', f)
 
             if m:
@@ -782,7 +783,7 @@ def main():
     bad, bits = [], []
 
     for body, target in STABLE.items():
-        amms = [v for v in vehicles if body_of(v) == body and os.path.isfile(os.path.join(GZ_MODELS, v + '_am', 'model.sdf'))]
+        amms = [v for v in vehicles if body_of(v) == body and gz_model.has_model(v + '_am')]
         finned = sorted({n for n in names if body_of(split(n)[0]) == body
                          and (split(n)[1][-1:] == ['fin'] or (has_actuator_fins(split(n)[0]) and not split(n)[1]))})
 
@@ -830,11 +831,11 @@ def main():
             bad.append('%s: 에어프레임이 없다' % v)
             continue
 
-        text = open(os.path.join(AIRFRAMES, airframe)).read()
+        text = open(gz_model.airframe_path(airframe)).read()
         params = {k: float(x) for k, x in re.findall(r'^param set-default (SIM_GZ_SV_\w+) (-?[\d.]+)', text, re.M)}
         compared = 0
 
-        for model in [v] + ([v + '_am'] if os.path.isfile(os.path.join(GZ_MODELS, v + '_am', 'model.sdf')) else []):
+        for model in [v] + ([v + '_am'] if gz_model.has_model(v + '_am') else []):
             merged = gz_model.merged(model)
             pairs = gz_model.servo_joints(merged)
             # every control joint a fin names, each driven by one servo topic
@@ -882,7 +883,7 @@ def main():
             bad.append('%s: posix %s, 비행 %s' % (v, posix, flight))
             continue
 
-        mine, theirs = allocation(os.path.join(AIRFRAMES, posix[0])), allocation(os.path.join(FLIGHT_AIRFRAMES, flight[0]))
+        mine, theirs = allocation(gz_model.airframe_path(posix[0])), allocation(os.path.join(FLIGHT_AIRFRAMES, flight[0]))
         # the file's own values stand in for the flight airframe's on the
         # lines the flight airframe leaves to the vehicle; everything else,
         # order included, is the flight airframe's

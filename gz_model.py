@@ -27,6 +27,15 @@ GZ_MODELS = os.path.join(ROOT, 'Tools/simulation/gz/models')
 AIRFRAMES = os.path.join(ROOT, 'ROMFS/px4fmu_common/init.d-posix/airframes')
 FLIGHT_AIRFRAMES = os.path.join(ROOT, 'ROMFS/px4fmu_common/init.d/airframes')
 CMAKE_POSIX = os.path.join(AIRFRAMES, 'CMakeLists.txt')
+# A model or a posix gz airframe has two homes: this repository's overlay,
+# where the families upstream does not carry live, and the PX4 tree. Names
+# never collide between them (the overlay's mask-0 member carries the _rigid
+# token, below), so the order only says where a name is looked for first.
+# The writers (airship_family_gen, apply_generic_hull) still take a root.
+HERE = os.path.dirname(os.path.abspath(__file__))
+OVERLAY = os.environ.get('AIRSHIP_OVERLAY', os.path.join(HERE, 'overlay'))
+MODEL_HOMES = [os.path.join(OVERLAY, 'models'), GZ_MODELS]
+AIRFRAME_HOMES = [os.path.join(OVERLAY, 'airframes'), AIRFRAMES]
 GZ_PLUGINS = os.environ.get('PX4_GZ_PLUGINS',
                             os.path.join(ROOT, 'build/px4_sitl_default/src/'
                                                'modules/simulation/gz_plugins'))
@@ -49,9 +58,96 @@ MULTICOPTER = 'multicopter-motor-model'
 GENERIC = 'GenericMotorModel'
 
 
+def model_dir(name):
+    """The directory of a model, from whichever home holds its model.sdf."""
+    for home in MODEL_HOMES:
+        path = os.path.join(home, name)
+
+        if os.path.isfile(os.path.join(path, 'model.sdf')):
+            return path
+
+    raise LookupError('%s 라는 모델이 없다 (%s)' % (name, ', '.join(MODEL_HOMES)))
+
+
+def has_model(name):
+    try:
+        model_dir(name)
+    except LookupError:
+        return False
+
+    return True
+
+
+def model_names():
+    """Every model name over the homes, sorted. A name in both homes is an
+    error: the homes are told apart by name, never by order."""
+    seen = {}
+
+    for home in MODEL_HOMES:
+        if not os.path.isdir(home):
+            continue
+
+        for d in os.listdir(home):
+            if not os.path.isfile(os.path.join(home, d, 'model.sdf')):
+                continue
+
+            if d in seen:
+                raise LookupError('%s 모델이 두 집에 있다: %s, %s' % (d, seen[d], home))
+
+            seen[d] = home
+
+    return sorted(seen)
+
+
+def airframe_files():
+    """[(file name, path)] of every posix gz airframe over the homes, sorted
+    by file name; a file name in both homes is an error, as for models."""
+    seen = {}
+
+    for home in AIRFRAME_HOMES:
+        if not os.path.isdir(home):
+            continue
+
+        for f in os.listdir(home):
+            path = os.path.join(home, f)
+
+            if not os.path.isfile(path) or '_gz_' not in f and '_gazebo-classic_' not in f:
+                continue
+
+            if f in seen:
+                raise LookupError('%s 에어프레임이 두 집에 있다: %s, %s' % (f, seen[f], path))
+
+            seen[f] = path
+
+    return sorted(seen.items())
+
+
+def airframe_path(file_name):
+    """The path of one posix airframe file, from whichever home holds it."""
+    for home in AIRFRAME_HOMES:
+        path = os.path.join(home, file_name)
+
+        if os.path.isfile(path):
+            return path
+
+    raise LookupError('%s 에어프레임이 없다 (%s)' % (file_name, ', '.join(AIRFRAME_HOMES)))
+
+
+def sourced_path(rel):
+    """The file a `. ${R}etc/<rel>` line sources: a posix airframe is looked
+    for over the homes (an overlay member sources its own bare one), anything
+    else is the tree's ROMFS."""
+    prefix = 'init.d-posix/airframes/'
+
+    if rel.startswith(prefix) and '/' not in rel[len(prefix):]:
+        return airframe_path(rel[len(prefix):])
+
+    return os.path.join(ROOT, 'ROMFS/px4fmu_common', rel)
+
+
 def sdf(name):
-    """The <model> element of models/<name>/model.sdf."""
-    return ET.parse(os.path.join(GZ_MODELS, name, 'model.sdf')).getroot().find('model')
+    """The <model> element of <home>/<name>/model.sdf."""
+    return ET.parse(os.path.join(model_dir(name), 'model.sdf')).getroot().find('model')
 
 
 def named(parent, tag, name):
@@ -151,16 +247,28 @@ def family(name):
 # In the scheme's order, <vehicle>[_am][_fin][_drag]: variant_check reads the
 # order from this tuple.
 SCHEME_TOKENS = ('am', 'fin', 'drag')
+# The overlay's mask-0 member, <vehicle>_rigid: none of the physics tokens,
+# and exclusive with them. The tree's plain name is the vehicle itself, bare
+# today and the complete plant once upstream carries only that.
+RIGID = 'rigid'
 
 
 def family_tokens(name):
     """The scheme tokens a model name carries, in order: ['am', 'fin'] for
-    airship_vectored_independent_am_fin, [] for a bare model."""
+    airship_vectored_independent_am_fin, ['rigid'] for the overlay's bare
+    member, [] for a plain name. The rigid token beside a physics token is
+    not the scheme's."""
     tokens = name.split('_')
     kept = []
 
     while len(tokens) > 1 and tokens[-1] in SCHEME_TOKENS:
         kept.insert(0, tokens.pop())
+
+    if len(tokens) > 1 and tokens[-1] == RIGID:
+        if kept:
+            raise LookupError('%s: _rigid 는 물리 토큰과 함께 쓰지 않는다' % name)
+
+        kept = [RIGID]
 
     return kept
 
@@ -190,7 +298,17 @@ def vehicle(name):
     while len(tokens) > 1 and tokens[-1] in SCHEME_TOKENS:
         tokens.pop()
 
+    if len(tokens) > 1 and tokens[-1] == RIGID:
+        tokens.pop()
+
     return '_'.join(tokens)
+
+
+def bare(vehicle):
+    """The mask-0 member of a vehicle: its _rigid model where one exists (the
+    overlay), else the plain name (the tree today)."""
+    rigid = '%s_%s' % (vehicle, RIGID)
+    return rigid if has_model(rigid) else vehicle
 
 
 def includes(name):
@@ -654,12 +772,12 @@ def airframe(name):
     this model. Exactly one, by the scheme's file name, or an error."""
     import re
 
-    found = [f for f in os.listdir(AIRFRAMES) if re.match(r'^\d+_gz_%s$' % re.escape(name), f)]
+    found = [(f, p) for f, p in airframe_files() if re.match(r'^\d+_gz_%s$' % re.escape(name), f)]
 
     if len(found) != 1:
-        raise LookupError('%s 의 posix 에어프레임이 %d 개다: %s' % (name, len(found), ', '.join(found) or '없음'))
+        raise LookupError('%s 의 posix 에어프레임이 %d 개다: %s' % (name, len(found), ', '.join(f for f, _ in found) or '없음'))
 
-    path = os.path.join(AIRFRAMES, found[0])
+    path = found[0][1]
 
     with open(path) as handle:
         text = handle.read()
@@ -667,7 +785,7 @@ def airframe(name):
     if 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=%s}' % name not in text:
         raise LookupError('%s 의 PX4_SIM_MODEL 기본값이 %s 가 아니다' % (found[0], name))
 
-    return int(found[0].split('_')[0]), path
+    return int(found[0][0].split('_')[0]), path
 
 
 def airframe_defaults(name):
@@ -678,7 +796,6 @@ def airframe_defaults(name):
     that cannot be read is an error: its defaults would silently be missing."""
     import re
 
-    romfs = os.path.join(ROOT, 'ROMFS/px4fmu_common')
     values = {}
 
     def read(path, depth):
@@ -693,7 +810,7 @@ def airframe_defaults(name):
             source = re.match(r'^\.\s+\$\{R\}etc/(\S+)$', line)
 
             if source:
-                read(os.path.join(romfs, source.group(1)), depth + 1)
+                read(sourced_path(source.group(1)), depth + 1)
                 continue
 
             setting = re.match(r'^param set-default\s+(\w+)\s+(\S+)', line)
