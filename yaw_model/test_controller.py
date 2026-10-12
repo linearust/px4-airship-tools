@@ -501,6 +501,7 @@ def rate_driven(path, frame, params, sim_per_wall=1.0, switch_delay=0.0):
 
 def test_rate_driven():
     found = sorted(glob.glob(os.path.join(HERE, 'data', 'samples_*.csv')))
+    found += sorted(glob.glob(os.path.join(HERE, 'records', 'samples_*.csv')))      # the kept copies of the chain runs
     found += sorted(glob.glob(os.path.join(BENCH, 'sitl_out', 'samples_*_chain9.csv')))
     seen = set()
     for p in found:
@@ -532,6 +533,7 @@ def test_rate_driven():
 
 def test_replay():
     found = sorted(glob.glob(os.path.join(HERE, 'data', 'samples_*.csv')))
+    found += sorted(glob.glob(os.path.join(HERE, 'records', 'samples_*.csv')))      # the kept copies of the chain runs
     # per-plant series from the running chain, if any appeared
     found += sorted(glob.glob(os.path.join(BENCH, 'sitl_out', 'samples_*_chain9.csv')))
     paths, seen = [], set()
