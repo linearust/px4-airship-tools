@@ -108,3 +108,34 @@ upstream 에 가는 수: 파라미터 **8 개** (17 → 8), 메시지 **0 개** 
    항목만) 통과.
 3. PR 브랜치 펌웨어를 스테이징한다. 실내 시험은 이것으로 난다 (요 루프 시험은 airship/dev 펌웨어로 따로; 그 증거는 다음 라운드).
 4. 하드웨어 패키지 카드에 "PR 주장 ↔ 카드" 를 적고, PR 본문 초안을 이 둘로 다시 쓴다.
+
+## 7. 배분기의 범위 (15:10; 사용자: "generic airship 범위를 넘어서는데 타당한 범위는?")
+
+지금 `ActuatorEffectivenessAirship` 이 드는 것: 포드 둘 (독립/집단 `GRP`), 꼬리 추진기 (`TAIL`), 조종면과 크레딧 (`CS_K`, `_control_surfaces`,
+`ControlSurfaceType.hpp` 리팩토링, `kMinEffectiveness`), 상태 메시지 (`airship_allocator_status`, `AirshipYawAllocation.hpp`, `AirshipAirframe.hpp`),
+2507 Cloudship 을 16 으로 전환. 파라미터 7, 메시지 2, 공용 파일 6 개 수정, 배분기 cpp 332 / hpp 182 / 시험 1754 줄.
+
+**제안: "틸트 포드 둘" 로 좁힌다. 실내 기체가 비행에서 밟는 경로만 남기고, 나머지는 삭제로만 좁혀 나중에 덧붙이는 커밋이 되게 한다.**
+
+| 남긴다 | 뺀다 (포크/오버레이에 남는다) |
+|---|---|
+| 독립 포드 둘: 모터 + 틸트 서보 각각, 고정 수 (yaml `count: CA_AIRSHIP_GRP` 꼼수 사라짐) | `CA_AIRSHIP_GRP` 집단 모드 (Y 케이블 시험은 펌웨어 경로가 아니다) |
+| `AirshipPod` 그대로: 범위, 슬루, 조향 밴드, 비무장 파킹, 200k 속성 시험 | `CA_AIRSHIP_TAIL` 꼬리 추진기 (실내 기체에 없다) |
+| `CA_AIRSHIP_TLMIN/TLMAX/TLT_R` | `CA_AIRSHIP_CS_K`, 조종면 전체, `ControlSurfaceType.hpp`, `kMinEffectiveness` 리팩토링 |
+| `podWrench`, 차동 추력 요·롤, 추력 x·z 투영 | 메시지 2 개, `AirshipYawAllocation.hpp`, `AirshipAirframe.hpp` (제어기가 쓰는 것) |
+| `getUnallocatedControl` 의 부호 보고 (축 셋, `heldByChoice` 할인) | 2507 Cloudship 전환 ("assumed, not measured" 라고 우리가 써 놓았다) |
+| 2520 + `COM_DISARM_LAND -1` (에어프레임 안에), posix 2520, 문서 | `rc.airship_defaults` 변경 |
+
+추정 크기: 배분기 cpp ~150 / hpp ~90, 포드 338 그대로, 시험 ~600 + 602, 파라미터 3, 메시지 0, 공용 파일은 `ControlAllocator.cpp/.hpp` 의 enum 값과
+case 하나뿐. 7790 줄 → 약 2000 줄.
+
+왜 이 선인가: (1) 실내 기체가 모든 경로를 난다 — ±180 조향 밴드, 슬루, 파킹, 차동 요, 투영, 포화 보고. (2) 기하 파라미터가 없다 (정규화 렌치, 모멘트
+암 없음) 이므로 7 m SITL 쌍둥이와 2 m 비행 기체가 같은 클래스를 쓴다는 설명이 선다. (3) 2500 은 Custom 에 남는다: 고정 추진기 + 조종면은 선형이라
+Custom 이 맞고, 클래스는 Custom 이 못 하는 틸트 투영 때문에 있다. (4) 집단·꼬리·조종면은 덧붙이는 커밋이다 — 포크의 넓은 배분기 = 좁힌 배분기 + 추가.
+
+라벨: upstream 관례 ("Helicopter (tail ESC)", "Rover (Ackermann)") 에 맞춰 `16: Airship (Tilt Pods)`. 파라미터 이름은 그대로. 2520 이름은 열지 않는다.
+
+리뷰어가 물을 것: `COM_DISARM_LAND -1` 이 왜 필요한가 → 착륙 감지기가 Land 선택 즉시 landed 를 보고한다 (별도 수정 후보, 이 PR 에서는 에어프레임
+안의 우회). 롤을 포드가 왜 섬기나 → 수직 차동 추력은 롤 토크이고 패스스루는 롤 0 을 보낸다, 쌍둥이와 비행 로그로 보인다.
+
+후속 (upstream 머지 뒤 라운드): 요 루프 → 집단 + 꼬리 (Cloudship 소유자 비행이 있을 때) → 조종면 크레딧 (고정 핀 기체).
