@@ -2,6 +2,7 @@
 // effectiveness through fixed scripts for several parameter sets and dumps
 // every output as hex floats, so refactor commits can be cmp'd bit for bit.
 #include <gtest/gtest.h>
+#include <string.h>
 #include "ActuatorEffectivenessAirship.hpp"
 #include <uORB/Publication.hpp>
 #include <uORB/topics/vehicle_status.h>
@@ -24,17 +25,31 @@ struct ParamSet {
 	const char *name; float tlmin, tlmax; int32_t grp, tail; float tlt_r, cs_k; int32_t cs_count; Surface cs[4]; float tail_min;
 };
 
+// A parameter the tree under test does not define is left alone: the
+// upstream-bound class has no grouping, tail or credit (IDENTITY_SETS=independent
+// runs only the sets that need none of them)
+template<typename T> static void setIf(const char *name, const T *value)
+{
+	const param_t handle = param_find(name);
+
+	if (handle != PARAM_INVALID) {
+		param_set(handle, value);
+	}
+}
+
+static bool independentOnly(const ParamSet &p) { return p.grp == 1 && p.tail == 0 && p.cs_count == 0; }
+
 static void setParams(const ParamSet &p)
 {
 	param_control_autosave(false);
 	param_reset_all();
-	param_set(param_find("CA_AIRSHIP_TLMIN"), &p.tlmin);
-	param_set(param_find("CA_AIRSHIP_TLMAX"), &p.tlmax);
-	param_set(param_find("CA_AIRSHIP_GRP"), &p.grp);
-	param_set(param_find("CA_AIRSHIP_TAIL"), &p.tail);
-	param_set(param_find("CA_AIRSHIP_TLT_R"), &p.tlt_r);
-	param_set(param_find("CA_AIRSHIP_CS_K"), &p.cs_k);
-	param_set(param_find("CA_SV_CS_COUNT"), &p.cs_count);
+	setIf("CA_AIRSHIP_TLMIN", &p.tlmin);
+	setIf("CA_AIRSHIP_TLMAX", &p.tlmax);
+	setIf("CA_AIRSHIP_GRP", &p.grp);
+	setIf("CA_AIRSHIP_TAIL", &p.tail);
+	setIf("CA_AIRSHIP_TLT_R", &p.tlt_r);
+	setIf("CA_AIRSHIP_CS_K", &p.cs_k);
+	setIf("CA_SV_CS_COUNT", &p.cs_count);
 	char name[17];
 
 	for (int i = 0; i < p.cs_count; i++) {
@@ -88,7 +103,13 @@ TEST(AirshipIdentity, Dump)
 	ASSERT_NE(out, nullptr);
 	const float dt = 0.02f;
 
+	const bool independent = getenv("IDENTITY_SETS") && strcmp(getenv("IDENTITY_SETS"), "independent") == 0;
+
 	for (const ParamSet &p : sets) {
+		if (independent && !independentOnly(p)) {
+			continue;
+		}
+
 		setParams(p);
 		lcg_state = 12345u;
 		publishArmed(true);

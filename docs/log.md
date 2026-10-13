@@ -526,6 +526,8 @@ Everything else is below, and the `.md` files carry the findings the checks exis
   to that directory's CMakeLists.txt (never commit either), `make tests TESTFILTER=AirshipIdentity`, then
   `IDENTITY_OUT=/tmp/new.txt build/px4_sitl_test/functional-ActuatorEffectivenessAirshipIdentity` and
   `identity/idcmp.sh /tmp/new.txt identity/dump_3b0a61e319_12sets.txt` (signed zero ignored: PX4 builds with -fno-signed-zeros).
+  `IDENTITY_SETS=independent` runs only the four independent-pod sets (2504, asym_wide, asym_one_rear, asym_vertical), the ones
+  the upstream-bound class can express; a parameter the tree does not define is left alone, so the same source runs on both trees.
 
   Parameter sets (2026-09-16, 12 sets x 7,399 rows = 88,788 lines): the seven original ones plus
   `asym_wide` (-100..99, independent), `asym_wide_coll` (-100..99, collective + tail + 2 surfaces)
