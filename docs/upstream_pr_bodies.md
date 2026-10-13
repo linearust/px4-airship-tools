@@ -52,7 +52,14 @@ Reviewer questions, answered:
   fingerprint regression on fmu-v6x) and on the gz twins; no flight on the Cloudship itself.
   If the reviewers prefer, 2507 stays on 9 and moves in P5.
 - **`@maintainer` on 2507.** [Keep only if the author takes the Cloudship on; otherwise drop.]
-- **Flash and RAM.** [micoair_h743-aio text/data/bss, upstream main vs this branch: table.]
+- **Flash and RAM.** micoair_h743-aio_default, `arm-none-eabi-size` of the elf, upstream main
+  (a4697ed08e) against this branch (1d2aef0e5c, the whole airship set):
+
+  | | text | data | bss |
+  |---|---|---|---|
+  | upstream main | 1865120 | 6540 | 59864 |
+  | this branch | 1876512 | 6540 | 59864 |
+  | delta | +11392 (+0.6 %) | 0 | 0 |
 
 Validation: unit tests (`AirshipPod`, `AirshipYawAllocation`, functional
 `ActuatorEffectivenessAirship`), the allocator identity harness (12 sets, IDENTICAL), fmu-v6x

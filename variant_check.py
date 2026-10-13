@@ -98,15 +98,27 @@ MASK = {'drag': 1, 'fin': 2, 'am': 4}
 
 
 def decades():
-    """{vehicle: decade} from the one place the table is written, the comment
-    above the 25xx entries of the posix CMakeLists ('#   2510 cloudship').
-    A vehicle marked reserved may have no model yet."""
+    """{vehicle: decade} from the two places the table is written: the comment
+    above the 25xx entries of the tree's posix CMakeLists ('#   2510 cloudship')
+    and the overlay's decade file (gz_model.OVERLAY_DECADES, '2630 airship_indoor'),
+    when it exists. A vehicle marked reserved may have no model yet; a vehicle
+    in both tables is an error, as a name in both homes is."""
     table, reserved = {}, set()
+    sources = [(CMAKE_POSIX, r'\s*#\s+(25\d0)\s+([a-z0-9_]+)(.*)')]
 
-    for line in open(CMAKE_POSIX):
-        m = re.match(r'\s*#\s+(25\d0)\s+([a-z0-9_]+)(.*)', line)
+    if os.path.isfile(gz_model.OVERLAY_DECADES):
+        sources.append((gz_model.OVERLAY_DECADES, r'\s*(26\d0)\s+([a-z0-9_]+)(.*)'))
 
-        if m:
+    for path, pattern in sources:
+        for line in open(path):
+            m = re.match(pattern, line)
+
+            if not m:
+                continue
+
+            if m.group(2) in table:
+                raise SystemExit('%s 가 십의 자리 표 둘에 다 있다 (%d 와 %s)' % (m.group(2), table[m.group(2)], m.group(1)))
+
             table[m.group(2)] = int(m.group(1))
 
             if 'reserved' in m.group(3):
@@ -555,19 +567,21 @@ def main():
 
     verdict('항력 블록이 선체마다 그 선체의 모든 _drag 구성원에서 같다', not bad, ', '.join(bad) if bad else ', '.join(bits))
 
-    # 6. buoyancy, and 7. numbers, over every gz airframe
+    # 6. buoyancy, and 7. numbers, over every gz airframe. A tree member is
+    #    listed in the tree's world, CMake and docs table; an overlay member
+    #    in the overlay's world, decade file and vehicle list (same shapes)
     enabled = {e.text for e in ET.parse(LTA).getroot().iter('enable')}
+    enabled_overlay = ({e.text for e in ET.parse(gz_model.OVERLAY_WORLD).getroot().iter('enable')}
+                       if os.path.isfile(gz_model.OVERLAY_WORLD) else set())
     cmake = open(CMAKE_POSIX).read()
     docs = open(DOCS).read()
+    docs_overlay = open(gz_model.OVERLAY_DOCS).read() if os.path.isfile(gz_model.OVERLAY_DOCS) else ''
+    decade_lines = open(gz_model.OVERLAY_DECADES).read() if os.path.isfile(gz_model.OVERLAY_DECADES) else ''
     missing, wrong = [], []
 
     for name in names:
         number = airframe_number(name)
         airframe = '%d_gz_%s' % (number, name)
-
-        for spawn in [name] + ['%s_%d' % (name, i) for i in range(4)]:
-            if '%s::base_link' % spawn not in enabled:
-                missing.append(spawn)
 
         try:
             path = gz_model.airframe_path(airframe)
@@ -575,16 +589,26 @@ def main():
             wrong.append('%s 없음' % airframe)
             continue
 
+        overlay = gz_model.in_overlay(path)
+
+        for spawn in [name] + ['%s_%d' % (name, i) for i in range(4)]:
+            if '%s::base_link' % spawn not in (enabled_overlay if overlay else enabled):
+                missing.append(spawn)
+
         text = open(path).read()
 
         if 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=%s}' % name not in text:
             wrong.append('%s 의 PX4_SIM_MODEL 기본값이 %s 가 아니다' % (airframe, name))
 
-        if '\t%s\n' % airframe not in cmake:
+        if overlay:
+            if not re.search(r'^\s*%d\s+%s\b' % (number // 10 * 10, re.escape(split(name)[0])), decade_lines, re.M):
+                wrong.append('%s 의 십의 자리가 오버레이 decades 파일에 없다' % airframe)
+
+        elif '\t%s\n' % airframe not in cmake:
             wrong.append('%s 가 CMakeLists 에 없다' % airframe)
 
-        if not re.search(r'`make px4_sitl gz_%s`\s*\|\s*%d\s*\|' % (re.escape(name), number), docs):
-            wrong.append('docs 표에 gz_%s = %d 가 없다' % (name, number))
+        if not re.search(r'`make px4_sitl gz_%s`\s*\|\s*%d\s*\|' % (re.escape(name), number), docs_overlay if overlay else docs):
+            wrong.append('%s 표에 gz_%s = %d 가 없다' % ('오버레이 vehicles.md' if overlay else 'docs', name, number))
 
     others = sorted(f for f, _ in gz_model.airframe_files() if '_gz_' in f and split(f.split('_gz_', 1)[1]) and
                     f not in ['%d_gz_%s' % (airframe_number(n), n) for n in names])
@@ -711,7 +735,8 @@ def main():
     # 12. make targets: two gz airframes may not produce one target, the way
     #     CMake would hit it (gz_<model>[_<world>] joined by _, never parsed).
     worlds = [w[:-4] for w in os.listdir(WORLDS) if w.endswith('.sdf')]
-    models_all = [f.split('_gz_', 1)[1] for f, _ in gz_model.airframe_files() if '_gz_' in f]
+    # the tree's members only: an overlay member has no make target (gz_run.sh spawns it)
+    models_all = [f.split('_gz_', 1)[1] for f, p in gz_model.airframe_files() if '_gz_' in f and not gz_model.in_overlay(p)]
     targets = {}
 
     for m in models_all:
@@ -722,16 +747,17 @@ def main():
     clashes = ['%s <- %s' % (t, ', '.join(ms)) for t, ms in targets.items() if len(ms) > 1]
     verdict('make 타깃이 겹치지 않는다', not clashes, '; '.join(clashes) if clashes else '%d 타깃' % len(targets))
 
-    # 13. numbers: 25xx unique within each directory; a flight 25xx is
-    #     upstream's 2500 or 2507 or a decade in the table, and a posix 25xx
-    #     is in a table decade, with the classic twin at x9.
+    # 13. numbers: 25xx (tree) and 26xx (overlay) unique over the posix homes
+    #     and within the flight directory; a flight 25xx is upstream's 2500 or
+    #     2507 or a decade in the table, and a posix number is in a table
+    #     decade, with the classic twin at x9.
     bad = []
 
     for files, label in (([f for f, _ in gz_model.airframe_files()], 'posix'), (os.listdir(FLIGHT_AIRFRAMES), 'flight')):
         nums = {}
 
         for f in files:
-            m = re.match(r'(25\d\d)_', f)
+            m = re.match(r'(2[56]\d\d)_', f)
 
             if m:
                 nums.setdefault(int(m.group(1)), []).append(f)

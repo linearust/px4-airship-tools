@@ -40,6 +40,18 @@ OVERLAY = os.environ.get('AIRSHIP_OVERLAY', os.path.join(HERE, 'overlay'))
 MODEL_HOMES = [os.path.join(OVERLAY, 'models'), GZ_MODELS]
 AIRFRAME_HOMES = [os.path.join(OVERLAY, 'airframes'), AIRFRAMES]
 VEHICLES = os.path.join(HERE, 'vehicles')     # the vehicle files the generator and the checks read
+# What the overlay keeps beside its models and airframes, the tree's CMake
+# comment, world and docs table in overlay shape: a decade table (one
+# `<decade> <bare model>[ reserved]` line each), the lab world the overlay
+# members are spawned in, and the vehicle list
+OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
+OVERLAY_WORLD = os.path.join(OVERLAY, 'worlds', 'lta_lab.sdf')
+OVERLAY_DOCS = os.path.join(OVERLAY, 'vehicles.md')
+
+
+def in_overlay(path):
+    """Whether a model or airframe path is the overlay's (else the tree's)."""
+    return os.path.abspath(path).startswith(os.path.abspath(OVERLAY) + os.sep)
 GZ_PLUGINS = os.environ.get('PX4_GZ_PLUGINS',
                             os.path.join(ROOT, 'build/px4_sitl_default/src/'
                                                'modules/simulation/gz_plugins'))
