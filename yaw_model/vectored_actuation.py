@@ -91,8 +91,7 @@ def clamp(x, lo, hi):
 # Parameters, read from the files and asserted against the cited values
 # ---------------------------------------------------------------------------
 
-AIRFRAME = 'ROMFS/px4fmu_common/init.d-posix/airframes/2520_gz_airship_vectored_independent'
-AIRFRAME_PATH = gz_model.airframe('airship_vectored_independent')[1]     # that file, found over the homes (overlay, tree)
+AIRFRAME_PATH = gz_model.airframe('airship_vectored_independent')[1]     # 2520's file, found over the homes (overlay, tree)
 WORLD = 'Tools/simulation/gz/worlds/lta.sdf'
 
 # Values the citations promise. load_params() re-reads every one from the file
@@ -205,8 +204,9 @@ def world_step(path):
 
 def load_params(model_name='airship_vectored_independent', check=True, airframe=None):
     """The actuation's parameters: the allocator's from the posix airframe
-    (AIRFRAME, 2520's, whose cited values are re-read, or `airframe`, another
-    family's bare airframe path relative to the PX4 tree, taken as it is) and
+    (AIRFRAME_PATH, 2520's found over the homes, whose cited values are re-read,
+    or `airframe`, another family's bare airframe path relative to the PX4
+    tree, taken as it is) and
     the plant's from the gz model; check=True also holds the plant to the
     10.97 m anchor's cited constants."""
     af = airframe_params(AIRFRAME_PATH if airframe is None else os.path.join(PX4, airframe))

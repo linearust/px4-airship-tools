@@ -547,17 +547,19 @@ def main():
     for a in ASSUMPTIONS:
         print('  ' + a)
 
-    # the accessor, exercised: one second of 1 N m from rest on each plant
-    print('\nget(): r after 1 s of 1 N m from rest [deg/s]')
+    if ok:
+        # the accessor, exercised: one second of 1 N m from rest on each plant
+        # (only on the anchored tree: PLANTS refuses any other)
+        print('\nget(): r after 1 s of 1 N m from rest [deg/s]')
 
-    for t in PLANTS:
-        rd, prm = get(t)
-        r = 0.0
+        for t in PLANTS:
+            rd, prm = get(t)
+            r = 0.0
 
-        for _ in range(1000):
-            r += rd(r, 1.0) * 0.001
+            for _ in range(1000):
+                r += rd(r, 1.0) * 0.001
 
-        print('  %-44s %.4f  (I %.4f)' % (t, r / DEG, prm['I_used']))
+            print('  %-44s %.4f  (I %.4f)' % (t, r / DEG, prm['I_used']))
 
     print('\nall parameters re-read from the SDFs: %s' % ('OK' if ok else 'MISMATCH'))
     return 0 if ok else 1

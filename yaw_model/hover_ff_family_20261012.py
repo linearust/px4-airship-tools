@@ -16,12 +16,6 @@ import gate  # noqa
 RHO = gz_model.RHO_AIR
 STICK, DZ = 0.5, 0.1
 
-def bare_airframe(vehicle):
-    for f, path in gz_model.airframe_files():
-        if f.endswith('_gz_' + gz_model.bare(vehicle)):
-            return path
-    raise LookupError(vehicle)
-
 class Plant:
     def __init__(self, model, member):
         fam = gz_model.family(model)
@@ -36,7 +30,7 @@ class Plant:
 
 class Act:
     def __init__(self, vehicle, model):
-        self.act = va.VectoredActuation(va.load_params(model, check=False, airframe=bare_airframe(vehicle)))
+        self.act = va.VectoredActuation(va.load_params(model, check=False, airframe=gz_model.airframe(gz_model.bare(vehicle))[1]))
     def step(self, dt, u):
         row = self.act.step(u, (0.0, 0.0, 0.0), 0.0)
         return row['N'], self.act.alloc.unallocated[2]

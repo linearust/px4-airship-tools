@@ -52,14 +52,14 @@ from the vehicle's model files through gz_model.
                starts the ramp at half that. Below the ramp the reserve term keeps the cap well under the stall
   AS_SPD_SRC 2, AS_SPD_WMAX 0 on the fin members, as the generic family's
 
-The written block sits between two markers in each airframe file, so a rerun
-replaces it; the bare airframe gets P and I, the _fin and the complete member
-their feedforward and schedule, as the generic family's 2520, 2522 and 2527.
+The block starts at the one-line source note MARK_OPEN and runs to the end of
+the file; a rerun rewrites from there. The bare airframe gets P and I, the _fin
+and the complete member their feedforward and schedule, as the generic family's
+2520, 2522 and 2527.
 """
 import argparse
 import math
 import os
-import re
 import sys
 import textwrap
 

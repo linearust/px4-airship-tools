@@ -8,7 +8,7 @@ jobs:
   tree-checks:
     # The checks that need only the PX4 source tree: generator round trip,
     # variant scheme, forward-flight analysis, the yaw model's controller
-    # reading. gz and the SITL gates stay local.
+    # reading and sitl_link's parse self-test. gz and the SITL gates stay local.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -19,8 +19,8 @@
   블록은 파일 끝까지, 생성기는 그 줄부터 다시 쓴다. 15 파일, 파라미터 줄 변화 0.
 - **D5 2519 @output 헤더.** PWM_MAIN_FUNC 매핑대로 고친다 (MAIN1 starboard, MAIN2 port, MAIN3 tilt, MAIN4 tail). 클래식 모델의 모터 0 이 +y 라
   클래식 시뮬의 차동추력 요 부호는 미검증 — 모델 항목으로 남긴다. (분리 설계의 "2507 로 되돌림" 은 트림 커밋에서.)
-- **D6 시험.** 같은 propulsive_yaw=false 경로를 세 번 도는 기능 시험 하나 삭제; 스케줄 배선·복원 규칙·데드존 에지를 Run() 을 통해 덮는 시험
-  넷 추가; 데드존 없는 복원 (옛 규칙으로의 회귀가 12 시험을 다 통과했다) 과 정확한 보유값 단언.
+- **D6 시험.** 같은 propulsive_yaw=false 경로를 세 번 도는 기능 시험 하나 삭제; 스케줄 배선·복원 규칙·데드존 에지를 Run() 을 통해 덮는 사례
+  넷 (TEST_F 다섯: 스케줄 2, 복원 1, 데드존 에지 2; 기능 시험 10 → 14) 추가; 데드존 없는 복원 (옛 규칙으로의 회귀가 12 시험을 다 통과했다) 과 정확한 보유값 단언.
   한 시험에서 모듈을 두 번 만들면 rate_ctrl_status (PublicationMulti) 가 새 인스턴스로 가서 구독이 끊긴다 — 시험당 모듈 하나.
 - **D7 yaw 모델의 닻.** plants.PLANTS 는 import 때가 아니라 첫 사용 때 만들고 EXPECTED 와 다르면 SystemExit (test_controller 의 SKIP 경로가
   받는다); validate.py 도 같은 거부. 재앵커링 (레지스트리) 은 분리 4 단계 그대로.
@@ -40,16 +40,16 @@
 ## 커밋 (전부 로컬, 서명 없음)
 
 PX4 airship/dev (a9e7c3c16b 위): afa1a26c6d rate_control getIntegral · c3fa91ba8f 컨트롤러 리팩터링 · 52e433fc87 시험 · 78459fa71d 배분기 주석 ·
-1865a03eaf 에어프레임 · 48b45f3e5f 문서 · 1d2aef0e5c 서브모듈 범프 (models 0c4307b: 자력계 tesla + lta 플래그 + 지면 상자).
-도구 main: c85a9f9 gz_model 통합 · 7f8e74d 닻·램프 · 62a2e62 전진 검사 스폰 높이 · 17c1efc 생성기 표식 · (이 기록과 pins).
+1865a03eaf 에어프레임 · 48b45f3e5f 문서 · 1d2aef0e5c 서브모듈 범프 (models 0c4307b: 자력계 tesla + lta 플래그 + 지면 상자) · 7791bc86c4 CA_AIRSHIP_GRP 는 무장 해제 상태에서 바꾼다 (D11 R2, module.yaml).
+도구 main: c85a9f9 gz_model 통합 · 7f8e74d 닻·램프 · 62a2e62 전진 검사 스폰 높이 · 17c1efc 생성기 표식 · bf0cd59 이 기록·PR 본문·pins · b7f5573 variant_check 두 집 · 00a5d73/c322ee6 체인 D·3 단계 기록 · eaa7400 f927e8b 4efd7ca 55a0703 생성기 두 모드 · edc01af pins at PX4 7791bc86c4.
 
 ## 검증
 
-gtest 8/8 (Airship) + RateControl, check_format, 도구 run_tests (생성기 17/17, 변형 16/16, 전진 분석 220/220, 컨트롤러 0 실패 1 건너뜀,
+gtest 8/8 (Airship) + RateControl, check_format, 도구 run_tests (생성기 17/17 (bf0cd59 시점; 3 단계 뒤 20/20), 변형 16/16, 전진 분석 220/220, 컨트롤러 0 실패 1 건너뜀,
 sitl_link 9/9), 보드 빌드 micoair h743 ×4 + zenfc + fmu-v6x airship (fw_48b45f3e5f8 스테이징, 올리기는 사용자), 전진 검사 `--plan` 의
 Cloudship 침하 줄. 체인 D (SITL 재기준선: 2520 호버, 2517 호버, 2527 전진, 2512 전진 @80 m) 는 아래에.
 
-## 체인 D 결과 (11:52~12:17, PX4 1d2aef0e5c + models 0c4307b, 자력계 수리 뒤의 재기준선)
+## 체인 D 결과 (11:52~12:17, PX4 1d2aef0e5c + models 0c4307b, 자력계 수리 뒤의 재기준선; 7791bc86c4 는 module.yaml 설명만, 체인 D 와 같은 펌웨어)
 
 | 검사 | 결과 | 비고 |
 |---|---|---|
@@ -60,7 +60,7 @@ Cloudship 침하 줄. 체인 D (SITL 재기준선: 2520 호버, 2517 호버, 252
 
 D9·D10 은 닫힌다. 2512 는 앞으로 80 m 스폰으로 돌린다 (검사가 20 m 에서는 다리 전에 거부하고 그 값을 말한다).
 
-## 12:00~ 분리 3 단계 (브랜치 split/step3, 체인과 겹치지 않게 worktree 에서)
+## 12:00~ 분리 3 단계 (split/step3 worktree 에서 작업, 12:19 main 에 cherry-pick: eaa7400 평범한 완전 플랜트 · f927e8b 오버레이 모드 · 4efd7ca airship_gains rigid bare · 55a0703 고정 쌍둥이; 브랜치·worktree 는 지움)
 
 `--upstream` (몸체 + 평범한 완전 플랜트 둘: 벡터링과 고정 쌍둥이, merge include 두 단, 에어프레임, 쌍둥이 검사) 과 `--overlay` (rigid 이름 +100 번호의
 자체 완결 가족, lta_lab, decades, vehicles.md; 템플릿은 오버레이의 generic rigid), airship_gains 의 rigid bare. 생성기 시험 20/20: 트림된 스크래치 트리와

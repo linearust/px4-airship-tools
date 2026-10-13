@@ -577,7 +577,7 @@ def synthetic_log(stick=1.0, tail=False, crab_deg=0.0, integ_start=0.0, stab_acr
 
 
 def gyro_cutoff_yaml():
-    return F.yaml_default('IMU_GYRO_CUTOFF', F.ANALYSIS_PARAMS['IMU_GYRO_CUTOFF'])
+    return F.yaml_default(F.ANALYSIS_PARAMS['IMU_GYRO_CUTOFF'], 'IMU_GYRO_CUTOFF')
 
 
 def test_synthetic():
@@ -990,7 +990,7 @@ def test_interface_constants():
     verdict('IMU_GYRO_CUTOFF 의 기본값은 yaml 의 40 Hz 다', gyro_cutoff_yaml() == 40.0, '%s' % gyro_cutoff_yaml())
 
     try:
-        F.yaml_default('IMU_NO_SUCH_PARAM', F.ANALYSIS_PARAMS['IMU_GYRO_CUTOFF'])
+        F.yaml_default(F.ANALYSIS_PARAMS['IMU_GYRO_CUTOFF'], 'IMU_NO_SUCH_PARAM')
         refused = False
     except LookupError:
         refused = True

@@ -73,7 +73,6 @@ import controller as ctl  # noqa: E402
 import forward as F  # noqa: E402
 
 gz_model = cl.gate.gz_model
-AS_SPD_HI_FW = float(ctl.DEFAULT_PARAMS['AS_SPD_HI'])   # m/s, the yaml default of the firmware's ramp end
 DT = cl.DT
 BENCH = cl.gate.BENCH
 SPEED_DOC = os.path.join(BENCH, 'docs', 'd1_speed_source_and_fins_20261001.md')
@@ -336,7 +335,7 @@ def schedule(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=AS_SPD_LO, hi=AS_SPD_HI
         return ff0, max_deg, {'off': True}
 
     if budget == 'd1':
-        return schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo, hi)     # the caller's ramp: the firmware's for D1
+        return schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo, hi)     # the caller's ramp (schedule's defaults are 0c's; D1 hooks pass firmware_ramp)
 
     w_lo = interpolate(u_lo, lo, hi, 0.0, 1.0)
     w_hi = interpolate(u_hi, lo, hi, 0.0, 1.0)
@@ -375,13 +374,13 @@ def budget_rate(ff0, ff_speed, budget, max_deg):
     return budget / ff_speed if ff_speed > 0.0 else float('inf')
 
 
-def schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=None, hi=None):
+def schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo, hi):
     """The increment-1 schedule (d1_universal_architecture_20261001.md 2.다 as
     amended 2026-10-07, d1_increment1_plan_20261007.md 1.3), what the firmware
-    implements, in the feedforward law controller.FF_LAW names. The ramp is the
-    firmware's: hi = AS_SPD_HI (the yaml default when not given), lo =
-    RAMP_START x hi (the increment-1 firmware's 1.5 is passed explicitly to
-    reproduce its records). (FF, cap deg/s,
+    implements, in the feedforward law controller.FF_LAW names. The ramp (lo,
+    hi) is the caller's: firmware_ramp(gains) for D1 (RAMP_START x AS_SPD_HI to
+    AS_SPD_HI); the increment-1 firmware's lo = 1.5 is passed to reproduce its
+    records. (FF, cap deg/s,
     details); FF is what the hook hands controller.set_feedforward: the speed
     term under 'quadratic', the whole gain under 'linear'. k > 0 (the caller
     handles k <= 0). The formulas below are the 'linear' law's; under
@@ -401,8 +400,6 @@ def schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=None, hi=None):
     (fixed here, recorded in the increment-1 report). At u_lo = u_hi = 0:
     FF_s = ff0 and the interval term is absent, so the cap is MAX unless
     (A - rho) / ff0 is below it."""
-    hi = AS_SPD_HI_FW if hi is None else hi
-    lo = RAMP_START * hi if lo is None else lo
     w_lo = interpolate(u_lo, lo, hi, 0.0, 1.0)
     w_hi = interpolate(u_hi, lo, hi, 0.0, 1.0)
     ff_speed = w_lo * k * u_lo

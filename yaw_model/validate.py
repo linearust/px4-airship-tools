@@ -97,7 +97,7 @@ def plant_for(model):
                          'these records are of another hull' % (model, inertia, expected))
 
     _, com = plants.gz_model.centre_of_mass(fam)
-    return plants.Plant(model, model, plants.gz_model.yaw_inertia(fam),
+    return plants.Plant(model, model, inertia,
                         plants.gz_model.added_mass(merged).get('rr', 0.0),
                         abs(plants.gz_model.hydrodynamics(merged).get('nRabsR', 0.0)),
                         plants._fins_from_sdf(merged, com), com[0], plants.gz_model.yaw_authority(model), {}, {})

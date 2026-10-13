@@ -1,8 +1,10 @@
 # Upstream PR bodies (draft, 2026-10-13)
 
 Draft bodies for the PR set in `upstream_pr_plan_20261007.md`, written to be pasted as they are.
-Verified facts only; numbers come from the gates in `docs/` and the gtests. Fill the two
-bracketed items when their measurements exist (the 2 m vehicle, the footprint table).
+Verified facts only; numbers come from the gates in `docs/` and the gtests. Fill the bracketed
+items when their measurements exist (the hardware flights; the @maintainer decision). Re-run
+`arm-none-eabi-size` on micoair_h743-aio_default at the PR head before pasting the footprint
+table: parameters.json.xz is in the ROMFS, so a module.yaml change moves the text size.
 
 ## M1 — PX4-gazebo-models: lta world, airship_base, the vectored and fixed generic families, Cloudship
 
@@ -53,7 +55,7 @@ Reviewer questions, answered:
   If the reviewers prefer, 2507 stays on 9 and moves in P5.
 - **`@maintainer` on 2507.** [Keep only if the author takes the Cloudship on; otherwise drop.]
 - **Flash and RAM.** micoair_h743-aio_default, `arm-none-eabi-size` of the elf, upstream main
-  (a4697ed08e) against this branch (1d2aef0e5c, the whole airship set):
+  (a4697ed08e) against this branch (48b45f3e5f, the whole airship set; 1d2aef0e5c carries the same firmware):
 
   | | text | data | bss |
   |---|---|---|---|
@@ -95,7 +97,7 @@ saved when the stick leaves the deadzone and put back when it returns or reverse
   -1. Reproduced in SITL (`cloudship_land_disarm_check.py`, 10/10 both ways). A sensor-based
   landed verdict for an airship is a separate feature.
 
-Validation: eight gtests (loop, schedule, selector, manual input, functional), SITL gates on
+Validation: the module's five gtest binaries, 65 cases (yaw rate loop 13, schedule 13, speed selector 11, manual input 14, functional 14), SITL gates on
 the generic and Cloudship plants (hover 10/10 and 9/9), [2 m vehicle flights].
 
 ## P3 — airship_att_control: the forward-speed schedule

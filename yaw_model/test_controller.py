@@ -34,7 +34,7 @@ import controller as C  # noqa: E402
 import record_gains  # noqa: E402
 
 FAILS = []
-SKIPS = []      # checks that could not run on this tree (the re-anchoring), reported beside the failures
+SKIPS = []      # checks that could not run on this tree (the re-anchoring, absent flight logs), reported beside the failures
 
 
 def run_of(path):
@@ -611,6 +611,7 @@ def test_ulogs():
         path = os.path.join(U.LOGDIR, rel)
         if not os.path.exists(path):
             print('  (no %s)' % path)
+            SKIPS.append('ulog %s' % rel)
             continue
         r = U.check_log(path, frame, verbose=False)
         ei = sorted(abs(x) for x in r['e_i'])

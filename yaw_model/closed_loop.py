@@ -291,7 +291,7 @@ class Loop(gate.compose):
                                                   self._armed, self._sticks_valid, self._unallocated)
 
             if hasattr(self.actuation, 'set_manual'):
-                # AAC:195-198: the thrust and the roll torque are the sticks
+                # AAC:224-228: the thrust and the roll torque are the sticks
                 # while the input is usable, zero otherwise
                 usable = self._armed and self._sticks_valid
                 thrust = ctl.manual_thrust(self._throttle, self._pitch) if usable else (0.0, 0.0, 0.0)

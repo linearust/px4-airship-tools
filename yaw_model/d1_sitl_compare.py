@@ -51,7 +51,7 @@ def speed_sensitivity(params, u, ff, cap):
     inside the ramp d ff / d u = k (w + u / (HI - LO)); the cap goes as 1 / ff
     past the ramp, so d cap / d u = -cap / ff d ff / d u."""
     k, hi = params.get('AS_YR_FF_SLP') or 0.0, params.get('AS_SPD_HI') or 0.0
-    lo = params.get('AS_SPD_LO') or 0.5 * hi     # logs before 2026-10-12 carry AS_SPD_LO; since then the ramp starts at half AS_SPD_HI
+    lo = params.get('AS_SPD_LO') or D.P.RAMP_START * hi     # logs before 2026-10-12 carry AS_SPD_LO; since then the ramp starts at RAMP_START x AS_SPD_HI
     if not k or u is None or hi <= lo:
         return 0.0, 0.0
     w = min(max((u - lo) / (hi - lo), 0.0), 1.0)

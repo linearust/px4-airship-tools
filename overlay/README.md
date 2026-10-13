@@ -5,7 +5,7 @@ Upstream PX4 is meant to carry one complete plant per airship family and the
 combinations) and the literature vehicles exist to tell the model's share of
 a result from the loop's share; they are validation apparatus and live here.
 
-The overlay is three directories the generator fills (`airship_family_gen.py
+The overlay is three directories and `vehicles.md` the generator fills (`airship_family_gen.py
 <vehicle.json> --overlay`: the whole family under the rigid naming, a hundred
 above the vehicle's decade, self-contained with its own added-mass body; the
 tree's plain plant, written by `--upstream`, is held to the overlay's complete
@@ -14,9 +14,13 @@ changes:
 
 | directory | reaches PX4 through |
 |---|---|
-| `models/` | both `overlay/models` and the tree's models are on the gz server's `GZ_SIM_RESOURCE_PATH` (the server is started by `gz_run.sh` with the build's `gz_env.sh` sourced); names never collide between the homes, so order does not matter. The overlay entity is spawned by `gz_run.sh` itself through the world's `create` service from the model file, since PX4's `rc.gzsim` only resolves a model under its own models directory. |
-| `airframes/` | copied into `build/px4_sitl_default/etc/init.d-posix/airframes/` by `install.sh` after every `make px4_sitl` (the ROMFS regeneration deletes the copies); rcS resolves `PX4_SIM_MODEL` and `SYS_AUTOSTART` by listing that directory, so no CMake entry is needed. There is no `make px4_sitl gz_<overlay member>` target: `gz_run.sh` builds with `make px4_sitl` and runs the binary directly with `PX4_SIM_MODEL=gz_<model> PX4_GZ_STANDALONE=1 PX4_GZ_MODEL_NAME=<model>_0 PX4_GZ_WORLD=lta_lab`, PX4's documented standalone path, attaching to the entity the script spawned. |
+| `models/` | both `overlay/models` and the tree's models are on the gz server's `GZ_SIM_RESOURCE_PATH` (the server is started by `gz_run.sh` with the build's `gz_env.sh` sourced); names never collide between the homes, so order does not matter. Once split step (5) lands, the overlay entity is spawned by `gz_run.sh` itself through the world's `create` service from the model file, since PX4's `rc.gzsim` only resolves a model under its own models directory. |
+| `airframes/` | copied into `build/px4_sitl_default/etc/init.d-posix/airframes/` by `install.sh` after every `make px4_sitl` (the ROMFS regeneration deletes the copies); rcS resolves `PX4_SIM_MODEL` and `SYS_AUTOSTART` by listing that directory, so no CMake entry is needed. There is no `make px4_sitl gz_<overlay member>` target: after step (5) `gz_run.sh` builds with `make px4_sitl` and runs the binary directly with `PX4_SIM_MODEL=gz_<model> PX4_GZ_STANDALONE=1 PX4_GZ_MODEL_NAME=<model>_0 PX4_GZ_WORLD=lta_lab`, PX4's documented standalone path, attaching to the entity the script spawned. |
 | `worlds/` | `lta_lab.sdf`, the tree's `lta.sdf` with the Buoyancy `<enable>` entries of every overlay model and its own `<world name>`, started standalone by `gz_run.sh` before PX4. |
+
+Until step (5) `gz_run.sh` runs the tree's `make px4_sitl gz_<model>` target
+and cannot start an overlay member (`docs/upstream_split_design_20261012.md`,
+section 7).
 
 The overlay can only be used against a trimmed tree: while the tree still
 carries the families, rcS's name lookup would find two airframes for one
