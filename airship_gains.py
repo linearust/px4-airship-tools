@@ -274,7 +274,8 @@ def write_airframes(vehicle, p, v, ref):
     written = []
 
     for suffix, block in blocks(vehicle, p, v, ref).items():
-        model = vehicle + suffix
+        # the mask-0 member is the plain name in the tree, <vehicle>_rigid in the overlay
+        model = gz_model.bare(vehicle) if not suffix else vehicle + suffix
         _, path = gz_model.airframe(model)
         t = open(path).read()
         new = '\n%s\n%s\n' % (MARK_OPEN, block)

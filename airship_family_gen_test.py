@@ -213,6 +213,18 @@ def main():
                 if 'SYS_AUTOSTART' in o_defaults else o_chain[0] == ofam.base_am and o_tokens == [gz_model.RIGID]):
             bad.append('%s: chain %s, tokens %s' % (name, o_chain, o_tokens))
 
+    # the calculator finds the overlay's members (the bare one under its rigid
+    # name) and rewrites their blocks without a change
+    before = {f: open(os.path.join(overlay, 'airframes', f)).read() for f in os.listdir(os.path.join(overlay, 'airframes'))}
+
+    import airship_gains as gains
+
+    with gen.at_root(overlay):
+        rc = gains.main(['airship_indoor', '--write'])
+
+    after = {f: open(os.path.join(overlay, 'airframes', f)).read() for f in os.listdir(os.path.join(overlay, 'airframes'))}
+    verdict('airship_gains 가 오버레이의 멤버 (bare 는 _rigid 이름) 를 찾아 블록을 다시 쓰고, 아무것도 바뀌지 않는다',
+            rc == 0 and before == after, ', '.join(f for f in before if before[f] != after.get(f)) or 'same')
     decades = open(os.path.join(overlay, 'airframes', 'decades')).read().split()
     world = open(os.path.join(overlay, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
     docs = open(os.path.join(overlay, 'vehicles.md')).read()
