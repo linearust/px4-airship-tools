@@ -170,8 +170,9 @@ def main():
     r2 = run(['airship_gains.py', 'airship_indoor', '--write'], root)
     second = snapshot(airframes)
     bare = open(os.path.join(airframes, '2530_gz_airship_indoor')).read()
-    verdict('indoor 의 세 에어프레임에 값 블록을 쓰고, 두 번째 쓰기는 같다',
-            r.returncode == 0 and r2.returncode == 0 and first == second and bare.count('airship_gains.py') == 2
+    verdict('indoor 의 세 에어프레임에 값 블록을 쓰고 (출처 한 줄, 닫는 표식 없음), 두 번째 쓰기는 같다',
+            r.returncode == 0 and r2.returncode == 0 and first == second and bare.count('airship_gains.py') == 1
+            and bare.count(G.MARK_OPEN) == 1 and '---' not in bare.split(G.MARK_OPEN)[1]
             and 'AS_YAWRATE_P' in bare and all('AS_YR_FF_SLP' in open(os.path.join(airframes, f)).read() for f in ('2532_gz_airship_indoor_fin', '2537_gz_airship_indoor_am_fin_drag')),
             (r.stderr or r.stdout)[-200:])
     return summary()

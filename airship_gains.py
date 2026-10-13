@@ -77,8 +77,10 @@ STALL_MARGIN = 0.8          # the cap at the ramp's end, as a share of the stall
 RESERVE = 0.5               # airship_yaw_schedule::kIntegratorReserve, the share of the integrator left to the loop
 HERE = os.path.dirname(os.path.abspath(__file__))
 MEASURED_TOL = 0.01         # a stored measurement is of this plant if its mass, fin arm and authority are within this
-MARK_OPEN = '# --- yaw loop values from airship_gains.py (regenerate, do not edit) ---'
-MARK_CLOSE = '# --- end of airship_gains.py ---'
+# The one-line source note the yaw loop block starts with; the block runs to
+# the end of the file, so the generator rewrites from here (no closing marker:
+# upstream airframes carry no generated-block markers)
+MARK_OPEN = '# Yaw loop values from airship_gains.py (px4-airship-tools) for this hull'
 
 
 def plant(vehicle):
@@ -238,14 +240,12 @@ def blocks(vehicle, p, v, ref):
     """{member suffix: text} of the parameter lines each airframe carries."""
     ff_fin, ff_drag, slp = rnd(v['FF_fin']), rnd(v['FF_drag']), rnd(v['AS_YR_FF_SLP'])
     hi = rnd(v['AS_SPD_HI'], 2)
-    source = ('measured in held turns in the simulator: the torque that holds the turn over u r, less the hull\'s rotational drag'
-              if v['slope_source'] == 'measured' else
-              'seeded from the files: the centripetal force on the fin arm less the Munk moment on the sideslip, to be replaced by a held-turn measurement')
-    schedule = comment('Fin lift damps yaw in proportion to the forward speed: a held turn takes %s more normalized yaw torque per '
-                       'rad/s for each m/s over the pods\' %.4g N m (%s). The schedule adds it to the feedforward from the ground '
-                       'speed, with no wind bound since the world has no wind, caps the yaw rate where the pods can hold the turn, '
-                       'and puts the integrator back after each turn. The ramp ends where the cap past it meets %g of the yaw '
-                       'rate that stalls the fins in a turn (%.3g deg/s at %s m/s) and starts at half that'
+    source = ('measured in held turns in the simulator' if v['slope_source'] == 'measured'
+              else 'seeded from the files, to be replaced by a held-turn measurement')
+    schedule = comment('Fin lift damps yaw with the forward speed: a held turn takes %s more normalized yaw torque per rad/s '
+                       'for each m/s over the pods\' %.4g N m (%s). Scheduled on the ground speed with no wind bound, since '
+                       'the world has none, and capped where the pods can hold the turn; the ramp ends where the cap meets %g '
+                       'of the yaw rate that stalls the fins in a turn (%.3g deg/s at %s m/s) and starts at half that'
                        % (slp, p['N'], source, STALL_MARGIN, v['r_stall_at_hi'], hi)) + '''
 param set-default AS_SPD_SRC 2
 param set-default AS_SPD_WMAX 0
@@ -277,10 +277,10 @@ def write_airframes(vehicle, p, v, ref):
         model = vehicle + suffix
         _, path = gz_model.airframe(model)
         t = open(path).read()
-        new = '\n%s\n%s\n%s\n' % (MARK_OPEN, block, MARK_CLOSE)
+        new = '\n%s\n%s\n' % (MARK_OPEN, block)
 
         if MARK_OPEN in t:
-            t = re.sub(r'\n' + re.escape(MARK_OPEN) + r'.*?' + re.escape(MARK_CLOSE) + r'\n', new, t, count=1, flags=re.S)
+            t = t[:t.index(MARK_OPEN)].rstrip('\n') + '\n' + new
         else:
             t = t.rstrip('\n') + '\n' + new
 
