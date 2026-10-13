@@ -1,140 +1,140 @@
-# Upstream PR bodies (draft, 2026-10-13)
+# Upstream PR bodies (2026-10-13, the two-PR shape of upstream_plan_20261013.md section 10)
 
-Draft bodies for the PR set in `upstream_pr_plan_20261007.md`, written to be pasted as they are.
-Verified facts only; numbers come from the gates in `docs/` and the gtests. Fill the bracketed
-items when their measurements exist (the hardware flights; the @maintainer decision). Re-run
-`arm-none-eabi-size` on micoair_h743-aio_default at the PR head before pasting the footprint
-table: parameters.json.xz is in the ROMFS, so a module.yaml change moves the text size.
+Written to be pasted as they are. Verified facts only; bracketed items wait for their measurement
+(the indoor flights, the footprint at the PR head, the merged models commit). The PX4 PR opens
+after the models PR has merged and its pointer has been moved to the merged commit. Neither PR
+opens before the indoor tests are done and the user has reviewed the branches.
 
-## M1 — PX4-gazebo-models: lta world, airship_base, the vectored and fixed generic families, Cloudship
+## PX4-gazebo-models — feat: add the generic airship with independently tilting pods and the lta world
 
-Adds a neutral-buoyancy world (`lta`) and three airship model families for gz SITL: a 7 m
-generic hull with independently tilting pods (`airship_vectored_independent`), the same hull
-with fixed thrusters and four fin flaps (`airship_fixed`), and the Cloudship (4.7 m, collective
-tilt, tail thruster). Each is a complete plant: buoyancy, Lamb added mass for the hull's
-fineness, Hydrodynamics drag cross terms about the link origin, fin lift-drag plugins.
+Adds a lighter-than-air vehicle for gz SITL: `airship_base`, the body (a 7 m hull with its
+gondola, tail and sensors, and the hull's fluid added mass on `base_link`), and
+`airship_vectored_independent`, the complete plant that merge-includes it and adds two side pods,
+each a propeller on a tilt joint, the four fins as lifting surfaces, and the hull's drag and
+rotational damping. `worlds/lta.sdf` is the default world plus the Buoyancy system at the air
+density (1.225 kg/m³), enabled for this model and its instances 0 to 3, with the 100 km ground
+box (#162) and the magnetometer in tesla (#161, `use_units_gauss=false`,
+`use_earth_frame_ned=false`, as PX4's `server.config` sets them).
 
-- Added mass and aerodynamic moments were measured in the engine against the file values
-  (added mass 9/9, moments 14/14, fin damping within 0.07 %); the Cloudship's added mass is
-  Lamb's for fineness 2.94 (the template factors were fineness-6).
-- The Hydrodynamics plugin reads velocity and applies its wrench at the link origin, so an
-  off-axis origin needs the six cross terms; the two obvious ones alone destabilize the hull.
-- The magnetometer noise is in tesla and the world loads the Magnetometer system with
-  `use_units_gauss=false` and `use_earth_frame_ned=false`, as `gz_bridge`'s server.config does
-  (a world that spells out its own systems otherwise gets the legacy gauss output and a wrong
-  heading).
-- The Buoyancy plugin needs every buoyant link enabled by name; the world lists them.
+- 5 files, +887 lines; primitive geometry only, no meshes; `model.config` with the author.
+- The PX4 twin is airframe 2520 (`make px4_sitl gz_airship_vectored_independent`), submitted to
+  PX4-Autopilot with its allocator and yaw rate loop; the two PRs are linked.
+- The physics values (added mass by Lamb for the hull's fineness, the fins' lift slope, the hull's
+  drag and the Hydrodynamics cross terms about the link origin) were measured in the engine against
+  the file values on the members this plant is generated from [added mass 9/9, moments 14/14, fin
+  damping within 0.07 %]; the plant is element-wise equal to those members (generator twin check).
+- Why a world: the Buoyancy system is world-level and needs every buoyant link enabled by name.
+- The hull's dimensions are those of the AS800 class in the airship literature (10.5 m × 3 m
+  scaled to 7 m, L/D 3.5); the vehicle that validated the firmware is a 2 m member of the same
+  family and is not part of this PR.
 
-## M2 — PX4-gazebo-models: the indoor airship family
+## PX4-Autopilot — feat: airship support for two independently tilting pods
 
-[After the 2 m vehicle flies: the family generated from its measured dimensions, with the
-held-turn slope measured on the vehicle.]
+### Summary
 
-## P1 — control_allocator: airship effectiveness (CA_AIRFRAME 16)
+Airships with two side pods that tilt independently get a control-allocation effectiveness
+(`CA_AIRFRAME` 16, Airship), a yaw rate loop in `airship_att_control`, a flight airframe (2520)
+and its gz SITL twin, with docs. Upstream's 2500 (Generic Airship) and 2507 (Cloudship) stay on
+the Custom allocator; the loop is off by default and closes only where an airframe sets
+`AS_YAWRATE_MAX` above zero.
 
-Replaces the single-configuration airship effectiveness with one that covers independently or
-collectively tilting pods, an optional tail yaw thruster and credited control surfaces
-(`ActuatorEffectivenessAirship`, `AirshipPod`, `AirshipYawAllocation`), and publishes what the
-yaw rate controller needs to know about the configuration in `airship_allocator_status`.
+### What it adds (commit order; a split along it is a cherry-pick)
 
-Reviewer questions, answered:
+| commit | files | lines |
+|---|---|---|
+| rate_control: set and read the integral term of one axis | 2 | +188 (test 167) |
+| control_allocator: the airship effectiveness for two tilting pods | 10 | +2276 (tests 1505) |
+| airship_att_control: a yaw rate loop on the stick | 9 | +1440 −39 (tests ≈ 920) |
+| airframes: 2520 Generic Airship (Independent Vectoring) | 2 | +43 |
+| simulation: the gz twin, posix 2520 | 2 | +76 |
+| simulation: gz models pointer | 1 | [merged commit] |
+| docs: frames_airship, sim_gazebo_gz vehicles/index/worlds, releases | 5 | +167 −20 |
 
-- **Why a new message (`airship_allocator_status`)?** The attitude controller must not read
-  another module's parameters (parameters guideline). Whether the propulsion gets yaw torque to
-  make, and how much at rest, is the allocator's result; the controller takes it on uORB.
-- **Why does the controller not read `control_allocator_status` for this?** That topic
-  reports allocation residuals per cycle; the propulsive-yaw verdict and the at-rest authority
-  per direction are configuration facts that change on a parameter update, and the controller
-  needs them before its first cycle (the allocator reports at construction).
-- **The pods are non-reversible; why a steer band?** A pod whose thrust cannot reverse steers
-  through the tilt range to point its force; the band keeps a demand the pod cannot realize
-  from flipping it back and forth (the dither a 200k-sample property test pins).
-- **2500 and 2507 move to CA_AIRFRAME 16.** 2500 (fixed thrusters, four flaps) and 2507
-  (Cloudship) were verified bit-identical at the FMU pins through the migration (0.0 us
-  fingerprint regression on fmu-v6x) and on the gz twins; no flight on the Cloudship itself.
-  If the reviewers prefer, 2507 stays on 9 and moves in P5.
-- **`@maintainer` on 2507.** [Keep only if the author takes the Cloudship on; otherwise drop.]
-- **Flash and RAM.** micoair_h743-aio_default, `arm-none-eabi-size` of the elf, upstream main
-  (a4697ed08e) against this branch (48b45f3e5f, the whole airship set; 1d2aef0e5c carries the same firmware):
+31 files, about +4190 lines, of which about 2600 are tests. No new message. Parameters: 8
+(`CA_AIRSHIP_TLMIN`, `CA_AIRSHIP_TLMAX`, `CA_AIRSHIP_TLT_R`, `AS_YAWRATE_P`, `AS_YAWRATE_I`,
+`AS_YR_INT_LIM`, `AS_YAWRATE_FF`, `AS_YAWRATE_MAX`). The controller also reads `MAN_DEADZONE`.
 
-  | | text | data | bss |
-  |---|---|---|---|
-  | upstream main | 1865120 | 6540 | 59864 |
-  | this branch | 1876512 | 6540 | 59864 |
-  | delta | +11392 (+0.6 %) | 0 | 0 |
+### Allocation
 
-Validation: unit tests (`AirshipPod`, `AirshipYawAllocation`, functional
-`ActuatorEffectivenessAirship`), the allocator identity harness (12 sets, IDENTICAL), fmu-v6x
-bench fingerprints at the pins (logic analyzer), gz twins.
+A pod's thrust is projected onto the tilt angle its servo realizes, so the effectiveness is not a
+matrix: the class declares zero columns and computes the actuators in `updateSetpoint()`, as the
+helicopter class does, and reports a sign per axis through `control_allocator_status`. The pods'
+differential thrust is yaw and roll torque, the tilt projects the common thrust between forward and
+vertical; pitch torque and lateral thrust are reported unallocated. The propellers are
+non-reversible: the motor commands stay non-negative and thrust reverses by tilting through the
+range, with a steering band, end-stop choice and slew inside the model (`CA_AIRSHIP_TLT_R`;
+`CA_SVn_SLEW` runs after the model and would desynchronise the projection). Why not Custom: a
+linear matrix cannot point the thrust. Why not Tiltrotor VTOL: its tilt is scheduled by the VTOL
+transition logic, not solved from the wrench, and spans ±90°.
 
-## P2 — airship_att_control: the yaw rate loop
+Units: 1.0 on a torque axis is what the pods deliver at rest at full differential; 1.0 on thrust x
+is both pods full forward. Outputs: Motor 1 starboard pod, Motor 2 port pod, Servo 1 and Servo 2
+their tilts, always declared; a later layout only appends behind them.
 
-The yaw stick commands a yaw rate closed by a PI loop with setpoint feedforward wherever the
-propulsion gets yaw to make; roll, pitch and thrust stay stick passthrough. The feedforward is
-the hull's damping torque at `AS_YAWRATE_MAX`, scaled by the setpoint's share of the maximum
-(the damping is quadratic in the rate), so the torque that holds a turn comes from the setpoint
-and goes with it on release instead of being built up in the integrator. The integrator is
-saved when the stick leaves the deadzone and put back when it returns or reverses.
+### Yaw rate loop
 
-- **Why no enable parameter (as FW_ACRO_YAW_EN)?** The loop follows the allocator's report
-  alone: on a frame whose yaw comes from control surfaces the stick stays torque, because the
-  loop does not follow how a surface's effectiveness changes with airspeed; at rest its
-  integrator would wind to the limit with no shortfall reported. A parameter that forced it on
-  would reintroduce exactly that.
-- **Why quadratic feedforward?** A constant gain that held one rate held smaller ones with
-  r_max / r times the torque before; the loop overshot them (model and SITL, 48/48 gate
-  verdicts).
-- **Why restore the integrator at every stick input?** Without it the integrator parked at its
-  limit during a turn and released over 37-145 deg of heading (SITL step 0); with it ≤ 6.5 deg.
-  The price is a yaw trim that changed during the turn coming back stale, which the loop
-  relearns at `AS_YAWRATE_I`.
-- **`rate_control::setIntegral`/`getIntegral`.** The restore needs to set one axis's integral;
-  the getter mirrors it. Both are unit tested in the library.
-- **Modes.** Acro, Stabilized, Altitude and Position close the loop; the airship has no attitude
-  or position controller, so the last two are the manual passthrough with the yaw loop.
-- **Land detector.** `AirshipLandDetector` reports landed as soon as Land mode is selected,
-  which with `COM_DISARM_LAND` > 0 disarms the airship in the air; `rc.airship_defaults` sets
-  -1. Reproduced in SITL (`cloudship_land_disarm_check.py`, 10/10 both ways). A sensor-based
-  landed verdict for an airship is a separate feature.
+In the manual modes with rate control (Acro, Stabilized, Altitude, Position) the yaw stick commands
+a yaw rate that a PI loop with setpoint feedforward closes on the measured yaw rate. The loop
+closes only where `AS_YAWRATE_MAX` is above zero (default 0; 2520 sets 15 deg/s), the opt-in shape
+of `FW_ACRO_YAW_EN`. The integrator is saved when the stick leaves the deadzone and put back when
+the stick returns or reverses (what a turn gathered against the hull's damping ends with the turn),
+stops in a direction the allocator reports it cannot serve, and is cleared when the loop opens.
+`AS_YAWRATE_FF` holds a turn at the maximum rate against the hull's quadratic yaw damping, scaled by
+the setpoint's share of the maximum.
 
-Validation: the module's five gtest binaries, 65 cases (yaw rate loop 13, schedule 13, speed selector 11, manual input 14, functional 14), SITL gates on
-the generic and Cloudship plants (hover 10/10 and 9/9), [2 m vehicle flights].
+The manual passthrough changes for every airship, loop or not: the roll stick is roll torque and
+the pitch stick also vertical thrust (both unallocated on Custom airframes without such actuators),
+the wrench is zero without usable sticks instead of the last sticks, and no wrench is published in
+a mode that enables none of manual, rate and attitude control (Offboard with thrust and torque
+setpoints owns it). These are stated in the controller commit.
 
-## P3 — airship_att_control: the forward-speed schedule
+2520 sets `COM_DISARM_LAND -1`: the airship land detector reports landed as soon as Land is
+selected, which would disarm the vehicle in the air; a land-detector fix is a separate candidate.
 
-Fins damp yaw in proportion to the forward speed. The schedule adds feedforward per m/s
-(`AS_YR_FF_SLP`) on the lower bound of a forward speed interval and caps the yaw rate where the
-propulsion can still hold the turn with integrator in reserve. The interval comes from an
-airspeed sensor widened by its pressure tolerance, the estimator's body-x ground speed widened
-by a wind bound, or their intersection (`AS_SPD_SRC`), filtered at 1 s.
+### Tests and checks
 
-- **Why a second message (`airship_speed`)?** The interval, its sources, the cap and the gain
-  applied have no place in an existing topic, and the forward-flight analysis judges the loop
-  by them. It is an optional logged topic (`add_optional_topic`), absent from other vehicles'
-  logs.
-- **`AS_SPD_DP_TOL` has no `unit:`.** Pascal is not in the parameter metadata unit list; the
-  short description carries [Pa].
-- **Why an interval and not a value?** An uncertain speed gets less feedforward and a lower
-  cap; a wrong airspeed reading the ground interval rules out is dropped for that cycle.
-- **Ground speed without `heading_good_for_control`.** Velocity and heading are one frame, so
-  a heading error cancels for a body-frame source (optical flow) and costs u (1 - cos delta)
-  for GNSS, 1.5 % at 10 deg; requiring the flag would keep the source off indoors.
+- gtest: AirshipPod 25 cases (incl. a 200,000-sample property test of the steering band),
+  ActuatorEffectivenessAirship [34 + 3] cases, AirshipYawRateLoop 15, AirshipManualInput [N],
+  AirshipAttitudeControl 10 (the module through uORB), RateControl +6.
+- `make tests`, `check_format`, `validate_module_configs`, `module_documentation`,
+  `px4_sitl_default`, fmu-v6x and micoair_h743-aio builds [exit codes at the PR head].
+- Footprint, `arm-none-eabi-size` [board, text/data/bss before and after at the PR head].
 
-Validation: gtests, forward-flight SITL on the fin plants (42/42 on the generic complete
-plant), [2 m vehicle with fixed fins].
+### Evidence
 
-## P4 — gz SITL airframes, docs, submodule pointer
+- Bit identity: the narrowed class against the author's wider development class on the same
+  independent-pod parameter sets [4 sets, N rows, IDENTICAL].
+- Bench, Cube Orange, logic analyzer at the output pins: [Manual fingerprint 0.0 µs between this
+  branch and the development branch at the 2520 preset; tilt end stops and slew; park on disarm].
+- Flight, 2 m indoor vehicle, two ±180° pods, optical flow, no wind [Flight Review links]:
+  Manual/Stabilized hover; tilt vectoring fore/aft/up/down; differential-thrust yaw with no tilt
+  reversal in the steering band; Acro yaw steps (P/I/INT_LIM); full-stick release in Stabilized
+  (restore rule; heading drift after release); anti-windup at full throttle + full yaw;
+  AS_YAWRATE_FF measured per the docs procedure then flown; Land selected in the air keeps the
+  vehicle armed.
+- SITL: [hover gate 10/10 on posix 2520 from this branch]; sim-vs-flight table from the vehicle's
+  own twin [table].
+- Not flown, unit tests only: a fixed mount (`TLMIN` = `TLMAX`), a ±90° range, the 7 m twin's own
+  gains, `AS_YAWRATE_FF`'s shipped default 0.
 
-The posix airframes of the three families' complete plants, the vehicle pages and the `lta`
-world description; the submodule pointer to M1 (and M2).
+### Not in this PR
 
-## P5 — the rest
+Pod grouping (collective tilt), a tail thruster, control-surface credit, the forward-speed
+feedforward schedule, an allocator status message, and the migration of 2500 and 2507 to the new
+allocator: each follows with the vehicle that validates it.
 
-- `2519_gazebo-classic_cloudship` (or 2507 if the rename is dropped): the `@output` header named
-  MAIN1 the tilt while `PWM_MAIN_FUNC` drives Motor 1 on it; fixed to the mapping. The classic
-  model places motor 0 at Gazebo +y, so the classic sim's differential-thrust yaw sign is
-  unverified (a model item).
-- `module.yaml`: "Pod Tilt Servo count 1 + Port Pod Tilt Servo count CA_AIRSHIP_GRP" shows one
-  unused servo in the GCS when the range is 0; a limit of the metadata, noted in the yaml.
-- `CA_AIRSHIP_GRP` is read on a parameter update with no armed check: switching grouping while
-  armed can leave the pods apart for a moment; change it disarmed (documented).
+## Claim → card (the hardware package)
+
+| PR claim | bench/flight card | what the card records |
+|---|---|---|
+| allocation = development branch at the pins | bench fingerprint, 2520 preset | fp_diff 0.0 µs, IMPLIED keys noted |
+| tilt stops and slew = parameters | tilt range card, `--drive` | pins reach ±180 both pods, slope = TLT_R |
+| park on disarm | disarm card | pins at park angle after disarm |
+| yaw and roll from differential thrust, vertical thrust from the pitch stick | Manual vectoring flight | actuator_motors/servos vs torque/thrust setpoints |
+| no reversal dither in the steering band | hover with small yaw demand | tilt reversals counted at the pins: 0 |
+| P/I/INT_LIM track the setpoint | Acro step flights at two amplitudes | rates setpoint vs gyro z, settled integrator |
+| restore rule | Stabilized full-stick release and reversal | heading drift after release, yawspeed_integ step |
+| anti-windup | full throttle + full yaw | unallocated_torque[2] ≠ 0, integrator flat |
+| AS_YAWRATE_FF procedure | 360° turn with FF 0, then with the value | integrator near zero in a held turn |
+| COM_DISARM_LAND -1 | Land in the air | vehicle_status stays armed |
+| the flown code is the PR code | staged image name | fw_<commit> from the preparation worktree |
