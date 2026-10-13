@@ -840,32 +840,98 @@ def upstream_models(vehicle, members_root):
     return out
 
 
+UPSTREAM_MARK = '# Yaw loop values for this hull'      # the marker's wording in an upstream airframe: no tool names
+# Parameters the upstream class and controller do not have (the fork's later
+# rounds: pod grouping, the forward-speed schedule): a line setting one is
+# dropped from an upstream airframe, with its paragraph when nothing else is set there
+UPSTREAM_ABSENT = ('CA_AIRSHIP_GRP', 'AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_HI', 'AS_YR_FF_SLP')
+OVERLAY_INCLUDES = ('model://ground_markers', 'model://flight_grid')   # lab-only models the upstream world does not include
+
+
+def without_absent(text):
+    """`text` less the lines that set an UPSTREAM_ABSENT parameter; a paragraph
+    (blank-line separated) left with comments only, having set only those, goes too."""
+    out = []
+
+    for para in text.split('\n\n'):
+        lines = para.split('\n')
+        kept = [l for l in lines if not any(l.startswith('param set-default %s ' % n) for n in UPSTREAM_ABSENT)]
+        had = any(l.startswith('param set-default ') for l in lines)
+        has = any(l.startswith('param set-default ') for l in kept)
+
+        if had and not has:
+            continue
+
+        out.append('\n'.join(kept))
+
+    return '\n\n'.join(out)
+
+
 def upstream_airframe(plain, members_root):
     """The posix airframe of a plain plant: the bare member's text, named for
     the vehicle and spawning the plain model, with the complete member's yaw
-    loop block after the bare one's (the resolved defaults of the chain)."""
+    loop block after the bare one's (the resolved defaults of the chain).
+    The upstream class drives independent pods only, so the grouping
+    parameter is left out, and the gains marker names no tool."""
     airframes = homes(members_root)[1]
     bare = read(airframe_path(airframes, plain.members_decade, plain.bare))
     complete = read(airframe_path(airframes, plain.members_decade + plain.complete_mask, plain.complete))
     t = with_name(bare, plain.title)
     t = sub1(t, r'PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=%s\}' % re.escape(plain.bare), 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=%s}' % plain.name)
+    t = t.replace(airship_gains.MARK_OPEN, UPSTREAM_MARK)
 
     if airship_gains.MARK_OPEN in complete:
         block = complete[complete.index(airship_gains.MARK_OPEN) + len(airship_gains.MARK_OPEN):].strip('\n')
         t = t.rstrip('\n') + '\n\n' + block + '\n'
 
-    return t
+    return without_absent(t)
 
 
-def write_upstream(vehicle, root, members_root):
+def model_config(name, author, description):
+    """A model.config: the name, the sdf, the member's author block, the description."""
+    return ('<?xml version="1.0"?>\n<model>\n  <name>%s</name>\n  <version>1.0</version>\n  <sdf version="1.10">model.sdf</sdf>\n'
+            '%s  <description>%s</description>\n</model>\n' % (name, author, description))
+
+
+def upstream_world(path, members_root, names):
+    """The upstream world, made once from the members' world: its buoyancy
+    entries only for `names` (bare and _0.._3) and without the lab-only
+    includes (OVERLAY_INCLUDES)."""
+    if os.path.exists(path):
+        return False
+
+    keep = {'%s%s' % (n, i) for n in names for i in ('',) + tuple('_%d' % k for k in range(4))}
+    out = []
+
+    for line in read(os.path.join(members_root, TREE_FILES[0])).split('\n'):
+        m = re.match(r'\s*<enable>([^:]+)::', line)
+
+        if m and m.group(1) not in keep:
+            continue
+
+        out.append(line)
+
+    t = '\n'.join(out)
+
+    for uri in OVERLAY_INCLUDES:
+        t = re.sub(r'\n *<include>\s*<uri>%s</uri>\s*</include>' % re.escape(uri), '', t)
+
+    write(path, t)
+    return True
+
+
+def write_upstream(vehicle, root, members_root, plants=None):
     """What upstream carries of the family into root (a PX4 tree trimmed of
-    the family): the body, each plain plant, its airframe and its world
-    entries, from the members under members_root (the overlay, or a tree
-    that still carries the members). Refused when root is members_root (the
-    plain plant would overwrite the members it is built from) or when root
-    still carries the family's variant members (the trim comes first).
-    Returns (written, world entries added)."""
+    the family): the body, each plain plant (those named in `plants`, all by
+    default), its model.config, its airframe and its world entries, from the
+    members under members_root (the overlay, or a tree that still carries
+    the members); the world itself is made from the members' when root has
+    none. Refused when root is members_root (the plain plant would overwrite
+    the members it is built from) or when root still carries the family's
+    variant members (the trim comes first). Returns (written, world entries added)."""
     fam = vehicle.family
+    mfam = vehicle.overlay_family if is_overlay(members_root) else vehicle.family
+    member_models = homes(members_root)[0]
 
     if os.path.realpath(root) == os.path.realpath(members_root):
         raise SystemExit('--upstream: --root and MEMBERS_ROOT are the same tree; the plain plant would overwrite the '
@@ -880,15 +946,31 @@ def write_upstream(vehicle, root, members_root):
     written = []
     models = os.path.join(root, TREE_DIRS[0])
 
+    plains = [p for p in plain_plants(vehicle, members_root) if plants is None or p.name in plants]
+    configs = {fam.base: (mfam.base_am, '%s: the body the vehicle merges, with the hull\'s fluid added mass. Not meant to '
+                                        'be spawned directly.' % vehicle.body_title)}
+    configs.update({p.name: (p.complete, '%s: the complete plant for PX4 SITL, %s merged with %s.' % (p.title, fam.base, p.what))
+                    for p in plains})
+
     for name, text in upstream_models(vehicle, members_root).items():
+        if name not in configs:
+            continue
+
         path = os.path.join(models, name, 'model.sdf')
 
         if not os.path.exists(path) or read(path) != text:
             write(path, text)
             written.append(name)
 
+        member, description = configs[name]
+        author = re.search(r'  <author>.*?</author>\n', read(os.path.join(member_models, member, 'model.config')), flags=re.S).group(0)
+        config = model_config(name, author, description)
+        path = os.path.join(models, name, 'model.config')
+
+        if not os.path.exists(path) or read(path) != config:
+            write(path, config)
+
     airframes = os.path.join(root, TREE_DIRS[1])
-    plains = plain_plants(vehicle, members_root)
 
     for plain in plains:
         path = airframe_path(airframes, plain.decade, plain.name)
@@ -898,16 +980,19 @@ def write_upstream(vehicle, root, members_root):
             write(path, text)
             written.append(os.path.basename(path))
 
-    return written, write_world_entries(os.path.join(root, TREE_FILES[0]), [plain.name for plain in plains])
+    world = os.path.join(root, TREE_FILES[0])
+    upstream_world(world, members_root, [plain.name for plain in plains])
+    return written, write_world_entries(world, [plain.name for plain in plains])
 
 
-def twin_check(vehicle, upstream_root, members_root):
+def twin_check(vehicle, upstream_root, members_root, plants=None):
     """The problems that keep each plain plant under upstream_root from being
     its complete member under members_root: the merged models element for
-    element, and the airframes' resolved defaults. [] means twins."""
+    element, and the airframes' resolved defaults (less the parameters the
+    upstream class and controller do not have). [] means twins."""
     problems = []
 
-    for plain in plain_plants(vehicle, members_root):
+    for plain in [p for p in plain_plants(vehicle, members_root) if plants is None or p.name in plants]:
         with at_root(upstream_root):
             mine = canonical(gz_model.merged(plain.name))[3]
             mine_defaults = gz_model.airframe_defaults(plain.name)
@@ -919,6 +1004,9 @@ def twin_check(vehicle, upstream_root, members_root):
         if mine != theirs:
             first = next((i for i, (a, b) in enumerate(zip(mine, theirs)) if a != b), 'length')
             problems.append('%s: merged models differ, %d vs %d children, first difference at child %s' % (plain.name, len(mine), len(theirs), first))
+
+        # the upstream class and controller lack UPSTREAM_ABSENT: the members' values of those are not compared
+        theirs_defaults = {k: v for k, v in theirs_defaults.items() if k not in UPSTREAM_ABSENT}
 
         if mine_defaults != theirs_defaults:
             keys = sorted(k for k in set(mine_defaults) | set(theirs_defaults) if mine_defaults.get(k) != theirs_defaults.get(k))
@@ -1103,6 +1191,7 @@ def main(argv=None):
                       help='write what upstream carries (the plain complete plants in merge-include shape) into --root, a tree '
                            'trimmed of the family, from the members under MEMBERS_ROOT (the overlay, or a tree that still has '
                            'them), then run the twin check')
+    ap.add_argument('--plants', help='with --upstream: the plain plants to write, comma-separated (default all)')
     args = ap.parse_args(argv)
     vehicle = load_vehicle(args.vehicle)
 
@@ -1116,8 +1205,9 @@ def main(argv=None):
         return 0
 
     if args.upstream:
-        written, n = write_upstream(vehicle, args.root, args.upstream)
-        problems = twin_check(vehicle, args.root, args.upstream)
+        plants = args.plants.split(',') if args.plants else None
+        written, n = write_upstream(vehicle, args.root, args.upstream, plants)
+        problems = twin_check(vehicle, args.root, args.upstream, plants)
         print('upstream: wrote %s; world entries added %d; twin check %s'
               % (', '.join(written) or 'nothing', n, 'OK' if not problems else '; '.join(problems)))
         return 0 if not problems else 1
