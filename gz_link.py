@@ -241,12 +241,11 @@ def _name_model(entity, model):
     return entity
 
 
-def _wrench_message(model, torque_z=0.0, force_z=0.0):
+def _wrench_message(model, torque_z=0.0):
     from gz.msgs10.entity_wrench_pb2 import EntityWrench
     message = EntityWrench()
     _name_model(message.entity, model)
     message.wrench.torque.z = torque_z
-    message.wrench.force.z = force_z
     return message
 
 
@@ -272,14 +271,6 @@ def wrench(torque_nm):
     """
     model, world = _target()
     return publish('/world/%s/wrench/persistent' % world, _wrench_message(model, torque_z=torque_nm))
-
-
-def push_up(force_n):
-    """A persistent vertical force on the hull, N, positive up (gz's world z).
-    The same message and the same rules as wrench(): published once, adds to
-    any other persistent wrench, removed by wrench_clear()."""
-    model, world = _target()
-    return publish('/world/%s/wrench/persistent' % world, _wrench_message(model, force_z=force_n))
 
 
 def wrench_clear(times=1):

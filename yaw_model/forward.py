@@ -624,8 +624,10 @@ def run_leg(target, u0, stick, throttle='trim', params=None, noise=False, seed=1
                  the pods run in (vectored: vectored_actuation.Allocator;
                  Cloudship: the side pods' controller.AirshipAllocator; the
                  tail is a static map, cloudship_actuation.TailChain).
-      restore    None, True or 'zero_or_sign' (options/D's restore rule), or
-                 'zero' (its zero-only edge): controller.set_restore
+      restore    None, True or 'zero_or_sign' (the restore rule), or 'zero'
+                 (its zero-only edge): controller.set_restore. None models
+                 the firmware before ec89e6bd84; HEAD restores at every
+                 stick input with the 'zero_or_sign' edge
       restore_trim0  with start 'release' and restore on: the integrator
                  saved when the stick left the deadzone (required)
       wind       (speed m/s, toward deg): a steady uniform wind the air moves
@@ -1137,7 +1139,7 @@ def replay_kwargs(leg, model, start='acro', gains=None):
     switch ('acro') or its stick's release ('release'):
 
       target 'gz_' + model; params the record's gains (record_gains.GAINS,
-      each the shortest decimal of its float32, record_gains.f32) unless
+      each the shortest decimal of its float32, record_gains.f32_decimal) unless
       `gains` is given; throttle the recorded mean thrust setpoint, exact
       (quantize False); the record's timeline (manual_s 0, centred_s, stick_s,
       release_s from replay.stick and replay.end_s); the entry state of that
@@ -1198,7 +1200,7 @@ def replay_kwargs(leg, model, start='acro', gains=None):
     pods0 = [{'tilt': float(acts[key]), 'mode': infer_pod_mode(d)} for key, d in zip(tilt_keys, demand)]
     motors0 = [float(acts['motor1']), float(acts['motor2'])] + ([] if vectored else [float(acts['motor3'])])
     kw = dict(target=target, u0=float(state['u']), stick=float(stick), throttle=c, quantize=False,
-              params=dict(gains) if gains is not None else {k: rg.f32(rp['params'][k]) for k in rg.GAINS},
+              params=dict(gains) if gains is not None else {k: rg.f32_decimal(rp['params'][k]) for k in rg.GAINS},
               v0=float(state['v']), r0=float(state['r_deg_s']), p0=float(state['p_deg_s']),
               phi0=float(state['roll_deg']), pods0=pods0, motors0=motors0, gyro_settled=True, start=start)
 

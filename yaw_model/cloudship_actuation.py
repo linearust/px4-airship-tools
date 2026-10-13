@@ -117,17 +117,17 @@ import sys
 
 import numpy as np
 
-PX4 = '/home/h/dev/PX4-Autopilot'
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
 import gz_model  # noqa: E402  (pure module: reads model.sdf files, no simulator)
 
-AIRFRAME = os.path.join(PX4, 'ROMFS/px4fmu_common/init.d-posix/airframes/2510_gz_cloudship')
+PX4 = gz_model.ROOT
+AIRFRAME = gz_model.airframe('cloudship')[1]     # 2510_gz_cloudship, found over the homes (overlay, tree)
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITL_OUT = os.path.join(TOOLS, 'sitl_out')
 
 F32 = np.float32
-FLT_EPSILON = float(np.finfo(np.float32).eps)      # 1.1920929e-07, as FLT_EPSILON in C
+FLT_EPSILON = 2.0 ** -23                            # FLT_EPSILON (float.h), exact
 DT_GZ = 0.004                                       # worlds/lta.sdf:8 max_step_size
 DT_CTRL = 0.004                                     # model.sdf:242 IMU 250 Hz -> one u per step
 EXTRA_STEPS = 0                                     # 0 or 1, see TIMING above
@@ -136,17 +136,10 @@ TAIL = 2                                            # ActuatorEffectivenessAirsh
 
 
 def airframe_params(path=AIRFRAME):
-    """param set-default NAME VALUE lines of one airframe file, as strings."""
-    params = {}
-
-    with open(path) as handle:
-        for line in handle:
-            m = re.match(r'\s*param set-default (\w+) (\S+)', line)
-
-            if m:
-                params[m.group(1)] = m.group(2)
-
-    return params
+    """param set-default NAME VALUE lines written in this one airframe file
+    (not the ones it sources), as strings."""
+    return {name: value for kind, name, value, where, _ in gz_model.airframe_settings(path)
+            if kind == 'default' and where == path}
 
 
 class TailChain:
@@ -532,6 +525,12 @@ def sitl_checks(chain):
             continue
 
         pterm = P * math.radians(rate)
+
+        if integ - 5e-5 - pterm <= 0.0:
+            lines.append('    %-40s %-22s |r| %.2f deg/s integ %.4f  excluded (no integrator to read K from)'
+                         % (name, target, rate, integ))
+            continue
+
         lo, hi = wind / (integ + 5e-5 + pterm), wind / (integ - 5e-5 - pterm)
         lines.append('    %-40s %-22s |r| %.2f deg/s integ %.4f -> K = %.3f (%.3f..%.3f) N m/unit'
                      % (name, target, rate, integ, wind / integ, lo, hi))

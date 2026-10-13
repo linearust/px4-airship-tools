@@ -116,10 +116,8 @@ def decades():
 
 
 DECADE, RESERVED = decades()
-# the flight airframe each gz vehicle is the twin of
-TWINS = {'airship_fixed': 2500, 'cloudship': 2507, 'airship_vectored_independent': 2520,
-         # the indoor airship flies the hardware preset 2520 with its own values (vehicles/airship_indoor.json)
-         'airship_indoor': 2520}
+# the flight airframe each gz vehicle without a vehicle file is the twin of
+TWINS = {'airship_fixed': 2500, 'cloudship': 2507}
 
 
 # The allocation values 2520 tells the user to set to the vehicle (its
@@ -131,24 +129,7 @@ VEHICLE_ALLOCATION = {'CA_AIRSHIP_TLMIN': lambda v: -v['pods']['tilt_deg'],
                       'CA_AIRSHIP_TLT_R': lambda v: v['pods']['tilt_rate_deg_s']}
 
 
-def vehicle_files():
-    """{family name: the vehicle file's dict} for every vectored vehicle
-    file (pods and a hull)."""
-    import glob
-    import json
-    out = {}
-
-    for path in glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vehicles', '*.json')):
-        with open(path) as handle:
-            v = json.load(handle)
-
-        if 'pods' in v and 'hull' in v:
-            out[v['name']] = v
-
-    return out
-
-
-VEHICLE_FILES = vehicle_files()
+VEHICLE_FILES = gz_model.vehicle_files()
 
 
 def allocation_matches(mine, theirs, own):
@@ -164,7 +145,8 @@ def allocation_matches(mine, theirs, own):
 def vehicle_file_twins():
     """Every vectored vehicle file's family flies the independent-vectoring
     preset 2520 in its bare member (a surfaces family declares its flaps in
-    the fin members only)."""
+    the fin members only); the indoor airship flies that hardware preset with
+    its own values (vehicles/airship_indoor.json)."""
     return {name: 2520 for name in VEHICLE_FILES}
 
 

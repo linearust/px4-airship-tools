@@ -34,6 +34,7 @@ import controller as C  # noqa: E402
 import record_gains  # noqa: E402
 
 FAILS = []
+SKIPS = []      # checks that could not run on this tree (the re-anchoring), reported beside the failures
 
 
 def run_of(path):
@@ -156,6 +157,8 @@ def test_feedforward():
         want = float(own[-1]) if own else C.DEFAULT_PARAMS['AS_YAWRATE_FF']
         check('%d (%s): AS_YAWRATE_FF %g, from its own file or the yaml' % (number, model, C.head_params(model)['AS_YAWRATE_FF']),
               C.head_params(model)['AS_YAWRATE_FF'] == want)
+        check('%s: the scheme\'s airframe (gz_model.airframe) is the walker\'s (airframe_for_model), %d'
+              % (model, number), C.gz_model.airframe(model)[0] == number)
 
     c = C.AirshipYawController('vectored', params={'AS_YAWRATE_FF': 1.0}, filter_gyro=False)
     c.set_param('AS_YAWRATE_I', 0.0)
@@ -604,8 +607,6 @@ def test_ulogs():
     except ImportError as exc:
         check('ulog check available', False, str(exc))
         return
-    # the logs were flown before 2026-10-12, on the linear feedforward law
-    law, C.FF_LAW = C.FF_LAW, 'linear'
     for rel, frame in U.DEFAULT_LOGS + U.HEAD_FF_LOGS:
         path = os.path.join(U.LOGDIR, rel)
         if not os.path.exists(path):
@@ -618,7 +619,6 @@ def test_ulogs():
         check('ulog %s: integrator p99 %.1e, torque p99 %.1e (< 1e-3); yaw saturation sign %d/%d'
               % (rel, p99i, p99t, r['agree'], r['total']),
               p99i < 1e-3 and p99t < 1e-3 and r['agree'] >= 0.995 * r['total'] and r['total'] > 1000)
-    C.FF_LAW = law
 
 
 # ---------------------------------------------------------------------------
@@ -632,6 +632,7 @@ def demo():
     motor models and the command delay are the plant part's."""
     sys.path.insert(0, BENCH)
     import gz_model as g
+    import closed_loop as cl
     for model, target in (('airship_vectored_independent', 'gz_airship_vectored_independent'),
                           ('airship_vectored_independent_am_fin_drag', 'gz_airship_vectored_independent_am_fin_drag'),
                           ('cloudship', 'gz_cloudship'), ('cloudship_am_fin_drag', 'gz_cloudship_am_fin_drag')):
@@ -639,7 +640,7 @@ def demo():
         J = g.yaw_inertia(g.family(model)) + g.added_mass(m).get('rr', 0.0)
         K = g.yaw_authority(model)
         q = abs(g.hydrodynamics(m).get('nRabsR', 0.0))
-        ch = C.SitlYawChain(C.PLANT_AIRFRAME[target], params=C.head_params(model))
+        ch = C.SitlYawChain(cl.ALL_TARGETS[target][1], params=C.head_params(model))
         # Manual, stick 0.5 for 3 s, from rest (the gate's 'Manual 통과'), then 0
         r = 0.0
         for mode, stick, secs in (('manual', 0.5, 3.0), ('manual', 0.0, 0.3)):
@@ -877,6 +878,7 @@ def test_restore_recorded_scenario():
                 # anchor and cannot be replayed on another plant.
                 print('SKIP  restore reproduces options/D\'s recorded relwind+ on %s: %s'
                       % (target, str(refusal).splitlines()[0]))
+                SKIPS.append('restore reproduces options/D\'s recorded relwind+ on %s' % target)
                 continue
             diff = [k for k in rec['m'] if got.get(k) != rec['m'][k]]
             check('restore reproduces options/D\'s recorded relwind+ on %s: %d of %d numbers equal (trim %.5f, '
@@ -908,5 +910,6 @@ if __name__ == '__main__':
     test_restore_recorded_scenario()
     if '--demo' in sys.argv:
         demo()
-    print('\n%d failed' % len(FAILS) + (': ' + ', '.join(FAILS) if FAILS else ''))
+    print('\n%d failed, %d skipped' % (len(FAILS), len(SKIPS)) + (': ' + ', '.join(FAILS) if FAILS else '')
+          + (' (skipped: ' + ', '.join(SKIPS) + ')' if SKIPS else ''))
     sys.exit(1 if FAILS else 0)

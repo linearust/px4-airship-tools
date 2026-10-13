@@ -83,10 +83,8 @@ import functools
 import glob
 import math
 import os
-import re
 import sys
 
-import yaml
 
 FLT_EPSILON = 1.1920929e-07
 PX4 = os.environ.get('PX4_ROOT', os.path.expanduser('~/dev/PX4-Autopilot'))
@@ -107,31 +105,19 @@ PARAM_FILES = {
     'AS_YR_INT_LIM': AS_YAML,
     'AS_YAWRATE_FF': AS_YAML,
     'AS_YAWRATE_MAX': AS_YAML,       # deg/s
+    'AS_SPD_HI': AS_YAML,            # m/s, the speed term's ramp end (ramps in from half of it)
+    'AS_YR_FF_SLP': AS_YAML,         # normalized torque per (rad/s) per (m/s)
     'MAN_DEADZONE': 'src/modules/manual_control/manual_control_params.yaml',
     'IMU_GYRO_CUTOFF': 'src/modules/sensors/vehicle_angular_velocity/imu_gyro_parameters.yaml',     # Hz
 }
-_YAML_CACHE = {}
+_BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+if _BENCH not in sys.path:
+    sys.path.insert(0, _BENCH)
 
-def yaml_default(relpath, name):
-    """The default of one parameter in a module yaml (parameters: - group:
-    definitions: NAME: default). Raises when the file or the name is not
-    there: a default that cannot be read is not a default of 0."""
-    if relpath not in _YAML_CACHE:
-        with open(os.path.join(PX4, relpath), encoding='utf-8') as handle:
-            _YAML_CACHE[relpath] = yaml.safe_load(handle)
+import gz_model  # noqa: E402  the file-reading layer: yaml defaults, the airframe chain, the homes
 
-    for group in _YAML_CACHE[relpath].get('parameters', []):
-        spec = group.get('definitions', {}).get(name)
-
-        if spec is not None:
-            if 'default' not in spec:
-                raise LookupError('%s: %s has no default' % (relpath, name))
-            return spec['default']
-
-    raise LookupError('%s does not define %s' % (relpath, name))
-
-
+yaml_default = gz_model.yaml_default     # (relpath, name): the default as written, LookupError when unreadable
 DEFAULT_PARAMS = {name: float(yaml_default(path, name)) for name, path in PARAM_FILES.items()}
 
 # ---------------------------------------------------------------------------
@@ -140,18 +126,6 @@ DEFAULT_PARAMS = {name: float(yaml_default(path, name)) for name, path in PARAM_
 # (2527 sources 2520 after setting PX4_SIM_MODEL, then sets AS_YAWRATE_FF),
 # and a later `param set-default` of the same name wins, as in the shell.
 # ---------------------------------------------------------------------------
-
-_BENCH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-if _BENCH not in sys.path:
-    sys.path.insert(0, _BENCH)
-
-import gz_model  # noqa: E402  the homes of a posix airframe (overlay, tree)
-
-ROMFS = os.path.join(PX4, 'ROMFS/px4fmu_common')
-_SOURCE = re.compile(r'^\s*\.\s+\$\{R\}etc/(\S+)\s*$')
-_SET_DEFAULT = re.compile(r'^\s*param set-default (\w+) (\S+)')
-_SIM_MODEL = re.compile(r'^\s*PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=(\S+)\}')
 
 
 def airframe_file(number):
@@ -164,31 +138,7 @@ def airframe_file(number):
     return found[0]
 
 
-def airframe_walk(path, _depth=0):
-    """(kind, name, value, file, line) in shell order through every sourced
-    file: kind 'default' for param set-default, 'model' for the
-    PX4_SIM_MODEL default."""
-    if _depth > 8:
-        raise RecursionError('airframe sourcing deeper than 8 at %s' % path)
-
-    with open(path, encoding='utf-8') as handle:
-        for number, line in enumerate(handle, 1):
-            m = _SOURCE.match(line)
-
-            if m:
-                yield from airframe_walk(gz_model.sourced_path(m.group(1)), _depth + 1)
-                continue
-
-            m = _SET_DEFAULT.match(line)
-
-            if m:
-                yield 'default', m.group(1), m.group(2), path, number
-                continue
-
-            m = _SIM_MODEL.match(line)
-
-            if m:
-                yield 'model', 'PX4_SIM_MODEL', m.group(1), path, number
+airframe_walk = gz_model.airframe_settings     # (kind, name, value, file, line) in shell order through the chain
 
 
 def airframe_defaults(number):
@@ -294,12 +244,6 @@ AIRFRAMES = {
     'cloudship': dict(CA_AIRFRAME=16, CA_AIRSHIP_GRP=0, CA_AIRSHIP_TAIL=True,
                       CA_AIRSHIP_TLMIN=-90.0, CA_AIRSHIP_TLMAX=90.0, CA_AIRSHIP_TLT_R=120.0,
                       CA_AIRSHIP_CS_K=1.0, CA_R_REV=4, yaw_surfaces=False),
-}
-PLANT_AIRFRAME = {
-    'gz_airship_vectored_independent': 'vectored',
-    'gz_airship_vectored_independent_am_fin_drag': 'vectored',
-    'gz_cloudship': 'cloudship',
-    'gz_cloudship_am_fin_drag': 'cloudship',
 }
 CA_YAML = 'src/modules/control_allocator/module.yaml'
 

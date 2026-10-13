@@ -189,7 +189,7 @@ def main():
     say('     ripple), and ixz feeds the roll swing into the body yaw rate the gyro reads (ixz 0 removes it too).')
     say('     The max-of-samples peak and the one-row brake reading pick the ripple up; the means do not.')
     say('     ixz -1 (the other sign convention for the SDF <ixz>) fits worse, which supports reading <ixz> as the')
-    say('     inertia-matrix element (SDF spec; coupling.products adds -m dx dz accordingly).')
+    say('     inertia-matrix element (SDF spec; gz_model.product_of_inertia adds -m dx dz accordingly).')
 
     # ---------------------------------------------------------------- 3
     say('\n3. The other candidate causes, each tried on the full model (verdicts and the numbers that moved most)')

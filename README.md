@@ -20,7 +20,7 @@ generators, the gates and the records.
 | | |
 |---|---|
 | `airship_family_gen.py`, `apply_generic_hull.py`, `generic_hull_design.py`, `hull_basis.py`, `fin_basis.py` | one vehicle JSON in, a gz model family, world entries, posix airframes and docs tables out |
-| `airship_gains.py` | the yaw loop's values (P, I, feedforward, speed schedule) from the family's model files |
+| `airship_gains.py` | the yaw loop's values (P, I, feedforward, speed schedule) from the family's model files; the Lamb added yaw inertia it uses reads 1.23x the CFD value on the Lotte, so P and I may come out about 20 % high and are tuned on the vehicle |
 | `vehicles/` | vehicle descriptions, their measured held-turn slopes, the FMU parameter set |
 | `sitl_check.py`, `forward_yaw_check.py`, `airship_fixed_flight_check.py`, `cloudship_*.py`, `tilt_range_check.py`, `reverse_thrust_check.py` | SITL gates, run through `gz_run.sh` |
 | `variant_check.py`, `added_mass_check.py`, `aero_moment_check.py` | is the model family what its names say, in the files and in the engine |
@@ -63,9 +63,10 @@ it. Each script's docstring is its manual.
 ## Tests and CI
 
 `run_tests.sh` runs the checks that need only the PX4 source tree: the
-generator round trip, the variant scheme, the forward-flight analysis and the
-yaw model's controller reading. CI checks out the fork at the commits in
-`pins.env` and runs it. The SITL gates need gz and stay local; their verdicts
+generator round trip, the variant scheme, the forward-flight analysis, the
+yaw model's controller reading and sitl_link's parse self-test (the `param
+show` line shapes and the model-name resolution). CI checks out the fork at
+the commits in `pins.env` and runs it. The SITL gates need gz and stay local; their verdicts
 are recorded in `docs/`.
 
 Four yaw model tests (`test_forward`, `test_forward_replay`,

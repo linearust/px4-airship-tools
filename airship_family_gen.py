@@ -598,11 +598,19 @@ def write_fixed_servos(vehicle, p, airframes):
     return [os.path.basename(paths[0])]
 
 
+# What the generator writes, relative to the tree root: the two directories
+# it adds files to and the four files it edits in place (check() copies them
+# to a scratch tree and diffs; the test lists the same).
+TREE_DIRS = ('Tools/simulation/gz/models', 'ROMFS/px4fmu_common/init.d-posix/airframes')
+TREE_FILES = ('Tools/simulation/gz/worlds/lta.sdf', 'docs/en/sim_gazebo_gz/index.md', 'docs/en/sim_gazebo_gz/vehicles.md',
+              'docs/en/frames_airship/index.md')
+
+
 def generate(vehicle, root):
-    models = os.path.join(root, 'Tools/simulation/gz/models')
-    airframes = os.path.join(root, 'ROMFS/px4fmu_common/init.d-posix/airframes')
+    models = os.path.join(root, TREE_DIRS[0])
+    airframes = os.path.join(root, TREE_DIRS[1])
     p = write_models(vehicle, models)
-    n = write_world(os.path.join(root, 'Tools/simulation/gz/worlds/lta.sdf'), vehicle.family)
+    n = write_world(os.path.join(root, TREE_FILES[0]), vehicle.family)
     print('world: %d entries added' % n)
     print('airframes written:', ', '.join(write_airframes(vehicle, p, airframes) + write_fixed_servos(vehicle, p, airframes)
                                           + write_surface_airframes(vehicle, p, airframes)) or 'none')
@@ -617,19 +625,17 @@ def check(vehicle):
     scratch = tempfile.mkdtemp(prefix='airship_family_')
     root = gz_model.ROOT
 
-    for rel in ('Tools/simulation/gz/models', 'ROMFS/px4fmu_common/init.d-posix/airframes'):
+    for rel in TREE_DIRS:
         shutil.copytree(os.path.join(root, rel), os.path.join(scratch, rel))
 
-    for rel in ('Tools/simulation/gz/worlds/lta.sdf', 'docs/en/sim_gazebo_gz/index.md', 'docs/en/sim_gazebo_gz/vehicles.md',
-                'docs/en/frames_airship/index.md'):
+    for rel in TREE_FILES:
         os.makedirs(os.path.dirname(os.path.join(scratch, rel)), exist_ok=True)
         shutil.copy(os.path.join(root, rel), os.path.join(scratch, rel))
 
     generate(vehicle, scratch)
     changed = 0
 
-    for rel in ('Tools/simulation/gz/models', 'ROMFS/px4fmu_common/init.d-posix/airframes', 'Tools/simulation/gz/worlds/lta.sdf',
-                'docs/en/sim_gazebo_gz/index.md', 'docs/en/sim_gazebo_gz/vehicles.md', 'docs/en/frames_airship/index.md'):
+    for rel in TREE_DIRS + TREE_FILES:
         out = subprocess.run(['diff', '-r', '-u', os.path.join(root, rel), os.path.join(scratch, rel)], capture_output=True, text=True)
 
         if out.returncode:

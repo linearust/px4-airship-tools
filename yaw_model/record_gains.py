@@ -106,7 +106,7 @@ NOTE = re.compile(r'지시 각속도 [\d.]+ deg/s \(AS_YAWRATE_MAX (\S+), MAN_DE
                   r'AS_YAWRATE_I (\S+), AS_YAWRATE_FF (\S+)\)')
 
 
-def f32(value):
+def f32_decimal(value):
     """The shortest decimal that names the same float32."""
     return float('%.7g' % float(value))
 
@@ -129,7 +129,7 @@ def kept_values(ip):
     """The logged values the gains need, as records/gains.json keeps them:
     the shortest decimals, SYS_AUTOSTART whole, a parameter the firmware
     did not have left out (its absence is what reads as FF 0)."""
-    return {name: (int(ip[name]) if name == 'SYS_AUTOSTART' else f32(ip[name]))
+    return {name: (int(ip[name]) if name == 'SYS_AUTOSTART' else f32_decimal(ip[name]))
             for name in KEPT_NAMES if name in ip}
 
 
@@ -225,7 +225,7 @@ def gains(run, target):
 
     for name in GAINS:
         if name in ip:
-            params[name] = f32(ip[name])
+            params[name] = f32_decimal(ip[name])
         elif name == 'AS_YAWRATE_FF':
             params[name] = 0.0          # the firmware had no feedforward (module docstring)
         else:

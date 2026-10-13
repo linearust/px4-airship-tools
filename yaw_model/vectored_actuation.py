@@ -67,20 +67,20 @@ sys.path.insert(0, BENCH)
 import gz_model  # noqa: E402  (bench) pure SDF reader, no simulator
 
 PX4 = gz_model.ROOT
-FLT_EPSILON = 1.1920928955078125e-07
+FLT_EPSILON = 2.0 ** -23        # FLT_EPSILON (float.h), exact
 
 
-def f32(x):
+def to_f32(x):
     """Round to IEEE single, as the firmware's float arithmetic does."""
     return struct.unpack('f', struct.pack('f', x))[0]
 
 
-M_PI_F = f32(math.pi)
+M_PI_F = to_f32(math.pi)
 
 
 def radians_f(deg):
     # src/lib/mathlib/math/Limits.hpp:139-142: degrees * (T(MATH_PI) / T(180)) in float
-    return f32(f32(deg) * f32(M_PI_F / f32(180.0)))
+    return to_f32(to_f32(deg) * to_f32(M_PI_F / to_f32(180.0)))
 
 
 def clamp(x, lo, hi):
@@ -92,6 +92,7 @@ def clamp(x, lo, hi):
 # ---------------------------------------------------------------------------
 
 AIRFRAME = 'ROMFS/px4fmu_common/init.d-posix/airframes/2520_gz_airship_vectored_independent'
+AIRFRAME_PATH = gz_model.airframe('airship_vectored_independent')[1]     # that file, found over the homes (overlay, tree)
 WORLD = 'Tools/simulation/gz/worlds/lta.sdf'
 
 # Values the citations promise. load_params() re-reads every one from the file
@@ -119,13 +120,10 @@ CITED = {
 
 
 def airframe_params(path):
-    out = {}
-    with open(path) as handle:
-        for number, line in enumerate(handle, 1):
-            match = re.match(r'\s*param set-default (\w+) (\S+)', line)
-            if match:
-                out[match.group(1)] = (float(match.group(2)), number)
-    return out
+    """{name: (value, line)} of the `param set-default` lines written in
+    this one file (not the ones it sources: the CITED lines are its own)."""
+    return {name: (float(value), line) for kind, name, value, where, line in gz_model.airframe_settings(path)
+            if kind == 'default' and where == path}
 
 
 def _text(elem, path, default=None):
@@ -211,7 +209,7 @@ def load_params(model_name='airship_vectored_independent', check=True, airframe=
     family's bare airframe path relative to the PX4 tree, taken as it is) and
     the plant's from the gz model; check=True also holds the plant to the
     10.97 m anchor's cited constants."""
-    af = airframe_params(os.path.join(PX4, airframe or AIRFRAME))
+    af = airframe_params(AIRFRAME_PATH if airframe is None else os.path.join(PX4, airframe))
     problems = []
 
     for name, (value, line) in (CITED if airframe is None else {}).items():

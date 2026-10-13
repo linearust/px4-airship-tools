@@ -50,18 +50,7 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sitl_out')
 def vehicle_files():
     """{name: (authority N m, True)} of every vectored vehicle file in
     vehicles/: two pods of pods.thrust_n at +-hull.pod_y."""
-    import glob
-    import json
-    out = {}
-
-    for path in sorted(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vehicles', '*.json'))):
-        with open(path) as handle:
-            v = json.load(handle)
-
-        if 'pods' in v and 'hull' in v:
-            out[v['name']] = (2.0 * v['pods']['thrust_n'] * v['hull']['pod_y'], True)
-
-    return out
+    return {name: (2.0 * v['pods']['thrust_n'] * v['hull']['pod_y'], True) for name, v in gz_model.vehicle_files().items()}
 
 
 VEHICLES = dict({'cloudship': (4.48, False)},          # 2.3544 N tail x 1.902 m

@@ -618,7 +618,7 @@ def probes():
         if changed:
             raise ValueError('%s: %s changed during the log; the replay would need the timeline' % (rel, changed))
 
-        gains = {name: rg.f32(ip[name]) for name in rg.GAINS}
+        gains = {name: rg.f32_decimal(ip[name]) for name in rg.GAINS}
         cm, mc, lp, gt = d['vehicle_control_mode'], d['manual_control_setpoint'], d['vehicle_local_position'], \
             d['vehicle_local_position_groundtruth']
         att, av, rc, tq = d['vehicle_attitude_groundtruth'], d['vehicle_angular_velocity'], d['rate_ctrl_status'], \

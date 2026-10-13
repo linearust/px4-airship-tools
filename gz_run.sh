@@ -138,9 +138,11 @@ fi
 export PX4_GZ_MODEL_POSE="${PX4_GZ_MODEL_POSE:-0,0,20}"
 
 ( tail -f /dev/null | HEADLESS=1 make -C "$ROOT" px4_sitl "$GZ_TARGET" > "$LOG" 2>&1 ) &
+job=$!
 
 up=""
 for _ in $(seq 1 150); do
+	kill -0 "$job" 2>/dev/null || break
 	"$ROOT/build/px4_sitl_default/bin/px4-listener" vehicle_status 1 >/dev/null 2>&1 && { up=1; break; }
 	sleep 1
 done
@@ -149,7 +151,7 @@ done
 # ran anyway, against nothing, and reported whatever a total absence of data
 # looks like to it.
 if [ -z "$up" ]; then
-	echo "실패: px4 가 150 초 안에 uORB 에 응답하지 않았다. $LOG 를 본다"
+	echo "실패: px4 가 끝났거나 150 초 안에 uORB 에 응답하지 않았다. $LOG 를 본다"
 	grep -m3 -E "Subprocess|error|Error|ERROR" "$LOG" | sed 's/^/  /'
 	exit 5
 fi

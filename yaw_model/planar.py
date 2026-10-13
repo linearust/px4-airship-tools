@@ -85,7 +85,7 @@ import plants  # noqa: E402
 import controller as ctl  # noqa: E402
 
 gz_model = plants.gz_model
-GYRO_NOISE = 0.0008726646          # cloudship/model.sdf:261, airship_base/model.sdf:236
+GYRO_NOISE = plants.GYRO_NOISE
 
 
 class PlanarPlant:
@@ -347,7 +347,7 @@ class RollPlanarPlant:
       rigid inertia at O: M_RB = [[m I, -m S(r_g)], [m S(r_g), I_O]] with
         I_g = [[Ixx, 0, ixz], [0, Iyy, 0], [ixz, 0, Izz]] about the family
         centre of mass (gz_model.inertia; ixz the SDF matrix element summed
-        with the parallel-axis term, coupling.products) and
+        with the parallel-axis term, gz_model.product_of_inertia) and
         I_O = I_g - m S(r_g)^2 (Fossen 2011 eq. 3.44);
       added mass at O: the whole <fluid_added_mass> block, xq and yp included;
       Coriolis of both, from the momentum (Kirchhoff): M nu_dot = tau -
@@ -396,15 +396,14 @@ class RollPlanarPlant:
         vol, cov = gz_model.centre_of_volume(fam)
         self.m = m
         self.rg = com
-        rho = 1.225                                  # worlds/lta.sdf:176
+        rho = gz_model.RHO_AIR
         self.W = m * gz_model.G
         self.buoy_ratio = rho * vol / m
         self.d_b = (cov[0] - com[0], cov[1] - com[1], cov[2] - com[2])
         ixx, iyy, izz = (gz_model.inertia(fam, a) for a in range(3))
-        import coupling
         # ixz: True, False (0) or a number to scale it by (-1: the opposite
         # sign convention, a check of the SDF matrix-element reading)
-        ixz = coupling.products(fam) * (1.0 if ixz is True else float(ixz))
+        ixz = gz_model.product_of_inertia(fam, 'xz') * (1.0 if ixz is True else float(ixz))
         Ig = [[ixx, 0.0, ixz], [0.0, iyy, 0.0], [ixz, 0.0, izz]]
         S = _skew(com)
         S2 = [[sum(S[i][k] * S[k][j] for k in range(3)) for j in range(3)] for i in range(3)]

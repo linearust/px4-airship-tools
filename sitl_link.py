@@ -88,8 +88,10 @@ if not gz_model.has_model(MODEL_NAME):
 # between them ("%c %c %c %s": used / unsaved-or-changed / readonly), so the
 # prefix is not a run of flag characters, and a pattern that assumed it was
 # read every parameter the caller had just written as absent. `python3
-# sitl_link.py` checks this against all four shapes.
-PARAM_LINE = r'^[x+*l ]*%s\s+\[-?\d+,\s*-?\d+\]\s*:\s*([-+0-9.eE]+)'
+# sitl_link.py` checks this against all four shapes. Group 1 is the flag
+# column ('+' saved or '*' unsaved where the value is not its default: what
+# forward_yaw_check.read_params reads), group 2 the value.
+PARAM_LINE = r'^([x+*l ]*)%s\s+\[-?\d+,\s*-?\d+\]\s*:\s*([-+0-9.eE]+)'
 
 
 def shell(args, timeout=10):
@@ -157,7 +159,7 @@ def param_show(name, tries=15):
             found = re.search(PARAM_LINE % name, text, re.M)
 
             if found:
-                return float(found.group(1))
+                return float(found.group(2))
 
             if 'parameters total' in text:
                 return None
@@ -325,7 +327,7 @@ if __name__ == '__main__':
 
     for line, want, note in SAMPLES:
         found = re.search(PARAM_LINE % 'SIM_GZ_EC_MIN1', line, re.M)
-        got = float(found.group(1)) if found else None
+        got = float(found.group(2)) if found else None
         ok = got == want
         bad += not ok
         print('  %s  %-26s %s' % ('통과' if ok else '실패', note,

@@ -12,8 +12,11 @@ thrust, the duty range, the model root - and a copy is how a tolerance quietly
 stops describing the vehicle it is applied to. Anything a check needs to know
 about the plant it asks for here.
 """
+import glob
+import json
 import math
 import os
+import re
 import xml.etree.ElementTree as ET
 
 ROOT = os.environ.get('PX4_ROOT', os.path.expanduser('~/dev/PX4-Autopilot'))
@@ -36,6 +39,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OVERLAY = os.environ.get('AIRSHIP_OVERLAY', os.path.join(HERE, 'overlay'))
 MODEL_HOMES = [os.path.join(OVERLAY, 'models'), GZ_MODELS]
 AIRFRAME_HOMES = [os.path.join(OVERLAY, 'airframes'), AIRFRAMES]
+VEHICLES = os.path.join(HERE, 'vehicles')     # the vehicle files the generator and the checks read
 GZ_PLUGINS = os.environ.get('PX4_GZ_PLUGINS',
                             os.path.join(ROOT, 'build/px4_sitl_default/src/'
                                                'modules/simulation/gz_plugins'))
@@ -143,6 +147,85 @@ def sourced_path(rel):
         return airframe_path(rel[len(prefix):])
 
     return os.path.join(ROOT, 'ROMFS/px4fmu_common', rel)
+
+
+_SOURCE = re.compile(r'^\s*\.\s+\$\{R\}etc/(\S+)\s*$')
+_SET_DEFAULT = re.compile(r'^\s*param set-default (\w+) (\S+)')
+_SIM_MODEL = re.compile(r'^\s*PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=(\S+)\}')
+
+
+def airframe_settings(path, _depth=0):
+    """(kind, name, value, file, line) of a posix airframe in shell order
+    through every file it sources: kind 'default' for a `param set-default`
+    (value as written), 'model' for the PX4_SIM_MODEL default. The one walker
+    of the chain: a later line of a name wins as it does in the shell, and a
+    sourced file that cannot be read is an error, never a silent absence."""
+    if _depth > 8:
+        raise RecursionError('%s: 에어프레임 포함이 8 단보다 깊다' % path)
+
+    with open(path, encoding='utf-8') as handle:
+        for number, line in enumerate(handle, 1):
+            m = _SOURCE.match(line)
+
+            if m:
+                yield from airframe_settings(sourced_path(m.group(1)), _depth + 1)
+                continue
+
+            m = _SET_DEFAULT.match(line)
+
+            if m:
+                yield 'default', m.group(1), m.group(2), path, number
+                continue
+
+            m = _SIM_MODEL.match(line)
+
+            if m:
+                yield 'model', 'PX4_SIM_MODEL', m.group(1), path, number
+
+
+def vehicle_files():
+    """{name: the file's dict} of every vectored vehicle file in vehicles/
+    (pods and a hull), in file-name order."""
+    out = {}
+
+    for path in sorted(glob.glob(os.path.join(VEHICLES, '*.json'))):
+        with open(path) as handle:
+            v = json.load(handle)
+
+        if 'pods' in v and 'hull' in v:
+            out[v['name']] = v
+
+    return out
+
+
+_YAML_CACHE = {}
+
+
+def yaml_default(rel, name):
+    """The default of one parameter in a PX4 module yaml (parameters: -
+    group: definitions: NAME: default), as written. LookupError when the file
+    is not there, does not define the name, or gives it no default: a default
+    that cannot be read is not a default of 0. The file is parsed once."""
+    if rel not in _YAML_CACHE:
+        import yaml
+        path = os.path.join(ROOT, rel)
+
+        if not os.path.exists(path):
+            raise LookupError('%s 가 없다' % path)
+
+        with open(path, encoding='utf-8') as handle:
+            _YAML_CACHE[rel] = yaml.safe_load(handle)
+
+    for group in _YAML_CACHE[rel].get('parameters', []):
+        spec = (group.get('definitions') or {}).get(name)
+
+        if spec is not None:
+            if 'default' not in spec:
+                raise LookupError('%s: %s 에 기본값이 없다' % (rel, name))
+
+            return spec['default']
+
+    raise LookupError('%s 의 기본값을 %s 에서 찾지 못했다' % (name, rel))
 
 
 def sdf(name):
@@ -401,10 +484,46 @@ def centre_of_volume(models):
     return volume, tuple(c / volume for c in moment)
 
 
+def hang_angle(name):
+    """The pitch a buoyant hull hangs at with nothing applied, rad, positive
+    nose down: the pendulum of its weight under its buoyancy trims where the
+    centre of mass is below the centre of volume, so a centre of mass ahead
+    of it hangs the nose down by atan((x_com - x_cov) / (z_cov - z_com)).
+    The Cloudship's 2.6 deg (cloudship_sitl.md) is this; with the throttle
+    off such a hull glides down its own axis at u tan(hang)."""
+    fam = family(name)
+    _, com = centre_of_mass(fam)
+    _, cov = centre_of_volume(fam)
+    return math.atan2(com[0] - cov[0], cov[2] - com[2])
+
+
 def added_mass(model):
     """The <fluid_added_mass> elements of the link that carries one, or {}."""
     block = model.find('link/inertial/fluid_added_mass')
     return {child.tag: float(child.text) for child in block} if block is not None else {}
+
+
+def product_of_inertia(models, axes='xz'):
+    """Family product of inertia about its centre of mass: each link's own
+    <i{axes}> (the SDF tensor element) plus the parallel-axis term -m d_a d_b.
+    ixz is what couples a roll swing into the body yaw rate the gyro reads."""
+    a, b = ('xyz'.index(axes[0]), 'xyz'.index(axes[1]))
+    _, com = centre_of_mass(models)
+    result = 0.0
+
+    for name in models:
+        for link in sdf(name).findall('link'):
+            inertial = link.find('inertial')
+
+            if inertial is None or inertial.find('mass') is None:
+                continue
+
+            mass = float(inertial.find('mass').text)
+            d = [pose(link, i) + pose(inertial, i) - com[i] for i in range(3)]
+            own = inertial.find('inertia/i' + axes)
+            result += (float(own.text) if own is not None else 0.0) - mass * d[a] * d[b]
+
+    return result
 
 
 def inertia(models, axis):
@@ -770,8 +889,6 @@ def lateral_derivatives(name):
 def airframe(name):
     """(number, path) of the posix gz airframe whose PX4_SIM_MODEL default is
     this model. Exactly one, by the scheme's file name, or an error."""
-    import re
-
     found = [(f, p) for f, p in airframe_files() if re.match(r'^\d+_gz_%s$' % re.escape(name), f)]
 
     if len(found) != 1:
@@ -792,34 +909,14 @@ def airframe_defaults(name):
     """{PARAM: value} that the model's posix airframe sets with `param
     set-default`, its sourced files included at the point they are sourced,
     so a later line wins as it does in the shell (2522 sources 2520 and then
-    sets its own AS_YAWRATE_FF). `${R}etc/` is the ROMFS tree. A sourced file
-    that cannot be read is an error: its defaults would silently be missing."""
-    import re
-
+    sets its own AS_YAWRATE_FF). Numbers as floats, anything else as written."""
     values = {}
 
-    def read(path, depth):
-        if depth > 8:
-            raise LookupError('%s: 에어프레임 포함이 너무 깊다' % path)
+    for kind, param, value, _, _ in airframe_settings(airframe(name)[1]):
+        if kind == 'default':
+            try:
+                values[param] = float(value)
+            except ValueError:
+                values[param] = value
 
-        with open(path) as handle:
-            lines = handle.read().splitlines()
-
-        for line in lines:
-            line = line.strip()
-            source = re.match(r'^\.\s+\$\{R\}etc/(\S+)$', line)
-
-            if source:
-                read(sourced_path(source.group(1)), depth + 1)
-                continue
-
-            setting = re.match(r'^param set-default\s+(\w+)\s+(\S+)', line)
-
-            if setting:
-                try:
-                    values[setting.group(1)] = float(setting.group(2))
-                except ValueError:
-                    values[setting.group(1)] = setting.group(2)
-
-    read(airframe(name)[1], 0)
     return values

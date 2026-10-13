@@ -26,43 +26,23 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import controller as ctl  # noqa: E402
 import plants  # noqa: E402
 
 gz_model = plants.gz_model
 DEG = math.pi / 180.0
 G = gz_model.G                     # worlds/lta.sdf:12 <gravity>0 0 -9.8 (gz_model.py:35-42)
 
-# Today's gain, for the crossover only: AS_YAWRATE_P 0.5 (task context). The
-# rate loop's torque is normalized, torque = P * (rate_sp - rate) + integral
-# with the rate in rad/s (src/lib/rate_control/rate_control.cpp:75-78; the
-# airship controller sets only the z gains, airship_att_control_main.cpp:
-# 97-98), and a normalized 1 is N_full at the hull, so the crossover of P
-# against the pure inertia is N_full * P / I.
-P_NOW = 0.5
+# The yaml default of AS_YAWRATE_P, for the crossover only. The rate loop's
+# torque is normalized, torque = P * (rate_sp - rate) + integral with the rate
+# in rad/s (src/lib/rate_control/rate_control.cpp; the airship controller
+# sets only the z gains, AirshipYawRateLoop::setGains), and a normalized 1 is
+# N_full at the hull, so the crossover of P against the pure inertia is
+# N_full * P / I.
+P_NOW = ctl.DEFAULT_PARAMS['AS_YAWRATE_P']
 
 HULL_Z = {'airship_vectored_independent': 2.05,   # airship_base/model.sdf:69 hull collision pose z
           'cloudship': 0.8986}                     # cloudship/model.sdf:85 hull collision pose z
-
-
-def products(fam):
-    """Family ixz about the family centre of mass: each link's own <ixz> (the
-    SDF tensor element) plus the parallel-axis term -m dx dz."""
-    _, com = gz_model.centre_of_mass(fam)
-    ixz = 0.0
-
-    for name in fam:
-        for link in gz_model.sdf(name).findall('link'):
-            inertial = link.find('inertial')
-
-            if inertial is None or inertial.find('mass') is None:
-                continue
-
-            m = float(inertial.find('mass').text)
-            d = [gz_model.pose(link, i) + gz_model.pose(inertial, i) - com[i] for i in range(3)]
-            own = inertial.find('inertia/ixz')
-            ixz += (float(own.text) if own is not None else 0.0) - m * d[0] * d[2]
-
-    return ixz
 
 
 def part_a():
@@ -84,7 +64,7 @@ def part_a():
             my = am['yy']
             ixx = ixx + h * h * my - (h * my) ** 2 / (mass + my)   # free-sway roll inertia (added_mass_check.py docstring)
 
-        ixz = products(fam)
+        ixz = gz_model.product_of_inertia(fam, 'xz')
         wz = math.sqrt(k_roll / ixx)
         wp = math.sqrt(k_roll / (ixx - ixz * ixz / p.I))
         wc = p.n_full * P_NOW / p.I

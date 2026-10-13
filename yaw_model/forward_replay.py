@@ -585,7 +585,7 @@ def preconditions(rec, start):
     if unread:
         return out
 
-    gains = {k: rg.f32(rp['params'][k]) for k in rg.GAINS}
+    gains = {k: rg.f32_decimal(rp['params'][k]) for k in rg.GAINS}
     sp = math.degrees(ctl.yaw_rate_setpoint(stick[1][1], gains['MAN_DEADZONE'], math.radians(gains['AS_YAWRATE_MAX'])))
     logged_sp = leg['stick']['setpoint_deg_s']
     check('the stick\'s setpoint from the logged gains is the logged one', abs(sp - logged_sp) <= SETPOINT_TOL_DEG,
@@ -1478,7 +1478,7 @@ def entry_rows(rec, start, runs, model, notes):
     gains = rp['params']
 
     for k in rg.GAINS:
-        info(where, k, '', rg.f32(gains[k]), s['params'][k], note='the log\'s float32 %r' % gains[k])
+        info(where, k, '', rg.f32_decimal(gains[k]), s['params'][k], note='the log\'s float32 %r' % gains[k])
 
     (_, _), (on, _), (off, _) = rp['stick']
     times = s['times']

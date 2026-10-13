@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""2026-10-12 D-f check (professor_decisions_20261012.md): the hover gate's Acro step and release
+"""A dated D-f check (2026-10-12); its result is recorded in docs/professor_decisions_20261012.md.
+The hover gate's Acro step and release
 replayed for any vehicle-file family, with the yaw model's actuation path (allocator, AirshipPod
 steer/slew, gz tilt joints and rotors: vectored_actuation.VectoredActuation) read
 from the family's own bare airframe and model, and the restore rule where the
@@ -7,12 +8,12 @@ firmware restores the integrator after every stick input. Plant: (I + rr) r_dot 
 import math, os, sys
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS); sys.path.insert(0, os.path.join(TOOLS, 'yaw_model'))
-import gz_model, airship_gains  # noqa
+import gz_model  # noqa
 import controller as ctl  # noqa
 import vectored_actuation as va  # noqa
 import gate  # noqa
 
-RHO = 1.225
+RHO = gz_model.RHO_AIR
 STICK, DZ = 0.5, 0.1
 
 def bare_airframe(vehicle):
@@ -39,18 +40,20 @@ class Act:
     def step(self, dt, u):
         row = self.act.step(u, (0.0, 0.0, 0.0), 0.0)
         return row['N'], self.act.alloc.unallocated[2]
-    def status(self):
-        pods = self.act.alloc.pods
-        return '%.0f/%.0f' % (math.degrees(pods[0].tilt), math.degrees(pods[1].tilt))
 
 def run(vehicle, member, quadratic, push_s=35.0, release_s=12.0, wind=0.0, i_off=False):
     model = vehicle + member
     params = ctl.head_params(model)
-    number = ctl.airframe_for_model(model)
-    defaults = gz_model.airframe_defaults(model)
     # the feedforward law is the controller module's switch: 'quadratic' is the
-    # firmware since 2026-10-12, 'linear' the one before
-    ctl.FF_LAW = 'quadratic' if quadratic else 'linear'
+    # firmware since 2026-10-12, 'linear' the one before; put back on return
+    law, ctl.FF_LAW = ctl.FF_LAW, ('quadratic' if quadratic else 'linear')
+    try:
+        return _run(vehicle, member, model, params, push_s, release_s, wind, i_off)
+    finally:
+        ctl.FF_LAW = law
+
+
+def _run(vehicle, member, model, params, push_s, release_s, wind, i_off):
     c = ctl.GateController('vectored', params, filter_gyro=False, other_params={'THR_MDL_FAC': params['THR_MDL_FAC']})
     c.ctrl.set_restore('zero_or_sign')      # the firmware restores after every stick input (2026-10-12)
     if i_off:

@@ -25,13 +25,13 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import airship_family_gen as gen             # noqa: E402
 import gz_model                              # noqa: E402
 from report import note, summary, verdict    # noqa: E402
 
 ROOT = gz_model.ROOT
-COPIED = ('Tools/simulation/gz/models', 'ROMFS/px4fmu_common/init.d-posix/airframes', 'ROMFS/px4fmu_common/init.d/airframes')
-FILES = ('Tools/simulation/gz/worlds/lta.sdf', 'docs/en/sim_gazebo_gz/index.md', 'docs/en/sim_gazebo_gz/vehicles.md',
-         'docs/en/frames_airship/index.md')
+COPIED = gen.TREE_DIRS + ('ROMFS/px4fmu_common/init.d/airframes',)
+FILES = gen.TREE_FILES
 
 
 def scratch_tree():
