@@ -19,7 +19,8 @@ it on the yaw model.
                  w(u_lo) k u_lo; r_lim = min(MAX, (A - rho) / (FF0 + k u_hi),
                  rho / (k (u_hi - u_lo))), rho = min(AS_YR_INT_LIM, A / 2);
                  the applied cap MAX + w(u_hi) (r_lim - MAX), w the ramp
-                 math::interpolate(u, AS_SPD_LO, AS_SPD_HI, 0, 1). k <= 0 is
+                 math::interpolate(u, RAMP_LO_0C, RAMP_HI_0C, 0, 1) (0c's ramp; the
+                 D1 schedule ramps as the firmware does, firmware_ramp). k <= 0 is
                  "off" and returns exactly (AS_YAWRATE_FF, AS_YAWRATE_MAX).
                  SCHED_STALL adds c u_lo to the min. budget 'supplied' (the
                  SCHED_CB variant, not the plan's text) writes the interval
@@ -72,9 +73,10 @@ import controller as ctl  # noqa: E402
 import forward as F  # noqa: E402
 
 gz_model = cl.gate.gz_model
+AS_SPD_HI_FW = float(ctl.DEFAULT_PARAMS['AS_SPD_HI'])   # m/s, the yaml default of the firmware's ramp end
 DT = cl.DT
 BENCH = cl.gate.BENCH
-SPEED_DOC = os.path.join(BENCH, 'd1_speed_source_and_fins_20261001.md')
+SPEED_DOC = os.path.join(BENCH, 'docs', 'd1_speed_source_and_fins_20261001.md')
 
 # The plan's new parameters at the values 0c flies (2.마: names are drafts,
 # values are set by measurement). The ramp's ends are 0c's own choice: the
@@ -82,8 +84,32 @@ SPEED_DOC = os.path.join(BENCH, 'd1_speed_source_and_fins_20261001.md')
 # 1.5-2 m/s in the speed document, and the gz fins' attachment and stall
 # zone, 2-2.5 m/s), not its values. The speed at which the 2 m/s results
 # (a full stick stalling the fins inside the ramp) bite follows from them.
-AS_SPD_LO = 1.5                 # m/s, w(u) = 0 at and below (chosen for 0c)
-AS_SPD_HI = 2.5                 # m/s, w(u) = 1 above (chosen for 0c)
+RAMP_LO_0C = 1.5                # m/s, w(u) = 0 at and below: 0c's own choice for the plan's schedule()
+RAMP_HI_0C = 2.5                # m/s, w(u) = 1 above (0c)
+AS_SPD_LO, AS_SPD_HI = RAMP_LO_0C, RAMP_HI_0C   # the names the 0c analysis (policy_compare) wrote the ramp under
+# The firmware's ramp since a9e7c3c16b (increment A): from kRampStart x
+# AS_SPD_HI to AS_SPD_HI, AS_SPD_HI the plant's own (its airframe chain).
+# The increment-1 firmware of 2026-10-07 ramped from AS_SPD_LO = 1.5
+# (d1_runs_20261007.jsonl was made on it: pass lo=1.5 to reproduce it).
+RAMP_START = 0.5
+
+
+def _firmware_ramp_start():
+    """kRampStart out of airship_yaw_schedule.hpp, so a changed firmware
+    ramp is noticed here and not in a comparison that quietly drifted."""
+    path = os.path.join(gz_model.ROOT, 'src/modules/airship_att_control/airship_yaw_schedule.hpp')
+
+    with open(path, encoding='utf-8') as handle:
+        m = re.search(r'kRampStart = ([0-9.]+)f', handle.read())
+
+    if m is None:
+        raise LookupError('%s: kRampStart not found' % path)
+
+    return float(m.group(1))
+
+
+if _firmware_ramp_start() != RAMP_START:
+    raise LookupError('the firmware ramps in from %g x AS_SPD_HI, this model from %g' % (_firmware_ramp_start(), RAMP_START))
 SELECTOR_TAU_S = 1.0            # 2.가: both bounds through a 1 s first-order filter
 SELECTOR_HOLD_S = 1.0           # 2.가: a lost source is taken back after this long usable (a code constant)
 RHO = gz_model.RHO_AIR          # kg/m^3 (worlds/lta.sdf:176), the pitot's q = 1/2 rho TAS^2
@@ -97,7 +123,9 @@ NONE, AIRSPEED, GROUND, TRUE = 'NONE', 'AIRSPEED', 'GROUND', 'TRUE'
 # A second addition, after the 0c review (finding 1): SCHED_CB, SCHED with
 # the interval term written on the FF the ramp supplies (schedule's budget
 # 'supplied'). It informs a formula question for the owner; it is not the
-# plan's text
+# plan's text.
+# Since increment A (ec89e6bd84) the restore rule is the firmware's at every
+# stick input: a policy without RESTORE models the firmware before it.
 POLICIES = ('HEAD', 'RESTORE', 'SCHED', 'SCHED_STALL', 'SCHED+RESTORE', 'SCHED+RESTORE_FWD', 'SCHED_CB', 'D1',
             'D1+RESTORE')
 SPEC_POLICIES = POLICIES[:5]
@@ -308,7 +336,7 @@ def schedule(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=AS_SPD_LO, hi=AS_SPD_HI
         return ff0, max_deg, {'off': True}
 
     if budget == 'd1':
-        return schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo, hi)
+        return schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo, hi)     # the caller's ramp: the firmware's for D1
 
     w_lo = interpolate(u_lo, lo, hi, 0.0, 1.0)
     w_hi = interpolate(u_hi, lo, hi, 0.0, 1.0)
@@ -347,10 +375,13 @@ def budget_rate(ff0, ff_speed, budget, max_deg):
     return budget / ff_speed if ff_speed > 0.0 else float('inf')
 
 
-def schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=AS_SPD_LO, hi=AS_SPD_HI):
+def schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=None, hi=None):
     """The increment-1 schedule (d1_universal_architecture_20261001.md 2.다 as
     amended 2026-10-07, d1_increment1_plan_20261007.md 1.3), what the firmware
-    implements, in the feedforward law controller.FF_LAW names. (FF, cap deg/s,
+    implements, in the feedforward law controller.FF_LAW names. The ramp is the
+    firmware's: hi = AS_SPD_HI (the yaml default when not given), lo =
+    RAMP_START x hi (the increment-1 firmware's 1.5 is passed explicitly to
+    reproduce its records). (FF, cap deg/s,
     details); FF is what the hook hands controller.set_feedforward: the speed
     term under 'quadratic', the whole gain under 'linear'. k > 0 (the caller
     handles k <= 0). The formulas below are the 'linear' law's; under
@@ -370,6 +401,8 @@ def schedule_d1(u_lo, u_hi, k, ff0, max_deg, int_lim, A, lo=AS_SPD_LO, hi=AS_SPD
     (fixed here, recorded in the increment-1 report). At u_lo = u_hi = 0:
     FF_s = ff0 and the interval term is absent, so the cap is MAX unless
     (A - rho) / ff0 is below it."""
+    hi = AS_SPD_HI_FW if hi is None else hi
+    lo = RAMP_START * hi if lo is None else lo
     w_lo = interpolate(u_lo, lo, hi, 0.0, 1.0)
     w_hi = interpolate(u_hi, lo, hi, 0.0, 1.0)
     ff_speed = w_lo * k * u_lo
@@ -632,6 +665,12 @@ def source(name):
 # ---------------------------------------------------------------------------
 
 
+def firmware_ramp(gains):
+    """(lo, hi) m/s of the firmware's speed-share ramp for a plant's gains:
+    from RAMP_START x AS_SPD_HI to AS_SPD_HI (airship_yaw_schedule.hpp)."""
+    return RAMP_START * gains['AS_SPD_HI'], gains['AS_SPD_HI']
+
+
 class Scheduled:
     """The SCHED hook (SCHED_STALL with c_stall, SCHED_CB with budget
     'supplied'): every cycle, the speed interval (the source through the
@@ -648,11 +687,14 @@ class Scheduled:
     call, bit for bit."""
 
     def __init__(self, source, k, ff0, max_deg, int_lim, A, c_stall=None, t_stick=0.0, marks=None, every=25,
-                 forward_gate=False, budget='plan'):
+                 forward_gate=False, budget='plan', ramp=None):
         """forward_gate: the restore rule's put-back happens only on a
         cycle with w(u_lo) > 0 (SCHED+RESTORE_FWD); the save at the stick's
         onset is untouched. Installed on the controller at the first call
-        (its _restore_edge, which only the put-back reads)."""
+        (its _restore_edge, which only the put-back reads).
+        ramp: (lo, hi) m/s of w(u); None is 0c's (RAMP_LO_0C, RAMP_HI_0C). A
+        D1 hook (budget 'd1') takes the firmware's, firmware_ramp(gains)."""
+        self.ramp_lo, self.ramp_hi = (RAMP_LO_0C, RAMP_HI_0C) if ramp is None else ramp
         a_pos, a_neg = (A, A) if isinstance(A, (int, float)) else (float(A[0]), float(A[1]))
         self.source, self.k, self.ff0, self.max_deg, self.int_lim = source, k, ff0, max_deg, int_lim
         self.A, self.A_neg = a_pos, (None if a_neg == a_pos else a_neg)
@@ -698,22 +740,22 @@ class Scheduled:
         else:
             lo, hi, src = self.sel.update(DT, tas, ug, ctrl.loop_active)
 
-        ff, cap, info = schedule(lo, hi, self.k, self.ff0, self.max_deg, self.int_lim, self.A, c_stall=self.c_stall,
-                                 budget=self.budget)
+        ff, cap, info = schedule(lo, hi, self.k, self.ff0, self.max_deg, self.int_lim, self.A, lo=self.ramp_lo,
+                                 hi=self.ramp_hi, c_stall=self.c_stall, budget=self.budget)
         ctrl.set_feedforward(ff)
 
         if self.A_neg is None:
             ctrl.set_rate_cap(cap, stick=True, clamp=True)
         else:
             _, cap_neg, _ = schedule(lo, hi, self.k, self.ff0, self.max_deg, self.int_lim, self.A_neg,
-                                     c_stall=self.c_stall, budget=self.budget)
+                                     lo=self.ramp_lo, hi=self.ramp_hi, c_stall=self.c_stall, budget=self.budget)
             ctrl.set_rate_cap(cap, stick=True, clamp=True, cap_neg_deg_s=cap_neg)
 
         if self.forward_gate:
             if not self._installed:
                 self._install(ctrl)
 
-            self.forward = self.k > 0.0 and interpolate(lo, AS_SPD_LO, AS_SPD_HI, 0.0, 1.0) > 0.0
+            self.forward = self.k > 0.0 and interpolate(lo, self.ramp_lo, self.ramp_hi, 0.0, 1.0) > 0.0
 
         row = (round(t, 6), lo, hi, src, ff, cap, info.get('binding'), tas, ug)
 
@@ -804,10 +846,12 @@ def make_hook(policy, cfg, source, k_factor=1.0, t_stick=3.0, t_release=23.0):
 
     g = cfg.gains
     c = cfg.stall['c'] if (policy == 'SCHED_STALL' and cfg.stall) else None
+    budget = BUDGETS.get(policy, 'plan')
     hook = Scheduled(source, cfg.k * k_factor, g['AS_YAWRATE_FF'], g['AS_YAWRATE_MAX'], g['AS_YR_INT_LIM'],
                      cfg.A_dir, c_stall=c, t_stick=t_stick,
                      marks={'stick': t_stick, 'stick_end': round(t_release - DT, 6), 'release': t_release},
-                     forward_gate=policy.endswith('_FWD'), budget=BUDGETS.get(policy, 'plan'))
+                     forward_gate=policy.endswith('_FWD'), budget=budget,
+                     ramp=firmware_ramp(g) if budget == 'd1' else None)
     return hook, restore
 
 

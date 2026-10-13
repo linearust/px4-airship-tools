@@ -18,8 +18,9 @@ is interpolated linearly and the others hold):
   rate        vehicle_angular_velocity.xyz[2] (already filtered, so the
               controller's filter is off here), logged every ~10 ms
   stick       vehicle_rates_setpoint.yaw inverted through the deadzone while
-              the loop is closed (published on the cycle a new stick is read,
-              AAC:240-242), vehicle_torque_setpoint.xyz[2] in Manual (torque ==
+              the loop is closed (published on the cycle a new stick is read:
+              publishRatesSetpoint under new_sticks in airship_att_control_main.cpp),
+              vehicle_torque_setpoint.xyz[2] in Manual (torque ==
               stick there), manual_control_setpoint.yaw (5 Hz) otherwise
   mode        vehicle_control_mode (armed, manual, rates flags), taken from the
               cycle after its timestamp
@@ -40,7 +41,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import controller as C  # noqa: E402
 
-LOGDIR = '/home/h/dev/PX4-Autopilot/build/px4_sitl_default/rootfs/fs/log'
+LOGDIR = os.path.join(C.PX4, 'build/px4_sitl_default/rootfs/fs/log')
 # The clean-start gate runs: 2026-09-25 on 9535f8abcd (the recorded results
 # in the task; firmware differs from HEAD only in propulsiveYaw(), true on
 # both airframes) and the 2026-09-27 chain9 runs on 1965de11ab.
@@ -53,7 +54,11 @@ DEFAULT_LOGS = [
     ('2026-09-27/08_36_30.ulg', 'vectored'),     # 2520, chain9
 ]
 # HEAD 4e1baea97c, chain14 of 2026-09-29: the three airframes that fly a
-# feedforward (record_gains.RUNS), the check of the FF port against SITL
+# feedforward (record_gains.RUNS), the check of the FF port against SITL.
+# Every log listed here predates the speed schedule (increment 1,
+# 2026-10-07) and the restore rule with the quadratic law (increment A,
+# 2026-10-12): check_log models them with the linear law and the restore rule
+# off, which is what their firmware ran.
 HEAD_FF_LOGS = [
     ('2026-09-29/03_05_52.ulg', 'vectored'),     # 2527, AS_YAWRATE_FF 1.0
     ('2026-09-29/03_12_03.ulg', 'vectored'),     # 2522, 0.3
@@ -80,8 +85,34 @@ def stick_from_sp(sp, rmax, dz):
     return math.copysign(abs(sp) / rmax * (1.0 - dz) + dz, sp)
 
 
-def check_log(path, frame=None, mode_lag_cycles=0, infer_stick=True, verbose=True):
+def ff_law_of(ip):
+    """The feedforward law the log's firmware ran, from its parameter set: no
+    AS_YR_FF_SLP is the linear law before 2026-10-07; AS_YR_FF_SLP without
+    AS_SPD_LO is the quadratic law since increment A (2026-10-12). A log of
+    the firmware between (both names) must be given its law explicitly."""
+    if 'AS_YR_FF_SLP' not in ip:
+        return 'linear'
+
+    if 'AS_SPD_LO' not in ip:
+        return 'quadratic'
+
+    raise ValueError('a log of the 2026-10-07..10-12 firmware: pass ff_law')
+
+
+def check_log(path, frame=None, mode_lag_cycles=0, infer_stick=True, verbose=True, ff_law=None):
+    """The model against one log; ff_law None reads the law from the log
+    (ff_law_of). controller.FF_LAW is set for the run and put back."""
     u = ULog(path, TOPICS)
+    ip = u.initial_parameters
+    law, C.FF_LAW = C.FF_LAW, (ff_law or ff_law_of(ip))
+
+    try:
+        return _check_log(u, path, frame, mode_lag_cycles, infer_stick, verbose)
+    finally:
+        C.FF_LAW = law
+
+
+def _check_log(u, path, frame, mode_lag_cycles, infer_stick, verbose):
     d = {x.name: x.data for x in u.data_list if x.multi_id == 0}
     ip = u.initial_parameters
     frame = frame or FRAME_OF_AUTOSTART[int(ip['SYS_AUTOSTART'])]
@@ -117,7 +148,6 @@ def check_log(path, frame=None, mode_lag_cycles=0, infer_stick=True, verbose=Tru
     for t, y in zip(rs['timestamp'], rs['yaw']):
         ev.append((int(t), stick_from_sp(float(y), rmax, dz), 1))
     ev.sort(key=lambda e: (e[0], e[2]))
-    ev_t = [e[0] for e in ev]
     manual_tq = {}                             # Manual cycles: torque == stick
     tq_t = tq['timestamp_sample'].astype(np.int64)
     tq_y = tq['xyz[2]'].astype(float)
@@ -238,9 +268,10 @@ def check_log(path, frame=None, mode_lag_cycles=0, infer_stick=True, verbose=Tru
         print('  timing: logged samples off the 4 ms grid or with timestamp != timestamp_sample: %d; smallest gyro '
               'step %d us; control_allocator_status publish times mod 8000 us: %s'
               % (grid_bad, min_gyro_step, st_phase))
-        print('  gains: P %g I %g INT_LIM %g FF %g%s' % (params['AS_YAWRATE_P'], params['AS_YAWRATE_I'],
-                                                       params['AS_YR_INT_LIM'], params['AS_YAWRATE_FF'],
-                                                       '' if 'AS_YAWRATE_FF' in ip else ' (no FF parameter)'))
+        print('  gains: P %g I %g INT_LIM %g FF %g%s, law %s' % (params['AS_YAWRATE_P'], params['AS_YAWRATE_I'],
+                                                               params['AS_YR_INT_LIM'], params['AS_YAWRATE_FF'],
+                                                               '' if 'AS_YAWRATE_FF' in ip else ' (no FF parameter)',
+                                                               C.FF_LAW))
         print('  torque, loop closed : %s  (stick step times taken from the torque %d times)'
               % (stats(e_tq), n_override))
         print('  torque, loop open   : %s' % stats(e_tq_open))

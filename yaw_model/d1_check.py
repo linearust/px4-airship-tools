@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Increment-1 step 2 (d1_increment1_plan_20261007.md): the corrected schedule
 (policies.schedule_d1, budget 'd1') on the model before any firmware.
+d1_runs_20261007.jsonl is the increment-1 firmware's (ramp from AS_SPD_LO =
+1.5); a rerun today models HEAD's ramp (policies.RAMP_START x AS_SPD_HI).
 
     python3 d1_check.py            # run what is missing (8 workers), then the report
     python3 d1_check.py --report   # the report from d1_runs_20261007.jsonl only

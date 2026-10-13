@@ -3,9 +3,9 @@
 
     python3 validate.py
 
-The gate's first check (sitl_check.py:291-316) is the only phase with a known
-torque and no controller: Manual, stick centred (torque 0), a persistent
-1 N m world-z couple on the model (gz_link.py:193-205) for sample('바람 확인', 5).
+The gate's first check (sitl_check.py's '바람 확인' phase) is the only one with a
+known torque and no controller: Manual, stick centred (torque 0), a persistent
+1 N m world-z couple on the model (gz_link.wrench) for sample('바람 확인', 5).
 It reports after[-1] - before. That is open loop, so it tests the plant alone.
 
 1. Every recorded wind check of the current hull revision (rev 3; chain4 and
@@ -83,9 +83,19 @@ def invert_manual(p, rows, label):
 
 
 def plant_for(model):
-    """Any family member as a Plant, straight from its files (no EXPECTED check)."""
+    """Any family member as a Plant from its files, refused when the family
+    is not the hull the RECORDS were flown on (models 78389ea: the family's
+    yaw inertia is held to plants.EXPECTED's rigid target of that vehicle)."""
     fam = plants.gz_model.family(model)
     merged = plants.gz_model.merged(model)
+    rigid = 'gz_' + plants.gz_model.vehicle(model)
+    expected = plants.EXPECTED[rigid]['I_rigid']
+    inertia = plants.gz_model.yaw_inertia(fam)
+
+    if abs(inertia - expected) > 1e-4 * expected:
+        raise SystemExit('%s: the tree\'s family yaw inertia %.4f is not the anchor\'s %.4f (models 78389ea): '
+                         'these records are of another hull' % (model, inertia, expected))
+
     _, com = plants.gz_model.centre_of_mass(fam)
     return plants.Plant(model, model, plants.gz_model.yaw_inertia(fam),
                         plants.gz_model.added_mass(merged).get('rr', 0.0),

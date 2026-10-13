@@ -10,10 +10,11 @@ centre of mass, in ONE frame (both FRD like PX4, or both z-up like gz; the
 plant is odd in r and N, so it does not care which). N is everything the
 actuators (or a test wrench) apply; the actuator/allocator path is NOT in here.
 
-Where every number comes from (paths relative to ~/dev/PX4-Autopilot, the
-working tree on 2026-09-27, including the uncommitted models/ submodule diff;
-none of the numbers used here is touched by that diff except fin cda/cda_stall,
-which leave cd(90 deg) = 1.2 unchanged, see FIN_NOTE):
+Where every number comes from (paths relative to ~/dev/PX4-Autopilot at
+airship/dev 4e1baea97c with the models submodule at 78389ea, the hull every
+record under records/ and records_head/ was flown on; the tree since
+2026-10-07 carries the 7 m hull, so build_from_sdf() is checked against
+EXPECTED on first use, see PLANTS):
 
   I_rigid  gz_model.yaw_inertia(gz_model.family(model)): each link's own izz
            plus m d^2 about the family centre of mass (this repository's 
@@ -360,9 +361,9 @@ SOURCES = {
     },
 }
 
-FIN_NOTE = ('The uncommitted models/ diff (git -C Tools/simulation/gz diff) changes the vectored fins '
-            'cda 0.9133 -> 0.8201 and cda_stall 0.7474 -> 0.7577 (bottom 1.0379 -> 0.9805, 0.7318 -> 0.7385); '
-            'cd(90 deg) is 1.2000 before and after, so the broadside term the gate runs of 2026-09-25 '
+FIN_NOTE = ('Models 78389ea (against its parent) changed the vectored fins cda 0.9133 -> 0.8201 and '
+            'cda_stall 0.7474 -> 0.7577 (bottom 1.0379 -> 0.9805, 0.7318 -> 0.7385); cd(90 deg) is 1.2000 '
+            'before and after, so the broadside term the gate runs of 2026-09-25 (chain5, before that commit) '
             'saw is the one here. It only matters for fin_moment_plugin at moderate alpha.')
 
 
@@ -432,7 +433,45 @@ def check(plant):
     return bad
 
 
-PLANTS = {t: build_from_sdf(t) for t in EXPECTED}
+GYRO_NOISE = 0.0008726646          # rad/s, the IMU's gyro noise: cloudship/model.sdf:261, airship_base/model.sdf:236
+
+
+class _Plants:
+    """The anchored plants, built from the tree on first use and refused when
+    the tree is not the hull the numbers were written out from (models
+    78389ea): every importer used to get the live tree's plant at import,
+    and a 7 m tree answered for 10.97 m records in silence."""
+
+    def __init__(self):
+        self._cache = {}
+
+    def __getitem__(self, target):
+        if target not in self._cache:
+            p = build_from_sdf(target)
+            bad = check(p)
+
+            if bad:
+                raise SystemExit('%s: the files in the tree are not the plant this model is anchored to (models 78389ea): %s'
+                                 % (target, '; '.join(bad)))
+
+            self._cache[target] = p
+
+        return self._cache[target]
+
+    def __contains__(self, target):
+        return target in EXPECTED
+
+    def __iter__(self):
+        return iter(EXPECTED)
+
+    def keys(self):
+        return list(EXPECTED)
+
+    def items(self):
+        return [(t, self[t]) for t in EXPECTED]
+
+
+PLANTS = _Plants()
 
 ASSUMPTIONS = (
     'A1 turn in place: the rotation axis is the vertical through the family centre of mass; the pods (vectored) '
@@ -445,8 +484,8 @@ ASSUMPTIONS = (
     'A5 gz plugin semantics read from gz-sim tag gz-sim8_8.15.0 sources (gz_src/, the installed libgz-sim8 is '
     '8.15.0); LiftDrag.cc, Hydrodynamics.cc, HydrodynamicsUtils.hh fetched here, MulticopterMotorModel.cc '
     'diffed identical to that tag.',
-    'A6 the model files are the working tree of 2026-09-27 (see FIN_NOTE for the one uncommitted change that '
-    'touches a used number; it leaves cd(90) at 1.2).',
+    'A6 the model files are models commit 78389ea (FIN_NOTE for the one change in that commit that touches a '
+    'used number; it leaves cd(90) at 1.2).',
     'A7 SDF inertia (gz_model.yaw_inertia) is nominal; it ignores link rotations, which moves the Cloudship prop '
     'and tail izz by 4.2e-4 kg m^2 (0.007 %). The engine-measured inertias (chain5) are in I_measured(): '
     '+0.10 % vectored rigid, +0.68 % complete, -1.83 % Cloudship rigid, +0.36 % complete.',
@@ -471,9 +510,11 @@ def get(target, fins=1.0, u_fin=None, measured=False):
 
 
 def main():
+    """The table, and MISMATCH where the tree is not the anchor (exit 1)."""
     ok = True
 
-    for t, p in PLANTS.items():
+    for t in EXPECTED:
+        p = build_from_sdf(t)
         bad = check(p)
         ok &= not bad
         print('== %s  (model %s)%s' % (t, p.model, '' if not bad else '  MISMATCH: ' + '; '.join(bad)))

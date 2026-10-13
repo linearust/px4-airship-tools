@@ -719,9 +719,10 @@ def _g1_one(args):
             g = yc.params
             source = P.SOURCES[src].calm()
             c = cfg.stall['c'] if (policy == 'SCHED_STALL' and cfg.stall) else None
+            budget = P.BUDGETS.get(policy, 'plan')
             hook = P.Scheduled(source, cfg.k, g['AS_YAWRATE_FF'], g['AS_YAWRATE_MAX'], g['AS_YR_INT_LIM'], cfg.A_dir,
-                               c_stall=c, t_stick=1e9, forward_gate=policy.endswith('_FWD'),
-                               budget=P.BUDGETS.get(policy, 'plan'))
+                               c_stall=c, t_stick=1e9, forward_gate=policy.endswith('_FWD'), budget=budget,
+                               ramp=P.firmware_ramp(g) if budget == 'd1' else None)
             view = F.PlantView(loop.plant, None)
             step = yc.step
 

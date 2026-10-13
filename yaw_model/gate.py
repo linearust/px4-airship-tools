@@ -27,65 +27,71 @@ source with ast, so the listener text is parsed by the gate's parser.
 gz_model is the real module (pure: model.sdf files only).
 
 
-THE GATE AS A SCRIPT (sitl_check.py line numbers; W = wall seconds)
--------------------------------------------------------------------
-Pre-arm, not judged: param_show AS_YAWRATE_MAX, MAN_DEADZONE, AS_YAWRATE_I
-(:231-233); setpoint = (0.5 - dz)/(1 - dz) x max (:240) = 6.667 deg/s at
-15 / 0.1; THR_MDL_FAC read, a warning below 0.5 (:245-248); wait_for_ekf (:252); sleep 10 (:255);
-param_set MAN_ARM_GESTURE 0 (:256); sticks start, sleep 2 (:258-260); mode
-manual, sleep 1, arm, sleep 3 (:261-264); abort 2 unless armed (:266).
+THE GATE AS A SCRIPT (sitl_check.py by function and phase string; W = wall seconds)
+-----------------------------------------------------------------------------------
+Pre-arm, not judged: param_show AS_YAWRATE_MAX, MAN_DEADZONE, AS_YAWRATE_I,
+AS_YAWRATE_P, CA_AIRSHIP_TLT_R; setpoint = published_setpoint() ((0.5 - dz)
+/(1 - dz) x max = 6.667 deg/s at 15 / 0.1); AS_YR_FF_SLP, AS_SPD_SRC,
+AS_YR_INT_LIM for rest_drift(); AS_YAWRATE_P and AS_YAWRATE_FF again for the
+'지시 각속도' note; THR_MDL_FAC read, a warning below 0.5 (eleven param_show
+in all since 2026-10-12; the chain7 fit assumed the first three, and
+validate_gate shifts its clock by what the run's pre-arm actually took);
+wait_for_ekf; sleep 10; param_set MAN_ARM_GESTURE 0; sticks start, sleep 2;
+mode manual, sleep 1, arm, sleep 3; abort 2 unless armed.
 
- 1 settle   wrench_clear (:275); sample 3 W (:277); abort 2 unless every rate
-            is finite and mean|r| of the last 3 W <= 2.0 deg/s (:283).
- 2 wind     before = last row of sample 2 W (:292); wrench +1.0 N m on world
-   check    z (:293); sample 5 W (:294); wrench_clear (:295). Expected =
+ 1 settle   wrench_clear; sample('정지 확인', 3); abort 2 unless every rate
+            is finite and mean|r| of the last 3 W <= 2.0 deg/s.
+ 2 wind     before = last row of sample('바람 확인 기준', 2); wrench(STRONG_NM)
+   check    on world z; sample('바람 확인', 5); wrench_clear. Expected =
             Euler integral, 5.0 s at dt 0.001, of (1 - |nR| r - |nRabsR| r|r|)
-            / (Izz_rigid + added rr) from gz_model (:303-312). PASS iff
-            both rates are finite and |r_last - before| > 0.5 x expected
-            (:313-316). The wrench has acted ~15 P = 4.74 W by the last row,
-            not the 5.0 s the expectation integrates.
- 3 Manual   stick 0.5 (:319); sample 3 W (:320); stick 0 (:321). PASS iff
-            every torque in the second half of the rows is within 0.02 of
-            0.5 (:323-326). Abort 2 unless |last torque| >= 0.02 (:333).
- 4 brake    mode acro (:350); sample 15 W (:351). Loop present iff any
-            |torque| > 0.02 in rows[1:] (:205-219); an unread torque there
-            exits 2 (:358-362), no loop exits 3 (:364-369). PASS iff |r| of
-            the LAST row (one instant, 47 P = 14.85 W in) < 6.0 deg/s (:371).
- 5 step x2  for acro, then stabilized (:375):
-            clean_start (:108-136): mode acro; 1-row samples until |r| < 0.5
-            has held >= 1.0 W (clock started when the first quiet row's
-            sample() returned, so 5 consecutive quiet rows at P = 0.316),
-            bounded 60 W; mode manual (the loop opens and the integrator is
-            cleared); sleep 1; mode <mode>; sleep 1; one row '출발'.
-            stick 0.5 (:390); push = sample 35 W (:395); stick 0 (:396);
-            release = sample 12 W (:397).
+            / (Izz_rigid + added rr) from gz_model. PASS iff both rates are
+            finite and |r_last - before| > 0.5 x expected; a push the
+            simulator dropped is retried once (the '(재시도)' phases). The
+            wrench has acted ~15 P = 4.74 W by the last row, not the 5.0 s
+            the expectation integrates.
+ 3 Manual   stick 0.5; sample('Manual 통과', 3); stick 0. PASS iff every
+            torque in the second half of the rows is within 0.02 of 0.5.
+            Abort 2 unless |last torque| >= 0.02.
+ 4 brake    mode acro; sample('Acro 제동', 15). Loop present iff any
+            |torque| > 0.02 in rows[1:] (loop_is_closed); an unread torque
+            there exits 2, no loop exits 3. PASS iff |r| of the LAST row
+            (one instant, 47 P = 14.85 W in) < 6.0 deg/s.
+ 5 step x2  for acro, then stabilized:
+            clean_start(mode, drift_m_s): mode acro; 1-row samples
+            ('정지 대기') until |r| < 0.5 has held >= 1.0 W (clock started
+            when the first quiet row's sample() returned, so 5 consecutive
+            quiet rows at P = 0.316), bounded CLEAN_BOUND_S; mode manual
+            (the loop opens and the integrator is cleared); sleep 1; mode
+            <mode>; sleep 1; one row '출발'.
+            stick 0.5; push = sample('<label> 추종', push_s); stick 0;
+            release = sample('<label> 놓음', release_s), the windows from
+            loop_windows() (35 W and 12 W on the chain7 vehicle).
             Tracking PASS iff the start settled and its rate and integrator
-            were read (:382), every push rate is finite, |signed mean of the
-            rows with t >= t_last - 3.0 - sp| < 0.25 sp and max(rate) < 1.4 sp
-            (:398-404).
-            Release PASS iff |release[0].rate| > 0.5 sp (:413) and settled()
-            finds |r| < 1.0 held 1.5 W (:164-175; 6 consecutive rows at
-            P = 0.316) starting < 10.0 W after the first release row
-            (:424-426); the 38-row window ends 11.69 W in, so a start later
-            than ~10.2 W cannot be seen at all. The text reports the least-squares
-            slope of |r| over the last 3 W when < -0.02 deg/s^2 (:178-202,
-            :419-420); the slope does not change the verdict.
- 6 wind     mode acro; sleep 2 (:429-430). wind_case (:432-446): wrench(tau);
+            were read, every push rate is finite, |signed mean of the
+            rows with t >= t_last - 3.0 - sp| < 0.25 sp and max(rate) < 1.4 sp.
+            Release PASS iff |release[0].rate| > 0.5 sp and settled()
+            finds |r| < 1.0 held 1.5 W (6 consecutive rows at P = 0.316)
+            starting < 10.0 W after the first release row; the 38-row window
+            ends 11.69 W in, so a start later than ~10.2 W cannot be seen at
+            all. The text reports still_falling()'s least-squares slope of
+            |r| over the last 3 W when < -0.02 deg/s^2; the slope does not
+            change the verdict.
+ 6 wind     mode acro; sleep 2. Each case (main's wind-case loop): wrench(tau);
    cases    sample N W; wrench_clear; needed = tau / authority (= 1/54 on
             both vehicles); integ = mean|integ|, rate = mean|r| of the rows
             with t >= t_last - 2.0; hold PASS iff all rates and integs finite,
             rate < 1.0 and |integ - needed| < 0.5 needed; no-hold PASS iff
             rate > 1.0; then sample 10 W '회복', unjudged.
             a) strong = authority/54 N m (1 on the vectored, 0.082963 on
-               the Cloudship), I on, hold, 40 W (:448-450).
+               the Cloudship), I on, hold, 40 W.
             b) param_set AS_YAWRATE_I 0; mode manual; sleep 2; mode acro;
                sleep 1; strong, no hold, 25 W; param_set AS_YAWRATE_I back;
-               sleep 1 (:456-468).
+               sleep 1.
             c) vectored only (HAS_TILT_BAND): weak = 0.4 x strong, hold,
-               50 W (:470-471).
- 7 end      disarm; '=== 정리 ===' list and '통과 N / 실패 M' (:473-481).
+               50 W.
+ 7 end      disarm; '=== 정리 ===' list and '통과 N / 실패 M'.
 
-Sampling (:89-105): a row = three px4-listener calls in the order
+Sampling (sample()): a row = three px4-listener calls in the order
 vehicle_angular_velocity z (rad/s -> deg/s), vehicle_torque_setpoint z,
 rate_ctrl_status.yawspeed_integ; then 't' = round(wall - T0, 2); then
 sleep 0.3. Rows are taken while wall < start + seconds, so a window of S

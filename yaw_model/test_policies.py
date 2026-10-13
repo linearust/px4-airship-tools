@@ -90,7 +90,7 @@ def test_schedule():
     check('k 0 is off: exactly (AS_YAWRATE_FF, AS_YAWRATE_MAX), whatever the speed', (ff, cap) == (1.0, 15.0)
           and info['off'])
     rest = [S(u, u, 4.0124, ff0, 15.0, 0.3, 1.0)[:2] for u in (0.0, 0.7, 1.5) for ff0 in (0.0, 0.3, 1.0, 10.0)]
-    check('at rest and up to AS_SPD_LO the schedule is exactly (FF0, MAX) for any k > 0 (w = 0, r_lim <= MAX)',
+    check('at rest and up to the 0c ramp\'s RAMP_LO_0C the schedule is exactly (FF0, MAX) for any k > 0 (w = 0, r_lim <= MAX)',
           all(c == 15.0 for _, c in rest) and [f for f, _ in rest] == [0.0, 0.3, 1.0, 10.0] * 3)
     k, u = 4.0124, 4.0
     ff, cap, info = S(u, u, k, 1.0, 15.0, 0.3, 1.0)
@@ -132,7 +132,7 @@ def test_schedule():
     check('3000 random intervals: the cap is finite in 0..MAX, never rises with u_hi, FF never falls with u_lo', ok)
     lo_side = [S(u, u, k, 1.0, 15.0, 0.3, 1.0)[:2] for u in (1.5, 1.5 + 1e-9)]
     hi_side = [S(u, u, k, 1.0, 15.0, 0.3, 1.0)[:2] for u in (2.5, 2.5 + 1e-9)]
-    check('the ramp is continuous at both ends (AS_SPD_LO, AS_SPD_HI)',
+    check('the 0c ramp is continuous at both ends (RAMP_LO_0C, RAMP_HI_0C)',
           abs(lo_side[0][0] - lo_side[1][0]) < 1e-6 and abs(lo_side[0][1] - lo_side[1][1]) < 1e-6
           and abs(hi_side[0][0] - hi_side[1][0]) < 1e-6 and abs(hi_side[0][1] - hi_side[1][1]) < 1e-6)
 
@@ -254,7 +254,7 @@ def test_hooks_on_legs():
             kw, _ = P.leg_kwargs(policy, cfg, P.SOURCES[src].calm(), 0.0, 1.0, **short)
             same.append(PC._same(F.run_leg(**kw)['trace'], head['trace']))
 
-    check('at rest in still air every scheduled policy with a source whose interval stays under AS_SPD_LO is HEAD, '
+    check('at rest in still air every scheduled policy with a source whose interval stays under the 0c ramp (RAMP_LO_0C) is HEAD, '
           'trace for trace (%d of %d)' % (sum(same), len(same)), all(same))
     kw, _ = P.leg_kwargs('SCHED', cfg, P.SOURCES['ground_W2_head'].calm(), 0.0, 1.0, **short)
     rest_w2 = F.run_leg(**kw)
@@ -378,7 +378,7 @@ def test_budget():
     check('3000 random intervals with u_hi past the ramp: under the supplied term a turn at the cap needs at most rho '
           'of the integrator at any speed in the interval (k right)', ok)
     lo_side = [S(u, 4.0, k, 1.0, 15.0, 0.3, 1.0, budget='supplied')[1] for u in (1.5, 1.5 + 1e-9)]
-    check('the supplied term is continuous at AS_SPD_LO', abs(lo_side[0] - lo_side[1]) < 1e-6)
+    check('the supplied term is continuous at the 0c ramp\'s RAMP_LO_0C', abs(lo_side[0] - lo_side[1]) < 1e-6)
     _, c_hi, _ = S(2.0, 4.0, k, 1.0, 15.0, 0.3, 1.0)
     _, c_lo, _ = S(2.0, 4.0, k, 1.0, 15.0, 0.3, 1.0, blend='lo')
     check('blending the cap by w(u_lo) (%.2f deg/s) lifts it toward MAX over the w(u_hi) blend (%.2f) whenever u_lo '
