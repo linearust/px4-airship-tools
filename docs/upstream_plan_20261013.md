@@ -179,3 +179,84 @@ Custom 이 맞고, 클래스는 Custom 이 못 하는 틸트 투영 때문에 �
 
 사용자가 결정할 것은 없다. 둘 다 정한다: 라벨은 "Airship", 틸트 서보는 언제나 둘 (포크부터 반영). PR 제출은 실내 시험을 충분히 한 뒤의 일이고,
 그 전의 모든 작업은 준비다: 포크 변경, 좁힌 브랜치 (시험 펌웨어의 바탕), 동일성 검사, 본문 초안. 위 절들의 "PR 브랜치" 는 그 준비 브랜치를 뜻한다.
+
+## 10. 가족 전제 아래 처음부터 다시: 묶음 PR 의 최종 제안 (16:20)
+
+전제: 레포마다 PR 하나, 실내 시험 뒤 제출, 배분기 + 요 루프 + SITL 을 한 PR 에 (사용자 결정), Kelluu·HyLight·2500·2507 은 뒤 라운드에 덧붙인다.
+검토: 10 에이전트 워크플로 (읽기 5, 설계 2, 심사 3; 185만 토큰). 결과 파일 `wf_digest` 는 세션 스크래치에; 요지는 아래.
+
+### 10.1 선례가 말하는 것 (gh 로 확인)
+
+- 신규 기여자의 배분기 + 제어기 묶음 #26281 (25 파일) 은 Jaeyoung-Lim 이 "배분기 + gz 모델 먼저, 제어기 따로" 로 분할을 요구해 닫혔고, 배분기만 남긴
+  #26879 (8 파일) 는 203 일째 열려 있다 (CI 빨강 + 후원자 없음). 가장 큰 머지 묶음 #24734 spacecraft (45 파일, +5583) 는 사전 골격 PR (#24221) 과
+  dev-call 후원이 있는 연구실의 4-PR 연작 중간이었고 인라인 리뷰는 1 개였다. 2020 년 비행선 PR #14862 도 수동 패스스루로 잘라 머지됐다.
+- 배분기 클래스만의 PR 은 비행 증거가 있으면 2 주 (#22083 동축 헬기, 7 파일). 로버 모듈 PR 24-40 파일은 정상이며 리뷰는 메시지 단위·일반 에어프레임
+  순수성·플래시·시험·문서에 집중했다.
+- 모델 PR 은 항상 먼저 머지되고 (3-8 파일, 하루), PX4 PR 은 서브모듈을 PR 안에서 올리거나 봇 범프를 탄다. 포크 커밋을 가리키는 포인터는 머지 불가.
+- 비행선 도메인 리뷰어는 없다 (#27697: "시험할 방법이 없다", "Cloudship 과 비교한 것"). 증거는 PR 본문이 지고 가야 한다.
+
+따라서 묶음은 선례의 반대편이다. 사용자 결정이므로 묶음으로 설계하되, 커밋을 배분기 → 루프 → SITL 순으로 두어 분할 요청이 cherry-pick 이 되게 하고,
+열기 전 수요일 dev-call 에서 발표한다.
+
+### 10.2 두 설계안과 심사
+
+A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상태 메시지) 대 B (검증된 것만: podWrench 그대로 삭제로 좁힘 + 루프 코어 + 확장점은 계약).
+심사 점수 메인테이너 5:7, 포크 4:7, 가족 5:7.5, 모두 B. A 의 반박된 주장: (1) "대칭 포드에서 podWrench 와 동일" — 2 m 포드는 무게중심 아래 0.05 m
+(pod_z) 라 PZ ≠ 0 이면 피치 권한이 생겨 5 축/4 자유도의 최소제곱 분배가 되고 동일성·핀 지문이 깨진다; (2) "단위를 나중에 바꾸면 전부 재튜닝" —
+정규화 = 기하 / 정지 최대 이므로 위치를 뒤에 더해도 (0, ±b, 0) 은 오늘의 0.5 계수를 그대로 재현한다, 코드 없이 문장으로 충분; (3) "Kelluu 는 에어프레임
+파일" — 랭크 3 이라 (피치‖Fz, 요‖Fy) 우선순위 결정 + 짐벌 포드 클래스가 필요하다; (4) 배분기가 uORB 토픽을 내는 것은 upstream 에 전례가 없고
+(VehicleActuatorEffectiveness 에 Publication 0 개) 세 필드 중 둘은 이 묶음에서 읽는 곳이 없다.
+
+### 10.3 최종: PX4 PR "Airship (CA_AIRFRAME 16): tilt-pod allocator, yaw rate loop, gz twin"
+
+| 들어간다 | 뺀다 (포크/오버레이, 뒤 라운드) |
+|---|---|
+| ActuatorEffectivenessAirship 을 삭제로 좁힘: 독립 포드 둘, 틸트 슬롯 둘 고정, `differential` 무조건, getUnallocatedControl 의 else 가지만 | GRP 집단, TAIL 꼬리, CS_K·조종면 전체, ControlSurfaceType/kMinEffectiveness 리팩토링 |
+| AirshipPod 그대로 (+ 602 줄 시험), 배분기 시험 64 → ~38 케이스 | AirshipAllocatorStatus·AirshipSpeed 메시지, AirshipYawAllocation.hpp, AirshipAirframe.hpp, logger 항목 |
+| 요 루프 코어: AS_YAWRATE_P/I/FF/MAX + AS_YR_INT_LIM, 복원 규칙, 반와인드업 (upstream 의 control_allocator_status 로), FF 정지항을 루프 안으로 | 속도 스케줄 + 속도 선택기 + AS_SPD_*/AS_YR_FF_SLP (핀 기체 라운드) |
+| airship_manual_input.hpp (패스스루 변경은 별도 커밋 + gtest + 본문 명시) | 2500/2507 의 16 전환, rc.airship_defaults 변경, 2519 이름 변경 |
+| rate_control setIntegral/getIntegral (+21, 시험 +167) | posix 쌍둥이 41 개와 문서 항목 (오버레이) |
+| 2520 비행 (COM_DISARM_LAND -1, AS_YAWRATE_MAX 15 안에) + posix 2520 + CMake 한 줄 + 서브모듈 범프 커밋 | |
+| 문서: frames_airship (틸트 포드, 단위 문장, 튜닝 절차, 파라미터 8), vehicles.md 항목 1 + png, index.md 행, worlds.md LTA, releases 한 줄 | airframe_reference/parameter_reference (봇) |
+
+파라미터 8 (CA_AIRSHIP_TLMIN/TLMAX/TLT_R, AS_YAWRATE_P/I/FF/MAX, AS_YR_INT_LIM; 포크는 16). 메시지 0. 약 33 파일, +4500 (시험 61 %), spacecraft 의
+73 % 파일 / 비시험 줄 40 %. 커밋 순서: lib → 배분기 → 제어기 → 비행 에어프레임 → posix + 서브모듈 → 문서.
+
+**루프 게이트 = AS_YAWRATE_MAX > 0 (기본 0, 2520 은 15).** 제어기가 CA_AIRFRAME 과 사설 토픽을 읽지 않고, upstream 의 2500/2507 (Custom) 은 기본값으로
+패스스루에 남는다. 선례 FW_ACRO_YAW_EN (기본 0, "활성 요 루프가 플랜트와 싸운다"). 오늘 코드는 반대로 16 이 아닌 모든 배분기에서 루프를 닫는다
+(main.cpp:109, 시험 :482) — 포크부터 고친다. 상태 메시지와 `&& propulsive_yaw` 항은 정지 시 요 권한이 없을 수 있는 부재 (조종면 크레딧 1) 가
+들어오는 라운드에 같은 세 필드 이름으로 돌아온다.
+
+**모델 PR:** airship_base (부가질량 몸체) + airship_vectored_independent (merge include, 생성기 `--upstream` 출력; 오늘 디렉터리는 강체를 머지하고 유체
+플러그인이 없다) + lta.sdf (enable 5 개, Magnetometer tesla 플래그, ground_markers/flight_grid include 제거), model.config 에 PX4 Development Team
+저작권. 5 파일 ~850 줄. 머지 시 Fuel 에 자동 업로드되므로 2 m 모델은 넣지 않는다 (오버레이).
+
+### 10.4 가족 계약 (코드 없이 PR 문장으로 고정)
+
+1. 토크 단위: 1.0 = 추진이 정지 상태에서 전 차동으로 내는 것 (정규화 = 기하 / 정지 최대). 위치는 뒤에 비율로만 들어온다.
+2. 배치: 모터 [pod0, pod1, (tail)], 서보 [(조종면 CS_COUNT), tilt0, tilt1, (pan0, pan1)] — 덧붙이되 끼워 넣지 않는다. 틸트 슬롯 둘 항상.
+3. 섬기는 축 규칙: 포드는 롤·요·Fx·Fz 넷을 섬기고 피치·Fy 는 보고한다. 뒤 기하가 축을 섬기는 것은 그 열이 독립일 때뿐이고, 종속 쌍 (피치‖Fx 무게중심
+   아래 포드, 피치‖Fz·요‖Fy Kelluu) 의 우선순위는 부재의 결정이지 클래스 기본값이 아니다.
+4. 미래 포드 위치 이름 = 기존 CA_ROTORn_PX/PY/PZ (2507 이 Custom 아래 이미 PY ±2, PX −10 을 쓴다; QGC 가 그린다). CA_AIRSHIP_P* 는 만들지 않는다.
+5. 포드 수 규칙 (뒤에 읽을 때 2520 출력이 안 움직이게): CA_ROTOR_COUNT 0 또는 2 = 포드 둘, 1 = 하나 (Kelluu), 3 = 둘 + 꼬리.
+6. 가역 포드는 뒤의 포드 플래그 (CA_R_REV 비트, 단위 불변; 2507 은 CA_R_REV 7). 2 축 포드는 AirshipPod 옆의 새 클래스 (제어기·메시지는 포드 종류를 모른다).
+7. 2500 전환은 "차동 없음" 스위치 (GRP 집단 또는 PY 0) 가 있어야 하므로 집단 라운드와 함께 간다.
+
+라운드 (R1 이 이 PR): R2 핀 기체 — 조종면 + CS_K + 상태 메시지 (+ propulsive_yaw 게이트) + 속도 스케줄 + AirshipSpeed; R3 Cloudship 류 — 집단 + 꼬리,
+2507 → 16, 2500 → 16; R4 Kelluu/HyLight 류 — 위치 (비율), 팬 축 CA_AIRSHIP_PN*, 짐벌 포드, 주기 발행 권한, 종속 축 우선순위; R5 고도·위치 루프.
+
+### 10.5 실내 시험 전 포크 작업 (전부 준비; 제출 아님)
+
+1. 틸트 슬롯 둘 항상 (cpp :124-132, writeTiltServos 집단에서 둘 다, yaml 리터럴 2, 시험 3 개, 2507/2510 @output, 문서, cloudship_ground_check.py 에
+   Servo2) → identity 하니스·2520 지문·2507 벤치 드라이브 재실행.
+2. 게이트: yawRateLoopActive 에 max_rate > 0, AS_YAWRATE_MAX 기본 0, main.cpp:109 를 `airship && propulsive_yaw && max_rate > 0` 으로, 시험 :482 뒤집기,
+   MAX 0 시험 추가; 생성기와 airship_gains.py 가 기본 에어프레임에 AS_YAWRATE_MAX 15 와 COM_DISARM_LAND -1 을 쓴다 (2 m 프리셋은 이미 15).
+3. FF 정지항 (airship_yaw_schedule.hpp:90-94) 을 AirshipYawRateLoop 로; 스케줄은 속도항만 더한다 → 2527 전진 42/42, yaw_model 기록 재생.
+4. 도구: fp_diff/bench_fingerprint 가 없는 키 (GRP/CS_K/TAIL) 를 포크 기본값으로 본다; identity 하니스에 PR 쪽 세트표 (독립 4 세트 + 2 m 프리셋);
+   vectored_actuation.py CITED 줄 갱신; yaw_model 게이트에 max_rate 항; 패스스루 변경 (RC 상실 0, 모드 게이트, 롤 토크·추력 z) 은 별도 커밋 + gtest.
+5. 분할 (4)-(7): 플랜트 레지스트리, gz_run.sh 독립 스폰, 트림 (S6 grep 빈 것), 재기준선 (2520/2521/2517/2512).
+6. 모델: airship/models 푸시 → 생성기 `--upstream` 으로 세 파일 → 쌍둥이 검사 → 모델 PR 초안.
+7. `pr/airship` 을 upstream main 에서 뜨고 삭제 + 위 세 수정으로 옮김; make tests, identity (4+1 세트), fmu-v6x 2520 지문 0.0 us, PR 워크트리를
+   PX4_ROOT 로 한 SITL 호버 게이트, px4_sitl_default, check_format/validate_module_configs/module_documentation, 보드 크기표.
+8. 비행 펌웨어는 PR 워크트리에서 스테이징 (D-FREEZE: 기체가 난 커밋 id 를 본문에; 이후 수정은 재지문). 카드마다 PR 주장 대응. upstream_pr_bodies.md 를
+   두 PR 로 다시 쓴다 (본문에 명시: 패스스루 변경, Stabilized 요가 루프가 됨 (MAX > 0 일 때), 시험 안 된 경로 — 고정 마운트·±90·FF 기본 0·7 m 게인).
