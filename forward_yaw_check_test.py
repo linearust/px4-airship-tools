@@ -1739,8 +1739,9 @@ class FakePX4:
     flying: what a kill there would leave."""
 
     def __init__(self, model, sticks_holder, stall_after_s=None, firmware=None, take_overrides=True, snapshot=None,
-                 log_params=None):
+                 log_params=None, spawn_m=20.0):
         self.model = model
+        self.spawn_m = spawn_m                        # the altitude the toy floats at (gz_run.sh's default spawn is 20 m)
         self.log_params = dict(log_params or {})     # the log's parameters beyond PARAMS, on top of the yaml's
         self.wall = 1000.0
         self.sim_us = 5 * S
@@ -1834,7 +1835,7 @@ class FakePX4:
             if self.due('av', 8000):
                 R['vehicle_angular_velocity'].append((t, 0.0, 0.0, r_rad))
             if self.due('gt', 20000):
-                R[F.GT_POS].append((t, self.u * math.cos(self.psi), self.u * math.sin(self.psi), 0.0, -20.0))
+                R[F.GT_POS].append((t, self.u * math.cos(self.psi), self.u * math.sin(self.psi), 0.0, -self.spawn_m))
                 R[F.GT_ATT].append((t, math.cos(self.psi / 2), 0.0, 0.0, math.sin(self.psi / 2)))
                 R['vehicle_local_position'].append((t, self.u * math.cos(self.psi), self.u * math.sin(self.psi), self.psi))
                 R['vehicle_torque_setpoint'].append((t, torque))
@@ -1872,8 +1873,9 @@ class FakePX4:
         if topic == 'vehicle_angular_velocity':
             return 'TOPIC\n    timestamp: %d (0.0 seconds ago)\n    xyz: [0.00000, 0.00000, %.5f]\n' % (t, math.radians(self.r))
         if topic == F.GT_POS:
-            return ('    timestamp: %d (0.0 seconds ago)\n    vx: %.5f\n    vy: %.5f\n    z: -20.00000\n    heading: %.5f\n'
-                    % (t, self.u * math.cos(self.psi), self.u * math.sin(self.psi), math.atan2(math.sin(self.psi), math.cos(self.psi))))
+            return ('    timestamp: %d (0.0 seconds ago)\n    vx: %.5f\n    vy: %.5f\n    z: %.5f\n    heading: %.5f\n'
+                    % (t, self.u * math.cos(self.psi), self.u * math.sin(self.psi), -self.spawn_m,
+                       math.atan2(math.sin(self.psi), math.cos(self.psi))))
         if topic == 'vehicle_status':
             return '    timestamp: %d\n    nav_state: %d\n    arming_state: %d\n' % (t, self.nav, 2 if self.armed else 1)
         if topic == 'vehicle_control_mode':
@@ -1947,7 +1949,7 @@ class FakePX4:
 
 
 def fake_live_run(model, legs, stall_after_s=None, env=None, firmware=None, take_overrides=True, snapshot=False,
-                  log_params=None):
+                  log_params=None, spawn_m=20.0):
     """main_live against FakePX4. Returns (exit code, output, the fake, the
     verdicts main_live recorded, the files it wrote). `env` is the run's
     PX4_PARAM_ environment, the documented PX4_PARAM_SDLOG_DIRS_MAX=0 unless
@@ -1991,7 +1993,7 @@ def fake_live_run(model, legs, stall_after_s=None, env=None, firmware=None, take
 
         events_path = os.path.join(tmp, 'out', 'forward_%s_20261001_100000_events.json' % model)
         fake = FakePX4(model, holder, stall_after_s, firmware, take_overrides, events_path if snapshot else None,
-                       log_params)
+                       log_params, spawn_m=spawn_m)
         module = types.ModuleType('sitl_link')
         module.field, module.vector, module.finite = real.field, real.vector, real.finite
         module.PARAM_LINE = real.PARAM_LINE
@@ -2086,7 +2088,16 @@ def test_live_sequence():
             '다리 1: 스틱 20 s 와 놓음 120 s 가 시뮬레이터 시계로 끝까지 갔다' in failed
             and '다리 1: 진입이 2.0 m/s 의 정상 직진이다' not in failed
             and any(f.endswith('_leg1.csv') for f in files), str(files))
+    # the Cloudship hangs 2.5 deg nose down and sinks through its legs: at the
+    # default spawn the run refuses before the first leg and names the pose
+    # that would do; spawned high enough it flies
+    need = F.vehicle_plan(CS_ALL, legs=F.parse_legs('1', CS_ALL))['height_needed_m']
     code, text, fake, recorded, files = fake_live_run(CS_ALL, '1')
+    failed = [name for name, ok in recorded if not ok]
+    verdict('코 아래로 매달린 선체는 계획의 침하만큼 높이 띄워야 날고, 20 m 스폰은 다리 전에 거부된다 (필요 %.0f m)' % need,
+            code != 0 and any(n.startswith('계획의 다리를 모두 날 높이에 있다') for n in failed)
+            and 'PX4_GZ_MODEL_POSE=0,0,' in text and need > 20.0, '종료 %s, 실패 판정 %s' % (code, failed))
+    code, text, fake, recorded, files = fake_live_run(CS_ALL, '1', spawn_m=math.ceil(need))
     verdict('완전한 Cloudship 은 Acro 에서 가속하고 Manual 을 거쳐 Acro 로 진입한다',
             '가속 acro' in text and code == 0, '종료 %s' % code)
 

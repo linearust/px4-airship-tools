@@ -5,7 +5,9 @@ log only rate/torque/integ, so the model's explanation of the Cloudship
 tracking failure (drift x Munk) and of the rigid vectored ripple (roll x ixz)
 was fitted/checked only through the rate. Here:
 
-  drift  vehicle_gps_position.vel_n_m_s / vel_e_m_s (gz navsat on base_link,
+  drift  the GNSS velocity, vehicle_gnss.receiver.vel_north / vel_east (logs
+         since the 2026-10-07 fork sync) or vehicle_gps_position.vel_n_m_s /
+         vel_e_m_s before it (gz navsat on base_link,
          no pose -> the link origin O, cloudship/model.sdf:288-292,
          30 Hz, no noise block) rotated into the body by the EKF heading
          (vehicle_local_position.heading) -> u (fwd), v (FLU, port)
@@ -37,8 +39,20 @@ RUNS = [
     ('gz_airship_vectored_independent_am_fin_drag', '2026-09-27/08_47_52.ulg', 'chain9'),
     ('gz_airship_vectored_independent_fin', '2026-09-27/08_42_18.ulg', 'chain9'),
 ]
-TOPICS = ['vehicle_gps_position', 'vehicle_local_position', 'vehicle_attitude', 'vehicle_angular_velocity',
+TOPICS = ['vehicle_gps_position', 'vehicle_gnss', 'vehicle_local_position', 'vehicle_attitude', 'vehicle_angular_velocity',
           'vehicle_torque_setpoint']
+
+
+def gnss_velocity(d):
+    """(timestamp_sample s, vel north, vel east) of the log's GNSS topic:
+    vehicle_gnss (receiver.vel_north/vel_east, since the 2026-10-07 fork
+    sync) or the older vehicle_gps_position (vel_n_m_s/vel_e_m_s)."""
+    if 'vehicle_gnss' in d:
+        g = d['vehicle_gnss']
+        return g['timestamp_sample'] * 1e-6, g['receiver.vel_north'], g['receiver.vel_east']
+
+    g = d['vehicle_gps_position']
+    return g['timestamp_sample'] * 1e-6, g['vel_n_m_s'], g['vel_e_m_s']
 
 
 def load(path):
@@ -69,8 +83,8 @@ def main(which=None):
         t_mod0 = ts[int(np.argmax(tqm >= 0.49))]
         off = t_log0 - t_mod0
 
-        gps = d['vehicle_gps_position']
-        t_g = gps['timestamp_sample'] * 1e-6 - off
+        t_g, g_vn, g_ve = gnss_velocity(d)
+        t_g = t_g - off
         lp = d['vehicle_local_position']
         t_lp = lp['timestamp_sample'] * 1e-6 - off
         att = d['vehicle_attitude']
@@ -89,8 +103,8 @@ def main(which=None):
         spd_m = np.hypot(u_m, v_m)
 
         # log series on the model grid
-        vn = interp(ts, t_g, gps['vel_n_m_s'])
-        ve = interp(ts, t_g, gps['vel_e_m_s'])
+        vn = interp(ts, t_g, g_vn)
+        ve = interp(ts, t_g, g_ve)
         hd = np.unwrap(lp['heading'])
         psi = interp(ts, t_lp, hd)
         u_l = vn * np.cos(psi) + ve * np.sin(psi)

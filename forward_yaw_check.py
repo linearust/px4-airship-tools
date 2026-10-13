@@ -86,7 +86,11 @@ unsteady entry cannot be compared with a replay of it. The run stops early
 (Abort) when the hull comes within MIN_HEIGHT_M of the ground, disarms, or
 px4 or the simulator's clock stops answering; what was flown until then is
 still measured, and the leg it stopped in is judged incomplete. gz_run.sh
-spawns at 20 m; PX4_GZ_MODEL_POSE=0,0,<h> (px4-rc.gzsim) gives more room.
+spawns at 20 m; PX4_GZ_MODEL_POSE=0,0,<h> (px4-rc.gzsim) gives more room. A
+hull that hangs nose down (gz_model.hang_angle: the Cloudship's 2.6 deg)
+glides down its own axis at u tan(hang) with the throttle off, so the plan
+adds up the height the legs sink and the run refuses, before the first leg,
+a spawn with less room than that over MIN_HEIGHT_M.
 
 The record is the ULog. SITL logs from boot to disarm (rcS: SDLOG_MODE 1); this
 reads the file it is writing from `logger status` after arming, closes it by
@@ -169,8 +173,8 @@ ROOTFS = os.path.join(gz_model.ROOT, 'build/px4_sitl_default/rootfs')
 ALLOWED = tuple(n for n in gz_model.model_names() if 'fin' in gz_model.family_tokens(n))
 
 # (low, high) speed per plant, m/s. Default legs: full stick at both, half
-# stick at the high speed, right (positive) yaw. The vectored airship flies the
-# plan's 2 and 4. The Cloudship's choice is computed, and --plan prints the
+# stick at the high speed, right (positive) yaw. The vectored airship's legs
+# come from its ramp (leg_speeds below). The Cloudship's choice is computed, and --plan prints the
 # table it comes from: its pods hold any of these speeds (the drag plant's
 # trims are a few percent of full thrust; the drag-free one coasts), so thrust
 # is not what limits it. The rigid-fin Cloudship flies the same 2 and 4, where
@@ -186,8 +190,10 @@ LEG_SPEEDS = {
     'cloudship_am_fin_drag': (2.0, 2.5),
 }
 # Any other plant flies the middle of its schedule's ramp and LEG_PAST_RAMP
-# times the ramp's end, rounded to 0.05 m/s: where the vectored airship's 2.0
-# and 4.0 m/s sit on its 1.5 to 2.5 m/s ramp. The ramp is set where the fins
+# times the ramp's end, rounded to 0.05 m/s. LEG_RAMP_MIDDLE and LEG_PAST_RAMP
+# were chosen so the 10.97 m hull's plan legs of 2.0 and 4.0 m/s sat mid-ramp
+# and at 1.6 x its AS_SPD_HI 2.5 (ramp 1.5-2.5); the 7 m hull (AS_SPD_HI 2.1,
+# ramp from half of it) flies 1.6 and 3.35. The ramp is set where the fins
 # would stall in a turn (airship_gains.py), so a leg means the same thing on
 # every hull; a length scale put the indoor hull's legs below its ramp
 LEG_RAMP_MIDDLE, LEG_PAST_RAMP = 0.5, 1.6
@@ -236,6 +242,7 @@ INTEG_CLEAR = 0.005         # |yawspeed_integ| at the first closed-loop sample a
 DURATION_TOL_S = 0.3        # stick and release lengths in the log against STICK_S and RELEASE_S
 TIMELINE_TOL_S = 0.5        # a logged event against the live PX4-time bracket around its command
 MIN_HEIGHT_M = 5.0          # above the model origin's ground: below it the run stops
+HANG_MARGIN_M = 2.0         # over the planned sink: the pendulum's swing and the brake's glide
 GROWTH_LIMIT = 2.0          # a leg whose predicted divergence grows more than this over the entry is flagged
 THROTTLE_TOL = 0.5e-3       # half a MANUAL_CONTROL throttle count (z in 0..1000)
 # Reversals are counted the way yaw_model/forward.py counts them, so the record
@@ -442,22 +449,11 @@ def firmware_default(name):
     """A parameter's firmware default from its module yaml. LookupError when
     none of PARAM_YAMLS defines it: a plan built on a guessed gain is a plan
     for some other firmware."""
-    import yaml
-
     for rel in PARAM_YAMLS:
-        path = os.path.join(gz_model.ROOT, rel)
-
-        if not os.path.exists(path):
+        try:
+            return float(gz_model.yaml_default(rel, name))
+        except LookupError:
             continue
-
-        with open(path) as handle:
-            doc = yaml.safe_load(handle)
-
-        for group in doc.get('parameters', []):
-            found = (group.get('definitions') or {}).get(name)
-
-            if found is not None and 'default' in found:
-                return float(found['default'])
 
     raise LookupError('%s 의 기본값을 %s 에서 찾지 못했다' % (name, ', '.join(PARAM_YAMLS)))
 
@@ -466,23 +462,7 @@ def yaml_default(name, rel):
     """A parameter's default from one module yaml of the PX4 tree (the
     analysis's, ANALYSIS_PARAMS; the plan's go through firmware_default).
     LookupError when the file is not there or does not define it."""
-    import yaml
-
-    path = os.path.join(gz_model.ROOT, rel)
-
-    if not os.path.exists(path):
-        raise LookupError('%s 가 없다' % path)
-
-    with open(path) as handle:
-        doc = yaml.safe_load(handle)
-
-    for group in doc.get('parameters', []):
-        found = (group.get('definitions') or {}).get(name)
-
-        if found is not None and 'default' in found:
-            return float(found['default'])
-
-    raise LookupError('%s 의 기본값을 %s 에서 찾지 못했다' % (name, rel))
+    return float(gz_model.yaml_default(rel, name))
 
 
 def f32_decimal(value):
@@ -725,7 +705,11 @@ def leg_plan(model, params, speed, stick, u_prev, mode):
     fixed = dwell + ENTRY_S + STICK_S + RELEASE_S
     typical = (accel_s if accel_s is not None else ACCEL_MAX_S) + STEADY_WINDOW_S + 1.0 + fixed + brake_s
     worst = ACCEL_MAX_S + STEADY_MAX_S + fixed + BRAKE_MAX_S + MANUAL_DWELL_S
-    return {'speed': speed, 'stick': stick, 'setpoint_deg_s': setpoint_deg(stick, params),
+    # a nose-down hull glides down its own axis for the whole leg (the thrust
+    # line below the centre of mass trims a driven hull a little nose up, so
+    # this is the most it sinks)
+    sink = max(0.0, math.tan(gz_model.hang_angle(model))) * speed * typical
+    return {'speed': speed, 'stick': stick, 'setpoint_deg_s': setpoint_deg(stick, params), 'sink_m': sink,
             'trim': trim, 'throttle_counts': counts, 'throttle_command': command, 'throttle': cruise,
             'holds_m_s': math.sqrt(cruise * gz_model.pod_thrust(model) / c) if c > 0.0 else None,
             'accel_throttle': push, 'accel_from': u_prev, 'accel_s': accel_s, 'accel_mode': mode,
@@ -752,8 +736,11 @@ def vehicle_plan(model, legs=None, params=None):
     prologue = SETTLE_S + 10.0      # the EKF wait and the arming, about
     sim_typ = prologue + sum(p['sim_typical_s'] for p in out)
     sim_max = prologue + sum(p['sim_worst_s'] for p in out)
+    sink = sum(p['sink_m'] for p in out)
     return {'model': model, 'airframe': gz_model.airframe(model)[0], 'params': params, 'accel_mode': mode,
             'legs': out, 'sim_typical_s': sim_typ, 'sim_worst_s': sim_max,
+            'hang_deg': math.degrees(gz_model.hang_angle(model)), 'sink_m': sink,
+            'height_needed_m': MIN_HEIGHT_M + sink + HANG_MARGIN_M,
             'wall_typical_s': BOOT_WALL_S + sim_typ / RTF + FINISH_WALL_S,
             'wall_worst_s': BOOT_WALL_S + sim_max / RTF + FINISH_WALL_S,
             'wall_worst_slow_s': BOOT_WALL_S + sim_max / RTF_SLOW + FINISH_WALL_S}
@@ -821,6 +808,12 @@ def print_plan(plan, table=False):
           % (plan['sim_typical_s'], plan['sim_typical_s'] / 60.0, plan['sim_worst_s'], plan['wall_typical_s'],
              plan['wall_typical_s'] / 60.0, plan['wall_worst_s'], BOOT_WALL_S, RTF, FINISH_WALL_S, RTF_SLOW,
              plan['wall_worst_slow_s']))
+
+    if plan['sink_m'] > 0.0:
+        print('  코 매달림 %.2f deg (파일의 무게중심과 부력중심): 추력 없이 제 축을 따라 가라앉는다 — %s, 합 %.0f m; '
+              '바닥 %g m 위에 %.0f m 가 필요하다 (gz_run.sh 는 20 m 에 띄운다: PX4_GZ_MODEL_POSE=0,0,%d)'
+              % (plan['hang_deg'], ', '.join('다리 %d %.0f m' % (leg['number'], leg['sink_m']) for leg in plan['legs']),
+                 plan['sink_m'], MIN_HEIGHT_M, plan['height_needed_m'], math.ceil(plan['height_needed_m'] / 5.0) * 5))
 
     if not table:
         return
@@ -984,7 +977,6 @@ def airframe_outputs(model):
     of the model's posix airframe and the files it sources (the physics
     variants source their vehicle's, which carries them), keyed by the CSV's
     column names. What each column is, in the airframe's own words."""
-    romfs = os.path.join(gz_model.ROOT, 'ROMFS/px4fmu_common')
     out, todo = {}, [gz_model.airframe(model)[1]]
 
     while todo:
@@ -995,10 +987,10 @@ def airframe_outputs(model):
                 if found:
                     out['%s%s' % (found.group(1).lower(), found.group(2))] = found.group(3).strip()
 
-                source = re.match(r'^\.\s+\$\{R\}etc/(init\.d-posix/airframes/\S+)$', line.strip())
+                source = re.match(r'^\.\s+\$\{R\}etc/(\S+)$', line.strip())
 
                 if source:
-                    todo.append(os.path.join(romfs, source.group(1)))
+                    todo.append(gz_model.sourced_path(source.group(1)))
 
     return out
 
@@ -2849,11 +2841,9 @@ def read_params(sl, names):
     (sitl_link.param_show). `changed` is the dump's second flag column, '+'
     (saved) or '*' (unsaved) where a value is not the default the firmware,
     the airframe and rcS gave it (param.cpp do_show_print): what tells a
-    PX4_PARAM_ that came through from one that only equals its default."""
-    line = sl.PARAM_LINE.replace('^[x+*l ]*', '^([x+*l ]*)', 1)
-
-    if line == sl.PARAM_LINE:
-        raise LookupError('sitl_link.PARAM_LINE 의 모양이 바뀌어 플래그 열을 읽을 수 없다: %s' % sl.PARAM_LINE)
+    PX4_PARAM_ that came through from one that only equals its default. The
+    flag column is sitl_link.PARAM_LINE's first group, the value its second."""
+    line = sl.PARAM_LINE
 
     for _ in range(15):
         text = sl.px4('param', 'show', '-a', timeout=30)
@@ -2892,7 +2882,7 @@ def logger_path(sl):
 
 def close_log(sl, path):
     """Stop the file and wait until it stops growing. SDLOG_MODE 1 stops it at
-    disarm; `logger off` drops a manual override, `logger stop` the module.
+    disarm; `logger off` closes the file (upstream e35171c3f9c), `logger stop` the module.
     Returns (closed, how)."""
     def running():
         text = sl.px4('logger', 'status')
@@ -3123,6 +3113,19 @@ def main_live(spec):
 
         if s is None or s['alt'] < MIN_HEIGHT_M:
             return stopped()
+
+        # a nose-down hull sinks through every leg: the spawn has to carry it
+        # over the floor to the end of the plan, or the run would stop in a leg
+        # and judge the plant for the check's own spawn height
+        if plan['sink_m'] > 0.0:
+            room = s['alt'] >= plan['height_needed_m']
+            verdict('계획의 다리를 모두 날 높이에 있다 (코 매달림 %.2f deg 로 %.0f m 가라앉는다)' % (plan['hang_deg'], plan['sink_m']),
+                    room, '고도 %.1f m, 필요 %.0f m%s' % (s['alt'], plan['height_needed_m'],
+                                                      '' if room else '; PX4_GZ_MODEL_POSE=0,0,%d 로 띄운다'
+                                                      % (math.ceil(plan['height_needed_m'] / 5.0) * 5)))
+
+            if not room:
+                return stopped()
 
         log_source = logger_path(sl)
         note('로그: %s' % (log_source or '찾지 못했다'))

@@ -8,9 +8,9 @@ from pyulog import ULog
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE)); sys.path.insert(0, HERE)
 import closed_loop as cl, gate, reproduce as rp
-from drift_check import RUNS, LOG
+from drift_check import RUNS, LOG, gnss_velocity
 for target, logname, tag in RUNS:
-    u = ULog(os.path.join(LOG, logname), ['vehicle_gps_position', 'vehicle_local_position', 'vehicle_torque_setpoint'])
+    u = ULog(os.path.join(LOG, logname), ['vehicle_gps_position', 'vehicle_gnss', 'vehicle_local_position', 'vehicle_torque_setpoint'])
     d = {x.name: x.data for x in u.data_list if x.multi_id == 0}
     tq = d['vehicle_torque_setpoint']
     t_log0 = tq['timestamp_sample'][int(np.argmax(tq['xyz[2]'] >= 0.49))] * 1e-6
@@ -18,9 +18,9 @@ for target, logname, tag in RUNS:
     res = gate.run_gate(loop, (cl.TARGETS.get(target) or cl.EXTRA_TARGETS[target])[0], out_dir=os.path.join(HERE, 'tmp_out', 'rms'))
     tr = loop.trace; ts = np.array([x[0] for x in tr])
     off = t_log0 - ts[int(np.argmax(np.array([x[4] for x in tr]) >= 0.49))]
-    g = d['vehicle_gps_position']; tg = g['timestamp_sample'] * 1e-6 - off
+    tg, g_vn, g_ve = gnss_velocity(d); tg = tg - off
     k = np.ones(30) / 30
-    vn = np.convolve(g['vel_n_m_s'], k, 'same'); ve = np.convolve(g['vel_e_m_s'], k, 'same')
+    vn = np.convolve(g_vn, k, 'same'); ve = np.convolve(g_ve, k, 'same')
     lp = d['vehicle_local_position']; psi = np.interp(ts, lp['timestamp_sample'] * 1e-6 - off, np.unwrap(lp['heading']))
     vn, ve = np.interp(ts, tg, vn), np.interp(ts, tg, ve)
     ul = vn * np.cos(psi) + ve * np.sin(psi); vl = vn * np.sin(psi) - ve * np.cos(psi)
