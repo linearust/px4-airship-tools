@@ -81,8 +81,24 @@ GENERIC = Family('Generic airship', 'airship_base', 'airship_base_am', 'airship_
                  fixed=('airship_fixed', 'airship_fixed_am'), fixed_drag=('airship_fixed_drag', 'airship_fixed_am_drag'))
 
 
-def vectored_family(name, title, surfaces=False):
-    """A vectored-only family under one name: <name>_base, <name>, <name>_fin, ..."""
+# The same family under the overlay's rigid naming: the mask-0 members carry
+# the _rigid token (gz_model.RIGID, design S2) and the added-mass body keeps
+# its name, so the overlay is self-contained; upstream's plain plant merges
+# its own copy of that body under the base name, held equal by the twin check
+GENERIC_RIGID = Family('Generic airship', 'airship_base_rigid', 'airship_base_am', 'airship_vectored_independent_rigid',
+                       'airship_vectored_independent_drag', 'airship_vectored_independent_fin', 'airship_vectored_independent_am',
+                       'airship_vectored_independent_am_fin', 'airship_vectored_independent_am_fin_drag',
+                       fixed=('airship_fixed_rigid', 'airship_fixed_am'), fixed_drag=('airship_fixed_drag', 'airship_fixed_am_drag'))
+
+
+def vectored_family(name, title, surfaces=False, rigid=False):
+    """A vectored-only family under one name: <name>_base, <name>, <name>_fin,
+    ...; rigid: the overlay's naming, <name>_base_rigid and <name>_rigid for
+    the mask-0 members, the rest as before."""
+    if rigid:
+        return Family(title, name + '_base_rigid', name + '_base_am', name + '_rigid', name + '_drag', name + '_fin', name + '_am',
+                      name + '_am_fin', name + '_am_fin_drag', surfaces=surfaces)
+
     return Family(title, name + '_base', name + '_base_am', name, name + '_drag', name + '_fin', name + '_am',
                   name + '_am_fin', name + '_am_fin_drag', surfaces=surfaces)
 

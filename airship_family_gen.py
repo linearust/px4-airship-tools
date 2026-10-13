@@ -78,6 +78,13 @@ class Vehicle:
             return A.GENERIC
         return A.vectored_family(self.name, self.body_title, self.surfaces)
 
+    @property
+    def overlay_family(self):
+        """The same family under the overlay's rigid naming."""
+        if self.name == A.GENERIC.bare:
+            return A.GENERIC_RIGID
+        return A.vectored_family(self.name, self.body_title, self.surfaces, rigid=True)
+
     def member_title(self, docs_name):
         if not docs_name:
             return self.title
@@ -126,22 +133,44 @@ def copy_family(src_fam, dst_fam, src_root, dst_root):
     """The destination family's eight directories from the source's files,
     every model name and the body's title renamed. A destination that is the
     source (the generic family in place) copies nothing."""
-    renames = sorted(((getattr(src_fam, r), getattr(dst_fam, r)) for r in ROLES), key=lambda kv: -len(kv[0]))
-    renames += [(src_fam.title, dst_fam.title), (src_fam.title.lower(), dst_fam.title.lower())]
+    rename = renamer(src_fam, dst_fam)
 
-    for role in ROLES:
-        src, dst = os.path.join(src_root, getattr(src_fam, role)), os.path.join(dst_root, getattr(dst_fam, role))
+    for src_name, dst_name in family_pairs(src_fam, dst_fam):
+        src, dst = os.path.join(src_root, src_name), os.path.join(dst_root, dst_name)
 
         if os.path.abspath(src) == os.path.abspath(dst):
             continue
 
         for name in ('model.sdf', 'model.config'):
-            t = read(os.path.join(src, name))
+            write(os.path.join(dst, name), rename(read(os.path.join(src, name))))
 
-            for old, new in renames:
-                t = t.replace(old, new)
 
-            write(os.path.join(dst, name), t)
+def family_pairs(src_fam, dst_fam):
+    """(source name, destination name) of every directory the two families
+    share by role: the eight vectored roles and the fixed twin's members a
+    source family has (the generic's; a vectored-only destination has none)."""
+    pairs = [(getattr(src_fam, r), getattr(dst_fam, r)) for r in ROLES]
+    pairs += list(zip(src_fam.fixed, dst_fam.fixed)) + list(zip(src_fam.fixed_drag, dst_fam.fixed_drag))
+    return pairs
+
+
+def renamer(src_fam, dst_fam):
+    """text -> text with every source family name (and the body's title)
+    replaced by the destination's, in one pass, longest name first: a chain
+    of replacements would let a new name be hit by a later rule (the rigid
+    naming turns _base_am into _base and _base into _base_rigid)."""
+    pairs = family_pairs(src_fam, dst_fam)
+    pairs += [(src_fam.title, dst_fam.title), (src_fam.title.lower(), dst_fam.title.lower())]
+    # every source name is in the pattern, the unchanged ones mapped to
+    # themselves: a longer name must be consumed whole, or its prefix would
+    # be renamed inside it (<name>_am_fin would become <name>_rigid_am_fin)
+    mapping = dict(pairs)
+
+    if all(old == new for old, new in mapping.items()):
+        return lambda t: t
+
+    pattern = re.compile('|'.join(re.escape(old) for old in sorted(mapping, key=len, reverse=True)))
+    return lambda t: pattern.sub(lambda m: mapping[m.group(0)], t)
 
 
 def write_pods(p, vehicle):
@@ -298,11 +327,13 @@ def inject_flaps(fam, root):
         write(path, t)
 
 
-def write_models(vehicle, root):
-    """The whole family under root: the generic files as templates, then the
+def write_models(vehicle, root, fam=None, template=None):
+    """The whole family under root (a models directory): the template family
+    (the tree's generic by default) copied under the family's names, then the
     design, then the pods."""
-    fam = vehicle.family
-    copy_family(A.GENERIC, fam, gz_model.GZ_MODELS, root)
+    fam = fam or vehicle.family
+    tfam, tmodels = template or (A.GENERIC, gz_model.GZ_MODELS)
+    copy_family(tfam, fam, tmodels, root)
 
     if fam.surfaces:
         inject_flaps(fam, root)
@@ -349,18 +380,34 @@ def airframe_path(airframes, number, model):
     return os.path.join(airframes, '%d_gz_%s' % (number, model))
 
 
-def write_airframes(vehicle, p, airframes):
-    """The posix airframes of the decade. The bare one is the generic bare
-    airframe with this vehicle's names and propulsion numbers; a member is a
-    header, its PX4_SIM_MODEL and the include of the bare one. A member that
-    exists keeps its text: the gains written below its include are the
-    calculator's, not this generator's."""
-    fam, pods = vehicle.family, vehicle.pods
-    bare_path = airframe_path(airframes, vehicle.decade, fam.bare)
+def write_airframes(vehicle, p, airframes, fam=None, decade=None, template=None, members_from=None):
+    """The posix airframes of the decade. The bare one is the template's bare
+    airframe (the generic's, 2520 in the tree) with this vehicle's names and
+    propulsion numbers; a member is a header, its PX4_SIM_MODEL and the
+    include of the bare one, or, with members_from = (airframes dir, family,
+    decade) naming this vehicle's own members elsewhere (the tree's, for the
+    overlay), that member's text with its bare include renamed: gains and all.
+    A member that exists keeps its text: the gains written below its include
+    are the calculator's, not this generator's."""
+    fam, pods = fam or vehicle.family, vehicle.pods
+    decade = decade or vehicle.decade
+    t_number, t_bare, t_airframes = template or (2520, A.GENERIC.bare, airframes)
+    tfam = A.GENERIC_RIGID if t_bare == A.GENERIC_RIGID.bare else A.GENERIC
+    rename = renamer(tfam, fam)
+    bare_path = airframe_path(airframes, decade, fam.bare)
+    own_bare = airframe_path(members_from[0], members_from[2], members_from[1].bare) if members_from else None
     # an existing bare airframe is updated in place, so the block the
-    # calculator appends below its propulsion lines survives a regeneration
-    t = read(bare_path) if os.path.exists(bare_path) else read(airframe_path(airframes, 2520, A.GENERIC.bare)).replace(A.GENERIC.bare, fam.bare)
-    t = sub1(t, r'(# @name )[^\n]*', r'\g<1>%s' % vehicle.title.replace('\\', '\\\\'))
+    # calculator appends below its propulsion lines survives a regeneration;
+    # a new one is this vehicle's own bare airframe elsewhere (gains and
+    # all), else the template's renamed
+    if os.path.exists(bare_path):
+        t = read(bare_path)
+    elif own_bare and os.path.exists(own_bare):
+        t = renamer(members_from[1], fam)(read(own_bare))
+    else:
+        t = rename(read(airframe_path(t_airframes, t_number, t_bare)))
+    title = vehicle.member_title('Rigid Hull') if fam.bare.endswith('_' + gz_model.RIGID) else vehicle.title
+    t = sub1(t, r'(# @name )[^\n]*', r'\g<1>%s' % title.replace('\\', '\\\\'))
     t = sub1(t, r'rotor speed 0\.\.[\d.]+ rad/s', 'rotor speed 0..%s rad/s' % fmt(pods.max_rot_velocity))
 
     for n in (1, 2):
@@ -378,10 +425,21 @@ def write_airframes(vehicle, p, airframes):
         written.append(os.path.basename(bare_path))
 
     for role, mask, docs_name in MEMBERS[1:]:
-        path = airframe_path(airframes, vehicle.decade + mask, getattr(fam, role))
+        path = airframe_path(airframes, decade + mask, getattr(fam, role))
 
         if os.path.exists(path):
             continue
+
+        if members_from:
+            m_airframes, m_fam, m_decade = members_from
+            source = airframe_path(m_airframes, m_decade + mask, getattr(m_fam, role))
+
+            if os.path.exists(source):
+                # this vehicle's own member elsewhere: its text, the bare include renamed
+                text = read(source).replace(os.path.basename(airframe_path(m_airframes, m_decade, m_fam.bare)), os.path.basename(bare_path))
+                write(path, text)
+                written.append(os.path.basename(path))
+                continue
 
         write(path, '''#!/bin/sh
 #
@@ -431,11 +489,12 @@ def surfaces_block(p):
     return '\n'.join([SURFACES_OPEN] + lines + [SURFACES_CLOSE])
 
 
-def write_surface_airframes(vehicle, p, airframes):
+def write_surface_airframes(vehicle, p, airframes, fam=None, decade=None):
     """A surfaces family's fin members: the surfaces block right after the
     include of the bare airframe (its tilt servo mapping is overridden), and
     the members' own @output lines. Updated in place."""
-    fam = vehicle.family
+    fam = fam or vehicle.family
+    decade = decade or vehicle.decade
 
     if not fam.surfaces:
         return []
@@ -444,7 +503,7 @@ def write_surface_airframes(vehicle, p, airframes):
     block = surfaces_block(p)
 
     for role, mask in SURFACE_MEMBERS:
-        path = airframe_path(airframes, vehicle.decade + mask, getattr(fam, role))
+        path = airframe_path(airframes, decade + mask, getattr(fam, role))
         t = read(path)
         new = t
 
@@ -497,8 +556,8 @@ def write_cmake(vehicle, airframes):
     return changed
 
 
-def docs_sections(vehicle, p):
-    fam = vehicle.family
+def docs_sections(vehicle, p, fam=None, rigid_title=''):
+    fam = fam or vehicle.family
     a, b = p.a, p.b
     intro = {
         'bare': '[%s](../frames_airship/index.md): two independently tilting thrust pods on a %.2f x %.2f m hull, the rigid hull: '
@@ -518,7 +577,8 @@ def docs_sections(vehicle, p):
         intro['bare'] += '\n' + vehicle.docs_note
 
     for role, _, docs_name in MEMBERS:
-        out.append('### %s\n\n%s\n\n```sh\nmake px4_sitl gz_%s\n```\n' % (vehicle.member_title(docs_name), intro[role], getattr(fam, role)))
+        out.append('### %s\n\n%s\n\n```sh\nmake px4_sitl gz_%s\n```\n'
+                   % (vehicle.member_title(docs_name or rigid_title), intro[role], getattr(fam, role)))
 
     return out
 
@@ -579,17 +639,23 @@ def write_docs(vehicle, p, root):
     return changed
 
 
-def write_fixed_servos(vehicle, p, airframes):
+def write_fixed_servos(vehicle, p, airframes, fam=None):
     """A family with a fixed-thruster twin (the generic one: airship_fixed):
     its bare posix airframe maps the bridge's +-1 onto the flap joints'
-    +-travel, SIM_GZ_SV_MINA/MAXA1..4 and the comment that says so."""
-    fam = vehicle.family
+    +-travel, SIM_GZ_SV_MINA/MAXA1..4 and the comment that says so. An
+    airframes directory without the twin's airframe (the overlay, whose fixed
+    airframes are not generated yet) is left alone."""
+    fam = fam or vehicle.family
 
     if not fam.fixed:
         return []
 
     import glob
     paths = glob.glob(os.path.join(airframes, '[0-9]*_gz_%s' % fam.fixed[0]))
+
+    if not paths:
+        return []
+
     assert len(paths) == 1, paths
     t = read(paths[0])
     new = sub1(t, r'(the gz joints stop at \+-)\d+( deg)', r'\g<1>%d\g<2>' % p.travel)
@@ -637,15 +703,17 @@ def canonical(elem):
 
 
 class at_root:
-    """gz_model's model and airframe homes pointed at one tree while inside."""
+    """gz_model's model and airframe homes pointed at these trees while
+    inside: an overlay directory (models/, airframes/) or a PX4 tree."""
 
-    def __init__(self, root):
-        self.root = root
+    def __init__(self, *roots):
+        self.roots = roots
 
     def __enter__(self):
         self.saved = (gz_model.MODEL_HOMES, gz_model.AIRFRAME_HOMES)
-        gz_model.MODEL_HOMES = [os.path.join(self.root, TREE_DIRS[0])]
-        gz_model.AIRFRAME_HOMES = [os.path.join(self.root, TREE_DIRS[1])]
+        home = lambda root, tree_dir, overlay_dir: os.path.join(root, overlay_dir if os.path.isdir(os.path.join(root, overlay_dir)) else tree_dir)
+        gz_model.MODEL_HOMES = [home(r, TREE_DIRS[0], 'models') for r in self.roots]
+        gz_model.AIRFRAME_HOMES = [home(r, TREE_DIRS[1], 'airframes') for r in self.roots]
 
     def __exit__(self, *_):
         gz_model.MODEL_HOMES, gz_model.AIRFRAME_HOMES = self.saved
@@ -763,6 +831,129 @@ def twin_check(vehicle, upstream_root, members_root):
     return problems
 
 
+# ---------------------------------------------------------------------------
+# The overlay: the whole family, under the rigid naming, in this repository
+# (gz_model.OVERLAY) instead of the tree, numbered a hundred above the
+# tree's decade (design S2, S5). The template is the overlay's own generic
+# rigid family once it exists, the tree's generic family before. The overlay
+# keeps its own added-mass body (<name>_base_am): upstream's plain plant
+# merges a copy under the base name, and the twin check holds the two equal.
+# ---------------------------------------------------------------------------
+
+OVERLAY_SHIFT = 100         # the overlay decade of a vehicle: its JSON decade plus this
+OVERLAY_WORLD_NAME = 'lta_lab'
+
+
+def overlay_template(overlay, template_root):
+    """((family, models dir), (bare number, bare name, airframes dir)) the
+    overlay generator copies from: the overlay's generic rigid family if it
+    is there, else the tree's generic family under template_root."""
+    models = os.path.join(overlay, 'models')
+    airframes = os.path.join(overlay, 'airframes')
+    rigid = A.GENERIC_RIGID
+
+    if os.path.isdir(os.path.join(models, rigid.bare)):
+        return (rigid, models), (2520 + OVERLAY_SHIFT, rigid.bare, airframes)
+
+    return (A.GENERIC, os.path.join(template_root, TREE_DIRS[0])), (2520, A.GENERIC.bare, os.path.join(template_root, TREE_DIRS[1]))
+
+
+def overlay_world(path, template_root):
+    """The overlay's lab world: the tree's lta world under its own name, made once."""
+    if os.path.exists(path):
+        return False
+
+    t = read(os.path.join(template_root, TREE_FILES[0]))
+    t = sub1(t, r'<world name="[^"]*">', '<world name="%s">' % OVERLAY_WORLD_NAME)
+    write(path, t)
+    return True
+
+
+def write_overlay_decades(path, decade, bare):
+    """One `<decade> <bare model>` line per family, in number order, once."""
+    lines = read(path).splitlines() if os.path.exists(path) else []
+    line = '%d %s' % (decade, bare)
+
+    if line in lines:
+        return False
+
+    if any(l.split()[0] == str(decade) for l in lines if l.split()):
+        raise SystemExit('%s: decade %d is taken (%s)' % (path, decade, [l for l in lines if l.startswith(str(decade))]))
+
+    lines.append(line)
+    write(path, '\n'.join(sorted(lines, key=lambda l: int(l.split()[0]))) + '\n')
+    return True
+
+
+OVERLAY_DOCS_HEAD = '''# Overlay vehicles
+
+The families this repository carries beside the PX4 tree (`docs/upstream_split_design_20261012.md`):
+every physics-variant member of each vehicle, under the overlay numbers. A member is flown with
+`GZ_TARGET=gz_<model> ./gz_run.sh <check>`; there is no make target.
+
+| Vehicle | Model | SYS_AUTOSTART |
+|---|---|---|
+'''
+
+
+def write_overlay_docs(path, vehicle, p, fam, decade):
+    """The overlay's vehicle list: a table row per member (the shape
+    variant_check reads) and the members' sections, each once."""
+    t = read(path) if os.path.exists(path) else OVERLAY_DOCS_HEAD
+    rows = []
+
+    for role, mask, docs_name in MEMBERS:
+        title = vehicle.member_title(docs_name or 'Rigid Hull')
+        row = '| [%s](#%s) | `gz_%s` | %d |' % (title, slug(title), getattr(fam, role), decade + mask)
+
+        if '`gz_%s`' % getattr(fam, role) not in t:
+            rows.append(row)
+
+    if rows:
+        end = t.index('\n', t.rindex('|---|---|---|')) + 1
+        table_end = end
+
+        while table_end < len(t) and t[table_end] == '|':
+            table_end = t.index('\n', table_end) + 1
+
+        t = t[:table_end] + '\n'.join(rows) + '\n' + t[table_end:]
+
+    sections = docs_sections(vehicle, p, fam, rigid_title='Rigid Hull')
+
+    if '### %s\n' % vehicle.member_title('Rigid Hull') not in t:
+        t = t.rstrip('\n') + '\n\n' + '\n'.join(sections)
+
+    write(path, t)
+    return bool(rows)
+
+
+def generate_overlay(vehicle, overlay=None, template_root=None):
+    """The vehicle's whole family into the overlay, self-contained: models,
+    airframes a hundred above the tree's decade, the lab world's entries, the
+    decade line and the docs."""
+    overlay = overlay or gz_model.OVERLAY
+    template_root = template_root or gz_model.ROOT
+    fam = vehicle.overlay_family
+    decade = vehicle.decade + OVERLAY_SHIFT
+    (tfam, tmodels), bare_template = overlay_template(overlay, template_root)
+    models = os.path.join(overlay, 'models')
+    airframes = os.path.join(overlay, 'airframes')
+    os.makedirs(airframes, exist_ok=True)
+    p = write_models(vehicle, models, fam=fam, template=(tfam, tmodels))
+    # the vehicle's own members in the tree (before the trim) carry their gains
+    # blocks: the overlay takes them as they are
+    members_from = (os.path.join(template_root, TREE_DIRS[1]), vehicle.family, vehicle.decade)
+    written = write_airframes(vehicle, p, airframes, fam=fam, decade=decade, template=bare_template, members_from=members_from)
+    written += write_surface_airframes(vehicle, p, airframes, fam=fam, decade=decade)
+    written += write_fixed_servos(vehicle, p, airframes, fam=fam)
+    world = os.path.join(overlay, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
+    overlay_world(world, template_root)
+    n = write_world_entries(world, [getattr(fam, role) for role, _, _ in MEMBERS])
+    write_overlay_decades(os.path.join(airframes, 'decades'), decade, fam.bare)
+    write_overlay_docs(os.path.join(overlay, 'vehicles.md'), vehicle, p, fam, decade)
+    return p, written, n
+
+
 def generate(vehicle, root):
     models = os.path.join(root, TREE_DIRS[0])
     airframes = os.path.join(root, TREE_DIRS[1])
@@ -808,6 +999,8 @@ def main(argv=None):
     ap.add_argument('vehicle', help='the vehicle JSON file')
     ap.add_argument('--root', default=gz_model.ROOT, help='the PX4 tree to write into (default PX4_ROOT or ~/dev/PX4-Autopilot)')
     ap.add_argument('--check', action='store_true', help='generate into a scratch copy and diff against the tree instead of writing')
+    ap.add_argument('--overlay', action='store_true',
+                    help='write the whole family under the rigid naming into the overlay (gz_model.OVERLAY) instead of the tree')
     ap.add_argument('--upstream', metavar='MEMBERS_ROOT',
                     help='write what upstream carries (the plain complete plant in merge-include shape) into --root, '
                          'from the family members under this tree, then run the twin check')
@@ -816,6 +1009,12 @@ def main(argv=None):
 
     if args.check:
         return check(vehicle)
+
+    if args.overlay:
+        p, written, n = generate_overlay(vehicle, template_root=args.root)
+        print('overlay: %s, decade %d; airframes written: %s; world entries added %d'
+              % (vehicle.name, vehicle.decade + OVERLAY_SHIFT, ', '.join(written) or 'none', n))
+        return 0
 
     if args.upstream:
         written, n = write_upstream(vehicle, args.root, args.upstream)

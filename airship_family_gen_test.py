@@ -178,6 +178,51 @@ def main():
             and not problems and not again and plain.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in plain
             and '--' not in plain.split('<!--', 1)[1].split('-->', 1)[0],
             '; '.join(problems) if problems else 'wrote %s' % ', '.join(written))
+    # the overlay: each family under the rigid naming, a hundred above its
+    # decade, self-contained, an exact twin of the tree's family (and so of
+    # the plain plant upstream carries), generated twice without a change
+    overlay = tempfile.mkdtemp(prefix='airship_overlay_')
+    bad = []
+
+    for name in ('airship_generic', 'airship_indoor'):
+        v = gen.load_vehicle('vehicles/%s.json' % name)
+        ofam = v.overlay_family
+        _, written, entries = gen.generate_overlay(v, overlay=overlay, template_root=ROOT)
+        _, again, entries_again = gen.generate_overlay(v, overlay=overlay, template_root=ROOT)
+
+        with gen.at_root(overlay):
+            o_merged = gen.canonical(gz_model.merged(ofam.am_fin_drag))[3]
+            o_defaults = gz_model.airframe_defaults(ofam.am_fin_drag)
+            o_bare = gz_model.airframe_defaults(ofam.bare)
+            o_chain = gz_model.family(ofam.am_fin_drag)
+            o_tokens = gz_model.family_tokens(ofam.bare)
+
+        with gen.at_root(ROOT):
+            t_merged = gen.canonical(gz_model.merged(v.family.am_fin_drag))[3]
+            t_defaults = gz_model.airframe_defaults(v.family.am_fin_drag)
+            t_bare = gz_model.airframe_defaults(v.family.bare)
+
+        if not (len(written) == 6 and entries == 5 and again == [] and entries_again == 0):
+            bad.append('%s: wrote %s, entries %d; again %s %d' % (name, written, entries, again, entries_again))
+
+        if not (o_merged == t_merged and o_defaults == t_defaults and o_bare == t_bare):
+            bad.append('%s: not the tree\'s twin (models %s, complete defaults %s, bare defaults %s)'
+                       % (name, o_merged == t_merged, o_defaults == t_defaults, o_bare == t_bare))
+
+        if not (o_chain[0] == ofam.base_am and o_tokens == [gz_model.RIGID] and o_defaults['SYS_AUTOSTART'] == v.decade + gen.OVERLAY_SHIFT + 7
+                if 'SYS_AUTOSTART' in o_defaults else o_chain[0] == ofam.base_am and o_tokens == [gz_model.RIGID]):
+            bad.append('%s: chain %s, tokens %s' % (name, o_chain, o_tokens))
+
+    decades = open(os.path.join(overlay, 'airframes', 'decades')).read().split()
+    world = open(os.path.join(overlay, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
+    docs = open(os.path.join(overlay, 'vehicles.md')).read()
+    verdict('오버레이: 두 가족이 rigid 이름과 +100 번호로 자체 완결되게 생성되고 (세계 lta_lab, decades, vehicles.md), 트리 가족과 '
+            'merged 모델·에어프레임 기본값이 같으며, 두 번째 생성은 아무것도 바꾸지 않는다',
+            not bad and decades == ['2620', 'airship_vectored_independent_rigid', '2630', 'airship_indoor_rigid']
+            and '<world name="%s">' % gen.OVERLAY_WORLD_NAME in world and 'airship_indoor_rigid_3::base_link' in world
+            and '`gz_airship_indoor_am_fin_drag` | 2637 |' in docs and docs.count('### ') == 12,
+            '; '.join(bad) if bad else 'decades %s' % ' '.join(decades))
+    shutil.rmtree(overlay)
     shutil.rmtree(scratch)
 
     note('[gains]')

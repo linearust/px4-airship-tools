@@ -135,7 +135,18 @@ airframe_for_model), variant_check (목록·경로 16곳; decades() 와 사실 7
 `2[56]\d\d`. gz_model 에 `OVERLAY_DECADES/OVERLAY_WORLD/OVERLAY_DOCS` 와 `in_overlay(path)`. 오버레이가 비어 있어 동작 동일 (16/16, 생성기
 시험 17/17); 오버레이 멤버가 있는 검증은 (3) 의 트림된 스크래치 트리 시험에서.
 
-**(3) 생성기 오버레이·upstream 모드 — 읽은 구조에서 나온 변경 목록 (다음 세션).**
+**(3) 생성기 두 모드 끝남 (2026-10-13 오후, 브랜치 split/step3).** `--upstream MEMBERS_ROOT`: 가족의 멤버들 (오버레이, 또는 오늘의 트리) 에서
+upstream 이 가지는 둘 — 부가질량 몸체 (`<body>_base`) 와 평범한 이름의 완전 플랜트 (몸체 merge + 추진·핀·항력 블록 한 파일, 두 단) — 와 그
+에어프레임 (bare 의 본문 + 완전 멤버의 요 값 블록) 을 쓰고, 쌍둥이 검사 (merged 모델 원소 단위, 에어프레임 resolved 기본값) 를 돌린다.
+`--overlay`: 가족 전체를 rigid 이름 (`<name>_base_rigid`, `<name>_rigid`; 나머지 그대로) 과 JSON decade + 100 으로 오버레이에 (모델, 에어프레임,
+`worlds/lta_lab.sdf`, `airframes/decades`, `vehicles.md`); 템플릿은 오버레이의 generic rigid 가족, 그것이 없으면 트리의 generic; 멤버 에어프레임은
+그 기체의 트리 멤버 (요 값 블록째) 를 bare 포함만 바꿔 가져온다. **S1/S2 보정:** 오버레이는 제 부가질량 몸체 (`<name>_base_am`, 이름 그대로) 를
+가진다 (자체 완결; `_am` 멤버가 트리의 `<name>_base` 를 merge 하지 않는다) — 두 몸체는 쌍둥이 검사가 같게 붙든다. 이유: 생성기 멱등성 (두 번째 실행이
+템플릿을 오버레이에서 읽는다) 과 두 집의 이름 충돌 규칙. 시험: 트림된 스크래치 트리 (generic 가족 삭제) 에 `--upstream`, 스크래치 오버레이에 generic·
+indoor `--overlay` → 세 쌍둥이 검사 모두 같음, 두 번째 생성 변화 0 (generator test 19/19). 남은 것: airship_gains 의 오버레이 모드 (bare 를
+`gz_model.bare()` 로), fixed 가족의 upstream 작성기 (`airship_fixed` = fixed_am_drag), cloudship 의 upstream 모양 (자체 완결), (4) 플랜트 레지스트리.
+
+**(3) 의 원래 변경 목록 (참고).**
 - `apply_generic_hull.Family`/`vectored_family(name, title, surfaces, rigid=False)`: rigid 가족은 `bare = name + '_rigid'`, `base = name + '_base_rigid'`, `base_am` 그대로,
   나머지 그대로. `GENERIC` 도 두 판 (트리용 지금 것, 오버레이용 rigid). `copy_family` 의 renames 는 긴 이름부터 (이미 그렇다) — `_base_am` 이 `_base_rigid` 로 잘못 바뀌지 않게
   base 앞에 base_am 을 둔다 (지금 정렬 규칙 `-len` 이 보장).

@@ -6,7 +6,10 @@ combinations) and the literature vehicles exist to tell the model's share of
 a result from the loop's share; they are validation apparatus and live here.
 
 The overlay is three directories the generator fills (`airship_family_gen.py
---overlay`, planned with the upstream trim) and nothing in the PX4 tree
+<vehicle.json> --overlay`: the whole family under the rigid naming, a hundred
+above the vehicle's decade, self-contained with its own added-mass body; the
+tree's plain plant, written by `--upstream`, is held to the overlay's complete
+member element for element by the generator test) and nothing in the PX4 tree
 changes:
 
 | directory | reaches PX4 through |
