@@ -276,3 +276,8 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   에이전트 둘이 만드는 중 (pr/airship-alloc, pr/airship-docs); 끝나면 lib → 배분기 → 제어기 → 에어프레임 → posix/서브모듈 → 문서 순으로 다시 쌓는다.
 - 생성기 --upstream (tools 3a5ee48): GRP·스케줄 줄 제거, 마커 "Yaw loop values for this hull", model.config, lta.sdf (enable 5, 랩 include 없음),
   --plants. 출력 = 워크트리 서브모듈의 브랜치 pr/airship-models (origin/main e5997f4 위; 로컬, 미푸시). 쌍둥이 검사 OK.
+- 17:05 pr/airship 를 다시 쌓음 (upstream main 97a3c7f017 위): 9fc13673f7 rate_control → 18410c2e1b 배분기 (에이전트 765ec6081d + 독립 포드 시험 3 개
+  복원, 37/37) → b5a03f1910 제어기 → be0b464e4f 2520 → e84108add2 posix 2520 → 969b754bea 서브모듈 포인터 (e9580fc, 로컬) → 475267c93a 문서
+  (에이전트 72dc24a0c8 + 문장 둘 수정). 31 파일 약 +4190 (시험 약 2600). 검증 스크립트 실행 중 (tests, identity independent, px4_sitl_default,
+  validate/module_documentation/check_format, 호버 게이트, fmu-v6x 크기). 남은 손질: 제어기 시험의 "Acro on propulsive yaw" 주석 한 줄 (마지막
+  재적층 때), 문서 png, PR 본문의 괄호 항목.
