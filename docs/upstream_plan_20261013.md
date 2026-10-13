@@ -270,3 +270,9 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
 - 도구: yaw_model 게이트 = propulsive && AS_YAWRATE_MAX > 0 (다른 배분기는 false), 이름 있는 에어프레임은 자기 체인의 AS_YAWRATE_MAX 를 읽고
   (GATE_PARAMS), closed_loop.build 도 명시 params 위에 게이트 파라미터를 얹는다; fp_diff 는 없는 GRP/TAIL/CS_K 키를 1/0/1 로 본다; pins PX4 27fd5f1ffd.
 - 다음: upstream main 에서 준비 워크트리 pr/airship 을 뜨고 삭제로 옮긴다 (lib → 배분기 → 제어기 → 에어프레임 → posix/서브모듈 → 문서).
+- 16:55 SITL 세 게이트 모두 통과 (포크 27fd5f1ffd): 2520 호버 10/10, 2527 전진 42/42, 2510 공중 무장 유지 10/10.
+- 준비 워크트리 /home/h/dev/px4-pr-airship, 브랜치 pr/airship (upstream main 97a3c7f017 에서): 9fc13673f7 rate_control 적분기 set/get;
+  제어기 좁힘 커밋 (루프 + 수동 입력 + 시험 3 개 바이너리, 파라미터 5, 게이트 = AS_YAWRATE_MAX > 0) gtest 3/3. 배분기·문서는 격리 워크트리의
+  에이전트 둘이 만드는 중 (pr/airship-alloc, pr/airship-docs); 끝나면 lib → 배분기 → 제어기 → 에어프레임 → posix/서브모듈 → 문서 순으로 다시 쌓는다.
+- 생성기 --upstream (tools 3a5ee48): GRP·스케줄 줄 제거, 마커 "Yaw loop values for this hull", model.config, lta.sdf (enable 5, 랩 include 없음),
+  --plants. 출력 = 워크트리 서브모듈의 브랜치 pr/airship-models (origin/main e5997f4 위; 로컬, 미푸시). 쌍둥이 검사 OK.
