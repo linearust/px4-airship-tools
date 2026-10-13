@@ -28,8 +28,18 @@ for k in ta:
 print('\nmax |diff| %.1f us, %d of %d vectors differ (>= 1 us), %d nan cells' % (mx, nvec, len(ta), nan))
 keys = ['CA_AIRFRAME', 'CA_AIRSHIP_GRP', 'CA_AIRSHIP_TLMIN', 'CA_AIRSHIP_TLMAX', 'CA_AIRSHIP_TLT_R',
         'CA_AIRSHIP_CS_K', 'CA_AIRSHIP_TAIL', 'CA_SV_CS_COUNT', 'MAN_DEADZONE']
+# The upstream-bound class has no grouping, tail or surface credit: firmware
+# built from it reads these as absent (None), which equals the fork at
+# independent pods, no tail, full credit. Compared as those values.
+IMPLIED = {'CA_AIRSHIP_GRP': 1.0, 'CA_AIRSHIP_TAIL': 0.0, 'CA_AIRSHIP_CS_K': 1.0}
 pa, pb = ref.get('params', {}), new.get('params', {})
-bad = [k for k in keys if pa.get(k) != pb.get(k)]
+def val(p, k):
+    v = p.get(k)
+    return IMPLIED[k] if v is None and k in IMPLIED else v
+bad = [k for k in keys if val(pa, k) != val(pb, k)]
+implied = [k for k in IMPLIED if pa.get(k) is None or pb.get(k) is None]
+if implied:
+    print('note: %s absent on one side (the narrowed class), compared as %s' % (', '.join(implied), ', '.join('%s=%g' % (k, IMPLIED[k]) for k in implied)))
 if bad:
     print('CONFIG MISMATCH, the diff above is meaningless:')
     for k in bad: print('  %-18s ref %s  new %s' % (k, pa.get(k), pb.get(k)))

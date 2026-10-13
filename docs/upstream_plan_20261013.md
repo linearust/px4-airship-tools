@@ -260,3 +260,13 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
    PX4_ROOT 로 한 SITL 호버 게이트, px4_sitl_default, check_format/validate_module_configs/module_documentation, 보드 크기표.
 8. 비행 펌웨어는 PR 워크트리에서 스테이징 (D-FREEZE: 기체가 난 커밋 id 를 본문에; 이후 수정은 재지문). 카드마다 PR 주장 대응. upstream_pr_bodies.md 를
    두 PR 로 다시 쓴다 (본문에 명시: 패스스루 변경, Stabilized 요가 루프가 됨 (MAX > 0 일 때), 시험 안 된 경로 — 고정 마운트·±90·FF 기본 0·7 m 게인).
+
+## 11. 진행 기록
+
+- 16:30-16:55 포크 (airship/dev, 로컬·무서명): 2f013b1a4a 틸트 슬롯 둘 항상 (identity 12 세트 88,788 행 동일); 6cc1c01006 FF 정지항을 루프로;
+  de05cda78b 게이트 AS_YAWRATE_MAX > 0 (기본 0, 틸트 에어프레임 15); 27fd5f1ffd COM_DISARM_LAND 을 에어프레임마다 (rc.airship_defaults 는 upstream 그대로).
+  gtest 8/8, check_format, validate_module_configs, 생성기 --check 5/5 IDENTICAL, variant 16/16, gen test 23/23. 에어프레임의 새 줄은 생성 블록
+  (airship_gains 의 MARK_OPEN 뒤는 파일 끝까지 다시 쓰인다) 앞에 둔다. SITL: 2520 호버 10/10; 2527 전진·2510 착륙 무장 유지는 진행 중.
+- 도구: yaw_model 게이트 = propulsive && AS_YAWRATE_MAX > 0 (다른 배분기는 false), 이름 있는 에어프레임은 자기 체인의 AS_YAWRATE_MAX 를 읽고
+  (GATE_PARAMS), closed_loop.build 도 명시 params 위에 게이트 파라미터를 얹는다; fp_diff 는 없는 GRP/TAIL/CS_K 키를 1/0/1 로 본다; pins PX4 27fd5f1ffd.
+- 다음: upstream main 에서 준비 워크트리 pr/airship 을 뜨고 삭제로 옮긴다 (lib → 배분기 → 제어기 → 에어프레임 → posix/서브모듈 → 문서).

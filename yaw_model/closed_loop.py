@@ -320,9 +320,11 @@ def build(target, plant='roll', fins=1.0, params=None, noise=False, trace=False,
     params None: the gains the target flies at HEAD, the yaml defaults with
     its posix airframe chain on top (controller.head_params: 2527 gets
     AS_YAWRATE_FF 1.0). params given: exactly those, over the yaml defaults
-    (controller.DEFAULT_PARAMS) and nothing from the airframe, which is what a
-    replay of a record wants (record_gains.gains gives a record's full set).
-    THR_MDL_FAC, which only the gate reads, is the airframe's either way.
+    (controller.DEFAULT_PARAMS) and nothing from the airframe but its gate
+    parameters (controller.GATE_PARAMS: AS_YAWRATE_MAX, which the airframe
+    sets since its default became 0), which is what a replay of a record
+    wants (record_gains.gains gives a record's full set). THR_MDL_FAC, which
+    only the gate reads, is the airframe's either way.
     restore: None models the firmware before ec89e6bd84 (every record under
     records/), 'zero_or_sign' HEAD's rule (controller.set_restore)."""
     model, airframe = ALL_TARGETS[target]
@@ -333,7 +335,7 @@ def build(target, plant='roll', fins=1.0, params=None, noise=False, trace=False,
         raise SystemExit('controller.AIRFRAMES[%r] is not airframe %d: %s' % (airframe, number, '; '.join(bad)))
 
     head = ctl.head_params(model)
-    gains = head if params is None else dict(ctl.DEFAULT_PARAMS, **params)
+    gains = head if params is None else dict(ctl.DEFAULT_PARAMS, **{k: head[k] for k in ctl.GATE_PARAMS}, **params)
     controller = ctl.GateController(airframe, gains, filter_gyro=False,
                                     other_params={'THR_MDL_FAC': head['THR_MDL_FAC']})
 

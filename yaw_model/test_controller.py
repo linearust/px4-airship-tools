@@ -88,6 +88,9 @@ def test_gate():
                               a['CA_AIRSHIP_CS_K'])
         check('%s: propulsiveYaw' % name, pv)
     check('collective without tail keeps the loop open', not C.propulsive_yaw(16, 0, False, False, 1.0))
+    check('another allocator keeps the stick as torque', not C.propulsive_yaw(9, 1, True, False, 1.0))
+    check('AS_YAWRATE_MAX 0 keeps the loop open, 15 closes it',
+          not C.loop_enabled(True, 0.0) and C.loop_enabled(True, 0.1) and not C.loop_enabled(False, 0.1))
     checks = {m: C.yaw_rate_loop_active(m, True, True) for m in C.MODE_FLAGS}
     check('loop closes in Acro/Stabilized/Altctl/Posctl, open in Manual/auto',
           checks['acro'] and checks['stabilized'] and checks['altctl'] and checks['posctl']
@@ -721,7 +724,7 @@ def test_feedforward_law():
     a = C.AirshipYawController('vectored', params={'AS_YAWRATE_FF': 1.3}, filter_gyro=False)
     b = C.AirshipYawController('vectored', params={'AS_YAWRATE_FF': 0.0}, filter_gyro=False)
     ra, rb = stepped(a, sticks, gyro, modes), stepped(b, sticks, gyro, modes)
-    r_max = math.radians(C.DEFAULT_PARAMS['AS_YAWRATE_MAX'])
+    r_max = math.radians(a.params['AS_YAWRATE_MAX'])    # the airframe's 15 (the yaml default is 0: loop open)
     d_t = max(abs((x[0] - y[0]) - 1.3 * x[2] * abs(x[2]) / r_max) for x, y in zip(ra, rb))
     check('AS_YAWRATE_FF adds FF sp |sp| / r_max to the torque (the setpoint\'s share of the maximum)', d_t < 1e-12,
           'worst %.1e' % d_t)

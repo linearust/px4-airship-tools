@@ -247,6 +247,18 @@ AIRFRAMES = {
                       CA_AIRSHIP_CS_K=1.0, CA_R_REV=4, yaw_surfaces=False),
 }
 CA_YAML = 'src/modules/control_allocator/module.yaml'
+# The posix airframe each named table entry models. The loop's gate parameter
+# is airframe configuration, not a gain: AS_YAWRATE_MAX defaults to 0 (loop
+# open) since 2026-10-13 and the tilting airframes set 15, so a named airframe
+# takes it from its chain while the gains stay the yaml defaults the model's
+# records and tests are anchored to (head_params takes the whole chain).
+AIRFRAME_NUMBERS = {'vectored': 2520, 'cloudship': 2510}
+GATE_PARAMS = ('AS_YAWRATE_MAX',)
+
+
+def airframe_params(number, names=GATE_PARAMS):
+    """The named parameters an airframe chain sets, as floats; absent names are left out."""
+    return {name: float(v[0]) for name, v in airframe_defaults(number).items() if name in names}
 
 
 def check_allocator_config(key, number):
@@ -372,16 +384,25 @@ def throttle_stick(fraction, quantize=True):
 
 
 def propulsive_yaw(allocator, pod_grouping, tail, yaw_surfaces, surface_credit):
-    """AMI:176-184 (yaw_surfaces: hasYawSurfaces(), AMI:132-145)."""
+    """The airship allocator's report (AirshipYawAllocation.hpp airshipPropulsiveYaw);
+    any other allocator (CA_AIRFRAME != 16) keeps the stick as torque
+    (airship_att_control_main.cpp applyAllocatorStatus, 2026-10-13)."""
     if allocator != 16:     # kCaAirframeAirship (AirshipAirframe.hpp)
-        return True
+        return False
     return (pod_grouping > 0 or bool(tail)) and not (yaw_surfaces and surface_credit >= 1.0)
 
 
-def yaw_rate_loop_active(mode, manual_input_usable, propulsive):
-    """AMI:196-201."""
+def loop_enabled(propulsive, yaw_rate_max):
+    """applyAllocatorStatus: the loop closes where the propulsion makes yaw AND
+    AS_YAWRATE_MAX is above zero (default 0 since 2026-10-13; the tilting
+    airframes set 15)."""
+    return bool(propulsive) and yaw_rate_max > 0.0
+
+
+def yaw_rate_loop_active(mode, manual_input_usable, enabled):
+    """airship_manual_input::yawRateLoopActive(control_mode, usable, loop_enabled)."""
     manual_enabled, rates_enabled = MODE_FLAGS[mode]
-    return manual_input_usable and propulsive and manual_enabled and rates_enabled
+    return manual_input_usable and enabled and manual_enabled and rates_enabled
 
 
 class LowPassFilter2p:
@@ -522,6 +543,10 @@ class AirshipYawController:
 
     def __init__(self, airframe='vectored', params=None, filter_gyro=True, gyro_bias=0.0):
         self.params = dict(DEFAULT_PARAMS)
+
+        if isinstance(airframe, str):
+            self.params.update(airframe_params(AIRFRAME_NUMBERS[airframe]))
+
         self.params.update(params or {})
         self.airframe = dict(AIRFRAMES[airframe]) if isinstance(airframe, str) else dict(airframe)
         self.rc = RateControlYaw(0.0, 0.0, 0.0)
@@ -563,6 +588,7 @@ class AirshipYawController:
         a = self.airframe
         self.propulsive_yaw = propulsive_yaw(a['CA_AIRFRAME'], a['CA_AIRSHIP_GRP'], a['CA_AIRSHIP_TAIL'],
                                              a['yaw_surfaces'], a['CA_AIRSHIP_CS_K'])
+        self.loop_enabled = loop_enabled(self.propulsive_yaw, self.yaw_rate_max)
 
     def set_param(self, name, value):
         self.params[name] = value
@@ -700,7 +726,7 @@ class AirshipYawController:
         usable = bool(armed) and bool(sticks_valid)
         torque = finite_or(stick_yaw, 0.0) if usable else 0.0
         # AAC:231-232
-        active = yaw_rate_loop_active(mode, usable, self.propulsive_yaw)
+        active = yaw_rate_loop_active(mode, usable, self.loop_enabled)
 
         if active:
             self._update_saturation(status_topic)                  # AAC:246
