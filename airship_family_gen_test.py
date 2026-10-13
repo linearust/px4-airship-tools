@@ -170,17 +170,61 @@ def main():
 
     written, _ = gen.write_upstream(vehicle, scratch, ROOT)
     problems = gen.twin_check(vehicle, scratch, ROOT)
-    again, _ = gen.write_upstream(vehicle, scratch, ROOT)
+    # the second write through the CLI: nothing to write, the twin check OK
+    import io, contextlib
+    out = io.StringIO()
+
+    with contextlib.redirect_stdout(out):
+        rc = gen.main(['vehicles/airship_generic.json', '--root', scratch, '--upstream', ROOT])
+
+    again = [] if rc == 0 and 'wrote nothing' in out.getvalue() and 'twin check OK' in out.getvalue() else ['cli: %s' % out.getvalue()[-200:]]
     plain = open(os.path.join(scratch, gen.TREE_DIRS[0], vehicle.name, 'model.sdf')).read()
     fixed = open(os.path.join(scratch, gen.TREE_DIRS[0], vehicle.family.fixed[0], 'model.sdf')).read()
     verdict('upstream 모양의 완전 플랜트 둘 (몸체 + 평범한 이름, merge include 두 단: 벡터링과 고정 쌍둥이) 은 트리의 완전 멤버와 원소 단위로 '
-            '같고 에어프레임의 기본값이 같으며, 두 번째 쓰기는 아무것도 바꾸지 않는다',
+            '같고 에어프레임의 기본값이 같으며, 두 번째 쓰기 (CLI) 는 아무것도 바꾸지 않는다',
             sorted(written) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name),
                                        vehicle.family.fixed[0], '2500_gz_%s' % vehicle.family.fixed[0]])
+            and vehicle.decade == gen.GENERIC_DECADE and gen.MASK['am_fin_drag'] == 7
             and not problems and not again and plain.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in plain
             and fixed.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in fixed
             and '--' not in plain.split('<!--', 1)[1].split('-->', 1)[0],
-            '; '.join(problems) if problems else 'wrote %s' % ', '.join(written))
+            '; '.join(problems + again) if problems or again else 'wrote %s' % ', '.join(written))
+    # the guard: an untrimmed copy of the tree is refused and left as it was; the modes exclude each other
+    untrimmed = tempfile.mkdtemp(prefix='airship_untrimmed_')
+
+    for rel in gen.TREE_DIRS:
+        shutil.copytree(os.path.join(ROOT, rel), os.path.join(untrimmed, rel))
+
+    for rel in gen.TREE_FILES:
+        os.makedirs(os.path.dirname(os.path.join(untrimmed, rel)), exist_ok=True)
+        shutil.copy(os.path.join(ROOT, rel), os.path.join(untrimmed, rel))
+
+    before = snapshot(os.path.join(untrimmed, gen.TREE_DIRS[0]))
+    refused = ''
+
+    try:
+        gen.write_upstream(vehicle, untrimmed, ROOT)
+    except SystemExit as why:
+        refused = str(why)
+
+    try:
+        gen.write_upstream(vehicle, ROOT, ROOT)
+        same_root = ''
+    except SystemExit as why:
+        same_root = str(why)
+
+    try:
+        with contextlib.redirect_stderr(io.StringIO()):
+            gen.main(['vehicles/airship_generic.json', '--check', '--overlay'])
+        exclusive = False
+    except SystemExit as why:
+        exclusive = why.code == 2
+
+    verdict('--upstream 은 트림되지 않은 트리 (가족 멤버가 남은) 와 MEMBERS_ROOT 와 같은 트리를 거부하고 아무것도 쓰지 않으며, '
+            '--check/--overlay/--upstream 은 서로 배타적이다',
+            'airship_base_am' in refused and 'same tree' in same_root and before == snapshot(os.path.join(untrimmed, gen.TREE_DIRS[0]))
+            and exclusive, (refused + ' | ' + same_root)[:200])
+    shutil.rmtree(untrimmed)
     # the overlay: each family under the rigid naming, a hundred above its
     # decade, self-contained, an exact twin of the tree's family (and so of
     # the plain plant upstream carries), generated twice without a change
@@ -228,6 +272,34 @@ def main():
     after = {f: open(os.path.join(overlay, 'airframes', f)).read() for f in os.listdir(os.path.join(overlay, 'airframes'))}
     verdict('airship_gains 가 오버레이의 멤버 (bare 는 _rigid 이름) 를 찾아 블록을 다시 쓰고, 아무것도 바뀌지 않는다',
             rc == 0 and before == after, ', '.join(f for f in before if before[f] != after.get(f)) or 'same')
+    # the overlay as MEMBERS_ROOT: the plain plant written from it is the one written from the tree, byte for byte
+    scratch2 = tempfile.mkdtemp(prefix='airship_upstream2_')
+
+    for rel in gen.TREE_DIRS:
+        shutil.copytree(os.path.join(scratch, rel), os.path.join(scratch2, rel))
+
+    for rel in gen.TREE_FILES:
+        os.makedirs(os.path.dirname(os.path.join(scratch2, rel)), exist_ok=True)
+        shutil.copy(os.path.join(scratch, rel), os.path.join(scratch2, rel))
+
+    for name in (vehicle.family.base, vehicle.name, vehicle.family.fixed[0]):
+        shutil.rmtree(os.path.join(scratch2, gen.TREE_DIRS[0], name))
+
+    os.remove(os.path.join(scratch2, gen.TREE_DIRS[1], '%d_gz_%s' % (vehicle.decade, vehicle.name)))
+    os.remove(os.path.join(scratch2, gen.TREE_DIRS[1], '2500_gz_%s' % vehicle.family.fixed[0]))
+    from_overlay, _ = gen.write_upstream(vehicle, scratch2, overlay)
+    problems2 = gen.twin_check(vehicle, scratch2, overlay)
+    # the same elements (the overlay's copies carry renamed comments, so not the same bytes)
+    import xml.etree.ElementTree as ET
+    same = all(gen.canonical(ET.parse(os.path.join(scratch, gen.TREE_DIRS[0], n, 'model.sdf')).getroot())
+               == gen.canonical(ET.parse(os.path.join(scratch2, gen.TREE_DIRS[0], n, 'model.sdf')).getroot())
+               for n in (vehicle.family.base, vehicle.name))
+    verdict('오버레이를 MEMBERS_ROOT 로 한 --upstream 은 트리에서 만든 것과 원소 단위로 같은 몸체와 완전 플랜트를 쓰고 (고정 쌍둥이는 '
+            '오버레이에 에어프레임이 없어 건너뜀) 쌍둥이 검사를 통과한다',
+            sorted(from_overlay) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name)])
+            and not problems2 and same, '; '.join(problems2) if problems2 else 'wrote %s' % ', '.join(from_overlay))
+    shutil.rmtree(scratch2)
+
     decades = open(os.path.join(overlay, 'airframes', 'decades')).read().split()
     world = open(os.path.join(overlay, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
     docs = open(os.path.join(overlay, 'vehicles.md')).read()
@@ -235,10 +307,37 @@ def main():
             'merged 모델·에어프레임 기본값이 같으며, 두 번째 생성은 아무것도 바꾸지 않는다',
             not bad and decades == ['2620', 'airship_vectored_independent_rigid', '2630', 'airship_indoor_rigid']
             and '<world name="%s">' % gen.OVERLAY_WORLD_NAME in world and 'airship_indoor_rigid_3::base_link' in world
-            and '`gz_airship_indoor_am_fin_drag` | 2637 |' in docs and docs.count('### ') == 12,
+            and '`gz_airship_indoor_am_fin_drag` | 2637 |' in docs and docs.count('### ') == 12
+            and 'make px4_sitl' not in docs and '../frames_airship' not in docs,
             '; '.join(bad) if bad else 'decades %s' % ' '.join(decades))
     shutil.rmtree(overlay)
     shutil.rmtree(scratch)
+
+    # variant_check on a populated overlay: a vehicle the tree does not carry
+    # (so the two homes do not collide), its file placed where the checks read
+    # vehicle files, generated into its own overlay; every fact passes
+    with open('vehicles/airship_indoor.json') as handle:
+        spec = json.load(handle)
+
+    spec.update(name='airship_scratch', title='Scratch Airship', decade=2570)
+    overlay2 = tempfile.mkdtemp(prefix='airship_overlay2_')
+    vehicle_file = os.path.join(gz_model.VEHICLES, 'airship_scratch.json')
+
+    try:
+        with open(vehicle_file, 'w') as handle:
+            json.dump(spec, handle)
+
+        gen.generate_overlay(gen.load_vehicle(vehicle_file), overlay=overlay2, template_root=ROOT)
+        env = dict(os.environ, PX4_ROOT=ROOT, AIRSHIP_OVERLAY=overlay2)
+        r = subprocess.run([sys.executable, os.path.join(HERE, 'variant_check.py')], capture_output=True, text=True, env=env)
+    finally:
+        os.remove(vehicle_file)
+        shutil.rmtree(overlay2)
+
+    lines = r.stdout.strip().splitlines()
+    verdict('오버레이에 가족이 하나 있을 때 variant_check 가 모든 사실을 통과한다 (멤버 46 개: 트리 40 + 오버레이 6, 몸체 둘은 사실 10 의 것)',
+            r.returncode == 0 and lines and lines[-1].endswith('실패 0') and '모델 46 개' in r.stdout,
+            (lines[-1] if lines else r.stderr[-300:]) + ' | ' + '; '.join(l.strip()[:90] for l in lines if l.strip().startswith('실패'))[:400])
 
     note('[gains]')
     import airship_gains as G
