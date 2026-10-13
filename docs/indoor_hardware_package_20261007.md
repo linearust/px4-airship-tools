@@ -31,7 +31,7 @@ Independent Vectoring) 에 이 기체의 값을 얹은 것이다. 시뮬레이�
 ## 2. 비행 카드, 실내, 바람 없음
 
 진행 순서대로. 각 카드는 로그를 남기고 (SDLOG_MODE 1), 분석은 `forward_yaw_check.py --analyze --hardware` (EKF 만 쓰는
-모드, 작성 예정) 로 한다.
+모드, 작성됨: 3절) 로 한다.
 
 | # | 카드 | 하는 일 | 보는 것 |
 |---|---|---|---|

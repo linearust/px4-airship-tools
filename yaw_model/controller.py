@@ -3,14 +3,16 @@
 yaw stick to the normalized yaw torque, plus the part of the airship allocator
 that feeds the loop's anti-windup.
 
-Source: PX4-Autopilot branch airship/dev at HEAD 4e1baea97c (2026-10-01). The
+Source: PX4-Autopilot branch airship/dev at HEAD 48b45f3e5f (2026-10-13). The
 port was written against 1965de11ab and the 2026-09-27 working tree; the
-2026-09-28 architecture pass moved the yaw path into AirshipYawRateLoop (YRL)
-and d2647379af added AS_YAWRATE_FF, which reaches RateControl through
-setGains() (YRL:58-69, called from AAC:104-105). Checked against HEAD on
-2026-10-01: the loop law, the integrator and its anti-windup gate (YRL:76-82,
-RC:88-118), the reset on opening (YRL:108-117) and the allocator (EA, POD)
-are the same arithmetic as before; FF is the one addition. The parameter
+2026-09-28 architecture pass moved the yaw path into AirshipYawRateLoop (YRL),
+d2647379af added AS_YAWRATE_FF, and since b1cb5a7e70 the loop's feedforward
+is handed in every closed cycle by setFeedForward (YRL:74, AAC:247) from the
+schedule's feedforwardGain (AAC:242): setGains carries only P, I and the
+integrator limit (YRL:59, AAC:97). The restore rule is the loop's own
+(YRL:102-123; the reversal edge from MAN_DEADZONE > 0, AAC:98). The loop law,
+the integrator and its anti-windup gate (RC), the reset on opening (YRL:144)
+and the allocator (EA, POD) are the same arithmetic as before. The parameter
 defaults are read from the yaml files at import (DEFAULT_PARAMS below), and a
 gz target's own set-defaults from its posix airframe chain (head_params()).
 
@@ -470,9 +472,10 @@ class RateControlYaw:
         self.sat_pos = positive
         self.sat_neg = negative
 
-    def set_gains(self, p, i, int_lim, ff):                      # YRL:58-69
-        """setPidGains, setIntegratorLimit and setFeedForwardGain together;
-        the integrator state is left as it is (RC has no reset there)."""
+    def set_gains(self, p, i, int_lim, ff):                      # YRL:59 (p, i, lim)
+        """setPidGains and setIntegratorLimit; the integrator state is left as
+        it is (RC has no reset there). ff: the model keeps the rest gain here,
+        the firmware sets the per-cycle gain through setFeedForward (YRL:74)."""
         self.p = p
         self.i = i
         self.int_lim = int_lim
@@ -506,11 +509,14 @@ class AirshipYawController:
     Topic. Output: the normalized yaw torque the controller publishes in
     vehicle_torque_setpoint.xyz[2].
 
-    Policy primitives for the D1 0c comparison, none in HEAD's firmware, all
-    off at construction (off, step() is bit-identical to the controller
-    without them): set_feedforward() (the per-cycle FF gain),
-    set_rate_cap() (the yaw-rate cap as the stick's full scale and as a
-    clamp on the loop's setpoint), set_restore() (options/D's restore rule).
+    Hooks for the firmware's schedule and restore rule: set_feedforward()
+    hands the schedule's speed term, set_rate_cap() the schedule's cap (as the
+    stick's full scale and as a clamp on the loop's setpoint), set_restore()
+    the restore rule. Since increments 1 (274890629f) and A (ec89e6bd84) the
+    cap, the speed term and the restore rule are the firmware's; all three
+    are OFF at construction, which models the firmware before 2026-10-07 (the
+    records under records/ and records_head/). A HEAD model calls
+    set_restore('zero_or_sign') and feeds the schedule (policies.Scheduled).
     A per-cycle caller (forward.run_leg's hook) sets them between cycles.
     """
 
@@ -522,19 +528,19 @@ class AirshipYawController:
         self.filter_gyro = filter_gyro
         self.gyro_bias = gyro_bias
         self._lpf = LowPassFilter2p(LOOP_HZ, self.params['IMU_GYRO_CUTOFF'])
-        self._last_run = 0            # AAH:140 _last_run{0}
-        self._was_active = False      # YRL:124 _closed{false}
+        self._last_run = 0            # AAH _last_run{0}
+        self._was_active = False      # YRL _closed{false}
         self._status_gen_seen = 0
         self.parameters_updated()
-        # The D1 plan's policy primitives (d1_universal_architecture_20261001.md
-        # "2) 구조" 다, and "남은 결정" 1), for the 0c comparison. All off here;
+        # The schedule's and the restore rule's hooks (d1_universal_architecture_20261001.md
+        # "2) 구조" 다). All off here, which is the firmware before 2026-10-07;
         # off, step() runs exactly the arithmetic it ran before they existed.
         self._ff_speed = 0.0          # the schedule's speed term, FF_LAW 'quadratic' (set_feedforward)
-        self.rate_cap = None          # rad/s; None: no cap (HEAD). set_rate_cap()
+        self.rate_cap = None          # rad/s; None: no cap (pre-increment-1 firmware). set_rate_cap()
         self.rate_cap_neg = None      # rad/s, the negative stick's cap where it differs; None: rate_cap both ways
-        self.cap_stick = True         # the cap is the stick's full scale (AAC:206-207's max_rate)
-        self.cap_clamp = True         # the cap clamps the setpoint handed to the loop (AAC:208)
-        self.restore = None           # None, or options/D's restore rule with its edge. set_restore()
+        self.cap_stick = True         # the cap is the stick's full scale (AAC:119-126 scheduledYawRateSetpoint's max_rate)
+        self.cap_clamp = True         # the cap clamps the setpoint handed to the loop (the constrain there)
+        self.restore = None           # None: pre-A firmware; 'zero_or_sign': HEAD (YRL:102-123, reversal iff MAN_DEADZONE > 0). set_restore()
         self._restore_sp_prev = 0.0   # the setpoint of the last closed cycle (options/D _sp_prev)
         self._restore_trim = 0.0      # the integrator saved when the setpoint left 0 (options/D _trim)
         self.restore_events = []      # (t_us, value put back), one per restore
@@ -545,12 +551,12 @@ class AirshipYawController:
         self.dt = 0.0
 
     def parameters_updated(self):
-        """AAC:101-121: setGains(P, I, INT_LIM, FF) (YRL:58-69) and the stick's
-        full scale. Does NOT touch the integrator: a changed AS_YAWRATE_I stops
-        or rescales integration but keeps what is accumulated. In the firmware
-        the update is polled at the END of Run() through a 1 s
-        SubscriptionInterval (AAC:228, AAH:125), so a param_set lands up to
-        1 s later and takes effect the cycle after."""
+        """AAC:97-98: setGains(P, I, INT_LIM) (YRL:59), setRestoreOnReversal
+        (MAN_DEADZONE > 0) and the stick's full scale. Does NOT touch the
+        integrator: a changed AS_YAWRATE_I stops or rescales integration but
+        keeps what is accumulated. In the firmware the update is polled at
+        the END of Run() through a 1 s SubscriptionInterval (AAC:268), so a
+        param_set lands up to 1 s later and takes effect the cycle after."""
         p = self.params
         self.rc.set_gains(p['AS_YAWRATE_P'], p['AS_YAWRATE_I'], p['AS_YR_INT_LIM'], p['AS_YAWRATE_FF'])
         self.yaw_rate_max = math.radians(p['AS_YAWRATE_MAX'])
@@ -619,25 +625,27 @@ class AirshipYawController:
         self.cap_clamp = bool(clamp)
 
     def set_restore(self, edge='zero_or_sign'):
-        """options/D's 'restore' rule (yaw_model/options/D/option_d.py
-        OptionD, kind 'restore'), a candidate safeguard of "남은 결정" 1: on
-        the closed cycle the setpoint leaves zero (the stick leaves the
-        deadzone) the integrator is saved; on the cycle it returns to zero, or
-        reverses sign without passing zero (edge 'zero_or_sign', MAN_DEADZONE >
-        0), the saved value is put back. 'zero' takes only the first trigger
-        (options/D's edge='zero', 'restore0'). The put-back is setIntegral: the
-        integrator is assigned, before RateControl::update of that cycle, so
-        that cycle's torque already uses it; no clamp at the assignment. The
-        saved value and the previous setpoint are cleared when the loop
-        closes, as OptionD does. None switches it off."""
+        """The firmware's restore rule since ec89e6bd84 (YRL:102-123), which
+        came from options/D (yaw_model/options/D/option_d.py OptionD, kind
+        'restore'): on the closed cycle the setpoint leaves zero (the stick
+        leaves the deadzone) the integrator is saved; on the cycle it returns
+        to zero, or reverses sign in one cycle (edge 'zero_or_sign', the
+        firmware's iff MAN_DEADZONE > 0), the saved value is put back. 'zero'
+        takes only the first trigger (options/D's edge='zero', 'restore0').
+        The put-back is setIntegral (YRL:123): the integrator is assigned
+        before RateControl::update of that cycle, so that cycle's torque
+        already uses it; the library clamps it to the limit. The saved value
+        and the previous setpoint are cleared when the loop closes. None
+        models the firmware before ec89e6bd84."""
         if edge not in (None, 'zero_or_sign', 'zero'):
             raise ValueError('restore edge %r: None, zero_or_sign or zero' % (edge,))
 
         self.restore = edge
 
     def _setpoint(self, stick_yaw):
-        """AAC:206-207 yawRateSetpoint, and with a cap set, the plan's two
-        applications of it (set_rate_cap)."""
+        """AAC:119-126 scheduledYawRateSetpoint (yawRateSetpoint with the cap
+        as the stick's full scale, then the constrain), called at AAC:240;
+        without a cap set, yawRateSetpoint alone."""
         if self.rate_cap is None:
             return yaw_rate_setpoint(stick_yaw, self.params['MAN_DEADZONE'], self.yaw_rate_max)
 
@@ -691,12 +699,12 @@ class AirshipYawController:
         # (AMI:102-105 usable, AMI:80-83 torque)
         usable = bool(armed) and bool(sticks_valid)
         torque = finite_or(stick_yaw, 0.0) if usable else 0.0
-        # AAC:201-202
+        # AAC:231-232
         active = yaw_rate_loop_active(mode, usable, self.propulsive_yaw)
 
         if active:
-            self._update_saturation(status_topic)                  # AAC:205
-            sp = self._setpoint(stick_yaw)                         # AAC:206-207 (and a cap, if set)
+            self._update_saturation(status_topic)                  # AAC:245
+            sp = self._setpoint(stick_yaw)                         # AAC:240 (and a cap, if set)
             self.rate_sp = sp
 
             if not self._was_active:                               # OptionD: cleared when the loop closes
