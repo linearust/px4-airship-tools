@@ -146,6 +146,40 @@ def main():
     last = (r.stdout.strip().splitlines() or [''])[-1]
     verdict('조종면 가족의 트리에서 variant_check 가 모두 통과한다', r.returncode == 0 and '실패 0' in last, last[:200])
 
+    note('[upstream]')
+    # the plain plant upstream carries, written into a scratch tree trimmed of
+    # the generic family, is the tree's complete member element for element
+    scratch = tempfile.mkdtemp(prefix='airship_upstream_')
+
+    for rel in gen.TREE_DIRS:
+        shutil.copytree(os.path.join(ROOT, rel), os.path.join(scratch, rel))
+
+    for rel in gen.TREE_FILES:
+        os.makedirs(os.path.dirname(os.path.join(scratch, rel)), exist_ok=True)
+        shutil.copy(os.path.join(ROOT, rel), os.path.join(scratch, rel))
+
+    vehicle = gen.load_vehicle('vehicles/airship_generic.json')
+
+    for m in vehicle.family.members:
+        if os.path.isdir(os.path.join(scratch, gen.TREE_DIRS[0], m)):
+            shutil.rmtree(os.path.join(scratch, gen.TREE_DIRS[0], m))
+
+    for f in os.listdir(os.path.join(scratch, gen.TREE_DIRS[1])):
+        if f[:4].isdigit() and vehicle.decade <= int(f[:4]) <= vehicle.decade + 7:
+            os.remove(os.path.join(scratch, gen.TREE_DIRS[1], f))
+
+    written, _ = gen.write_upstream(vehicle, scratch, ROOT)
+    problems = gen.twin_check(vehicle, scratch, ROOT)
+    again, _ = gen.write_upstream(vehicle, scratch, ROOT)
+    plain = open(os.path.join(scratch, gen.TREE_DIRS[0], vehicle.name, 'model.sdf')).read()
+    verdict('upstream 모양의 완전 플랜트 (몸체 + 평범한 이름, merge include 두 단) 는 트리의 _am_fin_drag 와 원소 단위로 같고 '
+            '에어프레임의 기본값이 같으며, 두 번째 쓰기는 아무것도 바꾸지 않는다',
+            sorted(written) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name)])
+            and not problems and not again and plain.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in plain
+            and '--' not in plain.split('<!--', 1)[1].split('-->', 1)[0],
+            '; '.join(problems) if problems else 'wrote %s' % ', '.join(written))
+    shutil.rmtree(scratch)
+
     note('[gains]')
     import airship_gains as G
     ref = G.REF_PLANT
