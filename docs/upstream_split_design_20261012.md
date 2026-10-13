@@ -129,7 +129,7 @@ airframe_for_model), variant_check (목록·경로 16곳; decades() 와 사실 7
 `gz_link`: 렌치·해제를 `gz.transport13` 의 살아 있는 노드에서 발행 (구독자 연결 뒤; 월드 없으면 10 s 뒤 False). `gz topic -p` 의 유실이 오늘 밤 2520 rigid 게이트의 "I 켬" 사례를
 적분기 2× (0.0370 vs 0.0185, 각속도 0.05 deg/s) 로 만들었다 — 루프는 렌치 둘을 잡고 있었다. 게이트를 다시 돌려 확인한다.
 
-**(2) 끝남 (2026-10-13 12:20, 도구 main).** `variant_check.decades()` 가 트리 CMake 주석 (25x0) 과 오버레이 `overlay/airframes/decades`
+**(2) 끝남 (2026-10-13 11:50, 도구 main).** `variant_check.decades()` 가 트리 CMake 주석 (25x0) 과 오버레이 `overlay/airframes/decades`
 (26x0, 있을 때) 를 합친다 (같은 기체가 둘에 있으면 SystemExit); 사실 7 은 멤버의 집에 따라 트리 (lta.sdf · CMake · docs 표) 나 오버레이
 (`overlay/worlds/lta_lab.sdf` · decades 파일 · `overlay/vehicles.md`) 를 본다; 사실 12 (make 타깃) 는 트리 멤버만; 사실 13 의 정규식은
 `2[56]\d\d`. gz_model 에 `OVERLAY_DECADES/OVERLAY_WORLD/OVERLAY_DOCS` 와 `in_overlay(path)`. 오버레이가 비어 있어 동작 동일 (16/16, 생성기
