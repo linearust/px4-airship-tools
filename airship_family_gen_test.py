@@ -165,17 +165,20 @@ def main():
             shutil.rmtree(os.path.join(scratch, gen.TREE_DIRS[0], m))
 
     for f in os.listdir(os.path.join(scratch, gen.TREE_DIRS[1])):
-        if f[:4].isdigit() and vehicle.decade <= int(f[:4]) <= vehicle.decade + 7:
+        if f[:4].isdigit() and 2500 <= int(f[:4]) <= vehicle.decade + 7:      # the fixed twin's 2500-2505 too
             os.remove(os.path.join(scratch, gen.TREE_DIRS[1], f))
 
     written, _ = gen.write_upstream(vehicle, scratch, ROOT)
     problems = gen.twin_check(vehicle, scratch, ROOT)
     again, _ = gen.write_upstream(vehicle, scratch, ROOT)
     plain = open(os.path.join(scratch, gen.TREE_DIRS[0], vehicle.name, 'model.sdf')).read()
-    verdict('upstream 모양의 완전 플랜트 (몸체 + 평범한 이름, merge include 두 단) 는 트리의 _am_fin_drag 와 원소 단위로 같고 '
-            '에어프레임의 기본값이 같으며, 두 번째 쓰기는 아무것도 바꾸지 않는다',
-            sorted(written) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name)])
+    fixed = open(os.path.join(scratch, gen.TREE_DIRS[0], vehicle.family.fixed[0], 'model.sdf')).read()
+    verdict('upstream 모양의 완전 플랜트 둘 (몸체 + 평범한 이름, merge include 두 단: 벡터링과 고정 쌍둥이) 은 트리의 완전 멤버와 원소 단위로 '
+            '같고 에어프레임의 기본값이 같으며, 두 번째 쓰기는 아무것도 바꾸지 않는다',
+            sorted(written) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name),
+                                       vehicle.family.fixed[0], '2500_gz_%s' % vehicle.family.fixed[0]])
             and not problems and not again and plain.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in plain
+            and fixed.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in fixed
             and '--' not in plain.split('<!--', 1)[1].split('-->', 1)[0],
             '; '.join(problems) if problems else 'wrote %s' % ', '.join(written))
     # the overlay: each family under the rigid naming, a hundred above its
