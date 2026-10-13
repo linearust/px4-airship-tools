@@ -61,3 +61,50 @@ upstream 에 가는 수: 파라미터 **8 개** (17 → 8), 메시지 **0 개** 
 - gz 모델 이름 `airship_vectored_independent` 를 upstream 에서 그대로 둘지 (`airship_tiltpod` 같은 짧은 이름이 upstream 모양에 가깝다).
 - 2 m 실내 모델 자체를 upstream 에 낼지 (M2): 비행과 시뮬이 같은 기체라는 가장 센 증거가 되지만, 기체 치수가 공개된다. 기본은 7 m generic 만.
 - 일체 틸트 Y 선 시험을 할지: PR 에는 쓰이지 않으므로 우리 지식용.
+
+## 6. 최종 제안 (15:00; 사용자 조건: 레포마다 PR 하나, PR 하나에 큰 주제 하나, 실내 시험 뒤 제출)
+
+**PX4-Autopilot PR 하나 — 틸트 포드 비행선 배분기 (`CA_AIRFRAME 16`, Airship: tilt pods).**
+**PX4-gazebo-models PR 하나 — 그 기체의 gz 쌍둥이와 lta 월드.** (PX4 PR 의 posix 2520·문서·포인터가 이것을 가리킨다.)
+
+요 각속도 루프는 **다음 라운드** 의 PX4 PR 이다. 이유:
+
+- 배분기는 기계적이고 핀에서 검증된다 (지문 = 쌍둥이 = 벤치). 리뷰어는 effectiveness 클래스를 추가하는 PR 을 많이 봐 왔다 (헬리콥터·로버).
+  루프는 제어 법칙 (FF 모양, 복원 규칙, 데드존 에지) 의 토론을 부르고 가장 긴 비행 증거가 필요하다. 둘을 한 PR 에 섞으면 두 영역의 리뷰어가
+  한 PR 을 봐야 하고, 루프의 논쟁이 배분기까지 붙든다.
+- 배분기만으로 기체는 완전히 난다: Manual/Stabilized 패스스루에서 틸트로 추력을 벡터링하고 요는 차동 추력 (요 스틱 = 토크). Cloudship 이
+  지금 나는 방식과 같다. 루프는 그 위의 개선이다.
+- 배분기가 먼저 있어야 루프 PR 이 설명된다 ("이 배분기에서만 루프를 닫는다").
+
+### PX4 PR 의 내용
+
+| 들어가는 것 | 비고 |
+|---|---|
+| `ActuatorEffectivenessAirship` (독립 포드 둘로 좁힘) + `AirshipPod` + 두 시험 | 그룹·꼬리·조종면 크레딧·상태 메시지·요 권한 계산 (`AirshipYawAllocation.hpp`) 은 뺀다 |
+| `CA_AIRFRAME` 16 "Airship (tilt pods)", 파라미터 `CA_AIRSHIP_TLMIN/TLMAX/TLT_R` | 파라미터 셋 |
+| 비행 에어프레임 2520 (`COM_DISARM_LAND -1` 은 **이 에어프레임 안에**: 2500/2507 에 영향 없음) | `rc.airship_defaults` 는 손대지 않는다 |
+| posix `2520_gz_airship_vectored_independent`, CMake, 문서 (frames_airship 의 틸트 포드 절, 시뮬 항목), 서브모듈 포인터 | 모델 PR 머지 뒤 |
+| `airship_att_control` 변경 없음, 메시지 없음, `rate_control` 변경 없음 | |
+
+리뷰어 질문 둘에 답을 준비한다: "왜 Custom (9) 으로 안 되나" — Custom 은 틸트 서보를 토크·추력면으로밖에 못 쓰고 추력을 틸트각으로 투영하지
+못한다 (Cloudship 의 틸트는 오늘 수동 패스스루); 비가역 프롭의 조향 밴드·슬루·멈춤쇠도 없다. "왜 틸트로터 VTOL (3) 이 아닌가" — 그것은
+고정익·멀티콥터 혼합과 대기속도를 가정하고 ±180° 조향이 없다.
+
+### 모델 PR 의 내용
+
+`airship_base` (부가질량 몸체), `airship_vectored_independent` (7 m generic 완전 플랜트, 두 단 merge include), `lta.sdf` (부력 enable 목록, 시스템
+목록, Magnetometer 플래그). 생성기 `--upstream` 의 출력, 쌍둥이 검사 통과.
+
+### 실내 시험이 줘야 하는 증거
+
+벤치: 핀 지문 (= SITL 쌍둥이 = airship/dev), 틸트 멈춤쇠와 TLT_R, 추력 곡선 (THR_MDL_FAC). 비행 (PR 브랜치 펌웨어로): Manual/Stabilized 호버,
+틸트 벡터링 전후·상하 이동, 차동 추력 요 (조향 밴드에서 떨림 없음, actuator_servos/motors 대 토크·추력 설정값), Land 모드에서 무장 유지.
+2 m 쌍둥이 (오버레이) 로 같은 카드의 시뮬-비행 비교. 로그는 Flight Review 에.
+
+### 지금 할 일
+
+1. upstream main 에서 PR 브랜치 (PX4 `pr/airship-tiltpod`, 모델 `pr/airship-sitl`) 를 뜨고 배분기를 좁혀 옮긴다 (2 일).
+2. 좁힌 배분기 = 넓은 배분기의 독립 포드 경로: identity 하니스 12 세트 동일, fmu-v6x 2520 지문 0.0 us, SITL 호버 게이트 (루프 없는 패스스루
+   항목만) 통과.
+3. PR 브랜치 펌웨어를 스테이징한다. 실내 시험은 이것으로 난다 (요 루프 시험은 airship/dev 펌웨어로 따로; 그 증거는 다음 라운드).
+4. 하드웨어 패키지 카드에 "PR 주장 ↔ 카드" 를 적고, PR 본문 초안을 이 둘로 다시 쓴다.
