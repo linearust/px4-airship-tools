@@ -99,15 +99,16 @@ MASK = {'drag': 1, 'fin': 2, 'am': 4}
 
 def decades():
     """{vehicle: decade} from the two places the table is written: the comment
-    above the 25xx entries of the tree's posix CMakeLists ('#   2510 cloudship')
-    and the overlay's decade file (gz_model.OVERLAY_DECADES, '2630 airship_indoor'),
+    above the 25xx entries of the tree's posix CMakeLists ('#   2510 cloudship',
+    the vehicle) and the overlay's decade file (gz_model.OVERLAY_DECADES,
+    '2630 airship_indoor_rigid', the bare model, keyed here by its vehicle),
     when it exists. A vehicle marked reserved may have no model yet; a vehicle
     in both tables is an error, as a name in both homes is."""
     table, reserved = {}, set()
-    sources = [(CMAKE_POSIX, r'\s*#\s+(25\d0)\s+([a-z0-9_]+)(.*)')]
+    sources = [(CMAKE_POSIX, r'\s*#\s+(%d\d0)\s+([a-z0-9_]+)(.*)' % TREE_HUNDREDS)]
 
     if os.path.isfile(gz_model.OVERLAY_DECADES):
-        sources.append((gz_model.OVERLAY_DECADES, r'\s*(26\d0)\s+([a-z0-9_]+)(.*)'))
+        sources.append((gz_model.OVERLAY_DECADES, r'\s*(%d\d0)\s+([a-z0-9_]+)(.*)' % OVERLAY_HUNDREDS))
 
     for path, pattern in sources:
         for line in open(path):
@@ -116,17 +117,22 @@ def decades():
             if not m:
                 continue
 
-            if m.group(2) in table:
-                raise SystemExit('%s 가 십의 자리 표 둘에 다 있다 (%d 와 %s)' % (m.group(2), table[m.group(2)], m.group(1)))
+            vehicle = gz_model.vehicle(m.group(2))
 
-            table[m.group(2)] = int(m.group(1))
+            if vehicle in table:
+                raise SystemExit('%s 가 십의 자리 표 둘에 다 있다 (%d 와 %s)' % (vehicle, table[vehicle], m.group(1)))
+
+            table[vehicle] = int(m.group(1))
 
             if 'reserved' in m.group(3):
-                reserved.add(m.group(2))
+                reserved.add(vehicle)
 
     return table, reserved
 
 
+# the hundreds of the two homes' numbers: the tree's 25xx, the overlay's 26xx
+TREE_HUNDREDS = 25
+OVERLAY_HUNDREDS = TREE_HUNDREDS + gz_model.OVERLAY_SHIFT // 100
 DECADE, RESERVED = decades()
 # the flight airframe each gz vehicle without a vehicle file is the twin of
 TWINS = {'airship_fixed': 2500, 'cloudship': 2507}
@@ -157,8 +163,7 @@ def allocation_matches(mine, theirs, own):
 def vehicle_file_twins():
     """Every vectored vehicle file's family flies the independent-vectoring
     preset 2520 in its bare member (a surfaces family declares its flaps in
-    the fin members only); the indoor airship flies that hardware preset with
-    its own values (vehicles/airship_indoor.json)."""
+    the fin members only), each with its own tilt values (VEHICLE_ALLOCATION)."""
     return {name: 2520 for name in VEHICLE_FILES}
 
 
@@ -169,19 +174,20 @@ LTA = os.path.join(WORLDS, 'lta.sdf')
 
 
 def split(name):
-    """(vehicle, [tokens]) or None when the tokens are not the scheme's."""
-    for vehicle in DECADE:
-        if name == vehicle or name.startswith(vehicle + '_'):
-            rest = name[len(vehicle):].strip('_')
-            tokens = rest.split('_') if rest else []
-            order = [t for t in TOKENS if t in tokens]
+    """(vehicle, [physics tokens]) or None when the name is not the scheme's:
+    the vehicle must be in the decade table, the tokens in the scheme's order
+    (gz_model.family_tokens), and the overlay's _rigid bare carries none."""
+    try:
+        tokens = gz_model.family_tokens(name)
+    except LookupError:
+        return None
 
-            if tokens == order:
-                return vehicle, tokens
+    vehicle = gz_model.vehicle(name)
 
-            return None
+    if vehicle not in DECADE:
+        return None
 
-    return None
+    return vehicle, [t for t in tokens if t != gz_model.RIGID]
 
 
 def airframe_number(name):
@@ -192,14 +198,25 @@ def airframe_number(name):
 
 
 def posix_airframes(vehicle):
-    """The posix gz airframe files of a vehicle's bare model."""
-    return [f for f, _ in gz_model.airframe_files() if re.match(r'\d+_gz_%s$' % re.escape(vehicle), f)]
+    """The posix gz airframe files of a vehicle's bare model (its _rigid
+    model in the overlay): one, or none."""
+    try:
+        return [os.path.basename(gz_model.airframe(gz_model.bare(vehicle))[1])]
+    except LookupError:
+        return []
 
 
 def body_of(vehicle):
-    """The <body>_base the vehicle's bare model merges, or None when the
-    bare model is its own body (cloudship)."""
-    parent = gz_model.parent(vehicle)
+    """The <body>_base the vehicle's bare model merges (the overlay's bare
+    merges <body>_base_rigid; the name without the token is returned, as the
+    _am members merge <body>_base_am either way), or None when the bare model
+    is its own body (cloudship)."""
+    parent = gz_model.parent(gz_model.bare(vehicle))
+    rigid = '_base_' + gz_model.RIGID
+
+    if parent and parent.endswith(rigid):
+        return parent[:-len(rigid)] + '_base'
+
     return parent if parent and parent.endswith('_base') else None
 
 
@@ -211,12 +228,18 @@ def actuator_fins(model):
 
 
 def has_actuator_fins(vehicle):
-    return bool(actuator_fins(gz_model.merged(vehicle)))
+    return bool(actuator_fins(gz_model.merged(gz_model.bare(vehicle))))
 
 
 def models():
     """Every airship model directory, by the scheme's vehicles."""
     return [d for d in gz_model.model_names() if split(d)]
+
+
+def is_body(name):
+    """A plugin-free body or its added-mass copy: <body>_base, <body>_base_am,
+    and the overlay's <body>_base_rigid."""
+    return name.endswith(('_base', '_base_am', '_base_' + gz_model.RIGID))
 
 
 def off_scheme():
@@ -226,7 +249,7 @@ def off_scheme():
     found = []
 
     for d in gz_model.model_names():
-        if d.endswith('_base') or d.endswith('_base_am'):
+        if is_body(d):
             continue                                   # a body, judged by fact 10
 
         if any(d.startswith(v + '_') for v in DECADE) and not split(d):
@@ -344,9 +367,12 @@ def main():
         body = body_of(vehicle)
 
         if not tokens:
-            want = body                      # the bare model: its own body, or the family's _base
+            # the bare model: its own body, or the family's _base (_base_rigid under the overlay's rigid bare)
+            want = body + '_' + gz_model.RIGID if body and name.endswith('_' + gz_model.RIGID) else body
         elif tokens == ['am']:
             want = body + '_am' if body else None   # a copy of a self-contained body, or a wrapper of <body>_base_am
+        elif len(tokens) == 1:
+            want = gz_model.bare(vehicle)           # _fin or _drag wraps the bare model (_rigid in the overlay)
         else:
             want = '_'.join([vehicle] + tokens[:-1])
 
@@ -364,7 +390,8 @@ def main():
 
     for v in vehicles:
         body = body_of(v)
-        copies.append((body, body + '_am') if body else (v, v + '_am'))
+        # the body the bare merges (its _rigid form in the overlay) against its _am copy
+        copies.append((gz_model.parent(gz_model.bare(v)), body + '_am') if body else (v, v + '_am'))
 
     copies = sorted(set(c for c in copies if gz_model.has_model(c[1])))
     bad, carriers = [], {}
@@ -399,7 +426,7 @@ def main():
 
     for v in vehicles:
         if body_of(v) and gz_model.has_model(v + '_am'):
-            if propulsion(v, v) != propulsion(v + '_am', v):
+            if propulsion(gz_model.bare(v), v) != propulsion(v + '_am', v):
                 bad.append('%s_am 의 추진 블록이 %s 의 것과 다르다' % (v, v))
 
     verdict('_am 은 몸통에 base_link 의 fluid_added_mass 만 더한 사본이고, 감싸는 _am 은 추진 블록을 그대로 되풀이한다',
@@ -429,14 +456,14 @@ def main():
 
     for v in vehicles:
         if has_actuator_fins(v):
-            bearers = [v] + ([v + '_am'] if gz_model.has_model(v + '_am') else [])
+            bearers = [gz_model.bare(v)] + ([v + '_am'] if gz_model.has_model(v + '_am') else [])
         else:
             bearers = [n for n in names if split(n)[0] == v and split(n)[1][-1:] == ['fin']]   # the block lives where the token is last
 
         if not bearers:
             continue
 
-        fins = fin_expectations(gz_model.merged(v))
+        fins = fin_expectations(gz_model.merged(gz_model.bare(v)))
         blocks = {}
 
         for name in bearers:
@@ -601,13 +628,16 @@ def main():
             wrong.append('%s 의 PX4_SIM_MODEL 기본값이 %s 가 아니다' % (airframe, name))
 
         if overlay:
-            if not re.search(r'^\s*%d\s+%s\b' % (number // 10 * 10, re.escape(split(name)[0])), decade_lines, re.M):
+            if not re.search(r'^\s*%d\s+%s\b' % (number // 10 * 10, re.escape(gz_model.bare(split(name)[0]))), decade_lines, re.M):
                 wrong.append('%s 의 십의 자리가 오버레이 decades 파일에 없다' % airframe)
 
         elif '\t%s\n' % airframe not in cmake:
             wrong.append('%s 가 CMakeLists 에 없다' % airframe)
 
-        if not re.search(r'`make px4_sitl gz_%s`\s*\|\s*%d\s*\|' % (re.escape(name), number), docs_overlay if overlay else docs):
+        # the docs table names the target with that number; the overlay's vehicle list names the model (no make target)
+        row = (r'`gz_%s`\s*\|\s*%d\s*\|' if overlay else r'`make px4_sitl gz_%s`\s*\|\s*%d\s*\|') % (re.escape(name), number)
+
+        if not re.search(row, docs_overlay if overlay else docs):
             wrong.append('%s 표에 gz_%s = %d 가 없다' % ('오버레이 vehicles.md' if overlay else 'docs', name, number))
 
     others = sorted(f for f, _ in gz_model.airframe_files() if '_gz_' in f and split(f.split('_gz_', 1)[1]) and
@@ -684,7 +714,7 @@ def main():
 
     # a body serves the vehicles its prefix names: airship_base the airship_*
     # vehicles, <vehicle>_base (a generated family) that vehicle itself
-    bases = [d for d in all_dirs if (d.endswith('_base') or d.endswith('_base_am'))
+    bases = [d for d in all_dirs if is_body(d)
              and any(v == d.split('_base')[0] or v.startswith(d.split('_base')[0] + '_') for v in DECADE)]
     bad = []
 
@@ -716,10 +746,12 @@ def main():
 
         m = re.search(r'^# @name (.+)$', open(path).read(), re.M)
         at = m.group(1).strip() if m else None
+        overlay = gz_model.in_overlay(path)
 
-        if at is None or ('### ' + at) not in vehicles_md:
-            bad.append('%s 의 @name %r 이 vehicles.md 제목에 없다' % (os.path.basename(path), at))
-        elif not re.search(r'vehicles\.md#%s\)[^\n]*`make px4_sitl gz_%s`' % (re.escape(slug(at)), re.escape(name)), docs):
+        # an overlay member's heading is in the overlay's vehicle list, which has no index.md row
+        if at is None or ('### ' + at) not in (docs_overlay if overlay else vehicles_md):
+            bad.append('%s 의 @name %r 이 %s 제목에 없다' % (os.path.basename(path), at, '오버레이 vehicles.md' if overlay else 'vehicles.md'))
+        elif not overlay and not re.search(r'vehicles\.md#%s\)[^\n]*`make px4_sitl gz_%s`' % (re.escape(slug(at)), re.escape(name)), docs):
             bad.append('index.md 의 gz_%s 행이 #%s 를 가리키지 않는다' % (name, slug(at)))
 
     for doc in ('docs/en/sim_gazebo_gz/index.md', 'docs/en/frames_airship/index.md'):
@@ -757,7 +789,7 @@ def main():
         nums = {}
 
         for f in files:
-            m = re.match(r'(2[56]\d\d)_', f)
+            m = re.match(r'(%d\d\d|%d\d\d)_' % (TREE_HUNDREDS, OVERLAY_HUNDREDS), f)
 
             if m:
                 nums.setdefault(int(m.group(1)), []).append(f)
@@ -782,7 +814,7 @@ def main():
                 elif not classic and n % 10 not in (0, 1, 2, 3, 4, 5, 6, 7):
                     bad.append('posix %d 의 일의 자리가 마스크 범위 밖이다' % n)
 
-    verdict('25xx 번호가 디렉터리 안에서 유일하고 전부 표 안에 있다', not bad,
+    verdict('번호 (트리 25xx, 오버레이 26xx) 가 디렉터리 안에서 유일하고 전부 표 안에 있다', not bad,
             '; '.join(bad) if bad else '표: %s' % ', '.join('%d=%s%s' % (v, k, ' (예약)' if k in RESERVED else '') for k, v in sorted(DECADE.items(), key=lambda kv: kv[1])))
     # 14. the requirement: fins over Munk, from the files, for every finned
     #     vehicle of a body the design declares stable. Judged at zero
@@ -843,7 +875,7 @@ def main():
         params = {k: float(x) for k, x in re.findall(r'^param set-default (SIM_GZ_SV_\w+) (-?[\d.]+)', text, re.M)}
         compared = 0
 
-        for model in [v] + ([v + '_am'] if gz_model.has_model(v + '_am') else []):
+        for model in [gz_model.bare(v)] + ([v + '_am'] if gz_model.has_model(v + '_am') else []):
             merged = gz_model.merged(model)
             pairs = gz_model.servo_joints(merged)
             # every control joint a fin names, each driven by one servo topic

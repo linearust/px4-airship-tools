@@ -47,6 +47,7 @@ VEHICLES = os.path.join(HERE, 'vehicles')     # the vehicle files the generator 
 OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
 OVERLAY_WORLD = os.path.join(OVERLAY, 'worlds', 'lta_lab.sdf')
 OVERLAY_DOCS = os.path.join(OVERLAY, 'vehicles.md')
+OVERLAY_SHIFT = 100         # an overlay family's decade is its vehicle's tree decade plus this: 25x0 -> 26x0
 
 
 def in_overlay(path):
@@ -164,14 +165,17 @@ def sourced_path(rel):
 _SOURCE = re.compile(r'^\s*\.\s+\$\{R\}etc/(\S+)\s*$')
 _SET_DEFAULT = re.compile(r'^\s*param set-default (\w+) (\S+)')
 _SIM_MODEL = re.compile(r'^\s*PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=(\S+)\}')
+_OUTPUT = re.compile(r'^\s*#\s*@output\s+(Motor|Servo)(\d+)\s+(.+?)\s*$')
 
 
-def airframe_settings(path, _depth=0):
+def airframe_settings(path, follow=True, _depth=0):
     """(kind, name, value, file, line) of a posix airframe in shell order
-    through every file it sources: kind 'default' for a `param set-default`
-    (value as written), 'model' for the PX4_SIM_MODEL default. The one walker
-    of the chain: a later line of a name wins as it does in the shell, and a
-    sourced file that cannot be read is an error, never a silent absence."""
+    through every file it sources (follow=False: this file's own lines only):
+    kind 'default' for a `param set-default` (value as written), 'model' for
+    the PX4_SIM_MODEL default, 'output' for a `# @output` line (name 'motor1',
+    'servo2', ...; value its label). The one walker of the chain: a later line
+    of a name wins as it does in the shell, and a sourced file that cannot be
+    read is an error, never a silent absence."""
     if _depth > 8:
         raise RecursionError('%s: 에어프레임 포함이 8 단보다 깊다' % path)
 
@@ -180,7 +184,9 @@ def airframe_settings(path, _depth=0):
             m = _SOURCE.match(line)
 
             if m:
-                yield from airframe_settings(sourced_path(m.group(1)), _depth + 1)
+                if follow:
+                    yield from airframe_settings(sourced_path(m.group(1)), True, _depth + 1)
+
                 continue
 
             m = _SET_DEFAULT.match(line)
@@ -193,6 +199,12 @@ def airframe_settings(path, _depth=0):
 
             if m:
                 yield 'model', 'PX4_SIM_MODEL', m.group(1), path, number
+                continue
+
+            m = _OUTPUT.match(line)
+
+            if m:
+                yield 'output', '%s%s' % (m.group(1).lower(), m.group(2)), m.group(3), path, number
 
 
 def vehicle_files():
@@ -388,15 +400,9 @@ def vehicle(name):
     include chain: airship_vectored_independent wraps airship_base, which
     is a body and not a vehicle, and a table keyed by vehicle wants the
     former."""
-    tokens = name.split('_')
-
-    while len(tokens) > 1 and tokens[-1] in SCHEME_TOKENS:
-        tokens.pop()
-
-    if len(tokens) > 1 and tokens[-1] == RIGID:
-        tokens.pop()
-
-    return '_'.join(tokens)
+    parts = name.split('_')
+    kept = family_tokens(name)
+    return '_'.join(parts[:len(parts) - len(kept)])
 
 
 def bare(vehicle):
@@ -501,8 +507,9 @@ def hang_angle(name):
     nose down: the pendulum of its weight under its buoyancy trims where the
     centre of mass is below the centre of volume, so a centre of mass ahead
     of it hangs the nose down by atan((x_com - x_cov) / (z_cov - z_com)).
-    The Cloudship's 2.6 deg (cloudship_sitl.md) is this; with the throttle
-    off such a hull glides down its own axis at u tan(hang)."""
+    The Cloudship's gz files give 2.52 deg here; the engine settled at 2.61
+    (cloudship_sitl.md). With the throttle off such a hull glides down its own
+    axis at u tan(hang)."""
     fam = family(name)
     _, com = centre_of_mass(fam)
     _, cov = centre_of_volume(fam)
@@ -804,9 +811,8 @@ def added_mass_terms(name, terms):
     a hull without that added mass, and the Munk moment, yy - xx, is what
     makes the complete Cloudship directionally unstable."""
     block = added_mass(merged(name))
-    tokens = name.split('_')[len(vehicle(name).split('_')):]
 
-    if not block and 'am' not in tokens:
+    if not block and 'am' not in family_tokens(name):
         return {term: 0.0 for term in terms}
 
     missing = [term for term in terms if term not in block]
@@ -900,19 +906,20 @@ def lateral_derivatives(name):
 
 def airframe(name):
     """(number, path) of the posix gz airframe whose PX4_SIM_MODEL default is
-    this model. Exactly one, by the scheme's file name, or an error."""
+    this model. Exactly one, by the scheme's file name, or an error; the
+    model it spawns is the file's own first PX4_SIM_MODEL default (${:=}
+    keeps the first one set, and a member sets its own before sourcing the
+    bare one), read by the walker without following the sources."""
     found = [(f, p) for f, p in airframe_files() if re.match(r'^\d+_gz_%s$' % re.escape(name), f)]
 
     if len(found) != 1:
         raise LookupError('%s 의 posix 에어프레임이 %d 개다: %s' % (name, len(found), ', '.join(f for f, _ in found) or '없음'))
 
     path = found[0][1]
+    models = [value for kind, _, value, _, _ in airframe_settings(path, follow=False) if kind == 'model']
 
-    with open(path) as handle:
-        text = handle.read()
-
-    if 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=%s}' % name not in text:
-        raise LookupError('%s 의 PX4_SIM_MODEL 기본값이 %s 가 아니다' % (found[0], name))
+    if not models or models[0] != name:
+        raise LookupError('%s 의 PX4_SIM_MODEL 기본값이 %s 가 아니다 (%s)' % (found[0][0], name, models[0] if models else '없음'))
 
     return int(found[0][0].split('_')[0]), path
 

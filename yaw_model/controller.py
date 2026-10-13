@@ -51,13 +51,13 @@ ENABLE_LOCKSTEP_SCHEDULER: build/px4_sitl_default/compile_commands.json):
      round(2500/4000) = 1 sample per publish and a 500 us minimum interval
      (VAV:134-150), so vehicle_angular_velocity is 250 Hz.
   4. vehicle_angular_velocity triggers AirshipAttitudeControl::Run()
-     (AAC:78 registerCallback, AAH:130), dt from timestamp_sample, clamped to
-     [0.125 ms, 20 ms] (AAC:186-188). While the loop is closed it reads the
-     latest control_allocator_status (AAC:159-166, YRL:76-82), and it
-     publishes thrust and torque together (AAC:224-226, publishWrench
-     AAC:123-137).
+     (AAC:71 registerCallback, AAH:130), dt from timestamp_sample, clamped to
+     [0.125 ms, 20 ms] (AAC:209-211). While the loop is closed it reads the
+     latest control_allocator_status (AAC:182-189, YRL:90-96), and it
+     publishes thrust and torque together (AAC:264-266, publishWrench
+     AAC:129-146).
   5. vehicle_torque_setpoint triggers ControlAllocator::Run() (CA:96, CA:387),
-     same rate_ctrl work queue (CA:57, AAC:55), so it runs after the
+     same rate_ctrl work queue (CA:57, AAC:52), so it runs after the
      controller in the same cycle. It publishes control_allocator_status only
      when now - last >= 5 ms (CA:464), i.e. every second 4 ms cycle, so the
      controller at cycle k sees the allocation of cycle k-1 or k-2.
@@ -140,7 +140,6 @@ def airframe_file(number):
     return found[0]
 
 
-airframe_walk = gz_model.airframe_settings     # (kind, name, value, file, line) in shell order through the chain
 
 
 def airframe_defaults(number):
@@ -153,7 +152,7 @@ def airframe_defaults(number):
 def _airframe_defaults(number):
     out = {}
 
-    for kind, name, value, path, line in airframe_walk(airframe_file(number)):
+    for kind, name, value, path, line in gz_model.airframe_settings(airframe_file(number)):
         if kind == 'default':
             out[name] = (value, os.path.relpath(path, PX4), line)
 
@@ -163,7 +162,7 @@ def _airframe_defaults(number):
 def airframe_model(number):
     """The gz model the airframe spawns: the first PX4_SIM_MODEL default in
     shell order, since ${PX4_SIM_MODEL:=...} keeps the first one set."""
-    for kind, _, value, _, _ in airframe_walk(airframe_file(number)):
+    for kind, _, value, _, _ in gz_model.airframe_settings(airframe_file(number)):
         if kind == 'model':
             return value
 
@@ -428,10 +427,11 @@ class RateControlYaw:
 
     update(): torque = P*e + I_state - D*accel + FF*sp with the integrator state
     from BEFORE this cycle (RC:75-78), then the integrator is advanced (RC:80-83,
-    88-118). The airship passes landed = false always (YRL:96-97), D = 0 (YRL:61
-    passes Vector3f() for D) and accel = 0 (YRL:96-97). FF is
-    AS_YAWRATE_FF, set with the gains by setGains() (YRL:58-69 ->
-    setFeedForwardGain, RCH:72) on every parameter update (AAC:104-105).
+    88-118). The airship passes landed = false always (YRL:129-133), D = 0
+    (YRL:62 passes Vector3f() for D) and accel = 0 (YRL:132-133). FF is the
+    gain setFeedForward (YRL:74-77) hands in every closed cycle (AAC:247) from
+    the schedule's feedforwardGain (AAC:242); setGains (YRL:59-66, AAC:97)
+    carries P, I and the limit only.
     FF enters the torque only: updateIntegral() integrates the rate error,
     clipped to one sign by the saturation flags (RC:91-99), and never sees
     the feedforward. It reaches the anti-windup only through the allocator,
@@ -468,7 +468,7 @@ class RateControlYaw:
         if isfinite(rate_i):                                     # RC:114-116
             self.integ = constrain(rate_i, -self.int_lim, self.int_lim)
 
-    def set_saturation(self, positive, negative):               # RC:57-69, YRL:80-81
+    def set_saturation(self, positive, negative):               # RC:57-69, YRL:94-95
         self.sat_pos = positive
         self.sat_neg = negative
 
@@ -481,7 +481,7 @@ class RateControlYaw:
         self.int_lim = int_lim
         self.ff = ff
 
-    def reset(self):                                             # RCH:103, YRL:115
+    def reset(self):                                             # RCH:103, YRL:151
         self.integ = 0.0
 
 
@@ -580,8 +580,8 @@ class AirshipYawController:
         (RCH:72), as fixed-wing sets it every cycle
         (FixedwingRateControl.cpp:389-392). FF only: P, I, the integrator limit
         and the integrator are untouched. A parameter update (set_param) puts
-        AS_YAWRATE_FF back as the gain, as setGains() does in the firmware
-        (YRL:58-69)."""
+        AS_YAWRATE_FF back as the rest gain under the linear law (the model's
+        convenience; the firmware sets the gain per cycle, YRL:74)."""
         if not (isfinite(ff) and ff >= 0.0):
             raise ValueError('feedforward %r: not a finite gain >= 0' % (ff,))
 
@@ -592,9 +592,9 @@ class AirshipYawController:
 
     def set_rate_cap(self, cap_deg_s, stick=True, clamp=True, cap_neg_deg_s=None):
         """The yaw-rate cap of the plan (2.다 상한, applied in two places):
-        stick, the stick's full scale (yawRateSetpoint's max_rate, AAC:206-207,
-        so the whole stick spans the cap); clamp, a constrain of the setpoint
-        handed to the rate loop (AAC:208, the rover's placement:
+        stick, the stick's full scale (scheduledYawRateSetpoint's max_rate,
+        AAC:119-126, so the whole stick spans the cap); clamp, a constrain of
+        the setpoint handed to the rate loop (AAC:248, the rover's placement:
         AckermannRateControl.cpp:71-74, which limits any setpoint source). The
         proposal uses both; each can be left out to compare the two
         placements. cap_deg_s: deg/s, finite, >= 0 (AS_YAWRATE_MAX's unit);
@@ -671,7 +671,7 @@ class AirshipYawController:
         return (sp == 0.0 and prev != 0.0) or (self.params['MAN_DEADZONE'] > 0.0 and sp * prev < 0.0)
 
     def _update_saturation(self, status_topic):
-        """AAC:159-166 -> YRL:76-82: only the sign test on the yaw element
+        """AAC:182-189 -> YRL:90-96: only the sign test on the yaw element
         matters here, gated by torque_setpoint_achieved. The flags persist
         until the next status message is read."""
         if status_topic is None or status_topic.gen == self._status_gen_seen:
@@ -691,11 +691,11 @@ class AirshipYawController:
         # vehicle_angular_velocity (VAV:770-771, 939)
         rate = (self._lpf.apply(gyro_z) if self.filter_gyro else gyro_z) - self.gyro_bias
         self.rate = rate
-        # AAC:186-188
+        # AAC:209-211
         dt = constrain((t_us - self._last_run) * 1e-6, 0.000125, 0.02)
         self._last_run = t_us
         self.dt = dt
-        # AAC:195-198: torque passthrough unless the loop takes the yaw axis
+        # AAC:224-228: torque passthrough unless the loop takes the yaw axis
         # (AMI:102-105 usable, AMI:80-83 torque)
         usable = bool(armed) and bool(sticks_valid)
         torque = finite_or(stick_yaw, 0.0) if usable else 0.0
@@ -703,7 +703,7 @@ class AirshipYawController:
         active = yaw_rate_loop_active(mode, usable, self.propulsive_yaw)
 
         if active:
-            self._update_saturation(status_topic)                  # AAC:245
+            self._update_saturation(status_topic)                  # AAC:246
             sp = self._setpoint(stick_yaw)                         # AAC:240 (and a cap, if set)
             self.rate_sp = sp
 
@@ -725,17 +725,17 @@ class AirshipYawController:
                 share = abs(sp) / self.yaw_rate_max if self.yaw_rate_max > 0.0 else 1.0
                 self.rc.ff = self.params['AS_YAWRATE_FF'] * share + self._ff_speed
 
-            t = self.rc.update(rate, sp, dt, landed=False)         # AAC:208, YRL:96-97
-            torque = t if isfinite(t) else 0.0                     # YRL:99
+            t = self.rc.update(rate, sp, dt, landed=False)         # AAC:248, YRL:132-133
+            torque = t if isfinite(t) else 0.0                     # YRL:135
             self._restore_sp_prev = sp
         elif self._was_active:
-            self.rc.reset()                                        # AAC:216, YRL:108-117
+            self.rc.reset()                                        # AAC:256-260, YRL:144-153
             self.rate_sp = 0.0
             self._restore_sp_prev = 0.0
         else:
             self.rate_sp = 0.0
 
-        self._was_active = active                                  # YRL:90, :114
+        self._was_active = active                                  # YRL:104-110, :150
         self.loop_active = active
         return torque
 
@@ -993,7 +993,7 @@ class SitlYawChain:
         self.t_us += DT_US
         tq = self.ctrl.step(self.t_us, gyro_z, stick_yaw, mode, armed, sticks_valid, self.status_topic)
         usable = armed and sticks_valid
-        # AMI:70-83 passthrough axes, zeroed when not usable (AAC:197-198)
+        # AMI:70-83 passthrough axes, zeroed when not usable (AAC:227-228)
         if usable:
             thrust_x, _, thrust_z = manual_thrust(self.throttle, self.pitch)
             roll_t, pitch_t, _ = manual_torque(self.roll, self.pitch, 0.0)
@@ -1017,7 +1017,7 @@ class GateController:
     """AirshipYawController behind gate.compose()'s controller interface:
     update(dt, rate_meas, stick, mode, armed, sticks_valid, unallocated),
     param(), set_param(), integ (None until rate_ctrl_status is first
-    published: AAC:214 while closed, AAC:219 once on opening).
+    published: AAC:254 while closed, AAC:259 once on opening).
 
     `unallocated` is the yaw element of the allocation compose() ran on the
     previous tick. It becomes a new control_allocator_status only on the ticks
@@ -1050,8 +1050,8 @@ class GateController:
         return self._other_params.get(name)
 
     def set_param(self, name, value):
-        # AAC:228 polls parameter_update at the end of Run() through a 1 s
-        # SubscriptionInterval (AAH:125): the change applies from the next
+        # AAC:268 polls parameter_update at the end of Run() through a 1 s
+        # SubscriptionInterval (AAH:133): the change applies from the next
         # cycle, or up to 1 s later if another update was taken in the last
         # second. Modelled as the next cycle.
         if name in self.ctrl.params:
