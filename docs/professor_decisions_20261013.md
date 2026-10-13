@@ -49,6 +49,21 @@ gtest 8/8 (Airship) + RateControl, check_format, 도구 run_tests (생성기 17/
 sitl_link 9/9), 보드 빌드 micoair h743 ×4 + zenfc + fmu-v6x airship (fw_48b45f3e5f8 스테이징, 올리기는 사용자), 전진 검사 `--plan` 의
 Cloudship 침하 줄. 체인 D (SITL 재기준선: 2520 호버, 2517 호버, 2527 전진, 2512 전진 @80 m) 는 아래에.
 
-## 체인 D 결과
+## 체인 D 결과 (11:52~12:17, PX4 1d2aef0e5c + models 0c4307b, 자력계 수리 뒤의 재기준선)
 
-(실행 중)
+| 검사 | 결과 | 비고 |
+|---|---|---|
+| 호버 2520 rigid | 10/10 | px4 로그에 "legacy mode" 경고 0 건 (어제는 매 실행) |
+| 호버 2517 Cloudship 완전 | 9/9 | |
+| 전진 2527 | 42/42 | EKF 헤딩 오차 중앙값 +0.63°, p95 0.69° (어제 로그 +5.17° / 6.11°); EKF u 1.585 vs groundtruth 1.583 m/s |
+| 전진 2512 Cloudship fin, PX4_GZ_MODEL_POSE=0,0,80 | **43/43** (어제 18/20 중단) | 스폰 79.9 m, 필요 78 m 판정 통과; 세 다리 모두 완주. 헤딩 오차 −0.29°, p95 0.57° |
+
+D9·D10 은 닫힌다. 2512 는 앞으로 80 m 스폰으로 돌린다 (검사가 20 m 에서는 다리 전에 거부하고 그 값을 말한다).
+
+## 12:00~ 분리 3 단계 (브랜치 split/step3, 체인과 겹치지 않게 worktree 에서)
+
+`--upstream` (몸체 + 평범한 완전 플랜트 둘: 벡터링과 고정 쌍둥이, merge include 두 단, 에어프레임, 쌍둥이 검사) 과 `--overlay` (rigid 이름 +100 번호의
+자체 완결 가족, lta_lab, decades, vehicles.md; 템플릿은 오버레이의 generic rigid), airship_gains 의 rigid bare. 생성기 시험 20/20: 트림된 스크래치 트리와
+스크래치 오버레이에서 세 쌍둥이 검사 모두 같음, 두 번째 생성 변화 0, 계산기 재작성 변화 0. S1/S2 보정 (오버레이는 제 부가질량 몸체를 가진다) 은
+설계 문서 7 절에. 남은 것: cloudship 의 upstream 모양 (자체 완결), 트리 쪽 variant_check 의 upstream 모양 사실, (4) 플랜트 레지스트리, (5) gz_run.sh,
+(6) 트림, (7) 재기준선.
