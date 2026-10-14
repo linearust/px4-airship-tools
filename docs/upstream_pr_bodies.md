@@ -109,17 +109,19 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
 - `make tests` (the five airship binaries and rate_control), `check_format`,
   `validate_module_configs`, `module_documentation`, `px4_sitl_default`: clean at d020cc4c40.
   fmu-v6x_airship builds; [micoair_h743-aio exit code at the final head].
-- Footprint, `arm-none-eabi-size` fmu-v6x_airship at e93b52d0e1: text 1,732,208, data 7,732,
-  bss 106,812 (d020cc4c40 differs by comments and one member) [before/after table at the final
-  head, both boards].
+- Footprint, `arm-none-eabi-size` fmu-v6x_airship at d020cc4c40: text 1,732,128, data 7,732,
+  bss 106,812 [before/after table at the final head, both boards].
 
 ### Evidence
 
 - Bit identity: the narrowed class against the author's wider development class on the same
   independent-pod parameter sets: 4 sets, 29,596 rows, IDENTICAL (against airship/dev 27fd5f1ffd,
   unchanged through the trim; re-run at d020cc4c40).
-- Bench, a px4_fmu-v6x board, logic analyzer at the output pins: [Manual fingerprint 0.0 µs between this
-  branch and the development branch at the 2520 preset; tilt end stops and slew; park on disarm].
+- Bench, a px4_fmu-v6x board, logic analyzer at the output pins, 13 stick vectors in Manual × 8 pins, props off:
+  fingerprint 0.0 µs between this branch (d020cc4c40) and the author's development branch (8af72b9a50) at the
+  2520 preset, 0 of 13 vectors differ; 15 tilt slews per run at the `CA_AIRSHIP_TLT_R` rate (180° in 1.5–1.6 s at
+  120°/s); on disarm the deflected tilt is back at rest within 0.3 s and the motors drop to the disarmed pulse in
+  the same 0.1 s window; tilt end stops 1000/2000/1500 µs on both pod servos (actuator_test, disarmed).
 - Flight, 2 m indoor vehicle on a MicoAir H743 AIO [exact board variant confirmed on receipt], two
   ±180° pods, optical flow, no wind [Flight Review links]:
   Manual/Stabilized hover; tilt vectoring fore/aft/up/down; differential-thrust yaw with no tilt

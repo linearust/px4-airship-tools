@@ -14,6 +14,7 @@ Which tool answers which question:
 | does the mid-air disarm mitigation hold, and does the bug come back without it? | `GZ_TARGET=gz_cloudship gz_run.sh ./cloudship_land_disarm_check.py` | gz |
 | is the Cloudship's flight airframe wired and mapped the way it claims, at the pins? | `cloudship_ground_check.py [--drive]` | the FMU on 2507, Logic 2 |
 | what does one output function put on every probed pin? | `ground_drive.py FUNCTION V1,V2,.. NAME` | the FMU, Logic 2 |
+| did the tilts slew at CA_AIRSHIP_TLT_R, and what did the pins do at the disarm? | `fp_tools/ramp.py FP_DIR [S,P]`, `fp_tools/park.py FP_DIR` (a fingerprint run's export) | nothing |
 | are the physics variants what the naming scheme says? | `variant_check.py` | nothing |
 | what does the yaw rate loop do on a surface-only (2500) allocation? | `bench_rate_hold.py [--loop]` (refuses unless the 2500 allocation is live: CA_AIRFRAME 16, two equal yaw-only rudders on CS2/CS3; CS_K as wanted; `--loop` predicts the closed loop of firmware before e550ec6597) | the FMU, Logic 2 |
 | does the .px4's airframe metadata (QGC's airframe picker) match the ROMFS the image boots? | `build_fmu.py` (build, check, stage to `fw_<commit>/`) or `build_fmu.py --check` (the existing build only) | the PX4 tree (and the toolchain unless `--check`) |
@@ -24,6 +25,30 @@ Which tool answers which question:
 | does the yaw integrator park in forward flight, and what does the release do? | `GZ_TARGET=gz_<model> gz_run.sh ./forward_yaw_check.py` (`--plan` needs nothing; `--analyze <ulg> --events <json>` re-measures a record) | gz |
 | does the yaw model fly a recorded forward leg the way SITL did? | `yaw_model/forward_replay.py sitl_out/forward_<model>_<stamp>_summary.json [--start both]` | nothing |
 | which forward-flight yaw policy holds up against speed-source and k errors? | `yaw_model/policy_compare.py` (record: `yaw_model/step0c_out_20261001.txt`) | nothing |
+
+## head_d020cc4c40/ — the preparation branch at the pins (2026-10-14, fmu-v6x, pr/airship d020cc4c40 vs airship/dev 8af72b9a50)
+Same board, same saved parameters, two firmwares, `bench_fingerprint.py` (13 stick vectors x 8 pins, props off, ESC power off):
+- `fpM_d020cc4c402`: the preparation branch (upstream main 97a3c7f017 + 7 commits). `fpN_8af72b9a506`: the development branch,
+  flashed right after. `fp_tools/fp_diff.py` fpM fpN: max |diff| 0.0 us, 0 of 13 vectors differ, exit 0 (`fp_diff_fpM_fpN.txt`).
+- The map with no surfaces: tilts on Servo 1/2 = MAIN1/MAIN2, motors on AUX1/2, MAIN3-6 at 1500 throughout. fpL (10-07, airship/dev
+  d51ed755cb) had the tilts on MAIN5/6 and its yaw vectors split with two rudders, because the board still stored CA_SV_CS_COUNT 4
+  from the 2500 experiments of 09-25; `fp_diff.py` fpL fpM says CONFIG MISMATCH, as it should (`fp_diff_fpL_fpM.txt`). The count
+  was set to 0, the 2520 preset's default, before the fork run, so both runs are the preset. `fp_diff.py` now compares the narrowed
+  class's CA_SV_CS_COUNT as 0 whatever the board stores: that class never reads it (the t1 snapshot lists it as unused).
+- `fp_tools/ramp.py <dir> 0,1`: 15 slews on each run, all at CA_AIRSHIP_TLT_R 120 deg/s (180 deg in 1.5-1.6 s), 0 off.
+- `fp_tools/park.py` (new): at the disarm the one tilt away from rest (MAIN2, 1613 us) is back at 1500 within 0.3 s through the rate
+  limiter (the controller publishes a zero wrench when disarmed); the motors drop from the armed idle 1100 to PWM_AUX_DIS 1000 in the
+  same 0.1 s window. Same on both firmwares.
+- Tilt end stops, `ground_drive.py 201 -1,1,0` and `202 -1,1,0` (disarmed actuator_test, PR firmware): 1000 / 2000 / 1500 us held
+  8.0 s each on MAIN1 and on MAIN2, every other pin flat (`stops_servo1.log`, `stops_servo2.log`).
+- Parameters. t1 (PR firmware, after the flash) against the 10-07 end state: no shared value moved but CAL_BARO0_OFF; 72 names gone,
+  10 the fork alone defines (AS_SPD_*, AS_YR_FF_SLP, AS_YR_RESTORE, CA_AIRSHIP_GRP/TAIL/CS_K) and 62 upstream control-surface and
+  airspeed-calibration parameters the narrowed class never reads, which MAVLink therefore does not list (`param status` 1022/1563
+  used/total); 1 new, UAVCAN_EC_SIGNED, upstream's since the fork's base. t3 (fork firmware) brings 69 back (AS_SPD_LO and
+  AS_YR_RESTORE no longer exist), CA_AIRSHIP_CS_K at its default 1.0: the saved 0.5 went with the PR firmware's first save, and 1.0
+  is the value fp_diff assumes for an absent CS_K. t2->t3 and t3->t4: volatile only.
+- Files: `t0/t3_identity.log` (`ver git`), `t1..t4` snapshots and `snap_diff_*.txt`, `fpM.log`/`fpN.log`, the two `fp_diff_*.txt`,
+  `ramp_*.txt`, `park_*.txt`, the end-stop logs and captures. The board stays on airship/dev 8af72b9a50; both images are staged.
 
 ## Parametric families: one vehicle file in, a whole family out (2026-10-07)
 

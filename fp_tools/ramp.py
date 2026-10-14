@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""ramp.py FP_DIR — tilt slew ramps from a fingerprint run's export (FP_DIR/export + FP_DIR/fingerprint.json).
+"""ramp.py FP_DIR [S,P] — tilt slew ramps from a fingerprint run's export (FP_DIR/export + FP_DIR/fingerprint.json).
+S,P are the analyzer channels (0-7) of the starboard and port tilt outputs; default 4,5 (Servo 5/6, the
+map with four surfaces ahead of the tilts). With no surfaces the tilts are Servo 1/2: pass 0,1.
 The table's last-second median cannot see the slew rate; the 0.1 s trace can. At CA_AIRSHIP_TLT_R 120
 and a 1000 us / 360 deg servo (2.778 us/deg), a 180 deg move must take ~1.5 s (1.6 in 0.1 s windows).
 An unlimited slew shows ramps of <= 0.2 s; a lost rate shows no ramps at all (tilts stuck)."""
@@ -14,7 +16,8 @@ marks = [(e['text'][2:], e['t'] - t_cap) for e in ev if e['text'].startswith('V 
 rows = la_mcp.widths(os.path.join(d, 'export'), window=0.1)
 US_PER_DEG, RATE = 1000.0 / 360.0, float(fp['params'].get('CA_AIRSHIP_TLT_R') or 120.0)
 bad = 0
-for ch, name in ((4, 'MAIN5 tilt S'), (5, 'MAIN6 tilt P')):
+tilt = [int(c) for c in (sys.argv[2] if len(sys.argv) > 2 else '4,5').split(',')]
+for ch, name in ((tilt[0], la_mcp.CHANNELS[tilt[0]] + ' (tilt S)'), (tilt[1], la_mcp.CHANNELS[tilt[1]] + ' (tilt P)')):
     r = rows.get(ch, [])
     print('%s: %d windows' % (name, len(r)))
     i = 0

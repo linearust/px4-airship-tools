@@ -33,16 +33,22 @@ keys = ['CA_AIRFRAME', 'CA_AIRSHIP_GRP', 'CA_AIRSHIP_TLMIN', 'CA_AIRSHIP_TLMAX',
 # independent pods, no tail, full credit. Compared as those values.
 IMPLIED = {'CA_AIRSHIP_GRP': 1.0, 'CA_AIRSHIP_TAIL': 0.0, 'CA_AIRSHIP_CS_K': 1.0}
 pa, pb = ref.get('params', {}), new.get('params', {})
+def narrowed(p):
+    return p.get('CA_AIRSHIP_GRP') is None
 def val(p, k):
     v = p.get(k)
+    if k == 'CA_SV_CS_COUNT' and narrowed(p):
+        # CA_SV_CS_COUNT is upstream's control-surface count, which the narrowed
+        # class never reads: whatever the board stores, its surface count is 0.
+        return 0.0
     return IMPLIED[k] if v is None and k in IMPLIED else v
 bad = [k for k in keys if val(pa, k) != val(pb, k)]
 implied = [k for k in IMPLIED if pa.get(k) is None or pb.get(k) is None]
 if implied:
-    print('note: %s absent on one side (the narrowed class), compared as %s' % (', '.join(implied), ', '.join('%s=%g' % (k, IMPLIED[k]) for k in implied)))
+    print('note: %s absent on one side (the narrowed class), compared as %s, and its CA_SV_CS_COUNT as 0 (unread)' % (', '.join(implied), ', '.join('%s=%g' % (k, IMPLIED[k]) for k in implied)))
 if bad:
     print('CONFIG MISMATCH, the diff above is meaningless:')
-    for k in bad: print('  %-18s ref %s  new %s' % (k, pa.get(k), pb.get(k)))
+    for k in bad: print('  %-18s ref %s  new %s (as compared)' % (k, val(pa, k), val(pb, k)))
 if pb.get('COM_RC_IN_MODE') != pa.get('COM_RC_IN_MODE'):
     print('note: COM_RC_IN_MODE ref %s new %s (source selection only, not an allocator input)' % (pa.get('COM_RC_IN_MODE'), pb.get('COM_RC_IN_MODE')))
 sys.exit(0 if (nvec == 0 and nan == 0 and not bad) else 1)
