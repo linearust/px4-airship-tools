@@ -1101,8 +1101,8 @@ def upstream_docs(root, plain, title_link=TREE_PAGE):
     t = read(vehicles_md)
 
     if '### %s\n' % plain.title not in t:
-        section = ('### %s\n\n[%s](%s) in Gazebo: the complete plant, %s.\nThe physics-variant members it was measured against '
-                   'live in [px4-airship-tools](https://github.com/linearust/px4-airship-tools).\n\n```sh\n%s\n```\n'
+        # the Airship section's intro says once where the physics-variant members live
+        section = ('### %s\n\n[%s](%s) in Gazebo: the complete plant, %s.\n\n```sh\n%s\n```\n'
                    % (plain.title, plain.title, title_link, plain.what, TREE_COMMAND % plain.name))
         start = t.index('\n## Airship\n') + 1
         m = re.search(r'^## ', t[start + 1:], re.M)
