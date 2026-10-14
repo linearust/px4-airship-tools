@@ -242,6 +242,14 @@ worktree 에서 한다. 도구는 main 에 이 단계가 병합된 뒤.
   마운트는 구동 안 함) 뒤 8 이다 — 트림과 무관, 마지막 기록 13/13 은 그 커밋 전; 검사의 기대값은 사용자가 정한다. 평범 2520 은 속도 스케줄 없이 난다 (설계대로). 문서 절의
   "airship_base merged with ..." 문구는 생성기의 것. 푸시는 gz-submodule-publish-order 대로 서브모듈 먼저, 사용자 검토 뒤.
 
+**(6)/(7) 보정 (2026-10-14 13:55, 도구 main 486f533·934e5e4; 포크 airship/dev = c023c88cdb, 서브모듈 airship/models = be2aea8).**
+재기준선의 두 편차는 둘 다 설계 귀결이었다. (a) 2520 전진 28/42: 생성기가 PR 용 "upstream 부재" 목록 (AS_SPD_* 등) 을 포크 트리에도 적용해 평범
+2520 이 스케줄 없이 날았다 → 부재 여부는 대상 트리의 모듈 yaml 에서 읽는다 (`gz_model.absent_params()`, 캐시는 경로 키; 포크에서는 아무것도
+부재가 아니고 upstream 트리에서는 GRP/TAIL/CS_K/AS_SPD_*/AS_YR_FF_SLP 부재); 평범 2520 이 2627 의 스케줄 줄을 되찾아 전진 42/42. (b) 2500 고정
+12/13: 틸트 슬롯 둘 고정 (2f013b1a4a) 으로 고정 마운트도 출력 8 → 검사 기대 6 → 8, 13/13. 덤: 오버레이 멤버에서 쓴 upstream 플랜트의 주석에
+`_rigid` 이름이 새던 것을 생성기가 되돌려 쓴다 (renamer); 생성기 시험의 스크래치 트리는 모듈 yaml 둘을 복사한다; forward_yaw_check.model_of 는
+트림 전 로그의 번호 (2527, 2522) 를 레지스트리로 푼다 (포크 체크아웃에서 run_tests 녹색: gen 17, variant 17, forward 220). 트림 워크트리와 가지는 지움.
+
 **(3) 의 원래 변경 목록 (참고).**
 - `apply_generic_hull.Family`/`vectored_family(name, title, surfaces, rigid=False)`: rigid 가족은 `bare = name + '_rigid'`, `base = name + '_base_rigid'`, `base_am` 그대로,
   나머지 그대로. `GENERIC` 도 두 판 (트리용 지금 것, 오버레이용 rigid). `copy_family` 의 renames 는 긴 이름부터 (이미 그렇다) — `_base_am` 이 `_base_rigid` 로 잘못 바뀌지 않게
