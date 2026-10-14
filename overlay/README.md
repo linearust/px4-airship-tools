@@ -85,13 +85,14 @@ is a `Parameter X not found` warning in `sitl_out/server.log` and nothing
 else; `gz_run.sh` lists them once before the check starts, so a verdict is
 read against what the airframe actually applied.
 
-The overlay can only be used against a trimmed tree: while the tree still
-carries the families, rcS's name lookup would find two airframes for one
-`PX4_SIM_MODEL` and load the tree's, and `gz_model.model_names()` refuses a
-name present in both homes. The generator fills these directories in the same
-increment as the trim (`docs/upstream_split_design_20261012.md`, sections 6
-and 7); until then they are empty and `pins.env` names the tree. Before the
-trim a member can still be generated into a scratch overlay
-(`AIRSHIP_OVERLAY=<dir>`) from the fork's family (`--root <fork tree>`) with
-the world from the trimmed tree (`PX4_ROOT=<trimmed tree>`), which is how step
-(5) was verified.
+The overlay is used against the trimmed tree `pins.env` names (split step
+(6), `docs/upstream_split_design_20261012.md` section 7): a tree still
+carrying the families would give rcS two airframes for one `PX4_SIM_MODEL`
+(it loads the tree's), and `gz_model.model_names()` refuses a name present in
+both homes. The directories were filled at the trim from the fork's families
+(`--root <fork tree>`, the world from the trimmed tree); since then the
+generator's template is the overlay's own generic rigid family, so
+`airship_family_gen.py <vehicle.json> --overlay` run again writes nothing (the
+generator test's round trip), a new vehicle file generates beside the others,
+and `airship_family_gen.py <vehicle.json> --upstream overlay --root <tree>`
+writes a family's plain plant back into the tree from here.
