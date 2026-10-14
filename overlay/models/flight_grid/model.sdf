@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Visual-only 3D reference: blue z-axis mast (rungs at 5/10/15 m) and
+     two 10 m-cell wall grids behind the broadside and bow views. -->
+<sdf version="1.10">
+  <model name="flight_grid">
+    <static>true</static>
+    <link name="link">
+      <visual name="mast_z_blue">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 10 0 0 0</pose>
+        <geometry><box><size>0.08 0.08 20</size></box></geometry>
+        <material>
+          <ambient>0.2 0.3 0.6 1</ambient>
+          <diffuse>0.2 0.3 0.6 1</diffuse>
+        </material>
+      </visual>
+      <visual name="mast_rung_5">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 5 0 0 0</pose>
+        <geometry><box><size>1.0 0.08 0.08</size></box></geometry>
+        <material>
+          <ambient>0.9 0.9 0.9 1</ambient>
+          <diffuse>0.9 0.9 0.9 1</diffuse>
+        </material>
+      </visual>
+      <visual name="mast_rung_10">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 10 0 0 0</pose>
+        <geometry><box><size>1.0 0.08 0.08</size></box></geometry>
+        <material>
+          <ambient>0.9 0.9 0.9 1</ambient>
+          <diffuse>0.9 0.9 0.9 1</diffuse>
+        </material>
+      </visual>
+      <visual name="mast_rung_15">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 15 0 0 0</pose>
+        <geometry><box><size>1.0 0.08 0.08</size></box></geometry>
+        <material>
+          <ambient>0.9 0.9 0.9 1</ambient>
+          <diffuse>0.9 0.9 0.9 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_xm30">
+        <cast_shadows>false</cast_shadows>
+        <pose>-30 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_xm20">
+        <cast_shadows>false</cast_shadows>
+        <pose>-20 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_xm10">
+        <cast_shadows>false</cast_shadows>
+        <pose>-10 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_x0">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_xp10">
+        <cast_shadows>false</cast_shadows>
+        <pose>10 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_xp20">
+        <cast_shadows>false</cast_shadows>
+        <pose>20 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_v_xp30">
+        <cast_shadows>false</cast_shadows>
+        <pose>30 25 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_h_z10">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 25 10 0 0 0</pose>
+        <geometry><box><size>60 0.06 0.06</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_h_z20">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 25 20 0 0 0</pose>
+        <geometry><box><size>60 0.06 0.06</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_y_h_z30">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 25 30 0 0 0</pose>
+        <geometry><box><size>60 0.06 0.06</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_ym30">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 -30 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_ym20">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 -20 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_ym10">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 -10 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_y0">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 0 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_yp10">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 10 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_yp20">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 20 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_v_yp30">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 30 15 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 30</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_h_z10">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 0 10 0 0 0</pose>
+        <geometry><box><size>0.06 60 0.06</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_h_z20">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 0 20 0 0 0</pose>
+        <geometry><box><size>0.06 60 0.06</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+      <visual name="wall_x_h_z30">
+        <cast_shadows>false</cast_shadows>
+        <pose>-25 0 30 0 0 0</pose>
+        <geometry><box><size>0.06 60 0.06</size></box></geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
