@@ -46,21 +46,22 @@ and its gz SITL twin, with docs. Upstream's 2500 (Generic Airship) and 2507 (Clo
 the Custom allocator; the loop is off by default and closes only where an airframe sets
 `AS_YAWRATE_MAX` above zero.
 
-### What it adds (commit order; a split along it is a cherry-pick)
+### What it adds (commit order; a split along it is a cherry-pick; numbers at head d020cc4c40)
 
 | commit | files | lines |
 |---|---|---|
 | rate_control: set and read the integral term of one axis | 2 | +188 (test 167) |
-| control_allocator: the airship effectiveness for two tilting pods | 10 | +2276 (tests 1505) |
-| airship_att_control: a yaw rate loop on the stick | 9 | +1440 −39 (tests ≈ 920) |
-| airframes: 2520 Generic Airship (Independent Vectoring) | 2 | +43 |
-| simulation: the gz twin, posix 2520 | 2 | +76 |
+| control_allocator: the airship effectiveness for two tilting pods | 10 | +2375 |
+| airship_att_control: a yaw rate loop on the stick | 9 | +1441 −40 |
+| airframes: 2520 Generic Airship (Independent Vectoring) | 2 | +44 |
+| simulation: the gz twin, posix 2520 | 2 | +77 |
 | simulation: gz models pointer | 1 | [merged commit] |
 | docs: frames_airship, sim_gazebo_gz vehicles/index/worlds, releases | 5 | +167 −20 |
 
-31 files, about +4190 lines, of which about 2600 are tests. No new message. Parameters: 8
+31 files, +4293 −61, of which 2665 lines are tests. No new message. Parameters: 8
 (`CA_AIRSHIP_TLMIN`, `CA_AIRSHIP_TLMAX`, `CA_AIRSHIP_TLT_R`, `AS_YAWRATE_P`, `AS_YAWRATE_I`,
 `AS_YR_INT_LIM`, `AS_YAWRATE_FF`, `AS_YAWRATE_MAX`). The controller also reads `MAN_DEADZONE`.
+The models PR is 5 files, +887 (commit d3beb42 on the models' main e5997f4).
 
 ### Allocation
 
@@ -102,16 +103,21 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
 ### Tests and checks
 
 - gtest: AirshipPod 25 cases (incl. a 200,000-sample property test of the steering band),
-  ActuatorEffectivenessAirship [34 + 3] cases, AirshipYawRateLoop 15, AirshipManualInput [N],
-  AirshipAttitudeControl 10 (the module through uORB), RateControl +6.
-- `make tests`, `check_format`, `validate_module_configs`, `module_documentation`,
-  `px4_sitl_default`, fmu-v6x and micoair_h743-aio builds [exit codes at the PR head].
-- Footprint, `arm-none-eabi-size` [board, text/data/bss before and after at the PR head].
+  ActuatorEffectivenessAirship 37, AirshipYawRateLoop 15, AirshipManualInput 13,
+  AirshipAttitudeControl 10 (the module through uORB), RateControl +6 (one for the accessors,
+  five pinning the behaviour the loop builds on).
+- `make tests` (the five airship binaries and rate_control), `check_format`,
+  `validate_module_configs`, `module_documentation`, `px4_sitl_default`: clean at d020cc4c40.
+  fmu-v6x_airship builds; [micoair_h743-aio exit code at the final head].
+- Footprint, `arm-none-eabi-size` fmu-v6x_airship at e93b52d0e1: text 1,732,208, data 7,732,
+  bss 106,812 (d020cc4c40 differs by comments and one member) [before/after table at the final
+  head, both boards].
 
 ### Evidence
 
 - Bit identity: the narrowed class against the author's wider development class on the same
-  independent-pod parameter sets [4 sets, N rows, IDENTICAL].
+  independent-pod parameter sets: 4 sets, 29,596 rows, IDENTICAL (against airship/dev 27fd5f1ffd,
+  unchanged through the trim; re-run at d020cc4c40).
 - Bench, a px4_fmu-v6x board, logic analyzer at the output pins: [Manual fingerprint 0.0 µs between this
   branch and the development branch at the 2520 preset; tilt end stops and slew; park on disarm].
 - Flight, 2 m indoor vehicle on a MicoAir H743 AIO [exact board variant confirmed on receipt], two
@@ -121,8 +127,8 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
   (restore rule; heading drift after release); anti-windup at full throttle + full yaw;
   AS_YAWRATE_FF measured per the docs procedure then flown; Land selected in the air keeps the
   vehicle armed.
-- SITL: [hover gate 10/10 on posix 2520 from this branch]; sim-vs-flight table from the vehicle's
-  own twin [table].
+- SITL: hover gate 10/10 on posix 2520 from this branch (475267c93a; re-run at d020cc4c40 [result]);
+  sim-vs-flight table from the vehicle's own twin [table].
 - Not flown, unit tests only: a fixed mount (`TLMIN` = `TLMAX`), a ±90° range, the 7 m twin's own
   gains, `AS_YAWRATE_FF`'s shipped default 0.
 
