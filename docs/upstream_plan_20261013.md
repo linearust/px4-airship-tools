@@ -293,3 +293,5 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
 - 11:40 분리 (5) 병합 (도구 main 030bde1): gz_run.sh 가 오버레이 멤버를 트림된 트리 위에서 독립 실행 (make px4_sitl → install.sh → gz sim lta_lab → create 서비스 스폰
   → PX4_GZ_STANDALONE); 트림된 트리 (pr/airship) 에서 오버레이 rigid 2620 호버 10/10, 트리 2520 10/10. 월드 이름은 gz_model.WORLD 한 곳.
   (6) 트림은 둘로: 6a 생성기 보강 (고정 가족·Cloudship 의 오버레이 복사와 upstream 모양, variant_check 두 모양, 절차 문서) 에이전트 진행 중 → 6b 트림 실행.
+- 11:45 pr/airship HEAD 2370453e1d (문서 커밋의 cherry-pick 표기 제거); 펌웨어 재스테이징 `fw_2370453e1d3/px4_fmu-v6x_airship.px4`. 중간 브랜치 넷
+  (pr/airship-alloc, -docs, -prestack, -v1) 삭제. 문서 png 는 이 셸에서 gz GUI 렌더가 안 돼 (EGL dri2 실패) 사용자 데스크톱 세션의 몫으로 남김.

@@ -24,6 +24,13 @@ box (#162) and the magnetometer in tesla (#161, `use_units_gauss=false`,
   the file values on the members this plant is generated from [added mass 9/9, moments 14/14, fin
   damping within 0.07 %]; the plant is element-wise equal to those members (generator twin check).
 - Why a world: the Buoyancy system is world-level and needs every buoyant link enabled by name.
+- gz prints `Inertia::verifySpatialTensor` warnings for `airship_base` at load: the fluid added mass is
+  written about the link origin, not the centre of mass, so its cross terms do not satisfy the
+  rigid-body relation the check expects; the engine measurements above were taken with exactly
+  this matrix. The simulation runs with it.
+- A screenshot for `docs/assets/simulation/gazebo/vehicles/airship_vectored_independent.png` is
+  still to be taken [from a desktop gz session: `gz sim` on the lta world with the model spawned,
+  the GUI's screenshot button].
 - The hull's dimensions are those of the AS800 class in the airship literature (10.5 m × 3 m
   scaled to 7 m, L/D 3.5); the vehicle that validated the firmware is a 2 m member of the same
   family and is not part of this PR.
