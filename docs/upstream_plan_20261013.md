@@ -338,3 +338,6 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   워크트리 ~/dev/px4-pr-airship 는 그대로). 추적은 아직 옛 원격 이름 (origin/airship/dev, origin/airship/models) 을 가리킨다: 포크의 원격 이름 변경은
   GitHub 의 branch rename (푸시된 끝 bccba2ef8c / 208cb2b 그대로, 서명 안 된 커밋은 올라가지 않음) 으로, 사용자 승인 뒤. CI 는 커밋만 받으므로 (PX4_COMMIT,
   GZ_MODELS_COMMIT) pins.env 의 BRANCH 두 줄은 문서용. 날짜 붙은 기록의 옛 이름은 그대로 둔다 (README·log.md 에 대응표).
+- 19:15 포크 원격 이름 변경 끝 (GitHub branch rename, 사용자 승인): 모델 포크 airship/models → linearust/airship-dev (끝 208cb2b), PX4 포크 airship/dev →
+  linearust/airship-dev (끝 bccba2ef8c); 옛 이름은 두 포크에서 사라졌고 (GitHub 는 옛 이름을 새 이름으로 돌려준다), 로컬 추적은 둘 다 origin/linearust/airship-dev
+  (앞섬 49 / 12). 로컬 전용 튜토리얼 가지 linearust/airship-sitl-tutorial (옛 airship/sitl-tutorial, 끝 f1ae2714ca, 태그 없음) 는 사용자 지시로 삭제.
