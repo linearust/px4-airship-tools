@@ -1043,12 +1043,17 @@ def overlay_template(overlay, template_root):
     return (A.GENERIC, tree_models), (GENERIC_DECADE, A.GENERIC, tree_airframes)
 
 
-def overlay_world(path, template_root):
-    """The overlay's lab world: the tree's lta world under its own name, made once."""
+def overlay_world(path, world_root):
+    """The overlay's lab world: the lta world of the tree the overlay runs
+    against, under its own name, made once. That tree, not the family's
+    template tree: a world includes the tree's own models (the fork's lta
+    world includes ground markers the trimmed tree does not carry), and the
+    server that loads it is started by gz_run.sh with the run tree's models on
+    its path."""
     if os.path.exists(path):
         return False
 
-    t = read(os.path.join(template_root, TREE_FILES[0]))
+    t = read(os.path.join(world_root, TREE_FILES[0]))
     t = sub1(t, r'<world name="[^"]*">', '<world name="%s">' % OVERLAY_WORLD_NAME)
     write(path, t)
     return True
@@ -1113,12 +1118,16 @@ def write_overlay_docs(path, vehicle, p, fam, decade):
     return bool(rows)
 
 
-def generate_overlay(vehicle, overlay=None, template_root=None):
+def generate_overlay(vehicle, overlay=None, template_root=None, world_root=None):
     """The vehicle's whole family into the overlay, self-contained: models,
     airframes a hundred above the tree's decade, the lab world's entries, the
-    decade line and the docs."""
+    decade line and the docs. The family is copied from the template tree
+    (or the overlay's own generic rigid family once it is there); the lab
+    world from the tree the overlay runs against, gz_model.ROOT (PX4_ROOT)
+    unless said otherwise."""
     overlay = overlay or gz_model.OVERLAY
     template_root = template_root or gz_model.ROOT
+    world_root = world_root or gz_model.ROOT
     fam = vehicle.overlay_family
     decade = vehicle.decade + OVERLAY_SHIFT
     (tfam, tmodels), bare_template = overlay_template(overlay, template_root)
@@ -1132,7 +1141,7 @@ def generate_overlay(vehicle, overlay=None, template_root=None):
     written += write_surface_airframes(vehicle, p, airframes, fam=fam, decade=decade)
     written += write_fixed_servos(vehicle, p, airframes, fam=fam)
     world = os.path.join(overlay, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
-    overlay_world(world, template_root)
+    overlay_world(world, world_root)
     n = write_world_entries(world, [getattr(fam, role) for role, _, _ in MEMBERS])
     write_overlay_decades(os.path.join(airframes, 'decades'), decade, fam.bare)
     write_overlay_docs(os.path.join(overlay, 'vehicles.md'), vehicle, p, fam, decade)
@@ -1186,7 +1195,9 @@ def main(argv=None):
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument('--check', action='store_true', help='generate into a scratch copy and diff against the tree instead of writing')
     mode.add_argument('--overlay', action='store_true',
-                      help='write the whole family under the rigid naming into the overlay (gz_model.OVERLAY) instead of the tree')
+                      help='write the whole family under the rigid naming into the overlay (gz_model.OVERLAY) instead of the tree; '
+                           'the family is copied from --root (a tree that still has it, or the overlay itself once generated), '
+                           'the lab world from PX4_ROOT, the tree the overlay runs against')
     mode.add_argument('--upstream', metavar='MEMBERS_ROOT',
                       help='write what upstream carries (the plain complete plants in merge-include shape) into --root, a tree '
                            'trimmed of the family, from the members under MEMBERS_ROOT (the overlay, or a tree that still has '
