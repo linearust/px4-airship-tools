@@ -147,6 +147,14 @@ indoor `--overlay` → 세 쌍둥이 검사 모두 같음, 두 번째 생성 변
 (`airship_fixed`, 2500) 는 55a0703. 남은 것: cloudship 의 upstream 모양 (자체 완결), 트리 쪽 variant_check 의 upstream 모양 사실, (4) 플랜트
 레지스트리, (5) gz_run.sh, (6) 트림, (7) 재기준선.
 
+**(4) 끝남 (2026-10-14 11:30, 도구 main 8971ee2..fec3bf8).** `yaw_model/plant_registry.py`: 키는 오버레이 이름 (`<vehicle>_rigid`/`_fin`/`_am_fin_drag`, generic 과
+cloudship 여섯), 항목은 기록이 날던 날의 트리 이름·SYS_AUTOSTART·모델 디렉터리·plants.EXPECTED 스냅샷, `model` 은 오늘 그 플랜트를 가진 집의 이름
+(오버레이에 있으면 키, 아니면 트리 이름: gz_model.bare 의 규칙). 별칭 `OVERLAY_NUMBER` (25x0..7 → 26x0..7, 일곱 decade) 와 `PLAIN_AFTER_TRIM`
+(2520 = 옛 2527, 2510 = 2517, 2500 = 2505). 소비자 전환: record_gains.RUNS/gains(), closed_loop.TARGETS/EXTRA/FORWARD (`{e.target: (e.model, e.family)}`),
+plants.EXPECTED (뷰), forward_replay (로그 검사는 number_tree, 배분기 검사는 오늘의 파일), sitl_check.VEHICLES, reproduce/reproduce_head/validate_gate.
+기록 파일은 손대지 않음. 시험 `yaw_model/test_plant_registry.py` (131 PASS; run_tests 254/0, SKIP 1 그대로). 트림 (6) 에서 그 시험의 두 단언
+(`model == tree_name`, 트리 에어프레임 존재) 을 오버레이 쪽 (`model == key`, `<number_overlay>_gz_<key>`) 으로 뒤집는다 — S3 의 재앵커링.
+
 **(3) 의 원래 변경 목록 (참고).**
 - `apply_generic_hull.Family`/`vectored_family(name, title, surfaces, rigid=False)`: rigid 가족은 `bare = name + '_rigid'`, `base = name + '_base_rigid'`, `base_am` 그대로,
   나머지 그대로. `GENERIC` 도 두 판 (트리용 지금 것, 오버레이용 rigid). `copy_family` 의 renames 는 긴 이름부터 (이미 그렇다) — `_base_am` 이 `_base_rigid` 로 잘못 바뀌지 않게

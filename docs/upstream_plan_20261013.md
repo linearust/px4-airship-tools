@@ -289,3 +289,4 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   `fw_e93b52d0e13/px4_fmu-v6x_airship.px4` (build_fmu.py, Airship 그룹 = ROMFS 2500/2507/2520 확인). 사용자가 올린다.
 - 분리 (4) 플랜트 레지스트리 에이전트 (split/step4, 어제 Fable 한도로 중단 → 재시작) 와 (5) gz_run.sh 오버레이 경로 에이전트 (split/step5, 트림된
   트리 = pr/airship 워크트리에서 검증) 진행 중. 남은 것: (6) 트림 (7) 재기준선, 문서 png, PR 본문 괄호 항목, 푸시 (사용자).
+- 11:30 분리 (4) 플랜트 레지스트리 병합 (도구 main fec3bf8; run_tests 254/0). (5) 에이전트 진행 중.
