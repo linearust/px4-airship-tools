@@ -22,6 +22,9 @@ Independent Vectoring) 에 이 기체의 값을 얹은 것이다. 시뮬레이�
    요 루프 이득이 뜻을 가진다 (frames_airship/index.md 의 Tuning 1). 두 포드의 최대 추력이 `vehicles/airship_indoor.json`
    의 thrust_n 과 다르면 그 값을 고치고 생성기를 다시 돌린다.
 5. **지문.** `bench_fingerprint.py` 로 Manual 출력을 기록해 두고, 펌웨어를 바꿀 때마다 0.000 µs 를 확인한다.
+   기준 (2026-10-14, fmu-v6x, `head_d020cc4c40/`): 준비 브랜치 d020cc4c40 과 포크 8af72b9a50 이 2520 프리셋에서 0.0 µs. 조종면이 없으므로
+   틸트는 Servo 1/2 = MAIN1/MAIN2 에 나온다; 보드에 남아 있던 CA_SV_CS_COUNT 4 는 0 으로 되돌렸다 (`fp_diff` 는 좁힌 클래스의 이 값을 0 으로 본다).
+   끝단 (`ground_drive.py 201 -1,1,0`, `202 ...`: 1000/2000/1500) 과 슬루 (`fp_tools/ramp.py <dir> 0,1`), 해제 시 파킹 (`fp_tools/park.py`) 도 그때 기록.
 6. **CPU.** `fmu_shell.py 'perf'` 에서 airship_att_control 과 control_allocator 의 평균을 적는다 (2026-10-07: 8.8 µs, 29.6 µs).
 7. **놓음 단차 (2026-10-12 증분 A 뒤).** 복원 규칙이 항상 켜져 있으므로 (파라미터 AS_YR_RESTORE 삭제; AS_SPD_LO 도 삭제, 램프는 AS_SPD_HI 의 절반에서 시작)
    Stabilized 에서 요 풀스틱을 4 s 걸었다 놓으면 적분기가 모은 만큼 (최대 AS_YR_INT_LIM 0.3) 의 토크 단차와 포드 스윙이 핀에 보인다. 로직 애널라이저로 포드

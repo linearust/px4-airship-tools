@@ -327,4 +327,5 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   fw_8af72b9a506 (새로 빌드·스테이징) 을 굽고 fpN → `fp_diff` 0.0 us, 13 벡터 중 0 다름. 슬루 15/15 (120 deg/s), 해제 시 파킹 (틸트 0.3 s 안에
   1500, 모터 즉시 1000), 틸트 끝단 1000/2000/1500 (actuator_test, 비무장). 저장돼 있던 CA_SV_CS_COUNT 4 (09-25 2500 실험의 잔재) 를 0 으로:
   좁힌 클래스는 이 값을 읽지 않고, 포크는 0 이어야 같은 핀에 같은 배분이 나온다 (fpL 과의 비교는 설정 불일치로 판정됨). PR 본문의 벤치 괄호를
-  측정값으로 채움; 풋프린트 d020cc4c40 text 1,732,128. 보드는 포크 HEAD 로 남김.
+  측정값으로 채움. 풋프린트 before/after (upstream 97a3c7f017 → d020cc4c40): fmu-v6x_airship text +6,920, micoair_h743-aio_default text +6,216,
+  data·bss 불변, 두 보드 make exit 0 (최종 head 에서 다시 잼). 보드는 포크 HEAD 로 남김.

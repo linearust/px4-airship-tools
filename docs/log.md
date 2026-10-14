@@ -49,6 +49,10 @@ Same board, same saved parameters, two firmwares, `bench_fingerprint.py` (13 sti
   is the value fp_diff assumes for an absent CS_K. t2->t3 and t3->t4: volatile only.
 - Files: `t0/t3_identity.log` (`ver git`), `t1..t4` snapshots and `snap_diff_*.txt`, `fpM.log`/`fpN.log`, the two `fp_diff_*.txt`,
   `ramp_*.txt`, `park_*.txt`, the end-stop logs and captures. The board stays on airship/dev 8af72b9a50; both images are staged.
+- Footprint, `arm-none-eabi-size` on a scratch worktree of upstream main 97a3c7f017 (submodules referenced from the fork's modules dir,
+  ccache) against the preparation worktree at d020cc4c40: fmu-v6x_airship text 1,725,208 -> 1,732,128 (+6,920), data 7,732, bss 106,812
+  unchanged; micoair_h743-aio_default (the indoor vehicle's board, airship_att_control on by default) text 1,865,480 -> 1,871,696 (+6,216),
+  data 6,540, bss 61,016 unchanged; both targets make exit 0 at d020cc4c40. The fork HEAD 8af72b9a50 fmu-v6x_airship: 1,737,376 / 7,732 / 105,660.
 
 ## Parametric families: one vehicle file in, a whole family out (2026-10-07)
 

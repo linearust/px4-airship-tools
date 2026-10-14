@@ -108,9 +108,14 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
   five pinning the behaviour the loop builds on).
 - `make tests` (the five airship binaries and rate_control), `check_format`,
   `validate_module_configs`, `module_documentation`, `px4_sitl_default`: clean at d020cc4c40.
-  fmu-v6x_airship builds; [micoair_h743-aio exit code at the final head].
-- Footprint, `arm-none-eabi-size` fmu-v6x_airship at d020cc4c40: text 1,732,128, data 7,732,
-  bss 106,812 [before/after table at the final head, both boards].
+  fmu-v6x_airship and micoair_h743-aio_default build (exit 0 at d020cc4c40) [re-check at the final head].
+- Footprint, `arm-none-eabi-size`, upstream main 97a3c7f017 → d020cc4c40 [re-measure at the final head]:
+
+  | target | text | data | bss |
+  |---|---|---|---|
+  | px4_fmu-v6x_airship | 1,725,208 → 1,732,128 (+6,920) | 7,732 → 7,732 | 106,812 → 106,812 |
+  | micoair_h743-aio_default | 1,865,480 → 1,871,696 (+6,216) | 6,540 → 6,540 | 61,016 → 61,016 |
+
 
 ### Evidence
 
