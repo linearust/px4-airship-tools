@@ -42,7 +42,7 @@ from pymavlink import mavutil
 import gz_model
 
 BIN = os.path.join(gz_model.ROOT, 'build/px4_sitl_default/bin')
-WORLD = os.environ.get('PX4_GZ_WORLD', 'lta')
+WORLD = gz_model.WORLD
 INSTANCE = os.environ.get('PX4_INSTANCE', '0')
 
 

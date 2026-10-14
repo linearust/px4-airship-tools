@@ -437,7 +437,7 @@ def entity():
         return None
 
     name = target.removeprefix('gz_')
-    world = os.environ.get('PX4_GZ_WORLD', 'lta')
+    world = gz_model.WORLD
     return name[:-len(world) - 1] if name.endswith('_' + world) else name
 
 

@@ -48,6 +48,11 @@ OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
 OVERLAY_WORLD = os.path.join(OVERLAY, 'worlds', 'lta_lab.sdf')
 OVERLAY_DOCS = os.path.join(OVERLAY, 'vehicles.md')
 OVERLAY_SHIFT = 100         # an overlay family's decade is its vehicle's tree decade plus this: 25x0 -> 26x0
+# The gz world of a SITL run, as the launcher exported it: gz_run.sh resolves
+# the tree's world (`lta` unless the target names another) or the overlay's
+# `lta_lab`. `lta` is for a check attached by hand to a world someone else
+# started; the one default lives here so no module keeps its own.
+WORLD = os.environ.get('PX4_GZ_WORLD', 'lta')
 
 
 def in_overlay(path):

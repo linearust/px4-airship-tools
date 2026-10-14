@@ -565,7 +565,7 @@ def _fakes(clock, loop, timing, model_name):
     sitl_link = types.ModuleType('sitl_link')
     sitl_link.MODEL_NAME = model_name
     sitl_link.MODEL = model_name + '_0'
-    sitl_link.WORLD = 'lta'
+    sitl_link.WORLD = gz_model.WORLD
     sitl_link.Sticks = Sticks
     sitl_link.commander = commander
     sitl_link.listener = listener
