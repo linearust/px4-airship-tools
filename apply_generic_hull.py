@@ -661,9 +661,12 @@ def write_family(p):
 
 
 def main():
-    p = plan()
+    """The overlay's generic rigid family and the Cloudship's fin stall from
+    the design; the tree's plain plants are airship_family_gen.py --upstream."""
+    root = os.path.join(gz_model.OVERLAY, 'models')
+    p = plan(fam=GENERIC_RIGID, root=root)
     write_family(p)
-    write_cloudship()
+    write_cloudship(CLOUDSHIP_RIGID, root)
     print('done: travel +-%d deg, spans %s' % (p.travel, p.d['spans']))
     return 0
 
