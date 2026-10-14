@@ -281,3 +281,11 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   (에이전트 72dc24a0c8 + 문장 둘 수정). 31 파일 약 +4190 (시험 약 2600). 검증 스크립트 실행 중 (tests, identity independent, px4_sitl_default,
   validate/module_documentation/check_format, 호버 게이트, fmu-v6x 크기). 남은 손질: 제어기 시험의 "Acro on propulsive yaw" 주석 한 줄 (마지막
   재적층 때), 문서 png, PR 본문의 괄호 항목.
+- 2026-10-14 11:10 pr/airship 최종 재적층 HEAD e93b52d0e1 (lib 9fc13673f7 → 배분기 29609b2fa5 → 제어기 ee297b1bba → 2520 125452427c → posix
+  1cab444fb8 → 포인터 9d5e38eaa6 → 문서 e93b52d0e1; 백업 브랜치 pr/airship-prestack, pr/airship-v1). 검증 (10-13 17:05-17:15, 475267c93a; 재적층은
+  주석 한 줄만 달라 시험 5/5 와 format·validate 만 다시 돌림): make tests Airship 5/5 바이너리 (37+25+15+N+10 케이스) + rate_control; identity
+  IDENTITY_SETS=independent 4 세트 29,596 행 포크와 IDENTICAL; px4_sitl_default; validate_module_configs; module_documentation; check_format;
+  호버 게이트 2520 10/10 (PX4_ROOT=워크트리); fmu-v6x_airship text 1,732,208 / data 7,732 / bss 106,812. 펌웨어 스테이징
+  `fw_e93b52d0e13/px4_fmu-v6x_airship.px4` (build_fmu.py, Airship 그룹 = ROMFS 2500/2507/2520 확인). 사용자가 올린다.
+- 분리 (4) 플랜트 레지스트리 에이전트 (split/step4, 어제 Fable 한도로 중단 → 재시작) 와 (5) gz_run.sh 오버레이 경로 에이전트 (split/step5, 트림된
+  트리 = pr/airship 워크트리에서 검증) 진행 중. 남은 것: (6) 트림 (7) 재기준선, 문서 png, PR 본문 괄호 항목, 푸시 (사용자).
