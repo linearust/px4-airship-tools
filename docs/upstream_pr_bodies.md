@@ -127,7 +127,7 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
   (restore rule; heading drift after release); anti-windup at full throttle + full yaw;
   AS_YAWRATE_FF measured per the docs procedure then flown; Land selected in the air keeps the
   vehicle armed.
-- SITL: hover gate 10/10 on posix 2520 from this branch (475267c93a; re-run at d020cc4c40 [result]);
+- SITL: hover gate 10/10 on posix 2520 from this branch (475267c93a, and again at d020cc4c40);
   sim-vs-flight table from the vehicle's own twin [table].
 - Not flown, unit tests only: a fixed mount (`TLMIN` = `TLMAX`), a ±90° range, the 7 m twin's own
   gains, `AS_YAWRATE_FF`'s shipped default 0.

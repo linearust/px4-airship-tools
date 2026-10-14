@@ -322,3 +322,4 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   오버레이로 옮기고 lta.sdf 에서 include 제거). 도구 main c97c428: 트리 모드 제거, 오버레이 자급 (템플릿은 오버레이의 generic rigid), absent_params(root),
   slug·lta_lab 이름 단일화, upstream 출력 주석 정리, 기록 보정 (hull 등급, 벤치 보드, pins 가지, 대체된 절 포인터, PR 본문 수치). 검증: 포크 run_tests
   (gen 17, variant 17, forward 220), 준비 브랜치 시험 5/5 + identity 29,596 행 동일 + px4_sitl_default; 호버 게이트 둘 (포크·준비) 실행 중.
+- 15:15 호버 게이트 둘 10/10 (포크 8af72b9a50, 준비 d020cc4c40). 패스 3 완료.
