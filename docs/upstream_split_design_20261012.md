@@ -156,6 +156,57 @@ plants.EXPECTED (뷰), forward_replay (로그 검사는 number_tree, 배분기 �
 (`model == tree_name`, 트리 에어프레임 존재) 을 오버레이 쪽 (`model == key`, `<number_overlay>_gz_<key>`) 으로 뒤집는다 — S3 의 재앵커링.
 **(5) 끝남 (2026-10-14, 도구 split/step5: 2286820 생성기 월드, 5b7b12d 월드 변수, a72d976 실행 경로; (4) 는 아직).** gz_run.sh 가 모델의 집으로 경로를 고른다: `GZ_TARGET=gz_<model>` 의 `<model>` 에 `$AIRSHIP_OVERLAY/models/<model>/model.sdf` 가 있으면 오버레이 경로 (두 집에 다 있으면 exit 8, `<n>_gz_<model>` 에어프레임이 없으면 exit 8, PX4_GZ_WORLD 가 lta_lab 이 아니면 exit 9), 아니면 트리 경로 그대로. 오버레이 경로 = S4: `make px4_sitl` (빌드만, 1800 s 상한) → `overlay/install.sh <tree>` (AIRSHIP_OVERLAY 를 읽고 `[0-9]*_gz_*` 만 복사) → 빌드 `gz_env.sh` source + `GZ_SIM_RESOURCE_PATH` 앞에 오버레이 models → `gz sim --verbose=1 -r -s overlay/worlds/lta_lab.sdf` (준비 = `/world/lta_lab/scene/info` 의 제공자, 30 s; gz.log 의 "Failed to load system plugin" 은 exit 4) → `/world/lta_lab/create` 로 `<model>_0` 을 `file://` 모델 파일에서 PX4_GZ_MODEL_POSE 로 스폰 (create 는 include 가 풀리지 않아도 true 라 `pose/info` 에 이름이 있어야 함) → `bin/px4` 를 rootfs 에서 `PX4_SIM_MODEL=gz_<model> PX4_GZ_STANDALONE=1 PX4_GZ_MODEL_NAME=<model>_0 PX4_GZ_WORLD=lta_lab` 로 (stdin 파이프, SDLOG_DIRS_MAX 0) → 기존 uORB·"world is ready" 대기 (+ "gz_bridge failed" 분기). 검사에는 PX4_GZ_ENTITY, PX4_GZ_WORLD=lta_lab, AIRSHIP_OVERLAY 가 간다; exit-10 규칙은 트리 경로의 것 (standalone px4 는 다른 월드를 찾지 않는다). 하드코딩 `lta` 는 sitl_link.WORLD, forward_yaw_check 의 target 해석, gate.py 의 sitl_link stub 세 곳 → `gz_model.WORLD` 하나 (기본 lta; aero_moment/added_mass 의 probe 월드와 variant_check 의 트리 lta.sdf 는 실행 월드가 아니라 그대로). 생성기: lab 월드는 템플릿 트리가 아니라 PX4_ROOT (실행 트리) 의 lta.sdf 사본 — 포크 lta.sdf 의 `model://ground_markers`·`flight_grid` include 가 트림된 트리의 서브모듈에 없어 서버가 월드를 거부했다 (generator test 23/23 그대로). 검증 (트림된 트리 px4-pr-airship e93b52d0e1, 서브모듈 e9580fce): 스크래치 오버레이 = `PX4_ROOT=<trimmed> AIRSHIP_OVERLAY=<scratch> airship_family_gen.py vehicles/airship_generic.json --overlay --root <fork 27fd5f1ffd>` (가족은 포크에서, 월드는 트림된 트리에서; 트리 둘 다 읽기만); 오버레이 게이트 `GZ_TARGET=gz_airship_vectored_independent_rigid` (2620, lta_lab) **10/10**, 트리 대조 `gz_airship_vectored_independent` (2520, lta) **10/10**. 트림된 펌웨어가 거부한 줄: 2620 의 `CA_AIRSHIP_GRP 1` 하나 (rcS 는 set +e 라 경고뿐, 게이트에 영향 없음); 2627 의 AS_SPD_SRC/WMAX/HI·AS_YR_FF_SLP 도 그 펌웨어에 없다 (돌리지 않음). 남은 것: (4) 플랜트 레지스트리, (6) 트림, (7) 재기준선; `inject_flaps` 는 조종면 가족의 플랩 템플릿을 아직 gz_model.GZ_MODELS (PX4_ROOT) 에서 읽는다 (generic 은 조종면이 없어 안 닿음); 오버레이 실행 뒤 빌드 etc 에 남는 26xx 사본은 이름이 달라 트리 경로에 무해; cleanup 의 bash "Killed/Terminated" 잡 알림은 전부터 있던 소음.
 
+**(6) 생성기 쪽 끝남 (2026-10-14, 도구 split/step6a: fbb643e variant_check, 096c9cb 생성기, + 이 문서 커밋).** `--overlay` 가 generic 의 고정 쌍둥이 (트리 2500-2505 → `airship_fixed_rigid` 2600/2601/2604/2605: 멤버 에어프레임은
+트리 것을 bare 포함만 바꿔 복사, 플랩 서보 범위는 생성기가, 월드·decades·vehicles.md 의 절은 트리 vehicles.md 의 절을 이름만 바꿔 복사) 를 함께 쓰고,
+`airship_family_gen.py cloudship --overlay` (기체 파일 대신 이름: Cloudship 은 설계된 기체가 아니라 이식된 모델이라 hull·pods 가 없고, JSON 을 두면 `vehicle_files()` 를 읽는
+TWINS 가 2520 으로 잘못 짝짓고 VEHICLE_ALLOCATION 이 pods 를 찾는다) 가 트리의 여섯 멤버를 bare 만 `cloudship_rigid` 로 (2610..2617; `2507_cloudship` 과 classic 의
+`cloudship/cloudship.sdf.jinja` 참조는 그대로) 복사한다 (두 번째 실행 변화 0; 오버레이에 이미 있으면 트리를 읽지 않으므로 트림 뒤에도 돈다). `--upstream` 은 셋 다 쓴다:
+cloudship 평범 플랜트는 오버레이 `cloudship_am` 사본에 `_am_fin`·`_am_fin_drag` 의 제 블록을 붙인 자체 완결 한 파일, posix 2510 은 rigid bare 의 본문 (변형 설명 문장 —
+physics mask·CMakeLists·rigid hull·member 를 말하는 문장 — 을 빼고 "This is the complete plant: ..." 한 문장을 붙임) + 완전 멤버의 include 뒤 블록 전부 (MARK 가 없어도).
+`--upstream` 이 이제 posix CMakeLists 항목과 문서 항목 셋 (vehicles.md 절, index.md 행, frames_airship 불릿; index.md 의 번호로 정렬) 도 쓴다 — 트림이 지우고 생성기가
+되돌리는 모양. variant_check 는 두 모양에서 돈다: `plain(vehicle)` (bare 가 오버레이 `_rigid` 인 기체의 트리 평범 이름) 은 사실 1 의 사슬을 완전 멤버 모양으로, 사실 7 의 번호를
+십 자리 − 100 (마스크 0) 으로, 사실 8 의 목록을 완전 멤버의 토큰으로 읽고, 사실 13 은 오버레이 십 자리 − 100 의 트리 번호를 받으며, 사실 14 의 STABLE 은 `_base_rigid` 의 머리도
+읽고 (안정 약속은 rigid 몸체의 머리에만 있다), 사실 2 는 자체 완결 기체의 사본을 bare (`cloudship_rigid`) 와 비교한다; **사실 17** (새로): 평범 플랜트 == 오버레이 완전 멤버
+(merged 원소 단위, 에어프레임 기본값 − `gz_model.UPSTREAM_ABSENT`). 시험: 생성기 26/26 (cloudship 복사 멱등, cloudship upstream 쌍둥이, `--plants`, 트림된 스크래치 트리 +
+오버레이 전체 (기체 5 + cloudship, 모델 43 = 오버레이 40 + 평범 3) 에서 variant_check 17/17), 오늘 트리 17/17, run_tests 254 PASS / 0 FAIL / SKIP 1.
+
+**(6) 절차 — 트림 (다음 에이전트가 그대로 실행).** 포크 트리 `~/dev/PX4-Autopilot` (airship/dev 27fd5f1ffd, 서브모듈 0c4307b) 은 끝까지 읽기 전용 템플릿으로 두고, 트림은
+worktree 에서 한다. 도구는 main 에 이 단계가 병합된 뒤.
+
+1. worktree 와 가지: `cd ~/dev/PX4-Autopilot && git worktree add ../px4-trim -b airship/trim airship/dev && cd ../px4-trim && git submodule update --init Tools/simulation/gz
+   && git -C Tools/simulation/gz checkout -b airship/models-trim`. 아래 `T=~/dev/px4-trim`, `F=~/dev/PX4-Autopilot`, `G=~/dev/px4-airship-tools`.
+2. 서브모듈 삭제 (`$T/Tools/simulation/gz`): `git rm -r models/airship_* models/cloudship*` (50 디렉터리: 벡터링 가족 5 × 8, airship_fixed 4, cloudship 6). `worlds/lta.sdf`:
+   `<enable>` 줄 전부 (airship_*·cloudship*, 200 줄: Buoyancy 플러그인 안에는 다른 enable 이 없다). 커밋 (`refactor(airship): trim the families to the plain plants`).
+3. PX4 삭제 (`$T`): `git rm ROMFS/px4fmu_common/init.d-posix/airframes/25[0-6][0-9]_gz_*` (40 개; `2519_gazebo-classic_cloudship` 은 남긴다); 그 `CMakeLists.txt` 의 `\t25xx_gz_*`
+   40 줄과 "Airship gz decades" 주석 블록 (표 7 줄과 그 위 설명 7 줄; `2519_gazebo-classic_cloudship` 줄은 남긴다); `docs/en/sim_gazebo_gz/vehicles.md` 의 `## Airship` 아래
+   `###` 절 40 개 전부 (서론 두 문단은 남기되 명명 규칙·마스크·"Regress the allocator on the rigid hull" 문단은 S6 대로 손으로: 가족은 px4-airship-tools 에 있다는 한 줄 +
+   링크); `docs/en/sim_gazebo_gz/index.md` 의 `make px4_sitl gz_airship_*`/`gz_cloudship*` 행 40 개; `docs/en/frames_airship/index.md` 의 Simulation 절 불릿 7 개와
+   "Each is a family of models named by..." 문장 (레포 링크 한 줄로); `docs/en/sim_gazebo_gz/worlds.md` 50-53 행 ("lists each airship model's bare name and instances
+   0 to 3" → 평범 플랜트 셋); 비행 `init.d/airframes/2520_airship_vectored_independent` 32-38 행 (변형 언급); `src/.../AirshipYawScheduleTest.cpp:39` 주석. 아직 커밋하지 않는다.
+4. 오버레이 생성 (트리는 포크에서, 월드는 트림된 트리에서 — (5) 의 검증과 같은 조합): `cd $G && for v in airship_generic airship_indoor airship_aurora airship_jaxa airship_mpi; do
+   PX4_ROOT=$T python3 airship_family_gen.py vehicles/$v.json --overlay --root $F; done && PX4_ROOT=$T python3 airship_family_gen.py cloudship --overlay --root $F`.
+   결과: `overlay/models` 50 디렉터리, `overlay/airframes` 40 파일 + `decades` 7 줄 (2600 airship_fixed_rigid, 2610 cloudship_rigid, 2620, 2630, 2640, 2650, 2660),
+   `overlay/worlds/lta_lab.sdf` (enable 200 줄, `<world name="lta_lab">`), `overlay/vehicles.md` (행 40, 절 40). 같은 명령을 한 번 더: "airframes written: none; world entries added 0".
+5. 평범 플랜트 셋을 오버레이에서 트림된 트리로: `PX4_ROOT=$T python3 airship_family_gen.py vehicles/airship_generic.json --upstream overlay --root $T` (`airship_base`,
+   `airship_fixed` + 2500, `airship_vectored_independent` + 2520) 와 `PX4_ROOT=$T python3 airship_family_gen.py cloudship --upstream overlay --root $T` (`cloudship` + 2510).
+   각각 "twin check OK". 쓰는 것: 모델 4 (model.sdf + model.config), posix 3, CMake 항목 3, `lta.sdf` enable 15 줄, vehicles.md 절 3 / index.md 행 3 / frames_airship 불릿 3
+   (2500, 2510, 2520 순). 2500·2510 의 머리 주석은 생성기가 "This is the complete plant: ..." 로 고쳐 쓴다; 문서 절 셋은 upstream 모양 (≤ 3 문장) 으로 손질하고 스크린샷은 있으면.
+6. 검사: (a) `PX4_ROOT=$T AIRSHIP_OVERLAY=$G/overlay python3 variant_check.py` → `통과 17 / 실패 0`, `모델 43 개`; (b) S6 게이트 — `cd $T && grep -rnE
+   "\b25(0[1-9]|1[1-8]|2[1-9]|[3-6][0-9])\b|_am_fin|_am_drag" ROMFS docs/en src/modules/control_allocator src/modules/airship_att_control src/lib/control_allocation` 이 비어야
+   한다 (S6 의 `src` 전체 grep 은 tflite 시험 자료·msp_osd 의 무관한 숫자에 걸린다); (c) `grep -rn "airship_\|cloudship" $T/Tools/simulation/gz/worlds/lta.sdf | wc -l` = 15;
+   (d) `cd $T && make px4_sitl_default` (오버레이 없이 트리만: gz 없이 빌드); (e) 도구 쪽 — `pins.env` 를 트림 커밋으로 바꾸기 **전에** 시험을 트림 모양으로 옮긴다:
+   `airship_family_gen_test` 의 트리 모드 세 경우 ([generic round trip]·[indoor family]·[surfaces option] 은 트리에 가족이 있을 때의 것) 를 오버레이 왕복 (`overlay/` 사본에
+   `--overlay` 다섯 + cloudship → 변화 0) 과 `--upstream` 왕복 (트리 사본에 `--upstream overlay` 둘 → "wrote nothing; twin check OK") 으로, `yaw_model/test_plant_registry.py` 의
+   두 단언을 (4) 에 적은 대로 (`model == key`, `<number_overlay>_gz_<key>` 존재) 뒤집고, `apply_generic_hull.main()` 의 기본 (`plan(..., GENERIC, M)`·`write_cloudship()`) 을
+   오버레이 (`GENERIC_RIGID`·`CLOUDSHIP_RIGID`, `gz_model.OVERLAY/models`) 로; 그 뒤 `PX4_ROOT=$T ./run_tests.sh` 녹색.
+7. 커밋과 푸시 순서 (gz-submodule-publish-order): 서브모듈 가지 `airship/models-trim` 을 포크에 먼저 푸시 → PX4 `airship/trim` 커밋 (서브모듈 포인터 포함; 3·5 의 변경 한
+   커밋 또는 삭제/생성 두 커밋) → 도구 레포: `overlay/models overlay/airframes overlay/worlds overlay/vehicles.md` 와 6(e) 의 시험 변경, `pins.env` (PX4_COMMIT·GZ_MODELS_COMMIT
+   = 트림 커밋, 가지 이름) 을 커밋. 사용자가 diff 를 검토하기 전에는 푸시하지 않는다 (commit-after-user-review).
+8. 남는 것 (건드리지 않음): posix `2519_gazebo-classic_cloudship` 과 classic 모델; 비행 에어프레임 `2500_generic_airship`·`2507_cloudship`·`2520_airship_vectored_independent`
+   (2520 은 32-38 행만); 넓은 펌웨어 — `AS_SPD_*`·`AS_YR_FF_SLP`·`CA_AIRSHIP_GRP` 는 포크 펌웨어에 남고 오버레이 에어프레임만 설정한다 (평범 플랜트 셋은 설정하지 않는다:
+   `UPSTREAM_ABSENT`); 요 모델 기록 파일. 그 다음이 (7) SITL 재기준선: 트리 2520 게이트 (= 오늘 2527 10/10), 2510 (= 2517 9/9), 2500 비행 검사; 오버레이 2627·2617·2637
+   (전진 42/42) 는 `GZ_TARGET=gz_<model> ./gz_run.sh` 로.
+
 **(3) 의 원래 변경 목록 (참고).**
 - `apply_generic_hull.Family`/`vectored_family(name, title, surfaces, rigid=False)`: rigid 가족은 `bare = name + '_rigid'`, `base = name + '_base_rigid'`, `base_am` 그대로,
   나머지 그대로. `GENERIC` 도 두 판 (트리용 지금 것, 오버레이용 rigid). `copy_family` 의 renames 는 긴 이름부터 (이미 그렇다) — `_base_am` 이 `_base_rigid` 로 잘못 바뀌지 않게
