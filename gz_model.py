@@ -48,14 +48,28 @@ OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
 OVERLAY_WORLD = os.path.join(OVERLAY, 'worlds', 'lta_lab.sdf')
 OVERLAY_DOCS = os.path.join(OVERLAY, 'vehicles.md')
 OVERLAY_SHIFT = 100         # an overlay family's decade is its vehicle's tree decade plus this: 25x0 -> 26x0
-# Parameters the upstream airship controller does not have (the fork's
-# forward-speed schedule). The tree's plain plant sets none of them, and its
-# airframe is held to the overlay's complete member less these
-# (airship_family_gen, variant_check fact 17). The pod grouping CA_AIRSHIP_GRP
-# is not among them: the fork firmware the tree builds has it with the
-# collective default, so a plain plant states its grouping as the flight
-# airframes do (2500 and 2507 collective, 2520 independent).
-UPSTREAM_ABSENT = ('AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_HI', 'AS_YR_FF_SLP')
+# The airship parameters an airframe may set that a tree may lack: the fork's
+# later rounds (pod grouping, tail, surface credit, the forward-speed
+# schedule) under the upstream-bound tree, none under the fork. A line setting
+# one is dropped from an airframe written into that tree, and the twin check
+# leaves it out, so the rule is asked of the tree, not fixed in a list
+PARAM_CANDIDATES = ('CA_AIRSHIP_GRP', 'CA_AIRSHIP_TAIL', 'CA_AIRSHIP_CS_K',
+                    'AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_HI', 'AS_YR_FF_SLP')
+PARAM_YAMLS = {'CA_': 'src/modules/control_allocator/module.yaml',
+               'AS_': 'src/modules/airship_att_control/airship_att_control_params.yaml'}
+
+
+def absent_params():
+    """The PARAM_CANDIDATES the tree at ROOT does not define (yaml_default raises)."""
+    out = []
+
+    for name in PARAM_CANDIDATES:
+        try:
+            yaml_default(PARAM_YAMLS[name[:3]], name)
+        except LookupError:
+            out.append(name)
+
+    return tuple(out)
 # The gz world of a SITL run, as the launcher exported it: gz_run.sh resolves
 # the tree's world (`lta` unless the target names another) or the overlay's
 # `lta_lab`. `lta` is for a check attached by hand to a world someone else
@@ -243,17 +257,18 @@ def yaml_default(rel, name):
     group: definitions: NAME: default), as written. LookupError when the file
     is not there, does not define the name, or gives it no default: a default
     that cannot be read is not a default of 0. The file is parsed once."""
-    if rel not in _YAML_CACHE:
+    path = os.path.join(ROOT, rel)    # the cache is by path: ROOT may be switched (airship_family_gen.at_root)
+
+    if path not in _YAML_CACHE:
         import yaml
-        path = os.path.join(ROOT, rel)
 
         if not os.path.exists(path):
             raise LookupError('%s 가 없다' % path)
 
         with open(path, encoding='utf-8') as handle:
-            _YAML_CACHE[rel] = yaml.safe_load(handle)
+            _YAML_CACHE[path] = yaml.safe_load(handle)
 
-    for group in _YAML_CACHE[rel].get('parameters', []):
+    for group in _YAML_CACHE[path].get('parameters', []):
         spec = (group.get('definitions') or {}).get(name)
 
         if spec is not None:

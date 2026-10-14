@@ -85,7 +85,7 @@ this reads every airship model in the tree and holds each fact to the file:
      the one plant upstream carries, numbered at the family's tree decade (a
      hundred below the overlay's, mask 0), and it is the family's complete
      member: the merged models element for element, the airframes' resolved
-     defaults less the parameters upstream lacks (gz_model.UPSTREAM_ABSENT).
+     defaults less the parameters this tree lacks (gz_model.absent_params()).
      Facts 1, 7, 8 and 13 read it so: its chain is the complete member's
      shape, its physics the complete member's. Before the trim there is no
      plain plant, and the facts read as they always did.
@@ -998,7 +998,7 @@ def main():
             bad.append('%s 의 merged 모델이 %s 와 다르다 (자식 %d/%d, 첫 차이 %s)' % (p, c, len(mine), len(theirs), first))
 
         mine_defaults = gz_model.airframe_defaults(p)
-        theirs_defaults = {k: x for k, x in gz_model.airframe_defaults(c).items() if k not in gz_model.UPSTREAM_ABSENT}
+        theirs_defaults = {k: x for k, x in gz_model.airframe_defaults(c).items() if k not in gz_model.absent_params()}
 
         if mine_defaults != theirs_defaults:
             keys = sorted(k for k in set(mine_defaults) | set(theirs_defaults) if mine_defaults.get(k) != theirs_defaults.get(k))

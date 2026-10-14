@@ -569,7 +569,8 @@ def main():
 
         time.sleep(2)
 
-    verdict('할당기가 모터 둘과 조종면 넷을 잡았다', count == 6, '할당기가 보고한 출력 %s' % (count if count >= 0 else '없음'))
+    # motors 2 + surfaces 4 + the two tilt slots the airship class always declares (undriven on a fixed mount, 2026-10-13)
+    verdict('할당기가 모터 둘, 조종면 넷, 틸트 슬롯 둘을 잡았다', count == 8, '할당기가 보고한 출력 %s' % (count if count >= 0 else '없음'))
 
     if not wait_for_ekf():
         verdict('EKF 가 유효해진다', False, '위치 추정이 유효해지지 않았다')
