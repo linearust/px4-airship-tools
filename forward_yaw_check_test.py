@@ -128,8 +128,9 @@ def test_files():
             (p['AS_YAWRATE_P'], p['AS_YAWRATE_I'], p['AS_YR_INT_LIM'], p['AS_YAWRATE_MAX'], p['MAN_DEADZONE'],
              p['AS_YAWRATE_FF']) == (0.7, 0.09, 0.3, 15.0, 0.1, 0.0), str({k: p[k] for k in sorted(p)}))
     numbers = {m: gz_model.airframe(m)[0] for m in F.ALLOWED}
-    known = {VEC_FIN: 2522, VEC_ALL: 2527, CS_FIN: 2512, CS_ALL: 2517}
-    verdict('핀 기체마다 posix 번호가 하나이고 네 기체는 제 번호다',
+    # the overlay's four under their overlay numbers, the tree's two plain complete plants under theirs
+    known = {VEC_FIN: 2622, VEC_ALL: 2627, CS_FIN: 2612, CS_ALL: 2617, 'airship_vectored_independent': 2520, 'cloudship': 2510}
+    verdict('핀 기체마다 posix 번호가 하나이고 네 기체는 오버레이 번호, 평범 플랜트 둘은 트리 번호다',
             all(numbers.get(m) == n for m, n in known.items()) and len(numbers) == len(F.ALLOWED), str(numbers))
     n17, n27 = gz_model.lateral_derivatives(CS_ALL)['n_v'], gz_model.lateral_derivatives(VEC_ALL)['n_v']
     verdict('Munk 가 핀을 이기는 것은 완전한 Cloudship 뿐이다 (n_v)', n17 < 0.0 < n27, '2517 %+.3f, 2527 %+.3f' % (n17, n27))
@@ -320,9 +321,10 @@ def test_plan():
             '%d 줄' % len(text.splitlines()))
     want = ['%.4f -> %d/1000' % (gz_model.trim_thrust(VEC_ALL, u), F.quantize(gz_model.trim_thrust(VEC_ALL, u))[0]) for u in (LOW, HIGH)]
     verdict('--plan 에 2527 의 두 트림과 그 계수가 있다 (%s)' % ', '.join(want), all(w in text for w in want), '')
-    verdict('완전한 Cloudship 만 Acro 에서 가속한다',
-            '기체 %s (posix 2517), 가속 acro' % CS_ALL in text
-            and all('기체 %s (posix %d), 가속 manual' % (m, gz_model.airframe(m)[0]) in text for m in (VEC_FIN, VEC_ALL, CS_FIN)),
+    verdict('완전한 Cloudship (2617 과 평범한 2510) 만 Acro 에서 가속한다',
+            '기체 %s (posix 2617), 가속 acro' % CS_ALL in text and '기체 cloudship (posix 2510), 가속 acro' in text
+            and all('기체 %s (posix %d), 가속 manual' % (m, gz_model.airframe(m)[0]) in text
+                    for m in (VEC_FIN, VEC_ALL, CS_FIN, 'airship_vectored_independent')),
             '')
     n_plants = len(F.ALLOWED)
     n_cloud = sum(m.startswith('cloudship') for m in F.ALLOWED)
@@ -331,8 +333,8 @@ def test_plan():
     verdict('Cloudship 기체마다 속도 선택 표가 있다 (%d)' % n_cloud, text.count('속도 선택 표') == n_cloud, '')
     code, text = run_main(['--plan'], {'GZ_TARGET': 'gz_cloudship_fin'})
     verdict('GZ_TARGET 이 있으면 그 기체만', code == 0 and text.count('기체 ') == 1 and CS_FIN in text, '')
-    code, text = run_main(['--plan'], {'GZ_TARGET': 'gz_airship_vectored_independent'})
-    verdict('다른 기체는 px4 를 묻기 전에 거절한다', isinstance(code, SystemExit) and 'airship_vectored_independent' in str(code),
+    code, text = run_main(['--plan'], {'GZ_TARGET': 'gz_airship_vectored_independent_rigid'})
+    verdict('다른 기체 (핀 없는 rigid) 는 px4 를 묻기 전에 거절한다', isinstance(code, SystemExit) and 'airship_vectored_independent_rigid' in str(code),
             str(code)[:80])
     code, text = run_main(['--plan'], {'GZ_TARGET': 'gz_cloudship_am_fin_drag', 'FORWARD_LEGS': '4.0:1.0'})
     verdict('4 m/s 의 완전한 Cloudship 다리는 진입이 발산한다고 표시된다', '진입이 정상 직진이 되지 못할 것으로 본다' in text, '')

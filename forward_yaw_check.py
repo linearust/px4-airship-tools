@@ -171,7 +171,13 @@ ROOTFS = os.path.join(gz_model.ROOT, 'build/px4_sitl_default/rootfs')
 # (2520, 2510) have nothing to show here; the plan keeps them as the unchanged
 # reference of the next increment. Read from the model homes, so a generated
 # family (airship_family_gen.py) is a plant the moment it exists.
-ALLOWED = tuple(n for n in gz_model.model_names() if 'fin' in gz_model.family_tokens(n))
+# The plants this check flies, in either home: those whose merged model
+# carries a fin as a lifting surface without a flap (the pods yaw them, the
+# fins only damp): the overlay's _fin members and the tree's plain complete
+# plants, which carry no token. The fixed family's fins are its rudders and
+# fly airship_fixed_flight_check.py.
+ALLOWED = tuple(n for n in gz_model.model_names() if n.startswith(('airship_', 'cloudship'))
+                and any(f['joint'] is None for f in gz_model.lift_drag_fins(gz_model.merged(n))))
 
 # (low, high) speed per plant, m/s. Default legs: full stick at both, half
 # stick at the high speed, right (positive) yaw. The vectored airship's legs
@@ -189,6 +195,7 @@ ALLOWED = tuple(n for n in gz_model.model_names() if 'fin' in gz_model.family_to
 LEG_SPEEDS = {
     'cloudship_fin': (2.0, 4.0),
     'cloudship_am_fin_drag': (2.0, 2.5),
+    'cloudship': (2.0, 2.5),               # the tree's plain plant: the complete member under its plain name
 }
 # Any other plant flies the middle of its schedule's ramp and LEG_PAST_RAMP
 # times the ramp's end, rounded to 0.05 m/s. LEG_RAMP_MIDDLE and LEG_PAST_RAMP
