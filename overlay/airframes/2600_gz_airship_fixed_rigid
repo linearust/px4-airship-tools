@@ -63,7 +63,8 @@ param set-default SIM_GZ_SV_MINA4 -8
 param set-default SIM_GZ_SV_MAXA4 8
 
 # One collective thrust command with the pods fixed thrusting forward, as
-# 2500 declares it: the zero tilt range allocates no tilt servo
+# 2500 declares it: the zero tilt range leaves the two tilt outputs declared
+# and undriven
 param set-default CA_AIRFRAME 16
 param set-default CA_AIRSHIP_GRP 0
 param set-default CA_AIRSHIP_TLMIN 0
