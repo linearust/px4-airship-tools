@@ -299,14 +299,14 @@ def reference_runs(rtf=1.0):
 # file, chain script), all in ./records_head
 HEAD_RUNS = []
 
-for _run, (_text, _header, _logs) in record_gains.RUNS.items():
+for _run, (_text, _header, _) in record_gains.RUNS.items():
     if not _text.startswith('yaw_model/records_head/'):
         continue
 
     _tag = record_gains.SERIES_TAG[_run]
     _script = os.path.join(RECORDS_HEAD, re.sub(r'_\d+$', '', _tag) + '.sh')
 
-    for _target in _logs:
+    for _target in record_gains.targets(_run):
         HEAD_RUNS.append((_run, _target, os.path.join(BENCH, _text), _header,
                           os.path.join(RECORDS_HEAD, 'samples_%s_%s.csv' % (_target, _tag)), _script))
 

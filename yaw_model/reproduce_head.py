@@ -71,9 +71,9 @@ def blocks(target):
     out = {}
 
     for run in RUNS:
-        text, header, logs = record_gains.RUNS[run]
+        text, header, _ = record_gains.RUNS[run]
 
-        if target not in logs:
+        if not record_gains.has_gate(run, target):
             continue
 
         lines = [line for line in record_gains.block_lines(os.path.join(record_gains.BENCH, text), header % target)
@@ -85,7 +85,7 @@ def blocks(target):
 
 def gains_of(target):
     """(params, sources) of `target` over its HEAD runs; one set or raise."""
-    found = [(run,) + record_gains.gains(run, target) for run in RUNS if target in record_gains.RUNS[run][2]]
+    found = [(run,) + record_gains.gains(run, target) for run in RUNS if record_gains.has_gate(run, target)]
     first = found[0][1]
 
     for run, params, _ in found[1:]:

@@ -225,7 +225,7 @@ def record_params(target, chains=CHAINS):
     for tag, _ in chains:
         run = RUN_OF_CHAIN[tag]
 
-        if target in record_gains.RUNS[run][2]:
+        if record_gains.has_gate(run, target):
             found.append((tag,) + record_gains.gains(run, target))
 
     if not found:

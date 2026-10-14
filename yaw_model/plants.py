@@ -105,8 +105,9 @@ BENCH = os.environ.get('AIRSHIP_BENCH', os.path.dirname(os.path.dirname(os.path.
 sys.path.insert(0, BENCH)
 
 import gz_model  # noqa: E402  pure: parses model.sdf, no simulator
+import plant_registry  # noqa: E402  the plants' keys, directories, numbers and snapshot numbers
 
-M = 'Tools/simulation/gz/models'
+M = plant_registry.MODELS
 DEG = math.pi / 180.0
 
 # ---------------------------------------------------------------------------
@@ -301,20 +302,11 @@ CS_AM_LINKS = (
 MEAS_VI = {'I_rigid': 129.2818, 'rr': 194.3086, 'src': 'sitl_out/chain5_20260925.txt:19-20'}
 MEAS_CS = {'I_rigid': 5.6922, 'rr': 4.0866, 'src': 'sitl_out/chain5_20260925.txt:31-32'}
 
-# The four plants as numbers. build_from_sdf() re-reads each one.
-EXPECTED = {
-    'gz_airship_vectored_independent': dict(
-        model='airship_vectored_independent', I_rigid=129.1503, rr=0.0, c_hull=0.0, x_com=0.00656,
-        c_fin=(), n_full=54.0),
-    'gz_airship_vectored_independent_am_fin_drag': dict(
-        model='airship_vectored_independent_am_fin_drag', I_rigid=129.1503, rr=192.24415, c_hull=241.5613,
-        x_com=0.00656, c_fin=(106.02, 89.28), n_full=54.0),
-    'gz_cloudship': dict(
-        model='cloudship', I_rigid=5.7986, rr=0.0, c_hull=0.0, x_com=0.02197, c_fin=(), n_full=4.478),
-    'gz_cloudship_am_fin_drag': dict(
-        model='cloudship_am_fin_drag', I_rigid=5.7986, rr=3.94525, c_hull=5.0873, x_com=0.02197,
-        c_fin=(0.4993, 0.4993), n_full=4.478),
-}
+# The four plants as numbers, keyed by the gz target of the records' day:
+# the registry's anchored entries (plant_registry.ENTRIES, where each number
+# lives) with the model directory a home holds the plant under today.
+# build_from_sdf() re-reads each one.
+EXPECTED = {e.target: dict(model=e.model, **e.expected) for e in plant_registry.anchored()}
 
 SOURCES = {
     'gz_airship_vectored_independent': {
@@ -387,7 +379,9 @@ def _fins_from_sdf(model_elem, com):
 
 
 def build_from_sdf(target):
-    """The plant as the model files say it, through gz_model."""
+    """The plant as the model files say it, through gz_model. `target` is
+    any name the registry resolves; the Plant carries the records' day's."""
+    target = plant_registry.resolve(target).target
     e = EXPECTED[target]
     fam = gz_model.family(e['model'])
     merged = gz_model.merged(e['model'])
@@ -446,6 +440,8 @@ class _Plants:
         self._cache = {}
 
     def __getitem__(self, target):
+        target = plant_registry.resolve(target).target
+
         if target not in self._cache:
             p = build_from_sdf(target)
             bad = check(p)
@@ -459,7 +455,10 @@ class _Plants:
         return self._cache[target]
 
     def __contains__(self, target):
-        return target in EXPECTED
+        try:
+            return plant_registry.resolve(target).target in EXPECTED
+        except LookupError:
+            return False
 
     def __iter__(self):
         return iter(EXPECTED)

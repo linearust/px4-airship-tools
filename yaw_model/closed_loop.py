@@ -77,29 +77,30 @@ sys.path.insert(0, HERE)
 
 import gate  # noqa: E402  (puts the bench tools on sys.path, no bytecode)
 import controller as ctl  # noqa: E402
+import plant_registry  # noqa: E402
 import plants  # noqa: E402
 
 DT = 0.004                         # lta.sdf:8 max_step_size; IMU 250 Hz (model.sdf:217 / :242)
 GYRO_NOISE = plants.GYRO_NOISE
 
-TARGETS = {
-    # target: (gz model name for sitl_check/gz_model, airframe key in controller.AIRFRAMES)
-    'gz_airship_vectored_independent': ('airship_vectored_independent', 'vectored'),
-    'gz_airship_vectored_independent_am_fin_drag': ('airship_vectored_independent_am_fin_drag', 'vectored'),
-    'gz_cloudship': ('cloudship', 'cloudship'),
-    'gz_cloudship_am_fin_drag': ('cloudship_am_fin_drag', 'cloudship'),
-}
+def _targets(*keys):
+    """{that day's gz target: (model name a home holds today, airframe key
+    in controller.AIRFRAMES)} of the registry plants `keys` name: the target
+    is what the records and tests call the plant, the model what the live
+    lookups (airframe_for_model, head_params, sitl_check) take."""
+    return {e.target: (e.model, e.family) for e in map(plant_registry.resolve, keys)}
+
+
+# The four plants of interest, the ones plants.py holds numbers for.
+TARGETS = _targets('airship_vectored_independent_rigid', 'airship_vectored_independent_am_fin_drag',
+                   'cloudship_rigid', 'cloudship_am_fin_drag')
 # Not one of the four plants of interest: a hold-out check. 2522 sources 2520
 # (2522_gz_airship_vectored_independent_fin:11-13), so its controller and
 # actuation are the vectored airship's; only the roll plant takes it.
-EXTRA_TARGETS = {
-    'gz_airship_vectored_independent_fin': ('airship_vectored_independent_fin', 'vectored'),
-}
+EXTRA_TARGETS = _targets('airship_vectored_independent_fin')
 # Built for the forward legs only (no gate record exists): the Cloudship with
 # fins on the rigid hull. 2512 sources 2510 (2512_gz_cloudship_fin:11-13).
-FORWARD_TARGETS = {
-    'gz_cloudship_fin': ('cloudship_fin', 'cloudship'),
-}
+FORWARD_TARGETS = _targets('cloudship_fin')
 ALL_TARGETS = dict(TARGETS, **EXTRA_TARGETS, **FORWARD_TARGETS)
 
 

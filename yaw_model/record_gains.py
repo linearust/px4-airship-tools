@@ -14,8 +14,8 @@ passes what it gets explicitly.
 Sources, both read, never typed in:
   1. the run's flight log: the SITL ulog's initial parameters (pyulog). Each
      registered run names its log below; the log is checked to be the right
-     airframe (its SYS_AUTOSTART against the target's posix airframe,
-     controller.airframe_for_model). The map was built on 2026-10-01 by
+     airframe (its SYS_AUTOSTART against the number the plant had that day,
+     plant_registry.Entry.number_tree, not the live tree's). The map was built on 2026-10-01 by
      matching each samples_<target>_<run>.csv's write time (the end of its
      gate run, cp -p) against every log's [start, end] window and airframe:
      exactly one log per run, no ambiguity.
@@ -45,6 +45,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 import controller as ctl  # noqa: E402
+import plant_registry  # noqa: E402
 
 LOGDIR = os.path.join(ctl.PX4, 'build/px4_sitl_default/rootfs/fs/log')
 BENCH = os.path.dirname(HERE)
@@ -52,12 +53,15 @@ GAINS = ('AS_YAWRATE_P', 'AS_YAWRATE_I', 'AS_YR_INT_LIM', 'AS_YAWRATE_FF', 'AS_Y
 KEPT = os.path.join(HERE, 'records', 'gains.json')     # {run: {target: {name: logged value}}}
 KEPT_NAMES = GAINS + ('SYS_AUTOSTART',)
 
-V, V27, VFIN = ('gz_airship_vectored_independent', 'gz_airship_vectored_independent_am_fin_drag',
-                'gz_airship_vectored_independent_fin')
-CS, CS17 = 'gz_cloudship', 'gz_cloudship_am_fin_drag'
+# The plants, by registry key (plant_registry.KEYS); a run's block headers,
+# samples files and gains.json entries carry that day's gz target instead
+# (Entry.target), which is how the loaders below name them.
+V, V27, VFIN = ('airship_vectored_independent_rigid', 'airship_vectored_independent_am_fin_drag',
+                'airship_vectored_independent_fin')
+CS, CS17 = 'cloudship_rigid', 'cloudship_am_fin_drag'
 
 # run -> (its chain log under the bench tools, the header of its block for a
-# target ('%s' = target), {target: ulog under LOGDIR}). The chain logs of the
+# target ('%s' = that day's gz target), {registry key: ulog under LOGDIR}). The chain logs of the
 # replayed runs are the read-only copies in yaw_model/records (P 0.5) and
 # yaw_model/records_head (HEAD gains); chain10 and stage 2 are read where the
 # chain left them.
@@ -141,12 +145,24 @@ def kept():
         return {}
 
 
+def targets(run):
+    """That day's gz targets of a run's gates, in RUNS order: the names its
+    block headers and samples files carry."""
+    return [plant_registry.resolve(key).target for key in RUNS[run][2]]
+
+
+def has_gate(run, target):
+    """Whether `run` flew the plant `target` names (any name the registry resolves)."""
+    return plant_registry.resolve(target).key in RUNS[run][2]
+
+
 def log_params(run, target):
     """(logged values, where from) for one run's gate: the flight log when
     it is there, else the copy --write kept of it. With both, they agree or
     this raises; with neither, the run is not replayed."""
-    relpath = RUNS[run][2][target]
-    copy = kept().get(run, {}).get(target)
+    plant = plant_registry.resolve(target)
+    relpath = RUNS[run][2][plant.key]
+    copy = kept().get(run, {}).get(plant.target)
 
     if os.path.exists(os.path.join(LOGDIR, relpath)):
         values = kept_values(ulog_params(relpath))
@@ -191,7 +207,7 @@ def from_note(run, target):
     if header is None:
         return None
 
-    for line in block_lines(os.path.join(BENCH, text), header % target):
+    for line in block_lines(os.path.join(BENCH, text), header % plant_registry.resolve(target).target):
         m = NOTE.search(line)
 
         if m:
@@ -209,17 +225,17 @@ def gains(run, target):
         raise KeyError('%s is not a registered run (%s)' % (run, ', '.join(RUNS)))
 
     logs = RUNS[run][2]
+    plant = plant_registry.resolve(target)
 
-    if target not in logs:
+    if plant.key not in logs:
         raise KeyError('%s has no %s gate' % (run, target))
 
     ip, where = log_params(run, target)
-    model = target[3:] if target.startswith('gz_') else target
-    want = ctl.airframe_for_model(model)
+    want = plant.number_tree             # the airframe the plant was that day, not the live tree's
 
     if int(ip.get('SYS_AUTOSTART', -1)) != want:
         raise ValueError('%s: %s logged SYS_AUTOSTART %s, the target is %d'
-                         % (run, logs[target], ip.get('SYS_AUTOSTART'), want))
+                         % (run, logs[plant.key], ip.get('SYS_AUTOSTART'), want))
 
     params = {}
 
@@ -229,7 +245,7 @@ def gains(run, target):
         elif name == 'AS_YAWRATE_FF':
             params[name] = 0.0          # the firmware had no feedforward (module docstring)
         else:
-            raise LookupError('%s: %s does not log %s' % (run, logs[target], name))
+            raise LookupError('%s: %s does not log %s' % (run, logs[plant.key], name))
 
     source = '%s (SYS_AUTOSTART %d%s)' % (where, want, '' if 'AS_YAWRATE_FF' in ip else ', no AS_YAWRATE_FF: FF 0')
     note = from_note(run, target)
@@ -252,9 +268,9 @@ def write_kept():
     present = 0
 
     for run, (_, _, logs) in RUNS.items():
-        for target, relpath in logs.items():
+        for key, relpath in logs.items():
             if os.path.exists(os.path.join(LOGDIR, relpath)):
-                out.setdefault(run, {})[target] = kept_values(ulog_params(relpath))
+                out.setdefault(run, {})[plant_registry.resolve(key).target] = kept_values(ulog_params(relpath))
                 present += 1
 
     with open(KEPT, 'w', encoding='utf-8') as handle:

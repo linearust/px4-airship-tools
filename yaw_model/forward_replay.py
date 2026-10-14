@@ -165,6 +165,7 @@ import controller as ctl  # noqa: E402
 import forward as F  # noqa: E402
 # the records replayed here were flown before 2026-10-12, on the linear feedforward law
 ctl.FF_LAW = 'linear'
+import plant_registry  # noqa: E402
 import record_gains as rg  # noqa: E402
 
 fyc = F.fyc                     # forward_yaw_check: the record's own code, imported read only
@@ -512,7 +513,9 @@ def preconditions(rec, start):
     # the airframe and its parameters (the log's, as today's analysis read
     # them) against the model's files
     params = doc.get('params') or {}
-    want = ctl.airframe_for_model(rec.model)
+    plant = plant_registry.resolve(rec.model)
+    want = plant.number_tree              # the airframe the plant was on the record's day
+    live = ctl.airframe_for_model(plant.model)      # the file a home holds it under today
     autostart = params.get('SYS_AUTOSTART')
     check('SYS_AUTOSTART is the model\'s airframe', finite(autostart) and int(autostart) == want,
           'log %s, model %s %d' % (autostart, rec.model, want))
@@ -520,12 +523,12 @@ def preconditions(rec, start):
     moved = sorted({name for _, name, _ in changes if name in WATCHED})
     check('no gain, allocator parameter, THR_MDL_FAC or gyro cutoff changed during the log', not moved,
           'changed: %s' % ', '.join(moved) if moved else 'none of %d changes' % len(changes))
-    key = cl.ALL_TARGETS[rec.target][1]
-    files = ctl.check_allocator_config(key, want)
+    key = plant.family
+    files = ctl.check_allocator_config(key, live)
     table = ctl.AIRFRAMES[key]
     model_values = {name: float(table[name]) for name in LAYOUT if name in table}
     model_values['CA_SV_CS_COUNT'] = 1.0 if table['yaw_surfaces'] else 0.0
-    model_values['THR_MDL_FAC'] = float(ctl.head_params(rec.model)['THR_MDL_FAC'])
+    model_values['THR_MDL_FAC'] = float(ctl.head_params(plant.model)['THR_MDL_FAC'])
     bad = ['%s log %s, model %s' % (name, params.get(name), value) for name, value in model_values.items()
            if not finite(params.get(name)) or float(params[name]) != value]
 

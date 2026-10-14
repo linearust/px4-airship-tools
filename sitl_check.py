@@ -35,6 +35,7 @@ import time
 from gz_link import TRACE, wrench, wrench_clear
 from report import note, results, summary, verdict
 import gz_model
+from yaw_model import plant_registry
 from sitl_link import (MODEL_NAME, Sticks, commander, field, finite, listener,
                        param_set, param_show, vector, wait_for_ekf)
 
@@ -53,7 +54,11 @@ def vehicle_files():
     return {name: (2.0 * v['pods']['thrust_n'] * v['hull']['pod_y'], True) for name, v in gz_model.vehicle_files().items()}
 
 
-VEHICLES = dict({'cloudship': (4.48, False)},          # 2.3544 N tail x 1.902 m
+# The vehicles with a fixed authority are the registry's (plant_registry.
+# VEHICLES: the Cloudship's 4.48, 2.3544 N tail x 1.902 m); the vectored
+# ones read theirs from their vehicle file.
+VEHICLES = dict({name: (v.authority_nm, v.tilt_band) for name, v in plant_registry.VEHICLES.items()
+                 if v.authority_nm is not None},
                 **vehicle_files())
 # The authority the cases below were written against: 1 N m of wind on the
 # 54 N m vectored airship of 2026-09 (18 N pods at 1.5 m). Every torque is
