@@ -158,6 +158,7 @@ import time
 import numpy as np
 
 import gz_model
+from yaw_model import plant_registry
 from report import note, summary, verdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -2126,14 +2127,25 @@ def write_csv(path, table):
 
 
 def model_of(log):
-    """The plant a log was flown on, by its SYS_AUTOSTART, or None."""
+    """The plant a log was flown on, by its SYS_AUTOSTART, or None. A log of
+    a day before the trim carries the tree number of that day; the plant
+    registry (yaw_model/plant_registry.py) names its plant as the overlay
+    holds it today."""
     autostart = log.param('SYS_AUTOSTART')
 
+    if autostart is None:
+        return None
+
     for name in ALLOWED:
-        if autostart is not None and int(autostart) == gz_model.airframe(name)[0]:
+        if int(autostart) == gz_model.airframe(name)[0]:
             return name
 
-    return None
+    try:
+        model = plant_registry.by_number(autostart).model
+    except LookupError:
+        return None
+
+    return model if model in ALLOWED else None
 
 
 def analyze(log, model, live=None, out_dir=OUT, stamp='analysis', release_s=RELEASE_S, stick_s=STICK_S):
