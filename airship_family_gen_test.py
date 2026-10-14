@@ -4,7 +4,8 @@
     python3 airship_family_gen_test.py
 
 1. The committed overlay regenerated into a copy of itself (the five
-   vehicles and the Cloudship, --overlay) writes and changes nothing; its
+   vehicles, --overlay; `cloudship --overlay` is refused, its overlay family
+   being committed) writes and changes nothing; its
    content is the split's shape (seven decades under the rigid naming, the
    generic's fixed twin, the copied Cloudship), with the indoor family's
    facts; a surfaces family generated beside them, from the overlay's own
@@ -169,13 +170,14 @@ def main():
     overlay = scratch_overlay()
     before = snapshot(overlay)
     runs = [run(['airship_family_gen.py', 'vehicles/%s.json' % v, '--overlay'], ROOT, overlay) for v in VEHICLES]
-    runs.append(run(['airship_family_gen.py', 'cloudship', '--overlay'], ROOT, overlay))
+    ported = run(['airship_family_gen.py', 'cloudship', '--overlay'], ROOT, overlay)
     after = snapshot(overlay)
-    verdict('다섯 기체와 cloudship 의 --overlay 를 오버레이 사본에 다시 돌리면 아무것도 쓰지 않고 바꾸지 않는다 (템플릿은 오버레이의 generic rigid '
-            '가족, 월드는 트리의)',
+    verdict('다섯 기체의 --overlay 를 오버레이 사본에 다시 돌리면 아무것도 쓰지 않고 바꾸지 않는다 (템플릿은 오버레이의 generic rigid 가족, '
+            '월드는 트리의); cloudship --overlay 는 거부된다 (exit 2: 그 가족은 커밋된 것, --upstream 만 받는다)',
             all(r.returncode == 0 and 'airframes written: none' in r.stdout and 'world entries added 0' in r.stdout for r in runs)
-            and after == before,
+            and ported.returncode == 2 and 'cloudship' in ported.stderr and after == before,
             '; '.join((r.stderr or r.stdout)[-120:] for r in runs if r.returncode or 'written: none' not in r.stdout)
+            or ('cloudship --overlay: exit %d %s' % (ported.returncode, ported.stderr[-120:]) if ported.returncode != 2 else '')
             or ', '.join(k for k in after if before.get(k) != after[k])[:300] or '같음')
     decades_text = open(os.path.join(OVERLAY, 'airframes', 'decades')).read()
     decades = decades_text.split()
@@ -257,9 +259,9 @@ def main():
             json.dump(spec, handle)
 
         v = gen.load_vehicle(vehicle_file)
-        _, written, entries = gen.generate_overlay(v, overlay=overlay, template_root=ROOT)
+        _, written, entries = gen.generate_overlay(v, overlay=overlay)
         middle = snapshot(overlay)
-        _, again, entries_again = gen.generate_overlay(v, overlay=overlay, template_root=ROOT)
+        _, again, entries_again = gen.generate_overlay(v, overlay=overlay)
         after = snapshot(overlay)
         r, last = variant_check(ROOT, overlay)
     finally:

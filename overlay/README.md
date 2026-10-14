@@ -90,9 +90,9 @@ The overlay is used against the trimmed tree `pins.env` names (split step
 carrying the families would give rcS two airframes for one `PX4_SIM_MODEL`
 (it loads the tree's), and `gz_model.model_names()` refuses a name present in
 both homes. The directories were filled at the trim from the fork's families
-(`--root <fork tree>`, the world from the trimmed tree); since then the
-generator's template is the overlay's own generic rigid family, so
-`airship_family_gen.py <vehicle.json> --overlay` run again writes nothing (the
-generator test's round trip), a new vehicle file generates beside the others,
-and `airship_family_gen.py <vehicle.json> --upstream overlay --root <tree>`
-writes a family's plain plant back into the tree from here.
+(the world from the trimmed tree); since then the generator's template is the
+overlay's own generic rigid family, so `airship_family_gen.py <vehicle.json>
+--overlay` run again writes nothing (the generator test's round trip), a new
+vehicle file generates beside the others, and `airship_family_gen.py
+<vehicle.json> --upstream overlay --root <tree>` writes a family's plain plant
+back into the tree from here.
