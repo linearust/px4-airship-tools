@@ -48,6 +48,11 @@ OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
 OVERLAY_WORLD = os.path.join(OVERLAY, 'worlds', 'lta_lab.sdf')
 OVERLAY_DOCS = os.path.join(OVERLAY, 'vehicles.md')
 OVERLAY_SHIFT = 100         # an overlay family's decade is its vehicle's tree decade plus this: 25x0 -> 26x0
+# Parameters the upstream airship class and controller do not have (the
+# fork's later rounds: pod grouping, the forward-speed schedule). The tree's
+# plain plant sets none of them, and its airframe is held to the overlay's
+# complete member less these (airship_family_gen, variant_check fact 17).
+UPSTREAM_ABSENT = ('CA_AIRSHIP_GRP', 'AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_HI', 'AS_YR_FF_SLP')
 # The gz world of a SITL run, as the launcher exported it: gz_run.sh resolves
 # the tree's world (`lta` unless the target names another) or the overlay's
 # `lta_lab`. `lta` is for a check attached by hand to a world someone else

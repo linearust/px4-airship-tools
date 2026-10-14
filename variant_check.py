@@ -80,6 +80,15 @@ this reads every airship model in the tree and holds each fact to the file:
      vehicle file's family keeps the three values the flight airframe tells
      the user to set to the vehicle, the tilt stops and the slew rate
      (VEHICLE_ALLOCATION), which must then be the file's own.
+ 17. the plain plant: once a family lives in the overlay (its bare is the
+     overlay's _rigid), the tree's model under the vehicle's plain name is
+     the one plant upstream carries, numbered at the family's tree decade (a
+     hundred below the overlay's, mask 0), and it is the family's complete
+     member: the merged models element for element, the airframes' resolved
+     defaults less the parameters upstream lacks (gz_model.UPSTREAM_ABSENT).
+     Facts 1, 7, 8 and 13 read it so: its chain is the complete member's
+     shape, its physics the complete member's. Before the trim there is no
+     plain plant, and the facts read as they always did.
 """
 import math
 import os
@@ -192,8 +201,13 @@ def split(name):
 
 def airframe_number(name):
     """The airframe number the scheme gives a model: its vehicle's decade
-    plus the physics mask of its tokens."""
+    plus the physics mask of its tokens; the tree's plain plant of an overlay
+    family keeps the tree decade, a hundred below the family's."""
     vehicle, tokens = split(name)
+
+    if is_plain(name):
+        return DECADE[vehicle] - gz_model.OVERLAY_SHIFT
+
     return DECADE[vehicle] + sum(MASK[t] for t in tokens)
 
 
@@ -218,6 +232,25 @@ def body_of(vehicle):
         return parent[:-len(rigid)] + '_base'
 
     return parent if parent and parent.endswith('_base') else None
+
+
+def plain(vehicle):
+    """The tree's plain plant of a vehicle whose family lives in the overlay:
+    the vehicle's own name, a tree model beside the overlay's _rigid bare.
+    None while the plain name is the bare (the tree before the trim)."""
+    return vehicle if gz_model.bare(vehicle) != vehicle and gz_model.has_model(vehicle) else None
+
+
+def is_plain(name):
+    found = split(name)
+    return bool(found) and not found[1] and plain(found[0]) == name
+
+
+def complete(vehicle, names):
+    """The family member carrying every physics token the family has: the
+    overlay's _am_fin_drag, the fixed twin's _am_drag."""
+    members = [n for n in names if split(n)[0] == vehicle and not is_plain(n)]
+    return max(members, key=lambda n: sum(MASK[t] for t in split(n)[1]))
 
 
 def actuator_fins(model):
@@ -306,23 +339,25 @@ def hull_axis_z(base):
 
 def stable_bodies():
     """Bodies whose header declares static directional stability, and the
-    ratio each promises: every *_base model whose header says the fins
-    'restore at least R x the hull's potential-flow Munk moment'
+    ratio each promises: every *_base model (the overlay's *_base_rigid,
+    keyed without the token as body_of() names it) whose header says the
+    fins 'restore at least R x the hull's potential-flow Munk moment'
     (generic_hull_design's requirement R1, written by apply_generic_hull).
     The Cloudship's fins restore about half its Munk moment by the drawing
     and its header makes no such promise."""
     out = {}
+    rigid = '_base_' + gz_model.RIGID
 
     for name in gz_model.model_names():
         path = os.path.join(gz_model.model_dir(name), 'model.sdf')
 
-        if not name.endswith('_base'):
+        if not name.endswith(('_base', rigid)):
             continue
 
         found = re.search(r"restore\s+at\s+least\s+([\d.]+)\s+x\s+the\s+hull's\s+potential-flow\s+Munk\s+moment", open(path).read())
 
         if found:
-            out[name] = float(found.group(1))
+            out[name[:-len(rigid)] + '_base' if name.endswith(rigid) else name] = float(found.group(1))
 
     return out
 
@@ -390,8 +425,8 @@ def main():
 
     for v in vehicles:
         body = body_of(v)
-        # the body the bare merges (its _rigid form in the overlay) against its _am copy
-        copies.append((gz_model.parent(gz_model.bare(v)), body + '_am') if body else (v, v + '_am'))
+        # the body the bare merges (its _rigid form in the overlay) against its _am copy; a self-contained vehicle's bare itself
+        copies.append((gz_model.parent(gz_model.bare(v)), body + '_am') if body else (gz_model.bare(v), v + '_am'))
 
     copies = sorted(set(c for c in copies if gz_model.has_model(c[1])))
     bad, carriers = [], {}
@@ -657,6 +692,9 @@ def main():
         merged = gz_model.merged(name)
         counts = {}
 
+        if is_plain(name):
+            tokens = split(complete(vehicle, names))[1]     # the plain plant carries what the complete member carries
+
         for p in merged.findall('plugin'):
             f = p.get('filename', '')
 
@@ -801,13 +839,16 @@ def main():
             if label == 'flight' and n in (2500, 2507):
                 continue                        # upstream's numbers, not a decade of their own
 
-            if label == 'flight' and n not in DECADE.values():
+            # a tree decade of an overlay family is the family's less the shift (the plain plant's, the classic twin's)
+            in_table = lambda decade: decade in DECADE.values() or decade + gz_model.OVERLAY_SHIFT in DECADE.values()
+
+            if label == 'flight' and not in_table(n):
                 bad.append('flight %d 는 어느 십의 자리 표에도 없다' % n)
 
             if label == 'posix':
                 classic = any('_gazebo-classic_' in f for f in fs)
 
-                if n // 10 * 10 not in DECADE.values():
+                if not in_table(n // 10 * 10):
                     bad.append('posix %d 는 표의 십의 자리 밖이다' % n)
                 elif classic and n % 10 != 9:
                     bad.append('posix %d 는 classic 쌍둥이인데 일의 자리가 9 가 아니다' % n)
@@ -836,7 +877,7 @@ def main():
 
         for model in finned:
             mass, com = gz_model.centre_of_mass(gz_model.family(model))
-            fins = fin_expectations(gz_model.merged(split(model)[0]))
+            fins = fin_expectations(gz_model.merged(gz_model.bare(split(model)[0])))
             ks = kh = 0.0
             vertical = 0
 
@@ -937,6 +978,37 @@ def main():
                                               '; 기체 파일의 %s' % ' '.join('%s %g' % kv for kv in sorted(own.items())) if own else ''))
 
     verdict('gz 쌍둥이의 할당 블록이 비행 에어프레임의 것이다 (기체 파일의 틸트 값은 그 파일의 것)', not bad, '; '.join(bad or bits))
+
+    # 17. the plain plant is the complete member: merged models element for
+    #     element, airframe defaults less what upstream lacks
+    bad, bits = [], []
+
+    for v in vehicles:
+        p = plain(v)
+
+        if p is None:
+            continue
+
+        c = complete(v, names)
+        mine = [canonical(ET.fromstring(ET.tostring(e))) for e in gz_model.merged(p)]
+        theirs = [canonical(ET.fromstring(ET.tostring(e))) for e in gz_model.merged(c)]
+
+        if mine != theirs:
+            first = next((i for i, (a, b) in enumerate(zip(mine, theirs)) if a != b), 'length')
+            bad.append('%s 의 merged 모델이 %s 와 다르다 (자식 %d/%d, 첫 차이 %s)' % (p, c, len(mine), len(theirs), first))
+
+        mine_defaults = gz_model.airframe_defaults(p)
+        theirs_defaults = {k: x for k, x in gz_model.airframe_defaults(c).items() if k not in gz_model.UPSTREAM_ABSENT}
+
+        if mine_defaults != theirs_defaults:
+            keys = sorted(k for k in set(mine_defaults) | set(theirs_defaults) if mine_defaults.get(k) != theirs_defaults.get(k))
+            bad.append('%s 의 에어프레임 기본값이 %s 와 다르다: %s' % (p, c, ', '.join('%s %s/%s' % (k, mine_defaults.get(k), theirs_defaults.get(k)) for k in keys)))
+
+        if not bad or bad[-1].split(' ')[0] != p:
+            bits.append('%s = %s (%d 원소, %d 기본값)' % (p, c, len(mine), len(mine_defaults)))
+
+    verdict('트리의 평범한 플랜트는 오버레이 가족의 완전 멤버다 (merged 모델 원소 단위, 에어프레임 기본값)', not bad,
+            '; '.join(bad or bits) or '평범한 플랜트 없음 (트림 전)')
 
     return summary()
 
