@@ -33,8 +33,8 @@ Independent Vectoring) 에 이 기체의 값을 얹은 것이다. 시뮬레이�
 
 ## 2. 비행 카드, 실내, 바람 없음
 
-> 2026-10-13: 실내 시험은 준비 브랜치 `pr/airship` 의 펌웨어 (`build_fmu.py` 가 `PX4_ROOT=~/dev/px4-pr-airship` 에서 스테이징한 `fw_<커밋>`) 로 난다.
-> 카드마다 어느 PR 주장을 받치는지는 `docs/upstream_pr_bodies.md` 의 "Claim → card" 표에 있다. 요 스케줄·꼬리·집단 실험은 포크 (airship/dev) 펌웨어로 따로 하고,
+> 2026-10-13: 실내 시험은 준비 브랜치 `linearust/airship-tilt-pods` 의 펌웨어 (`build_fmu.py` 가 `PX4_ROOT=~/dev/px4-pr-airship` 에서 스테이징한 `fw_<커밋>`) 로 난다.
+> 카드마다 어느 PR 주장을 받치는지는 `docs/upstream_pr_bodies.md` 의 "Claim → card" 표에 있다. 요 스케줄·꼬리·집단 실험은 포크 (linearust/airship-dev) 펌웨어로 따로 하고,
 > 그 결과는 이번 PR 의 증거가 아니다.
 
 진행 순서대로. 각 카드는 로그를 남기고 (SDLOG_MODE 1), 분석은 `forward_yaw_check.py --analyze --hardware` (EKF 만 쓰는

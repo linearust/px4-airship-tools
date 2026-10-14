@@ -6,10 +6,15 @@ into a Gazebo model family with its airframes, a calculator for the yaw loop's
 values, SITL gates, a validated model of the yaw rate loop, bench scripts for
 the flight controller at the pins, and the notes behind the decisions.
 
-The firmware is the `airship/dev` branch of
+The firmware is the `linearust/airship-dev` branch of
 [icarus-lta/PX4-Autopilot](https://github.com/icarus-lta/PX4-Autopilot) and
-the models are `airship/models` of
-[icarus-lta/PX4-gazebo-models](https://github.com/icarus-lta/PX4-gazebo-models).
+the models are `linearust/airship-dev` of
+[icarus-lta/PX4-gazebo-models](https://github.com/icarus-lta/PX4-gazebo-models);
+the branches prepared for upstream are `linearust/airship-tilt-pods` in both.
+The branches carry the maintainer's GitHub name, as PX4's own `<user>/<topic>`
+branches do: they are maintained by one person. They were renamed on 2026-10-14
+from `airship/dev`, `airship/models`, `pr/airship` and `pr/airship-models`; the
+dated records under `docs/` keep the names of their day.
 `pins.env` names the commits this repository is verified against. What
 hardware validates goes upstream; this repository keeps what upstream would
 not take: the physics-variant families, the literature vehicles, the

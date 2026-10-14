@@ -120,7 +120,7 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
 ### Evidence
 
 - Bit identity: the narrowed class against the author's wider development class on the same
-  independent-pod parameter sets: 4 sets, 29,596 rows, IDENTICAL (against airship/dev 27fd5f1ffd,
+  independent-pod parameter sets: 4 sets, 29,596 rows, IDENTICAL (against linearust/airship-dev 27fd5f1ffd,
   unchanged through the trim; re-run at d020cc4c40).
 - Bench, a px4_fmu-v6x board, logic analyzer at the output pins, 13 stick vectors in Manual × 8 pins, props off:
   fingerprint 0.0 µs between this branch (d020cc4c40) and the author's development branch (8af72b9a50) at the

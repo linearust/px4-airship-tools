@@ -2,6 +2,9 @@
 
 `upstream_first_pr_20261013.md` (비행 전 전제의 "2500 시뮬 쌍둥이" 안) 을 대체한다.
 
+브랜치 이름은 2026-10-14 19:00 에 바뀌었다 (11 절 마지막 항목): 본문의 `airship/dev` = `linearust/airship-dev`, `airship/models` = 모델 저장소의
+`linearust/airship-dev`, `pr/airship`·`pr/airship-models` = `linearust/airship-tilt-pods`. 날짜 붙은 문장은 그날의 이름 그대로다.
+
 ## 1. 전제가 바꾸는 것
 
 실내 기체 (2 m, 독립 틸트 포드 둘, 러더 없음, 광류, 바람 없음; 서보 Y 선으로 일체 틸트도 시험 가능) 가 비행 로그를 준다. 그러면 리뷰어의
@@ -329,3 +332,9 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   좁힌 클래스는 이 값을 읽지 않고, 포크는 0 이어야 같은 핀에 같은 배분이 나온다 (fpL 과의 비교는 설정 불일치로 판정됨). PR 본문의 벤치 괄호를
   측정값으로 채움. 풋프린트 before/after (upstream 97a3c7f017 → d020cc4c40): fmu-v6x_airship text +6,920, micoair_h743-aio_default text +6,216,
   data·bss 불변, 두 보드 make exit 0 (최종 head 에서 다시 잼). 보드는 포크 HEAD 로 남김.
+- 2026-10-14 19:05 브랜치 이름 변경 (사용자: 회사 대표 브랜치가 아니라 한 사람이 관리하는 사이드 프로젝트임을 이름에 남긴다). PX4 선례는 `<github 이름>/<주제>`
+  (upstream 에 dakejahl/, maetugr/, potaito/ 가지가 있다). 로컬: airship/dev → linearust/airship-dev, airship/sitl-tutorial → linearust/airship-sitl-tutorial,
+  서브모듈 airship/models → linearust/airship-dev, 준비 가지 pr/airship 과 pr/airship-models → linearust/airship-tilt-pods (양쪽 저장소에 같은 이름; 준비
+  워크트리 ~/dev/px4-pr-airship 는 그대로). 추적은 아직 옛 원격 이름 (origin/airship/dev, origin/airship/models) 을 가리킨다: 포크의 원격 이름 변경은
+  GitHub 의 branch rename (푸시된 끝 bccba2ef8c / 208cb2b 그대로, 서명 안 된 커밋은 올라가지 않음) 으로, 사용자 승인 뒤. CI 는 커밋만 받으므로 (PX4_COMMIT,
+  GZ_MODELS_COMMIT) pins.env 의 BRANCH 두 줄은 문서용. 날짜 붙은 기록의 옛 이름은 그대로 둔다 (README·log.md 에 대응표).

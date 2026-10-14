@@ -26,6 +26,9 @@ Which tool answers which question:
 | does the yaw model fly a recorded forward leg the way SITL did? | `yaw_model/forward_replay.py sitl_out/forward_<model>_<stamp>_summary.json [--start both]` | nothing |
 | which forward-flight yaw policy holds up against speed-source and k errors? | `yaw_model/policy_compare.py` (record: `yaw_model/step0c_out_20261001.txt`) | nothing |
 
+Branch names since 2026-10-14 (the records below keep the names of their day): PX4 `airship/dev` → `linearust/airship-dev`, models
+`airship/models` → `linearust/airship-dev`, the preparation pair `pr/airship` / `pr/airship-models` → `linearust/airship-tilt-pods` (both repositories).
+
 ## head_d020cc4c40/ — the preparation branch at the pins (2026-10-14, fmu-v6x, pr/airship d020cc4c40 vs airship/dev 8af72b9a50)
 Same board, same saved parameters, two firmwares, `bench_fingerprint.py` (13 stick vectors x 8 pins, props off, ESC power off):
 - `fpM_d020cc4c402`: the preparation branch (upstream main 97a3c7f017 + 7 commits). `fpN_8af72b9a506`: the development branch,
