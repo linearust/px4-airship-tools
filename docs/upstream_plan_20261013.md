@@ -290,3 +290,6 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
 - 분리 (4) 플랜트 레지스트리 에이전트 (split/step4, 어제 Fable 한도로 중단 → 재시작) 와 (5) gz_run.sh 오버레이 경로 에이전트 (split/step5, 트림된
   트리 = pr/airship 워크트리에서 검증) 진행 중. 남은 것: (6) 트림 (7) 재기준선, 문서 png, PR 본문 괄호 항목, 푸시 (사용자).
 - 11:30 분리 (4) 플랜트 레지스트리 병합 (도구 main fec3bf8; run_tests 254/0). (5) 에이전트 진행 중.
+- 11:40 분리 (5) 병합 (도구 main 030bde1): gz_run.sh 가 오버레이 멤버를 트림된 트리 위에서 독립 실행 (make px4_sitl → install.sh → gz sim lta_lab → create 서비스 스폰
+  → PX4_GZ_STANDALONE); 트림된 트리 (pr/airship) 에서 오버레이 rigid 2620 호버 10/10, 트리 2520 10/10. 월드 이름은 gz_model.WORLD 한 곳.
+  (6) 트림은 둘로: 6a 생성기 보강 (고정 가족·Cloudship 의 오버레이 복사와 upstream 모양, variant_check 두 모양, 절차 문서) 에이전트 진행 중 → 6b 트림 실행.
