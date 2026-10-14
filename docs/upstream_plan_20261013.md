@@ -298,3 +298,9 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
 - 12:20 6a 병합 (도구 main 458eda3..3273946; run_tests 254/0, 생성기 26, variant 17). 6b + (7) 에이전트 시작: PX4 워크트리 ~/dev/px4-trim (airship/trim ←
   airship/dev), 서브모듈 가지 airship/models-trim (로컬 저장소를 --reference 로), 도구 워크트리 ~/dev/px4-airship-tools-step6b (split/step6b). 절차는
   split design 7 절 "(6) 절차". 끝나면 검토 → 도구 main ff, airship/dev 를 airship/trim 으로 ff, 서브모듈 airship/models 갱신, pins.
+- 14:05 (6)+(7) 트림 끝: 포크 airship/dev 를 airship/trim 으로 ff (02541aa001 삭제 48 파일, b86228fb4e 평범 플랜트 셋, cf4a4700c1 2520 스케줄 복원,
+  c023c88cdb 포인터), 서브모듈 airship/models = be2aea8 (가족 50 디렉터리·enable 200 줄 삭제, 평범 플랜트 4). 오버레이 (도구 main): 모델 50, 에어프레임 40
+  (2600 fixed, 2610 cloudship, 2620-2660 다섯 기체), lta_lab. 재기준선 (에이전트, 트림 워크트리): 2520 호버 10/10, 2620 rigid 10/10, 2621 drag 10/10, 2510
+  cloudship 9/9, 2612 fin 전진 43/43, 2510 착륙 무장 유지 10/10; 2520 전진 28/42 → 생성기가 PR 용 부재 목록을 포크에도 적용한 탓 (대상 트리 yaml 로 바꿈,
+  486f533) 재실행 중; 2500 고정 12/13 → 틸트 슬롯 둘 고정의 귀결 (검사 기대 6 → 8) 재실행 중. pins c023c88cdb / be2aea8.
+- pr/airship 재적층 HEAD f45fbddb7b (posix 2520 마커 줄, 모델 e017639 = 현재 생성기 출력); 펌웨어 재스테이징 중.
