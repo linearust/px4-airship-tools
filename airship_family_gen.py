@@ -752,10 +752,10 @@ def canonical(elem):
 class at_root:
     """gz_model's model and airframe homes pointed at these roots while
     inside: an overlay directory (models/, airframes/) or a PX4 tree. It
-    moves gz_model's homes only: sourced_path's other ROMFS files and the yaml
-    cache read the tree at ROOT, and yaw_model.controller caches
-    airframe_defaults and airframe_for_model per process, so do not call
-    controller inside."""
+    moves gz_model's homes only: sourced_path's other ROMFS files read the
+    tree at ROOT, absent_params takes its root explicitly (its yaml cache is
+    by path), and yaw_model.controller caches airframe_defaults and
+    airframe_for_model per process, so do not call controller inside."""
 
     def __init__(self, *roots):
         self.roots = roots
@@ -882,7 +882,7 @@ def upstream_models(vehicle, members_root):
 
 UPSTREAM_MARK = '# Yaw loop values for this hull'      # the marker's wording in an upstream airframe: no tool names
 # A line setting a parameter the target tree does not define
-# (gz_model.absent_params(), asked of that tree) is dropped from an upstream
+# (gz_model.absent_params(root), asked of that tree) is dropped from an upstream
 # airframe, with its paragraph when nothing else is set there
 OVERLAY_INCLUDES = ('model://ground_markers', 'model://flight_grid')   # lab-only models the upstream world does not include
 
@@ -1125,9 +1125,7 @@ def write_upstream(vehicle, root, members_root, plants=None):
             write(path, config)
 
     airframes = os.path.join(root, TREE_DIRS[1])
-
-    with at_root(root):
-        absent = gz_model.absent_params()    # what this tree's firmware lacks: not set in its airframes
+    absent = gz_model.absent_params(root)    # what this tree's firmware lacks: not set in its airframes
 
     rename = renamer(mfam, fam) if is_overlay(members_root) else (lambda text: text)
 
@@ -1156,11 +1154,12 @@ def twin_check(vehicle, upstream_root, members_root, plants=None):
     upstream class and controller do not have). [] means twins."""
     problems = []
 
+    absent = gz_model.absent_params(upstream_root)
+
     for plain in [p for p in plain_plants(vehicle, members_root) if plants is None or p.name in plants]:
         with at_root(upstream_root):
             mine = canonical(gz_model.merged(plain.name))[3]
             mine_defaults = gz_model.airframe_defaults(plain.name)
-            absent = gz_model.absent_params()
 
         with at_root(members_root):
             theirs = canonical(gz_model.merged(plain.complete))[3]

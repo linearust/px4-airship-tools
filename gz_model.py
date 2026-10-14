@@ -59,13 +59,13 @@ PARAM_YAMLS = {'CA_': 'src/modules/control_allocator/module.yaml',
                'AS_': 'src/modules/airship_att_control/airship_att_control_params.yaml'}
 
 
-def absent_params():
-    """The PARAM_CANDIDATES the tree at ROOT does not define (yaml_default raises)."""
+def absent_params(root=ROOT):
+    """The PARAM_CANDIDATES the tree at root (ROOT by default) does not define (yaml_default raises)."""
     out = []
 
     for name in PARAM_CANDIDATES:
         try:
-            yaml_default(PARAM_YAMLS[name[:3]], name)
+            yaml_default(PARAM_YAMLS[name[:3]], name, root)
         except LookupError:
             out.append(name)
 
@@ -252,12 +252,13 @@ def vehicle_files():
 _YAML_CACHE = {}
 
 
-def yaml_default(rel, name):
+def yaml_default(rel, name, root=ROOT):
     """The default of one parameter in a PX4 module yaml (parameters: -
-    group: definitions: NAME: default), as written. LookupError when the file
-    is not there, does not define the name, or gives it no default: a default
-    that cannot be read is not a default of 0. The file is parsed once."""
-    path = os.path.join(ROOT, rel)    # the cache is by path: ROOT may be switched (airship_family_gen.at_root)
+    group: definitions: NAME: default) of the tree at root (ROOT by default),
+    as written. LookupError when the file is not there, does not define the
+    name, or gives it no default: a default that cannot be read is not a
+    default of 0. The file is parsed once."""
+    path = os.path.join(root, rel)    # the cache is by path: a caller may ask another tree (absent_params(root))
 
     if path not in _YAML_CACHE:
         import yaml

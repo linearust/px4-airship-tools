@@ -55,7 +55,7 @@ def scratch_tree():
         os.makedirs(os.path.dirname(os.path.join(root, rel)), exist_ok=True)
         shutil.copy(os.path.join(ROOT, rel), os.path.join(root, rel))
 
-    # the module yamls: gz_model.absent_params() asks a tree which airship
+    # the module yamls: gz_model.absent_params(root) asks a tree which airship
     # parameters its firmware defines, and a scratch tree without them would
     # read as a tree without any
     for rel in gz_model.PARAM_YAMLS.values():
