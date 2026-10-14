@@ -1195,7 +1195,7 @@ def upstream_docs(root, plain, title_link=TREE_PAGE):
         heads = [(m.start(), m.group(1)) for m in re.finditer(r'^### (.*)$', t[start:end], re.M)]
         later = [start + at for at, title in heads if title in later_titles]
         at = later[0] if later else end
-        t = t[:at].rstrip('\n') + '\n\n' + section + '\n' + t[at:]
+        t = t[:at].rstrip('\n') + '\n\n' + section + ('\n' + t[at:] if t[at:] else '')
         write(vehicles_md, t)
         changed.append(os.path.basename(vehicles_md))
 
