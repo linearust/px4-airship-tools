@@ -314,3 +314,11 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
 - pr/airship 재적층 HEAD f45fbddb7b (posix 2520 마커 줄, 모델 e017639 = 현재 생성기 출력); 펌웨어 재스테이징 중.
 - 13:55 재실행 결과: 2520 전진 42/42, 2500 고정 13/13 → 트림 트리의 모든 기준선 유지. 트림 워크트리·가지 정리. 이 세션의 목록 완료; 남은 것은 사용자 몫
   (리뷰·서명·푸시 순서 models → dev, 펌웨어 올리기 fw_f45fbddb7b7, 문서 png) 과 실내 시험 뒤의 PR 본문 괄호 항목.
+- 2026-10-14 15:05 리팩토링 패스 3 (워크플로 12 에이전트 196만 토큰: 찾기 6 + 영역별 반박 6; 확정 37, 반박 10). 실행:
+  준비 브랜치 pr/airship 재적층 HEAD d020cc4c40 (별칭 `demand` 제거, `_yaw_rate_max` 멤버가 게이트와 설정값을 한 번에, CMake DEPENDS 정리, 시험의
+  배치 모형 단순화와 fixture 정리, 주석·문서 (게이트 문장 "whatever the allocator", 게인 출처, 추정치 명시), 커밋 메시지 셋 (Custom = 9, STACK_MAX
+  사유, rate_control 시험 설명); 모델 d3beb42 (평범 플랜트의 주석이 평범 플랜트를 말함, 월드의 랩 보조물 주석 제거); 펌웨어 fw_d020cc4c402.
+  포크 airship/dev HEAD 8af72b9a50 (2519 의 죽은 AS_YAWRATE_MAX 제거, 주석·문서, 생성기 출력 재생성; 서브모듈 67feb0fa8576cacd21d77e71367db9d817b4c95c: 랩 보조물 ground_markers/flight_grid 를
+  오버레이로 옮기고 lta.sdf 에서 include 제거). 도구 main c97c428: 트리 모드 제거, 오버레이 자급 (템플릿은 오버레이의 generic rigid), absent_params(root),
+  slug·lta_lab 이름 단일화, upstream 출력 주석 정리, 기록 보정 (hull 등급, 벤치 보드, pins 가지, 대체된 절 포인터, PR 본문 수치). 검증: 포크 run_tests
+  (gen 17, variant 17, forward 220), 준비 브랜치 시험 5/5 + identity 29,596 행 동일 + px4_sitl_default; 호버 게이트 둘 (포크·준비) 실행 중.
