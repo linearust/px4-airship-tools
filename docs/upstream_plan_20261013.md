@@ -295,3 +295,6 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
   (6) 트림은 둘로: 6a 생성기 보강 (고정 가족·Cloudship 의 오버레이 복사와 upstream 모양, variant_check 두 모양, 절차 문서) 에이전트 진행 중 → 6b 트림 실행.
 - 11:45 pr/airship HEAD 2370453e1d (문서 커밋의 cherry-pick 표기 제거); 펌웨어 재스테이징 `fw_2370453e1d3/px4_fmu-v6x_airship.px4`. 중간 브랜치 넷
   (pr/airship-alloc, -docs, -prestack, -v1) 삭제. 문서 png 는 이 셸에서 gz GUI 렌더가 안 돼 (EGL dri2 실패) 사용자 데스크톱 세션의 몫으로 남김.
+- 12:20 6a 병합 (도구 main 458eda3..3273946; run_tests 254/0, 생성기 26, variant 17). 6b + (7) 에이전트 시작: PX4 워크트리 ~/dev/px4-trim (airship/trim ←
+  airship/dev), 서브모듈 가지 airship/models-trim (로컬 저장소를 --reference 로), 도구 워크트리 ~/dev/px4-airship-tools-step6b (split/step6b). 절차는
+  split design 7 절 "(6) 절차". 끝나면 검토 → 도구 main ff, airship/dev 를 airship/trim 으로 ff, 서브모듈 airship/models 갱신, pins.
