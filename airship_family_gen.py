@@ -1046,7 +1046,8 @@ def members_world(members_root):
 def upstream_world(path, members_root, names):
     """The upstream world, made once from the members' world: its buoyancy
     entries only for `names` (bare and _0.._3), under the tree's world name,
-    and without the lab-only includes (OVERLAY_INCLUDES)."""
+    and without the lab-only aids (OVERLAY_INCLUDES, with the comment above
+    them)."""
     if os.path.exists(path):
         return False
 
@@ -1062,10 +1063,9 @@ def upstream_world(path, members_root, names):
         out.append(line)
 
     t = sub1('\n'.join(out), r'<world name="[^"]*">', '<world name="%s">' % gz_model.WORLD)
-
-    for uri in OVERLAY_INCLUDES:
-        t = re.sub(r'\n *<include>\s*<uri>%s</uri>\s*</include>' % re.escape(uri), '', t)
-
+    # the aids' includes, in order, and the comment right above them as one block
+    includes = ''.join(r'\s*<include>\s*<uri>%s</uri>\s*</include>' % re.escape(uri) for uri in OVERLAY_INCLUDES)
+    t = re.sub(r'(?:\n *<!--(?:(?!-->).)*?-->)?' + includes, '', t, count=1, flags=re.S)
     write(path, t)
     return True
 

@@ -184,9 +184,10 @@
            here simply gets no force, with no warning. That matters more for a
            lighter-than-air vehicle than for the submarine this pattern comes
            from - buoyancy is 100% of its weight support, not a trim term - so
-           the first four instances of each are listed rather than instance 0
-           alone. An empty list is not the short form of this one: the plugin
-           then lifts every link in the world, the ground plane included. -->
+           the first four instances of every model named are listed rather
+           than instance 0 alone. An empty list is not the short form of this
+           one: the plugin then lifts every link in the world, the ground plane
+           included. -->
       <enable>airship_vectored_independent_rigid::base_link</enable>
       <enable>airship_vectored_independent_rigid_0::base_link</enable>
       <enable>airship_vectored_independent_rigid_1::base_link</enable>
