@@ -174,10 +174,6 @@ def vectored_chain(fam, decade, title):
     return Chain({role: getattr(fam, role) for role, _, _ in MEMBERS}, MEMBERS, decade, title)
 
 
-def slug(title):
-    return re.sub(r'[^a-z0-9 ]', '', title.lower()).strip().replace(' ', '-')
-
-
 def read(path):
     with open(path, encoding='utf-8') as handle:
         return handle.read()
@@ -1012,7 +1008,7 @@ def upstream_docs(root, plain, title_link=TREE_PAGE):
     changed = []
     index_md = os.path.join(root, TREE_FILES[1])
     t = read(index_md)
-    cells = [' [%s](../sim_gazebo_gz/vehicles.md#%s)' % (plain.title, slug(plain.title)), ' `%s`' % (TREE_COMMAND % plain.name),
+    cells = [' [%s](../sim_gazebo_gz/vehicles.md#%s)' % (plain.title, gz_model.slug(plain.title)), ' `%s`' % (TREE_COMMAND % plain.name),
              ' %d' % plain.decade]
 
     if cells[0].strip() not in t:
@@ -1046,7 +1042,7 @@ def upstream_docs(root, plain, title_link=TREE_PAGE):
 
     airship_md = os.path.join(root, TREE_FILES[3])
     t = read(airship_md)
-    anchor = '../sim_gazebo_gz/vehicles.md#%s' % slug(plain.title)
+    anchor = '../sim_gazebo_gz/vehicles.md#%s' % gz_model.slug(plain.title)
 
     if anchor + ')' not in t:
         bullet = '- [%s](%s): %s\n' % (plain.title, anchor, plain.what)
@@ -1261,7 +1257,7 @@ def write_overlay_docs(path, chain, sections):
 
     for role, _, _ in chain.members:
         title, model = chain.title_of(role), chain.names[role]
-        row = '| [%s](#%s) | `gz_%s` | %d |' % (title, slug(title), model, chain.number(role))
+        row = '| [%s](#%s) | `gz_%s` | %d |' % (title, gz_model.slug(title), model, chain.number(role))
 
         if '`gz_%s`' % model not in t:
             rows.append(row)

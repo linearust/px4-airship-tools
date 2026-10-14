@@ -97,7 +97,7 @@ import xml.etree.ElementTree as ET
 import fin_basis
 import gz_model
 import hull_basis
-from gz_model import CMAKE_POSIX, FLIGHT_AIRFRAMES, HYDRO_FILE, LIFT_DRAG_FILE, ROOT, RHO_AIR
+from gz_model import CMAKE_POSIX, FLIGHT_AIRFRAMES, HYDRO_FILE, LIFT_DRAG_FILE, ROOT, RHO_AIR, slug
 from report import note, summary, verdict
 
 TOKENS = gz_model.SCHEME_TOKENS
@@ -291,13 +291,6 @@ def off_scheme():
                 found.append('airframes/' + f)
 
     return found
-
-
-def slug(heading):
-    """VitePress's anchor for a heading: lowercase, punctuation dropped,
-    spaces to hyphens."""
-    text = re.sub(r'[^a-z0-9 -]', '', heading.lower())
-    return re.sub(r'-+', '-', text.strip().replace(' ', '-'))
 
 
 def canonical(elem):

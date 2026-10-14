@@ -80,6 +80,16 @@ WORLD = os.environ.get('PX4_GZ_WORLD', 'lta')
 def in_overlay(path):
     """Whether a model or airframe path is the overlay's (else the tree's)."""
     return os.path.abspath(path).startswith(os.path.abspath(OVERLAY) + os.sep)
+
+
+def slug(heading):
+    """VitePress's anchor for a heading, which the docs writers link and the
+    scheme check resolves: lowercase, punctuation dropped, spaces to hyphens,
+    a run of hyphens one."""
+    text = re.sub(r'[^a-z0-9 -]', '', heading.lower())
+    return re.sub(r'-+', '-', text.strip().replace(' ', '-'))
+
+
 GZ_PLUGINS = os.environ.get('PX4_GZ_PLUGINS',
                             os.path.join(ROOT, 'build/px4_sitl_default/src/'
                                                'modules/simulation/gz_plugins'))
