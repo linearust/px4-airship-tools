@@ -31,9 +31,10 @@ box (#162) and the magnetometer in tesla (#161, `use_units_gauss=false`,
 - A screenshot for `docs/assets/simulation/gazebo/vehicles/airship_vectored_independent.png` is
   still to be taken [from a desktop gz session: `gz sim` on the lta world with the model spawned,
   the GUI's screenshot button].
-- The hull's dimensions are those of the AS800 class in the airship literature (10.5 m × 3 m
-  scaled to 7 m, L/D 3.5); the vehicle that validated the firmware is a 2 m member of the same
-  family and is not part of this PR.
+- The hull is a 7.0 m × 2.0 m prolate spheroid (L/D 3.5, 14.66 m³, 18.0 kg neutrally buoyant),
+  the 7 m RC blimp class, with this project's two-pod actuation and the assumed pod thrust and
+  masses the vehicle file lists; the vehicle that validated the firmware is a 2 m member of the
+  same family and is not part of this PR.
 
 ## PX4-Autopilot — feat: airship support for two independently tilting pods
 
@@ -111,9 +112,10 @@ selected, which would disarm the vehicle in the air; a land-detector fix is a se
 
 - Bit identity: the narrowed class against the author's wider development class on the same
   independent-pod parameter sets [4 sets, N rows, IDENTICAL].
-- Bench, Cube Orange, logic analyzer at the output pins: [Manual fingerprint 0.0 µs between this
+- Bench, a px4_fmu-v6x board, logic analyzer at the output pins: [Manual fingerprint 0.0 µs between this
   branch and the development branch at the 2520 preset; tilt end stops and slew; park on disarm].
-- Flight, 2 m indoor vehicle, two ±180° pods, optical flow, no wind [Flight Review links]:
+- Flight, 2 m indoor vehicle on a MicoAir H743 AIO [exact board variant confirmed on receipt], two
+  ±180° pods, optical flow, no wind [Flight Review links]:
   Manual/Stabilized hover; tilt vectoring fore/aft/up/down; differential-thrust yaw with no tilt
   reversal in the steering band; Acro yaw steps (P/I/INT_LIM); full-stick release in Stabilized
   (restore rule; heading drift after release); anti-windup at full throttle + full yaw;

@@ -17,6 +17,8 @@
 
 ## 2. 주제: **독립 틸트 포드 비행선 — 배분과 요 각속도 제어, 2 m 실내 기체로 비행 검증**
 
+*→ 10 절 (16:20) 이 대체: PR 하나 (배분기 + 루프 + SITL), 게이트 AS_YAWRATE_MAX > 0, 파라미터 8 (포크 16), COM_DISARM_LAND 은 에어프레임 안에, 라벨 "Airship".*
+
 PR 셋이 한 주제다. 각각 작고, 같은 기체의 같은 로그로 설명한다.
 
 | 순서 | PR | 내용 | 증거 |
@@ -42,6 +44,8 @@ upstream 에 가는 수: 파라미터 **8 개** (17 → 8), 메시지 **0 개** 
 
 ## 3. 기체가 오기 전에 할 일 (지금; 2~3 일)
 
+*→ 10 절 (16:20) 이 대체: PR 하나 (배분기 + 루프 + SITL), 게이트 AS_YAWRATE_MAX > 0, 파라미터 8 (포크 16), COM_DISARM_LAND 은 에어프레임 안에, 라벨 "Airship".*
+
 1. **PR 브랜치를 upstream main 에서 뜬다** (`pr/airship-allocator`, `pr/airship-yaw-loop`, `pr/airship-sitl`; airship/dev 는 연구 브랜치로 그대로).
    코드는 airship/dev 에서 가져오되 좁힌다: 배분기에서 그룹·꼬리·조종면 분기와 상태 메시지 제거, 루프에서 선택기·스케줄·`airship_speed` 제거,
    루프 게이트는 `CA_AIRFRAME == 16`. 주석 밀도는 오늘 패스의 것.
@@ -63,6 +67,8 @@ upstream 에 가는 수: 파라미터 **8 개** (17 → 8), 메시지 **0 개** 
 - 일체 틸트 Y 선 시험을 할지: PR 에는 쓰이지 않으므로 우리 지식용.
 
 ## 6. 최종 제안 (15:00; 사용자 조건: 레포마다 PR 하나, PR 하나에 큰 주제 하나, 실내 시험 뒤 제출)
+
+*→ 10 절 (16:20) 이 대체: PR 하나 (배분기 + 루프 + SITL), 게이트 AS_YAWRATE_MAX > 0, 파라미터 8 (포크 16), COM_DISARM_LAND 은 에어프레임 안에, 라벨 "Airship".*
 
 **PX4-Autopilot PR 하나 — 틸트 포드 비행선 배분기 (`CA_AIRFRAME 16`, Airship: tilt pods).**
 **PX4-gazebo-models PR 하나 — 그 기체의 gz 쌍둥이와 lta 월드.** (PX4 PR 의 posix 2520·문서·포인터가 이것을 가리킨다.)
@@ -110,6 +116,8 @@ upstream 에 가는 수: 파라미터 **8 개** (17 → 8), 메시지 **0 개** 
 4. 하드웨어 패키지 카드에 "PR 주장 ↔ 카드" 를 적고, PR 본문 초안을 이 둘로 다시 쓴다.
 
 ## 7. 배분기의 범위 (15:10; 사용자: "generic airship 범위를 넘어서는데 타당한 범위는?")
+
+*→ 10 절 (16:20) 이 대체: PR 하나 (배분기 + 루프 + SITL), 게이트 AS_YAWRATE_MAX > 0, 파라미터 8 (포크 16), COM_DISARM_LAND 은 에어프레임 안에, 라벨 "Airship".*
 
 지금 `ActuatorEffectivenessAirship` 이 드는 것: 포드 둘 (독립/집단 `GRP`), 꼬리 추진기 (`TAIL`), 조종면과 크레딧 (`CS_K`, `_control_surfaces`,
 `ControlSurfaceType.hpp` 리팩토링, `kMinEffectiveness`), 상태 메시지 (`airship_allocator_status`, `AirshipYawAllocation.hpp`, `AirshipAirframe.hpp`),
@@ -256,7 +264,7 @@ A (가족형: CA_ROTORn_PX/PY/PZ 를 지금 읽는 기하 포드 + 루프 + 상�
    vectored_actuation.py CITED 줄 갱신; yaw_model 게이트에 max_rate 항; 패스스루 변경 (RC 상실 0, 모드 게이트, 롤 토크·추력 z) 은 별도 커밋 + gtest.
 5. 분할 (4)-(7): 플랜트 레지스트리, gz_run.sh 독립 스폰, 트림 (S6 grep 빈 것), 재기준선 (2520/2521/2517/2512).
 6. 모델: airship/models 푸시 → 생성기 `--upstream` 으로 세 파일 → 쌍둥이 검사 → 모델 PR 초안.
-7. `pr/airship` 을 upstream main 에서 뜨고 삭제 + 위 세 수정으로 옮김; make tests, identity (4+1 세트), fmu-v6x 2520 지문 0.0 us, PR 워크트리를
+7. `pr/airship` 을 upstream main 에서 뜨고 삭제 + 위 세 수정으로 옮김; make tests, identity (4+1 세트; 실행은 독립 4 세트, 11 절 10-14 11:10 — 2 m 프리셋 세트는 하니스에 없다), fmu-v6x 2520 지문 0.0 us, PR 워크트리를
    PX4_ROOT 로 한 SITL 호버 게이트, px4_sitl_default, check_format/validate_module_configs/module_documentation, 보드 크기표.
 8. 비행 펌웨어는 PR 워크트리에서 스테이징 (D-FREEZE: 기체가 난 커밋 id 를 본문에; 이후 수정은 재지문). 카드마다 PR 주장 대응. upstream_pr_bodies.md 를
    두 PR 로 다시 쓴다 (본문에 명시: 패스스루 변경, Stabilized 요가 루프가 됨 (MAX > 0 일 때), 시험 안 된 경로 — 고정 마운트·±90·FF 기본 0·7 m 게인).
