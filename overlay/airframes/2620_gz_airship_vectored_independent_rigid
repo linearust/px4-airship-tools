@@ -65,7 +65,8 @@ param set-default AS_YAWRATE_MAX 15
 param set-default COM_DISARM_LAND -1
 
 # Yaw loop values from airship_gains.py (px4-airship-tools) for this hull
-# The generic family's loop bandwidth N P / I and integral time P / I on this
-# hull: N 10 N m, yaw inertia 27.5 + 25.94 (added) kg m^2
+# P and I keep the loop bandwidth N P / I_zz and the integral time P / I the
+# default gains give the 11 m anchor hull, on this hull: N 10 N m of yaw
+# authority, I_zz 27.5 + 25.94 (added) kg m^2
 param set-default AS_YAWRATE_P 0.628
 param set-default AS_YAWRATE_I 0.0808

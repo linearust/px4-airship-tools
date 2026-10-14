@@ -252,10 +252,11 @@ param set-default AS_SPD_WMAX 0
 param set-default AS_SPD_HI %s
 param set-default AS_YR_FF_SLP %s''' % (hi, slp)
     return {
-        '': '''# The generic family's loop bandwidth N P / I and integral time P / I on this
-# hull: N %.4g N m, yaw inertia %.4g + %.4g (added) kg m^2
+        '': comment('P and I keep the loop bandwidth N P / I_zz and the integral time P / I the default gains give the 11 m '
+                    'anchor hull, on this hull: N %.4g N m of yaw authority, I_zz %.4g + %.4g (added) kg m^2'
+                    % (p['N'], p['I_rigid'], p['rr'])) + '''
 param set-default AS_YAWRATE_P %s
-param set-default AS_YAWRATE_I %s''' % (p['N'], p['I_rigid'], p['rr'], rnd(v['AS_YAWRATE_P']), rnd(v['AS_YAWRATE_I'])),
+param set-default AS_YAWRATE_I %s''' % (rnd(v['AS_YAWRATE_P']), rnd(v['AS_YAWRATE_I'])),
         '_fin': '''# Fin lift damps yaw: the generic fin member's feedforward scaled by the fins'
 # held-turn slope over the yaw authority (%.3g against the generic %.3g per m/s)
 param set-default AS_YAWRATE_FF %s

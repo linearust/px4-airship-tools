@@ -966,7 +966,7 @@ def without_absent(text, absent):
 
         out.append('\n'.join(kept))
 
-    return '\n\n'.join(out)
+    return '\n\n'.join(out).rstrip('\n') + '\n'
 
 
 # A sentence of a bare member's comment that describes the variant family
@@ -1004,8 +1004,9 @@ def upstream_airframe(plain, members_root, absent=(), rename=lambda text: text):
     family, with the complete member's block (what follows its include of
     the bare one: the yaw loop values) after the bare one's, so the file
     resolves to the chain's defaults. The upstream class drives independent
-    pods only, so the grouping parameter is left out, and the gains marker
-    names no tool."""
+    pods only, so the grouping parameter is left out; the gains marker names
+    no tool and stands once, above both blocks; the tilt comment names the
+    2520 flight airframe, not a "hardware preset"."""
     airframes = homes(members_root)[1]
     bare = rename(read(airframe_path(airframes, plain.members_decade, plain.bare)))
     complete = rename(read(airframe_path(airframes, plain.members_decade + plain.complete_mask, plain.complete)))
@@ -1016,9 +1017,15 @@ def upstream_airframe(plain, members_root, absent=(), rename=lambda text: text):
     assert include, '%s does not source its bare airframe' % plain.complete
     block = complete[include.end():].strip('\n')
 
+    # the complete member's block opens with the marker the bare one's block
+    # already carries: one marker above both
+    if airship_gains.MARK_OPEN in t and block.startswith(airship_gains.MARK_OPEN + '\n'):
+        block = block[len(airship_gains.MARK_OPEN) + 1:]
+
     if block:
         t = t.rstrip('\n') + '\n\n' + block + '\n'
 
+    t = t.replace('hardware preset', 'the 2520 airframe')
     return without_absent(t.replace(airship_gains.MARK_OPEN, UPSTREAM_MARK), absent)
 
 
