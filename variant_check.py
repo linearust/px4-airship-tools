@@ -58,9 +58,7 @@ this reads every airship model in the tree and holds each fact to the file:
  12. make targets: no two gz airframes produce one gz_<model>[_<world>] target,
      the way CMake would hit it.
  13. numbers: 25xx unique within each airframe directory, and every 25xx is
-     upstream's (2500, 2507) or in the decade table, which is read from the
-     comment above the 25xx entries of the posix CMakeLists, the one place it
-     is written.
+     upstream's (2500, 2507) or in the decade table (gz_model.OVERLAY_DECADES).
  14. the requirement, not the transcription: for every finned model of a
      body whose header declares it statically stable (STABLE, at the ratio
      the header promises), the two vertical fins' restoring moment over the Munk
@@ -107,34 +105,31 @@ MASK = {'drag': 1, 'fin': 2, 'am': 4}
 
 
 def decades():
-    """{vehicle: decade} from the two places the table is written: the comment
-    above the 25xx entries of the tree's posix CMakeLists ('#   2510 cloudship',
-    the vehicle) and the overlay's decade file (gz_model.OVERLAY_DECADES,
+    """{vehicle: decade} from the overlay's decade file (gz_model.OVERLAY_DECADES,
     '2630 airship_indoor_rigid', the bare model, keyed here by its vehicle),
-    when it exists. A vehicle marked reserved may have no model yet; a vehicle
-    in both tables is an error, as a name in both homes is."""
+    empty when there is none; the trimmed tree's posix CMakeLists has no decade
+    table. A vehicle marked reserved may have no model yet; a vehicle twice in
+    the table is an error, as a name in both homes is."""
     table, reserved = {}, set()
-    sources = [(CMAKE_POSIX, r'\s*#\s+(%d\d0)\s+([a-z0-9_]+)(.*)' % TREE_HUNDREDS)]
 
-    if os.path.isfile(gz_model.OVERLAY_DECADES):
-        sources.append((gz_model.OVERLAY_DECADES, r'\s*(%d\d0)\s+([a-z0-9_]+)(.*)' % OVERLAY_HUNDREDS))
+    if not os.path.isfile(gz_model.OVERLAY_DECADES):
+        return table, reserved
 
-    for path, pattern in sources:
-        for line in open(path):
-            m = re.match(pattern, line)
+    for line in open(gz_model.OVERLAY_DECADES):
+        m = re.match(r'\s*(%d\d0)\s+([a-z0-9_]+)(.*)' % OVERLAY_HUNDREDS, line)
 
-            if not m:
-                continue
+        if not m:
+            continue
 
-            vehicle = gz_model.vehicle(m.group(2))
+        vehicle = gz_model.vehicle(m.group(2))
 
-            if vehicle in table:
-                raise SystemExit('%s 가 십의 자리 표 둘에 다 있다 (%d 와 %s)' % (vehicle, table[vehicle], m.group(1)))
+        if vehicle in table:
+            raise SystemExit('%s 가 십의 자리 표에 두 번 있다 (%d 와 %s)' % (vehicle, table[vehicle], m.group(1)))
 
-            table[vehicle] = int(m.group(1))
+        table[vehicle] = int(m.group(1))
 
-            if 'reserved' in m.group(3):
-                reserved.add(vehicle)
+        if 'reserved' in m.group(3):
+            reserved.add(vehicle)
 
     return table, reserved
 

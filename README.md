@@ -43,8 +43,8 @@ generators, the gates and the records.
 ## Running
 
 ```sh
-python3 airship_family_gen.py vehicles/airship_indoor.json          # write the family into the PX4 tree
-python3 airship_family_gen.py vehicles/airship_generic.json --check # regenerate into a scratch copy, diff
+python3 airship_family_gen.py vehicles/airship_indoor.json --overlay                # the family into the overlay
+python3 airship_family_gen.py vehicles/airship_generic.json --upstream overlay --root <tree>  # its plain plants into a trimmed tree
 python3 airship_gains.py airship_indoor --write --params vehicles/airship_indoor.params
 python3 variant_check.py                                            # the scheme, in the files; no gz
 

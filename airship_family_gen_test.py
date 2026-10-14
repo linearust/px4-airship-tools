@@ -12,7 +12,7 @@
 2. --upstream from the overlay into a tree copy trimmed of a plain plant
    writes it back as the tree holds it (the twin check, then the copy is the
    tree byte for byte); a tree still holding a family member is refused, and
-   the modes exclude each other.
+   the two modes exclude each other.
 3. The split's end state replayed: a tree copy trimmed as the procedure
    trims it (docs/upstream_split_design_20261012.md, section 7, step (6)) and
    written back from the overlay is the tree again and passes every fact of
@@ -331,13 +331,13 @@ def main():
 
     try:
         with contextlib.redirect_stderr(io.StringIO()):
-            gen.main(['vehicles/airship_generic.json', '--check', '--overlay'])
+            gen.main(['vehicles/airship_generic.json', '--overlay', '--upstream', OVERLAY])
         exclusive = False
     except SystemExit as why:
         exclusive = why.code == 2
 
     verdict('--upstream 은 가족 멤버가 남은 트리 (airship_base_am) 와 MEMBERS_ROOT 와 같은 트리를 거부하고 아무것도 쓰지 않으며, '
-            '--check/--overlay/--upstream 은 서로 배타적이다',
+            '--overlay 와 --upstream 은 서로 배타적이다',
             'airship_base_am' in refused and 'same tree' in same_root and before == snapshot(os.path.join(untrimmed, gen.TREE_DIRS[0]))
             and exclusive, (refused + ' | ' + same_root)[:200])
     shutil.rmtree(untrimmed)
