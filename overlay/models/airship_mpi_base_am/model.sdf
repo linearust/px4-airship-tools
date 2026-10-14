@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  airship_mpi_base_rigid with the hull's fluid added mass. A full copy of that file
+  rather than a merge include of it, because <fluid_added_mass> is a property
+  of base_link's <inertial>, which a plain merge include cannot change. The
+  body, its mass budget, the tail sizing and the gondola offset are
+  documented in airship_mpi_base_rigid's header. This file differs from it by the
+  <fluid_added_mass> block, its model name and this header; an edit to either
+  file belongs in both. The _am members of the generic vehicles merge this
+  instead of airship_mpi_base_rigid.
+-->
+<sdf version="1.10">
+  <model name="airship_mpi_base_am">
+    <self_collide>false</self_collide>
+    <static>false</static>
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <!-- Hull as a solid spheroid (3.4325 kg at the hull centre), gondola
+             box (7.74 kg at x 0.3438), four fin plates at their centres
+             (dorsal and side 0.4007 kg, ventral 0.1700 kg), parallel-axis
+             about the combined CoM, products included; pods/props carry their
+             own mass in the wrapper, on the pods' plane. -->
+        <pose>0.0005 0.0000 0.5694 0 0 0</pose>
+        <mass>12.5446</mass>
+        <inertia>
+          <ixx>8.1715</ixx>
+          <iyy>16.5512</iyy>
+          <izz>12.6989</izz>
+          <ixy>0.0000</ixy>
+          <ixz>3.7583</ixz>
+          <iyz>0.0000</iyz>
+        </inertia>
+        <!-- Fluid added mass of the hull: Lamb's prolate-spheroid values for
+             its fineness a/b = 2.5: k1 0.15626 axial, k2 0.76189 transverse,
+             k' 0.36520 rotational, on the displaced mass rho V = 12.8282 kg of
+             the spheroid with semi-axes a = 2.50000 m and b = 1.00000 m (the
+             collision, which is also what is drawn) and its transverse inertia
+             rho V (a^2 + b^2) / 5 = 18.6008 kg m^2. Written about the link
+             origin, h = 1.25 m below the hull axis, with the offset terms that
+             implies (xq = h m_x, yp = -h m_y, pp = h^2 m_y, qq = I_q + h^2
+             m_x; T = 1/2 v_P^T A v_P with v_P = v_O + w x d). The engine folds
+             this into the spatial inertia, Coriolis terms and all, so it
+             brings the Munk moment with it: -(m_y - m_x) u v = -7.769 u v N m
+             of yaw in this y-port, z-up frame, the nose turning away from the
+             velocity. That is what the fins of the _fin members are sized
+             against. The fin plates' own added mass is not in it. -->
+        <fluid_added_mass>
+          <xx>2.00459</xx>
+          <yy>9.77362</yy>
+          <zz>9.77362</zz>
+          <xq>2.50574</xq>
+          <yp>-12.21703</yp>
+          <pp>15.27128</pp>
+          <qq>9.92514</qq>
+          <rr>6.79296</rr>
+        </fluid_added_mass>
+      </inertial>
+      <!-- The hull, drawn and collided alike; buoyancy volume 10.472 m^3 -->
+      <collision name="hull_collision">
+        <pose>0 0 1.25 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>2.50000 1.00000 1.00000</radii>
+          </ellipsoid>
+        </geometry>
+      </collision>
+      <!-- Ground contact; buoyancy volume 0.01344 m^3 -->
+      <collision name="gondola_collision">
+        <pose>0.3438 0 0.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.42 0.16 0.2</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <min_depth>0.001</min_depth>
+              <max_vel>0</max_vel>
+            </ode>
+          </contact>
+          <friction>
+            <ode />
+          </friction>
+        </surface>
+      </collision>
+      <visual name="hull_visual">
+        <pose>0 0 1.25 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>2.50000 1.00000 1.00000</radii>
+          </ellipsoid>
+        </geometry>
+        <material>
+          <ambient>0.85 0.85 0.9 1</ambient>
+          <diffuse>0.85 0.85 0.9 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+      <visual name="gondola_visual">
+        <pose>0.3438 0 0.1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.42 0.16 0.2</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.35 1</ambient>
+          <diffuse>0.3 0.3 0.35 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+      <!-- Cruciform tail, visual only here: no collision and no lift-drag,
+           so it adds no weathercock stiffness. The _fin variants give these
+           four boxes lift and airship_fixed_rigid gives them flaps. Rooted at the
+           mid-chord hull radius; see the header. -->
+      <visual name="fin_port_visual">
+        <pose>-1.9350 1.2932 1.2500 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.85 1.32 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_starboard_visual">
+        <pose>-1.9350 -1.2932 1.2500 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.85 1.32 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_top_visual">
+        <pose>-1.9350 0.0000 2.5432 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.85 0.02 1.32</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_bottom_visual">
+        <pose>-1.9350 0.0000 0.3368 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.85 0.02 0.56</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <sensor name="air_pressure_sensor" type="air_pressure">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>50</update_rate>
+        <air_pressure>
+          <!-- Noise modeled after BMP390 -->
+          <pressure>
+            <noise type="gaussian">
+              <mean>0</mean>
+              <stddev>3</stddev>
+            </noise>
+          </pressure>
+        </air_pressure>
+      </sensor>
+      <sensor name="magnetometer_sensor" type="magnetometer">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>100</update_rate>
+        <magnetometer>
+          <!-- 3mgauss RMS = 3e-7 tesla, noise modeled after IIS2MDC -->
+          <!-- Noise is in the units of the field: tesla with use_units_gauss=false (lta.sdf's Magnetometer
+               system, as PX4's gz_bridge server.config), gauss with the gz-sim default -->
+          <x>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </z>
+        </magnetometer>
+      </sensor>
+      <sensor name="imu_sensor" type="imu">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>250</update_rate>
+        <imu>
+          <angular_velocity>
+            <!-- Noise modeled after IIM42653, 0.05 deg/s in rad/s -->
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <!-- Noise modeled after IIM42653, 0.65/0.70 mg-rms in m/s^2 -->
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00637</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00637</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00686</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+      <sensor name="navsat_sensor" type="navsat">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+      </sensor>
+    </link>
+  </model>
+</sdf>

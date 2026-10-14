@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# @name JAXA 14 m LTA Test Vehicle (Hull Drag)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_jaxa_drag}
+
+. ${R}etc/init.d-posix/airframes/2650_gz_airship_jaxa_rigid

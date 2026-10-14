@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cloudship in gz. One tilting rod carries both thrusters, so thrust is
+  collective and a single servo vectors it; a reversible tail thruster does
+  yaw. That is the airframe the flight side already flies
+  (init.d/airframes/2507_cloudship: CA_AIRFRAME 16, CA_AIRSHIP_GRP 0,
+  CA_AIRSHIP_TAIL 1), and it had no gz simulator: the posix gazebo-classic
+  Cloudship (2519) is still on the old CA_AIRFRAME 9 rotor geometry. So this
+  is the first plant the collective-and-tail path of the airship allocator
+  can be flown against.
+
+  Every length and mass is the gazebo-classic model's own measurement
+  (models/cloudship/cloudship.sdf.jinja): a 4.7 x 1.6 m hull of 5.97 m^3 with
+  its center of volume 2.22 m from the nose, a 0.4 x 0.17 x 0.1 gondola 2 m
+  from the nose and 0.8486 m under that center, a 1.05 kg payload, four
+  0.465 x 0.39 m fins from 3.635 m and 0.5634 m off the axis, thrusters
+  +-0.45 m either side of the gondola, 13" props good for 1.62 kg each and a
+  5" tail prop for 0.24 kg. The inertia is NOT that model's: its parallel-axis
+  terms take the wrong offsets (its gondola ixx is built from the x offset and
+  its izz from the z one), so the tensor here is recomputed from the same
+  bodies about the real center of mass, ixz and all.
+
+  Frame and buoyancy follow airship_base: x forward, y port, z up, the origin
+  on the ground under the gondola, and lift from the collision volumes at
+  1.225 kg/m^3. The drawn hull is the true 4.7 x 1.6 m ellipsoid and displaces
+  6.300 m^3; the real hull holds 5.97, so the collision ellipsoid is the drawn
+  one scaled by 0.981925, which with the gondola's 0.0068 m^3 puts the lift at
+  7.31480 kg against a mass of 7.3148. The ventral fin reaches 5.5 cm below
+  the gondola, which is the vehicle's shape and not a mistake; the gondola
+  still carries the ground contact, so the fin passes through the ground when
+  the hull is resting on it.
+
+  This is cloudship_rigid with fluid added mass and nothing else, and it is a
+  full copy of that file rather than a merge include of it, because
+  <fluid_added_mass> is a property of base_link's <inertial>, which a plain
+  merge include cannot change. The copy differs from cloudship_rigid by that one
+  block, its model name and this paragraph; an edit to either file belongs in
+  both. The fluid
+  physics come as variants named by what they add, in a fixed order:
+    cloudship_am            fluid added mass (a full copy: <fluid_added_mass>
+                            lives in the link's <inertial>, which a plain
+                            merge include cannot change)
+    cloudship_fin           fin lift, four lift-drag plugins
+    cloudship_drag          hull drag and rotational damping
+    cloudship_am_fin        added mass and fins together: added mass brings
+                            the Munk moment, and the fins are what oppose it
+    cloudship_am_fin_drag   everything, the plant to tune against
+  Every variant but _am is a thin merge include of the model with one token
+  fewer (cloudship_fin and cloudship_drag wrap cloudship_rigid, cloudship_am_fin
+  wraps cloudship_am, cloudship_am_fin_drag wraps cloudship_am_fin), so the
+  vehicle is written in cloudship_rigid and once more in this copy, kept equal to
+  that file; the drag block is written once,
+  in cloudship_drag, and the fin block once more than that, in the two _fin
+  variants, held identical the same way.
+  The thruster assembly's 0.30 kg comes out of the gondola's 3.3, which is
+  where the classic model leaves it; the split and the moving links' inertias
+  are placeholders. Prop links are pitched 90 deg so link +Z, the motor
+  plugin's thrust axis, points forward; the tail prop is rolled -90 deg so its
+  +Z points to port, which swings the nose to starboard, PX4's positive yaw.
+-->
+<sdf version="1.10">
+  <model name="cloudship_am">
+    <self_collide>false</self_collide>
+    <static>false</static>
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <!-- Hull shell, lifting gas, gondola, payload and four fins, each
+             about its own center and summed about theirs. -->
+        <pose>0.0155 0 0.4183 0 0 0</pose>
+        <mass>7.0148</mass>
+        <inertia>
+          <ixx>2.3196</ixx>
+          <iyy>6.8533</iyy>
+          <izz>5.6703</izz>
+          <ixy>0</ixy>
+          <ixz>0.3598</ixz>
+          <iyz>0</iyz>
+        </inertia>
+        <!-- Fluid added mass of the hull, Lamb's prolate-spheroid values for
+             THIS hull's fineness ratio a/b = 2.9375: k1 0.12555 axial, k2 0.79930
+             transverse, k' 0.45438 rotational, on the displaced mass rho V =
+             7.3065 kg and the displaced fluid's transverse inertia
+             rho V (a^2 + b^2) / 5 = 8.6826 kg m^2 of the collision ellipsoid
+             itself. The gazebo-classic template carries k1 0.04662, k2 0.9147,
+             k' 0.75567 instead, which are Lamb's values for a/b = 5.875 =
+             4.7 / 0.8, the hull's length over its radius where Lamb's ratio
+             is semi-length over radius; they are not used, for the same
+             reason the inertia above is recomputed rather than copied.
+             The tensor is diagonal about the hull's centre of volume and this
+             element is written about the link origin, h = 0.8986 m below the
+             hull axis, so it picks up the same offset terms the drag block
+             does: xq = h m_x, yp = -h m_y, pp = h^2 m_y, qq = I_q + h^2 m_x
+             (T = 1/2 v_P^T A v_P with v_P = v_O + w x d, d = (0, 0, h)).
+             The engine folds this into the spatial inertia, Coriolis terms
+             and all, so it brings the Munk moment with it: -(m_y - m_x) u v
+             = -4.9228 u v N m of yaw in this y-port, z-up frame, the nose
+             turning away from the velocity. That is what the _fin variants'
+             fins are for, and cloudship_am_fin carries both. -->
+        <fluid_added_mass>
+          <xx>0.91729</xx>
+          <yy>5.84009</yy>
+          <zz>5.84009</zz>
+          <xq>0.82428</xq>
+          <yp>-5.24790</yp>
+          <pp>4.71576</pp>
+          <qq>4.68595</qq>
+          <rr>3.94525</rr>
+        </fluid_added_mass>
+      </inertial>
+      <!-- Buoyancy volume 5.96447 m^3: the drawn ellipsoid scaled to the
+           hull's real 5.97 m^3 less the gondola's own displacement. dartsim
+           logs "Ellipsoid is not a supported collision geomerty" and builds a
+           16x16 mesh instead; that is its own notice and not a problem here,
+           because the lift comes from the SDF shape's analytic volume and the
+           ground contact comes from the gondola. -->
+      <collision name="hull_collision">
+        <pose>0 0 0.8986 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>2.30752 0.78554 0.78554</radii>
+          </ellipsoid>
+        </geometry>
+      </collision>
+      <!-- Ground contact; buoyancy volume 0.0068 m^3 -->
+      <collision name="gondola_collision">
+        <pose>0.22 0 0.05 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.4 0.17 0.1</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <min_depth>0.001</min_depth>
+              <max_vel>0</max_vel>
+            </ode>
+          </contact>
+          <friction>
+            <ode />
+          </friction>
+        </surface>
+      </collision>
+      <visual name="hull_visual">
+        <pose>0 0 0.8986 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>2.35 0.8 0.8</radii>
+          </ellipsoid>
+        </geometry>
+        <material>
+          <ambient>0.9 0.9 0.92 1</ambient>
+          <diffuse>0.9 0.9 0.92 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+      <visual name="gondola_visual">
+        <pose>0.22 0 0.05 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.4 0.17 0.1</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.25 0.25 0.3 1</ambient>
+          <diffuse>0.25 0.25 0.3 1</diffuse>
+        </material>
+      </visual>
+      <visual name="payload_visual">
+        <pose degrees="true">-0.18 0 0.1146 90 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.05</radius>
+            <length>0.12</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.15 0.15 0.15 1</ambient>
+          <diffuse>0.15 0.15 0.15 1</diffuse>
+        </material>
+      </visual>
+      <!-- Cruciform tail, visual only here: no collision and no lift-drag,
+           so it adds no weathercock stiffness, exactly as airship_base's
+           does. The _fin variants give these four boxes lift. -->
+      <visual name="fin_port_visual">
+        <pose>-1.6475 0.7584 0.8986 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.465 0.39 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_starboard_visual">
+        <pose>-1.6475 -0.7584 0.8986 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.465 0.39 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_top_visual">
+        <pose>-1.6475 0 1.6570 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.465 0.01 0.39</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_bottom_visual">
+        <pose>-1.6475 0 0.1402 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.465 0.01 0.39</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <sensor name="air_pressure_sensor" type="air_pressure">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>50</update_rate>
+        <air_pressure>
+          <!-- Noise modeled after BMP390 -->
+          <pressure>
+            <noise type="gaussian">
+              <mean>0</mean>
+              <stddev>3</stddev>
+            </noise>
+          </pressure>
+        </air_pressure>
+      </sensor>
+      <sensor name="magnetometer_sensor" type="magnetometer">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>100</update_rate>
+        <magnetometer>
+          <!-- 3mgauss RMS = 3e-7 tesla, noise modeled after IIS2MDC -->
+          <!-- Noise is in the units of the field: tesla with use_units_gauss=false (lta.sdf's Magnetometer
+               system, as PX4's gz_bridge server.config), gauss with the gz-sim default -->
+          <x>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </z>
+        </magnetometer>
+      </sensor>
+      <sensor name="imu_sensor" type="imu">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>250</update_rate>
+        <imu>
+          <angular_velocity>
+            <!-- Noise modeled after IIM42653, 0.05 deg/s in rad/s -->
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <!-- Noise modeled after IIM42653, 0.65/0.70 mg-rms in m/s^2 -->
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00637</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00637</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00686</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+      <sensor name="navsat_sensor" type="navsat">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+      </sensor>
+    </link>
+    <!-- One rod, both thrusters: thrust is collective and one servo vectors
+         it. The stop is +-pi for the same reason as the big airship's: a pod
+         is a servo, and the bridge caps the command at +-180 anyway. -->
+    <link name="thruster_rod">
+      <pose>0.32 0 0.05 0 0 0</pose>
+      <inertial>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>0.0135</ixx>
+          <iyy>0.0005</iyy>
+          <izz>0.0135</izz>
+        </inertia>
+      </inertial>
+      <visual name="thruster_rod_visual">
+        <pose degrees="true">0 0 0 90 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>0.9</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="tilt_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster_rod</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-3.141593</lower>
+          <upper>3.141593</upper>
+        </limit>
+        <dynamics>
+          <damping>0.01</damping>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="prop_starboard">
+      <pose degrees="true">0.32 -0.45 0.05 0 90 0</pose>
+      <inertial>
+        <mass>0.04</mass>
+        <inertia>
+          <ixx>0.0003</ixx>
+          <iyy>0.0003</iyy>
+          <izz>0.0005</izz>
+        </inertia>
+      </inertial>
+      <visual name="prop_starboard_visual">
+        <geometry>
+          <box>
+            <size>0.02 0.3302 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="prop_starboard_joint" type="revolute">
+      <parent>thruster_rod</parent>
+      <child>prop_starboard</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="prop_port">
+      <pose degrees="true">0.32 0.45 0.05 0 90 0</pose>
+      <inertial>
+        <mass>0.04</mass>
+        <inertia>
+          <ixx>0.0003</ixx>
+          <iyy>0.0003</iyy>
+          <izz>0.0005</izz>
+        </inertia>
+      </inertial>
+      <visual name="prop_port_visual">
+        <geometry>
+          <box>
+            <size>0.02 0.3302 0.02</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="prop_port_joint" type="revolute">
+      <parent>thruster_rod</parent>
+      <child>prop_port</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <!-- At the trailing edge of the ventral fin root, which is where the
+         classic model puts it: r_fin_x - fin_root_chord/2 back and r_fin_rad
+         down, so -1.6475 - 0.2325 and 0.8986 - 0.5634. It was on the hull
+         axis at the fin station, which is 0.2325 m too far forward, 0.5634 m
+         too high, and buried inside the hull - the ellipsoid still has a
+         0.550 m local radius there. The height is what mattered: on the axis
+         the tail's thrust acts 0.49 m above the centre of mass and banks the
+         hull 1.9 degrees every time it yaws, where at the fin root it acts
+         0.07 m below it and the bank is 0.27 degrees the other way. A yaw
+         thruster goes in the lower fin precisely so that yaw does not roll
+         the vehicle. -->
+    <link name="prop_tail">
+      <pose degrees="true">-1.88 0 0.3352 -90 0 0</pose>
+      <inertial>
+        <mass>0.02</mass>
+        <inertia>
+          <ixx>0.00002</ixx>
+          <iyy>0.00002</iyy>
+          <izz>0.00004</izz>
+        </inertia>
+      </inertial>
+      <visual name="prop_tail_visual">
+        <geometry>
+          <box>
+            <size>0.015 0.127 0.015</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="prop_tail_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>prop_tail</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <plugin filename="gz-sim-joint-position-controller-system"
+      name="gz::sim::systems::JointPositionController">
+      <joint_name>tilt_joint</joint_name>
+      <sub_topic>servo_0</sub_topic>
+      <p_gain>2.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>0.1</d_gain>
+    </plugin>
+    <!-- 7.0632e-06 * 1500^2 = 15.89 N per thruster, 31.8 N on a 7.3 kg
+         vehicle, which is the classic model's 1.62 kg each. The two turn
+         opposite ways so their reaction couples cancel at equal thrust, and
+         the collective group never splits them. timeConstant is the classic
+         model's mot_tau; momentConstant, rotorDragCoefficient and
+         rollingMomentCoefficient are still the x500 quadrotor's. -->
+    <plugin filename="gz-sim-multicopter-motor-model-system"
+      name="gz::sim::systems::MulticopterMotorModel">
+      <jointName>prop_starboard_joint</jointName>
+      <linkName>prop_starboard</linkName>
+      <turningDirection>ccw</turningDirection>
+      <timeConstantUp>0.05</timeConstantUp>
+      <timeConstantDown>0.05</timeConstantDown>
+      <maxRotVelocity>1500.0</maxRotVelocity>
+      <motorConstant>7.0632e-06</motorConstant>
+      <momentConstant>0.016</momentConstant>
+      <commandSubTopic>command/motor_speed</commandSubTopic>
+      <motorNumber>0</motorNumber>
+      <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+      <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+      <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      <motorType>velocity</motorType>
+    </plugin>
+    <plugin filename="gz-sim-multicopter-motor-model-system"
+      name="gz::sim::systems::MulticopterMotorModel">
+      <jointName>prop_port_joint</jointName>
+      <linkName>prop_port</linkName>
+      <turningDirection>cw</turningDirection>
+      <timeConstantUp>0.05</timeConstantUp>
+      <timeConstantDown>0.05</timeConstantDown>
+      <maxRotVelocity>1500.0</maxRotVelocity>
+      <motorConstant>7.0632e-06</motorConstant>
+      <momentConstant>0.016</momentConstant>
+      <commandSubTopic>command/motor_speed</commandSubTopic>
+      <motorNumber>1</motorNumber>
+      <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+      <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+      <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      <motorType>velocity</motorType>
+    </plugin>
+    <!-- 2.3544 N at full command, the classic model's 0.24 kg prop, 1.902 m
+         behind the center of mass for 4.48 N m of yaw. Its thrust axis is
+         +Y, so a positive command swings the nose to starboard, and it sits
+         0.07 m below the centre of mass, so a full-command yaw also banks the
+         hull 0.27 degrees.
+
+         This is the vehicle's only yaw authority, so it has to go both ways,
+         and it is the one motor here that is not a MulticopterMotorModel.
+         That plugin reverses on a negative rotor velocity, but no negative
+         ever reaches it: the bridge's SIM_GZ_EC_MIN/MAX live in a uint16_t
+         inside MixingOutput, which truncates a negative and then swaps the
+         pair because min now exceeds max. So the sign has to live here.
+         duty_cycle + bidirectionalMotor centres the non-negative 1100..1900
+         the bridge does send, giving a signed -1..1 reference, and the two
+         thrust polynomials are 2.3544 * ref^2 either side of it. Same
+         mechanism and the same duty range as uuv_bluerov2_heavy.
+
+         The polynomials must carry four coefficients even though only the
+         quadratic one is non-zero, and the constant term must be zero: the
+         plugin takes ref >= minCommand, so a non-zero constant would be a
+         standing thrust at neutral.
+
+         Only the elements below are read in this mode. maxRotVelocity,
+         motorConstant, momentConstant, rotorDragCoefficient,
+         rollingMomentCoefficient and the two time constants belong to the
+         plugin's kVelocity branch and are not carried here, however much
+         uuv_bluerov2_heavy carries them: the thrust comes from the
+         polynomial and the joint velocity is written straight from the
+         reference. That last one is a real loss worth saying out loud - this
+         tail has no lag, where the classic template gives its prop tau
+         0.025. -->
+    <plugin filename="libGenericMotorModelPlugin.so"
+      name="gz::sim::systems::GenericMotorModel">
+      <jointName>prop_tail_joint</jointName>
+      <linkName>prop_tail</linkName>
+      <turningDirection>ccw</turningDirection>
+      <commandSubTopic>command/motor_speed</commandSubTopic>
+      <actuator_number>2</actuator_number>
+      <rotorVelocitySlowdownSim>0.025</rotorVelocitySlowdownSim>
+      <motorType>force_polynomial</motorType>
+      <controlMethod>duty_cycle</controlMethod>
+      <minCommand>0.0</minCommand>
+      <minDutyCycle>1100</minDutyCycle>
+      <maxDutyCycle>1900</maxDutyCycle>
+      <bidirectionalMotor>1</bidirectionalMotor>
+      <positiveThrustPolynomial>[0.0, 0.0, 2.3544, 0.0]</positiveThrustPolynomial>
+      <negativeThrustPolynomial>[0.0, 0.0, 2.3544, 0.0]</negativeThrustPolynomial>
+    </plugin>
+  </model>
+</sdf>

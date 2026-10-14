@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The complete vectored airship plant: airship_vectored_independent_am_fin
+  merged, plus the hull drag and rotational damping block of
+  airship_vectored_independent_drag. Added mass, the Munk moment it brings,
+  fin lift against it, and the dissipation that bounds every rate. This is
+  the model to tune the yaw loop against; airship_vectored_independent_rigid is the
+  one to regress the allocator against.
+-->
+<sdf version="1.10">
+  <model name="airship_vectored_independent_am_fin_drag">
+    <include merge="true">
+      <uri>model://airship_vectored_independent_am_fin</uri>
+    </include>
+    <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <!-- Quadratic drag [N/(m/s)^2] -->
+      <xUabsU>-0.1473</xUabsU>
+      <yVabsV>-5.0780</yVabsV>
+      <zWabsW>-5.0780</zWabsW>
+      <!-- Rotational damping [N m/(rad/s)^2], with the linear roll term the
+           very lightly damped roll mode needs [N m/(rad/s)] -->
+      <kP>-1.0308</kP>
+      <kPabsP>-4.6388</kPabsP>
+      <mQabsQ>-30.9254</mQabsQ>
+      <nRabsR>-30.9254</nRabsR>
+      <!-- The same two drags written about the link origin, h = 1.3 m below
+           the hull axis they act on. Surge and pitch, from u_hull = u + h q
+           and M_y = +h F_x; sway and roll, from v_hull = v - h p and
+           M_x = -h F_y. Both signs follow from d x F for d = (0, 0, h), and
+           the leading minus on yPabsV and kVabsV is that, not a typo.
+             xQabsU = 2h  * xUabsU   yPabsV = -2h  * yVabsV   [N/(rad/s)/(m/s)]
+             mUabsU =  h  * xUabsU   kVabsV =  -h  * yVabsV   [N m/(m/s)^2]
+             mQabsU = 2h^2* xUabsU   kPabsV = 2h^2 * yVabsV   [N m/(rad/s)/(m/s)]
+           Heave has no row of its own: its line of action runs through both
+           points, and no rate changes it, because d is along it. -->
+      <xQabsU>-0.3830</xQabsU>
+      <yPabsV>13.2028</yPabsV>
+      <mUabsU>-0.1915</mUabsU>
+      <mQabsU>-0.4979</mQabsU>
+      <kVabsV>6.6014</kVabsV>
+      <kPabsV>-17.1637</kPabsV>
+      <!-- Inert while no xDot* term is set, and kept for when one is: it is
+           also what tells the plugin to stand back if the link ever gains a
+           <fluid_added_mass>, which it would otherwise double-count. -->
+      <disable_added_mass>true</disable_added_mass>
+    </plugin>
+  </model>
+</sdf>

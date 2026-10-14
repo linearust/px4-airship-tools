@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# @name Generic Airship (Independent Vectoring, Complete)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_vectored_independent_am_fin_drag}
+
+. ${R}etc/init.d-posix/airframes/2620_gz_airship_vectored_independent_rigid
+
+# Yaw loop values from airship_gains.py (px4-airship-tools) for this hull
+# Hull drag damps yaw as the square of the rate: holding AS_YAWRATE_MAX in a
+# turn in place takes |nRabsR| r^2 = 2.12 N m, 0.81 of the pods' yaw authority
+# per rad/s, which the loop scales by the setpoint's share of that rate
+param set-default AS_YAWRATE_FF 0.81
+
+# Fin lift damps yaw with the forward speed: a held turn takes 5.18 more
+# normalized yaw torque per rad/s for each m/s over the pods' 10 N m (measured
+# in held turns in the simulator). Scheduled on the ground speed with no wind
+# bound, since the world has none, and capped where the pods can hold the turn;
+# the ramp ends where the cap meets 0.8 of the yaw rate that stalls the fins in
+# a turn (5.46 deg/s at 2.1 m/s) and starts at half that
+param set-default AS_SPD_SRC 2
+param set-default AS_SPD_WMAX 0
+param set-default AS_SPD_HI 2.1
+param set-default AS_YR_FF_SLP 5.18

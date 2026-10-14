@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# @name Generic Airship (Independent Vectoring, Rigid Hull)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+# @output Motor1 starboard pod motor
+# @output Motor2 port pod motor
+# @output Servo1 starboard pod tilt
+# @output Servo2 port pod tilt
+#
+
+. ${R}etc/init.d/rc.airship_defaults
+
+param set-default COM_PREARM_MODE 2
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=lta}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_vectored_independent_rigid}
+
+param set-default SIM_GZ_EN 1
+
+# Simulation only: allow arming without a GCS connection
+param set-default NAV_DLL_ACT 0
+
+# gz motors: 1 = starboard, 2 = port; output 0..1 = rotor speed 0..300 rad/s
+param set-default SIM_GZ_EC_FUNC1 101
+param set-default SIM_GZ_EC_FUNC2 102
+param set-default SIM_GZ_EC_MIN1 0
+param set-default SIM_GZ_EC_MIN2 0
+param set-default SIM_GZ_EC_MAX1 300
+param set-default SIM_GZ_EC_MAX2 300
+
+# gz pod thrust is quadratic in the rotor speed command: linearize it so a
+# normalized torque demand is the torque the pods deliver at every level
+param set-default THR_MDL_FAC 1
+
+# Tilt servos: 1 = starboard, 2 = port. The angle range must equal
+# CA_AIRSHIP_TLMIN/TLMAX below: the allocator projects thrust with the
+# CA range and the gz servo bridge maps the servo output onto this one
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_FUNC2 202
+param set-default SIM_GZ_SV_MINA1 -180
+param set-default SIM_GZ_SV_MAXA1 180
+param set-default SIM_GZ_SV_MINA2 -180
+param set-default SIM_GZ_SV_MAXA2 180
+
+# Independently vectored side pods; the tilt slew rate matches the
+# hardware preset so SITL exercises the same code path
+param set-default CA_AIRFRAME 16
+param set-default CA_AIRSHIP_GRP 1
+param set-default CA_AIRSHIP_TLMIN -180
+param set-default CA_AIRSHIP_TLMAX 180
+param set-default CA_AIRSHIP_TLT_R 120
+
+# The yaw rate loop: full yaw stick commands this rate in Acro, Stabilized,
+# Altitude and Position; 0 keeps the stick as yaw torque in every mode
+param set-default AS_YAWRATE_MAX 15
+
+# Disable auto-disarm on landing: the airship land detector reports "landed"
+# as soon as Land is selected, which would disarm the vehicle in the air
+param set-default COM_DISARM_LAND -1
+
+# Yaw loop values from airship_gains.py (px4-airship-tools) for this hull
+# The generic family's loop bandwidth N P / I and integral time P / I on this
+# hull: N 10 N m, yaw inertia 27.5 + 25.94 (added) kg m^2
+param set-default AS_YAWRATE_P 0.628
+param set-default AS_YAWRATE_I 0.0808

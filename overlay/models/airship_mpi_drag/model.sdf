@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The vectored airship with hull aerodynamics. Same vehicle as
+  airship_mpi_rigid, which this merges: only the fluid the hull
+  moves through is added, so a run against either model is the same control
+  code on two plants.
+
+  Quadratic drag and rotational damping, no added mass. The added-mass terms
+  this plugin also accepts are left out on purpose: it applies them as an
+  explicit force, and at an airship's ratios (the hull's added sway mass is of
+  the order of its dry mass) that diverges within a fraction of a second. Added
+  mass belongs in the link's <fluid_added_mass>, which the physics engine folds
+  into the spatial inertia: airship_mpi_base_am carries it, and
+  airship_mpi_am_fin_drag has both.
+
+  The dimensionless coefficients are the airship-control-design reference set
+  (c_d 0.08906 axial, c_lat 3.08324 lateral, c_lp_lin 0.04 and c_lp_quad 0.18
+  roll, c_mq = c_nr 1.2 pitch and yaw) on an 8.3534 x 2.3693 m hull. The fluid
+  is air at rho = 1.225 kg/m^3 despite the plugin's name. On this hull,
+  airship_mpi_base_rigid's 5.00 x 2.00 m spheroid, the frontal reference radius
+  scales with the half-height to 0.92854 m (A = 2.7087 m^2); the lateral
+  coefficient is crossflow drag, which scales with the planform, so it also
+  takes the fineness ratio (2.5 / 3.5257, x 0.7091); the axial one takes
+  Hoerner's fineness dependence of a streamlined body's frontal drag (x
+  0.9347); and the rotational scale is 0.5 * rho * S * L^3 * 0.003438 with
+  S = 26.1518 m^2 and L = 5.0000 m, giving 6.8837 N m. Translational terms are
+  then -0.5 * rho * A * c times those factors, rotational terms -6.8837 * c.
+
+  The plugin applies its wrench at the link origin (gz::sim::Link has an
+  offset form, but Hydrodynamics calls the two-argument AddWorldWrench, which
+  the header documents as acting at the link's origin). It reads the velocity
+  there too. So the origin, not the hull axis and not the center of mass, is
+  the point this whole coefficient set is written about, and it sits 1.25 m
+  below the axis the drag acts on. About a point off the axis the set is not
+  diagonal, and not in one way but two, so six cross terms.
+
+  Two conditions make the plugin's wrench the hull's. The force it applies has
+  to be the force on the hull, which is set by the velocity at the axis and
+  not at the origin; and the couple has to be d x F for d = (0, 0, 1.25), the
+  offset between the two points. The center of mass appears in neither, which
+  is the check on the algebra: a derivation that only matches the moment about
+  the center of mass satisfies the second condition and quietly leaves the
+  first one broken, because the force error's own lever hides it there.
+
+  So each in-plane axis needs four coefficients where the plugin had one: the
+  drag itself, its rate term on the force, its arm on the couple, and that
+  arm's rate term. The arm pair is what stops forward flight pitching the nose
+  down. The rate terms are what stop the hull rolling itself apart: without
+  both of them the roll moment per unit rate about the centre of mass is
+  -0.28 + 2.80 |v| N m/(rad/s), which stops damping above 0.10 m/s of sideslip
+  (on the earlier hull's coefficients that settled into a 6 deg limit cycle),
+  and without kPabsV alone it is -0.28 + 7.87 |v|, which stops damping above
+  0.03 m/s.
+
+  One term of the shift has no home in this plugin's grammar, a squared rate
+  that follows the sign of the velocity rather than of the rate. At the center
+  of mass it is worth 0.5 N of sway and 0.4 N m of roll at 0.3 rad/s against 87
+  N m/rad of restoring, and it falls away with the rate. The expansion behind
+  all of it holds while the rate-induced velocity stays under the velocity
+  itself. Past that, which is near-still air, these terms overshoot rather than
+  reverse: in still air the hull's own contribution to roll damping reads 2.7 N
+  m/(rad/s)^2 where it should read 1.2, so the total with kPabsP comes out 4.0
+  against 2.4, 63 % high and on the safe side. The rotational damping is a pure
+  couple, equal about every point and untouched by any of this.
+-->
+<sdf version="1.10">
+  <model name="airship_mpi_drag">
+    <include merge="true">
+      <uri>model://airship_mpi_rigid</uri>
+    </include>
+    <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <!-- Quadratic drag [N/(m/s)^2] -->
+      <xUabsU>-0.1381</xUabsU>
+      <yVabsV>-3.6271</yVabsV>
+      <zWabsW>-3.6271</zWabsW>
+      <!-- Rotational damping [N m/(rad/s)^2], with the linear roll term the
+           very lightly damped roll mode needs [N m/(rad/s)] -->
+      <kP>-0.2753</kP>
+      <kPabsP>-1.2391</kPabsP>
+      <mQabsQ>-8.2605</mQabsQ>
+      <nRabsR>-8.2605</nRabsR>
+      <!-- The same two drags written about the link origin, h = 1.25 m below
+           the hull axis they act on. Surge and pitch, from u_hull = u + h q
+           and M_y = +h F_x; sway and roll, from v_hull = v - h p and
+           M_x = -h F_y. Both signs follow from d x F for d = (0, 0, h), and
+           the leading minus on yPabsV and kVabsV is that, not a typo.
+             xQabsU = 2h  * xUabsU   yPabsV = -2h  * yVabsV   [N/(rad/s)/(m/s)]
+             mUabsU =  h  * xUabsU   kVabsV =  -h  * yVabsV   [N m/(m/s)^2]
+             mQabsU = 2h^2* xUabsU   kPabsV = 2h^2 * yVabsV   [N m/(rad/s)/(m/s)]
+           Heave has no row of its own: its line of action runs through both
+           points, and no rate changes it, because d is along it. -->
+      <xQabsU>-0.3453</xQabsU>
+      <yPabsV>9.0679</yPabsV>
+      <mUabsU>-0.1726</mUabsU>
+      <mQabsU>-0.4316</mQabsU>
+      <kVabsV>4.5339</kVabsV>
+      <kPabsV>-11.3348</kPabsV>
+      <!-- Inert while no xDot* term is set, and kept for when one is: it is
+           also what tells the plugin to stand back if the link ever gains a
+           <fluid_added_mass>, which it would otherwise double-count. -->
+      <disable_added_mass>true</disable_added_mass>
+    </plugin>
+  </model>
+</sdf>

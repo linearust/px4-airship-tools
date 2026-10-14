@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The Cloudship with hull drag and rotational damping. Same vehicle as
+  cloudship_rigid, which this merges: only the fluid the hull moves through is
+  added, so a run against either model is the same control code on two
+  plants. No added mass (that is cloudship_am, and cloudship_am_fin_drag has
+  both): the plugin's own added-mass terms apply it as an explicit force and
+  diverge within a fraction of a second at an airship's ratios.
+  The coefficients are the airship-control-design reference set scaled to
+  this hull exactly as airship_vectored_independent_drag is scaled to that
+  one: r_ref 1.1 * (0.8 / 1.18465) = 0.74284 m so A = 1.73354 m^2, S the
+  prolate spheroid's 19.3908 m^2, L 4.7, giving a rotational scale of
+  4.2394 N m. The six cross terms are the same construction as well, because
+  the plugin works entirely at the link origin, here 0.8986 m below the hull
+  axis. They matter more on this hull than on the big one: without the rate
+  pair the roll damping changes sign at 0.13 m/s of sideslip rather than
+  0.40.
+-->
+<sdf version="1.10">
+  <model name="cloudship_drag">
+    <include merge="true">
+      <uri>model://cloudship_rigid</uri>
+    </include>
+    <!-- Hull aerodynamics, the same reference set and the same six cross
+         terms as airship_vectored_independent_drag, scaled to this hull and
+         to its own 0.8986 m offset between the link origin and the hull
+         axis. Translational terms are -0.5 * rho * A * c with A = 1.73354
+         m^2, rotational ones -4.2394 * c. -->
+    <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <!-- Quadratic drag [N/(m/s)^2] -->
+      <xUabsU>-0.0946</xUabsU>
+      <yVabsV>-3.2738</yVabsV>
+      <zWabsW>-3.2738</zWabsW>
+      <!-- Rotational damping [N m/(rad/s)^2], with the linear roll term the
+           very lightly damped roll mode needs [N m/(rad/s)] -->
+      <kP>-0.1696</kP>
+      <kPabsP>-0.7631</kPabsP>
+      <mQabsQ>-5.0873</mQabsQ>
+      <nRabsR>-5.0873</nRabsR>
+      <!-- h = 0.8986 m from the link origin up to the hull axis: the force
+           picks up 2h * c, its arm h * c, and that arm's rate term 2h^2 * c.
+           Without the rate pair this hull's roll damping changes sign at
+           0.13 m/s of sideslip. -->
+      <xQabsU>-0.1700</xQabsU>
+      <yPabsV>5.8837</yPabsV>
+      <mUabsU>-0.0850</mUabsU>
+      <mQabsU>-0.1528</mQabsU>
+      <kVabsV>2.9418</kVabsV>
+      <kPabsV>-5.2871</kPabsV>
+      <disable_added_mass>true</disable_added_mass>
+    </plugin>
+  </model>
+</sdf>

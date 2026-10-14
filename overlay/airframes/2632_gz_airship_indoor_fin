@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# @name Indoor Airship (Fins)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_indoor_fin}
+
+. ${R}etc/init.d-posix/airframes/2630_gz_airship_indoor_rigid
+
+# Yaw loop values from airship_gains.py (px4-airship-tools) for this hull
+# Fin lift damps yaw: the generic fin member's feedforward scaled by the fins'
+# held-turn slope over the yaw authority (15.4 against the generic 4.24 per m/s)
+param set-default AS_YAWRATE_FF 1.09
+
+# Fin lift damps yaw with the forward speed: a held turn takes 15.4 more
+# normalized yaw torque per rad/s for each m/s over the pods' 0.0375 N m
+# (measured in held turns in the simulator). Scheduled on the ground speed with
+# no wind bound, since the world has none, and capped where the pods can hold
+# the turn; the ramp ends where the cap meets 0.8 of the yaw rate that stalls
+# the fins in a turn (4.92 deg/s at 0.8 m/s) and starts at half that
+param set-default AS_SPD_SRC 2
+param set-default AS_SPD_WMAX 0
+param set-default AS_SPD_HI 0.8
+param set-default AS_YR_FF_SLP 15.4

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AURORA airship base body: hull, gondola, tail and sensors; propulsion is
+  added by wrapper models. Neutrally buoyant in the lta world, whose Buoyancy
+  plugin sets the fluid density and must name this model to reach it: the
+  collision volumes total 34.8 m^3, so lift at 1.225 kg/m^3 is exactly the
+  declared 42.63 kg total (hull 8.23 + fins 2.50 + gondola 30.9 + pods/props
+  1). The hull is one prolate spheroid of fineness 3.5, 9.27 x 2.65 m, drawn
+  and collided alike: its 34 m^3 is what the buoyancy, the added mass, the
+  Munk moment, the drag reference and the tail are all sized on. The gondola's
+  top meets the envelope: along its centre line it sits 4.6 to 7.4 cm inside,
+  and its long edges -1.2 to 1.7 cm below it. The centre of mass (0.007, 0,
+  0.8321) m sits under the centre of volume (0.007, 0, 2.012), 19.6 mm above
+  the pods' plane.
+
+  The tail is a sizing, not a drawing: a cruciform of 1.20 m chord, trailing
+  edge 0.30 m short of the stern at x = -4.333, roots on the hull at the
+  mid-chord radius 0.784 m. The ventral fin is 1.21 m, what the ground allows
+  at level attitude: its tip is 6 cm above the gondola floor, which 0.8 deg of
+  nose-up on the ground uses up. The fins have no collision, so the simulation
+  never touches; a vehicle built to this needs a stated ground pitch. The
+  dorsal and side fins are 1.54 m, the shortest that meets the requirement
+  (NACA Report 184): the dorsal and ventral fins restore at least 1.2 x the
+  hull's potential-flow Munk moment at every speed, judged at zero sideslip on
+  the attached-flow slope (Helmbold's) times the slender-body carryover of
+  NACA Report 1307: 36.92 against 30.69 N m per (m/s)^2 of u v, a ratio of
+  1.20. The plugins carry the flat-plate slope 2 pi AR / (AR + 2) that Ananda,
+  Sukumar and Selig (2015) measured, a secant to about 10 deg that includes
+  vortex lift (1.41 on it). The side fins make pitch stable at every speed
+  (1.39 on the same basis) with the pendulum on top. A fin stalls where its
+  own incidence, the body angle times the hull's upwash K_W(B), reaches the
+  plates' CLmax of 0.7 (8.8 deg of body angle), and flaps of 30 % chord would
+  travel +-10 deg, the most that keeps a full-rudder turn on the added-mass
+  plants 2 deg below that. The margin rests on the 0.7: at the 0.55 bottom of
+  the measured range the same turn is at 92 % of the stall. Here the fins are
+  visual only, in the inertia at 0.36 kg/m^2; airship_aurora_fin and
+  airship_aurora_am_fin give them lift. A box on a tapering stern sits inside
+  the hull at the leading edge and off it at the trailing edge. The gondola
+  sits 0.312 m forward so that the fins' mass leaves the centre of mass under
+  the centre of volume. Added mass is not modeled here: airship_aurora_base_am
+  is this file plus the <fluid_added_mass> block, and airship_aurora_drag adds
+  hull drag and rotational damping.
+-->
+<sdf version="1.10">
+  <model name="airship_aurora_base_rigid">
+    <self_collide>false</self_collide>
+    <static>false</static>
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <!-- Hull as a solid spheroid (8.2314 kg at the hull centre), gondola
+             box (30.9 kg at x 0.3117), four fin plates at their centres
+             (dorsal and side 0.6600 kg, ventral 0.5186 kg), parallel-axis
+             about the combined CoM, products included; pods/props carry their
+             own mass in the wrapper, on the pods' plane. -->
+        <pose>0.0073 0.0000 0.8326 0 0 0</pose>
+        <mass>41.63</mass>
+        <inertia>
+          <ixx>37.7300</ixx>
+          <iyy>107.2207</iyy>
+          <izz>85.4525</izz>
+          <ixy>0.0000</ixy>
+          <ixz>16.6609</ixz>
+          <iyz>0.0000</iyz>
+        </inertia>
+      </inertial>
+      <!-- The hull, drawn and collided alike; buoyancy volume 34 m^3 -->
+      <collision name="hull_collision">
+        <pose>0 0 2.05 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>4.63278 1.32366 1.32366</radii>
+          </ellipsoid>
+        </geometry>
+      </collision>
+      <!-- Ground contact; buoyancy volume 0.8 m^3 -->
+      <collision name="gondola_collision">
+        <pose>0.3117 0 0.4 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.25 0.8 0.8</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <min_depth>0.001</min_depth>
+              <max_vel>0</max_vel>
+            </ode>
+          </contact>
+          <friction>
+            <ode />
+          </friction>
+        </surface>
+      </collision>
+      <visual name="hull_visual">
+        <pose>0 0 2.05 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>4.63278 1.32366 1.32366</radii>
+          </ellipsoid>
+        </geometry>
+        <material>
+          <ambient>0.85 0.85 0.9 1</ambient>
+          <diffuse>0.85 0.85 0.9 1</diffuse>
+          <specular>0.3 0.3 0.3 1</specular>
+        </material>
+      </visual>
+      <visual name="gondola_visual">
+        <pose>0.3117 0 0.4 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.25 0.8 0.8</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.35 1</ambient>
+          <diffuse>0.3 0.3 0.35 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+      <!-- Cruciform tail, visual only here: no collision and no lift-drag,
+           so it adds no weathercock stiffness. The _fin variants give these
+           four boxes lift and airship_fixed_rigid gives them flaps. Rooted at the
+           mid-chord hull radius; see the header. -->
+      <visual name="fin_port_visual">
+        <pose>-3.7328 1.5540 2.0500 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.20 1.54 0.03</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_starboard_visual">
+        <pose>-3.7328 -1.5540 2.0500 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.20 1.54 0.03</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_top_visual">
+        <pose>-3.7328 0.0000 3.6040 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.20 0.03 1.54</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fin_bottom_visual">
+        <pose>-3.7328 0.0000 0.6610 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.20 0.03 1.21</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.2 0.2 1</ambient>
+          <diffuse>0.6 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+      <sensor name="air_pressure_sensor" type="air_pressure">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>50</update_rate>
+        <air_pressure>
+          <!-- Noise modeled after BMP390 -->
+          <pressure>
+            <noise type="gaussian">
+              <mean>0</mean>
+              <stddev>3</stddev>
+            </noise>
+          </pressure>
+        </air_pressure>
+      </sensor>
+      <sensor name="magnetometer_sensor" type="magnetometer">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>100</update_rate>
+        <magnetometer>
+          <!-- 3mgauss RMS = 3e-7 tesla, noise modeled after IIS2MDC -->
+          <!-- Noise is in the units of the field: tesla with use_units_gauss=false (lta.sdf's Magnetometer
+               system, as PX4's gz_bridge server.config), gauss with the gz-sim default -->
+          <x>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <stddev>3e-7</stddev>
+            </noise>
+          </z>
+        </magnetometer>
+      </sensor>
+      <sensor name="imu_sensor" type="imu">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>250</update_rate>
+        <imu>
+          <angular_velocity>
+            <!-- Noise modeled after IIM42653, 0.05 deg/s in rad/s -->
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.0008726646</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <!-- Noise modeled after IIM42653, 0.65/0.70 mg-rms in m/s^2 -->
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00637</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00637</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>0.00686</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+      <sensor name="navsat_sensor" type="navsat">
+        <gz_frame_id>base_link</gz_frame_id>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+      </sensor>
+    </link>
+  </model>
+</sdf>

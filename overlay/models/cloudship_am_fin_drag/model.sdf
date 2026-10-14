@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The complete Cloudship plant: cloudship_am_fin merged, plus the hull drag
+  and rotational damping block of cloudship_drag. Added mass, the Munk
+  moment it brings, fin lift against it, and the dissipation that bounds
+  every rate. This is the model to tune the yaw loop against; cloudship_rigid is
+  the one to regress the allocator against.
+-->
+<sdf version="1.10">
+  <model name="cloudship_am_fin_drag">
+    <include merge="true">
+      <uri>model://cloudship_am_fin</uri>
+    </include>
+    <!-- Hull aerodynamics, the same reference set and the same six cross
+         terms as airship_vectored_independent_drag, scaled to this hull and
+         to its own 0.8986 m offset between the link origin and the hull
+         axis. Translational terms are -0.5 * rho * A * c with A = 1.73354
+         m^2, rotational ones -4.2394 * c. -->
+    <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <!-- Quadratic drag [N/(m/s)^2] -->
+      <xUabsU>-0.0946</xUabsU>
+      <yVabsV>-3.2738</yVabsV>
+      <zWabsW>-3.2738</zWabsW>
+      <!-- Rotational damping [N m/(rad/s)^2], with the linear roll term the
+           very lightly damped roll mode needs [N m/(rad/s)] -->
+      <kP>-0.1696</kP>
+      <kPabsP>-0.7631</kPabsP>
+      <mQabsQ>-5.0873</mQabsQ>
+      <nRabsR>-5.0873</nRabsR>
+      <!-- h = 0.8986 m from the link origin up to the hull axis: the force
+           picks up 2h * c, its arm h * c, and that arm's rate term 2h^2 * c.
+           Without the rate pair this hull's roll damping changes sign at
+           0.13 m/s of sideslip. -->
+      <xQabsU>-0.1700</xQabsU>
+      <yPabsV>5.8837</yPabsV>
+      <mUabsU>-0.0850</mUabsU>
+      <mQabsU>-0.1528</mQabsU>
+      <kVabsV>2.9418</kVabsV>
+      <kPabsV>-5.2871</kPabsV>
+      <disable_added_mass>true</disable_added_mass>
+    </plugin>
+  </model>
+</sdf>

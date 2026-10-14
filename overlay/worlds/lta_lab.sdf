@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Lighter-than-air development world: buoyant air for airships.
+-->
+<sdf version="1.9">
+  <world name="lta_lab">
+    <physics type="ode">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+    </physics>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic"/>
+    <scene>
+      <grid>true</grid>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>true</shadows>
+    </scene>
+    <gui fullscreen="false">
+      <plugin filename="MinimalScene" name="3D View">
+        <gz-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>-22 -22 14 0 0.35 0.785</camera_pose>
+        <camera_clip>
+          <near>0.25</near>
+          <far>25000</far>
+        </camera_clip>
+      </plugin>
+      <plugin filename="EntityContextMenuPlugin" name="Entity context menu">
+        <gz-gui>
+          <property key="state" type="string">floating</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="GzSceneManager" name="Scene Manager">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="InteractiveViewControl" name="Interactive view control">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="CameraTracking" name="Camera Tracking">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="MarkerManager" name="Marker manager">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="SelectEntities" name="Select Entities">
+        <gz-gui>
+          <anchors target="Select entities">
+            <line own="right" target="right"/>
+            <line own="top" target="top"/>
+          </anchors>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="VisualizationCapabilities" name="Visualization Capabilities">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="Spawn" name="Spawn Entities">
+        <gz-gui>
+          <anchors target="Select entities">
+            <line own="right" target="right"/>
+            <line own="top" target="top"/>
+          </anchors>
+          <property key="resizable" type="bool">false</property>
+          <property key="width" type="double">5</property>
+          <property key="height" type="double">5</property>
+          <property key="state" type="string">floating</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin name="World control" filename="WorldControl">
+        <gz-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">0</property>
+          <property type="bool" key="resizable">0</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="double" key="z">1</property>
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </gz-gui>
+        <play_pause>1</play_pause>
+        <step>1</step>
+        <start_paused>1</start_paused>
+      </plugin>
+      <plugin name="World stats" filename="WorldStats">
+        <gz-gui>
+          <title>World stats</title>
+          <property type="bool" key="showTitleBar">0</property>
+          <property type="bool" key="resizable">0</property>
+          <property type="double" key="height">110</property>
+          <property type="double" key="width">290</property>
+          <property type="double" key="z">1</property>
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="right" target="right"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </gz-gui>
+        <sim_time>1</sim_time>
+        <real_time>1</real_time>
+        <real_time_factor>1</real_time_factor>
+        <iterations>1</iterations>
+      </plugin>
+      <plugin name="Entity tree" filename="EntityTree"/>
+    </gui>
+    <!-- Declaring any world plugin replaces gz's entire default system list,
+         so the stack is spelled out: PX4's server.config set, less the camera
+         and optical-flow systems this vehicle does not carry, plus Buoyancy
+         and Magnetometer. -->
+    <plugin name="gz::sim::systems::Physics" filename="gz-sim-physics-system"/>
+    <plugin name="gz::sim::systems::UserCommands" filename="gz-sim-user-commands-system"/>
+    <plugin name="gz::sim::systems::SceneBroadcaster" filename="gz-sim-scene-broadcaster-system"/>
+    <plugin name="gz::sim::systems::Contact" filename="gz-sim-contact-system"/>
+    <plugin name="gz::sim::systems::Imu" filename="gz-sim-imu-system"/>
+    <plugin name="gz::sim::systems::AirPressure" filename="gz-sim-air-pressure-system"/>
+    <plugin name="gz::sim::systems::AirSpeed" filename="gz-sim-air-speed-system"/>
+    <plugin name="gz::sim::systems::Magnetometer" filename="gz-sim-magnetometer-system">
+      <!-- as PX4's gz_bridge server.config: the field in tesla and in the sensor's frame;
+           without these the bridge reads gauss on swapped axes and the heading is wrong -->
+      <use_units_gauss>false</use_units_gauss>
+      <use_earth_frame_ned>false</use_earth_frame_ned>
+    </plugin>
+    <plugin name="gz::sim::systems::NavSat" filename="gz-sim-navsat-system"/>
+    <plugin name="gz::sim::systems::ApplyLinkWrench" filename="gz-sim-apply-link-wrench-system"/>
+    <plugin name="gz::sim::systems::WindEffects" filename="gz-sim-wind-effects-system"/>
+    <plugin name="gz::sim::systems::Sensors" filename="gz-sim-sensors-system">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <!-- Buoyancy on the enabled links' collision volumes. -->
+    <plugin filename="gz-sim-buoyancy-system" name="gz::sim::systems::Buoyancy">
+      <uniform_fluid_density>1.225</uniform_fluid_density>
+      <!-- One line per spawn name. px4-rc.gzsim spawns <model>_<instance>,
+           and the plugin lifts only the links it is given: a name that is not
+           here simply gets no force, with no warning. That matters more for a
+           lighter-than-air vehicle than for the submarine this pattern comes
+           from - buoyancy is 100% of its weight support, not a trim term - so
+           the first four instances of each are listed rather than instance 0
+           alone. An empty list is not the short form of this one: the plugin
+           then lifts every link in the world, the ground plane included. -->
+      <enable>airship_vectored_independent_rigid::base_link</enable>
+      <enable>airship_vectored_independent_rigid_0::base_link</enable>
+      <enable>airship_vectored_independent_rigid_1::base_link</enable>
+      <enable>airship_vectored_independent_rigid_2::base_link</enable>
+      <enable>airship_vectored_independent_rigid_3::base_link</enable>
+      <enable>airship_vectored_independent_drag::base_link</enable>
+      <enable>airship_vectored_independent_drag_0::base_link</enable>
+      <enable>airship_vectored_independent_drag_1::base_link</enable>
+      <enable>airship_vectored_independent_drag_2::base_link</enable>
+      <enable>airship_vectored_independent_drag_3::base_link</enable>
+      <enable>airship_vectored_independent_fin::base_link</enable>
+      <enable>airship_vectored_independent_fin_0::base_link</enable>
+      <enable>airship_vectored_independent_fin_1::base_link</enable>
+      <enable>airship_vectored_independent_fin_2::base_link</enable>
+      <enable>airship_vectored_independent_fin_3::base_link</enable>
+      <enable>airship_vectored_independent_am::base_link</enable>
+      <enable>airship_vectored_independent_am_0::base_link</enable>
+      <enable>airship_vectored_independent_am_1::base_link</enable>
+      <enable>airship_vectored_independent_am_2::base_link</enable>
+      <enable>airship_vectored_independent_am_3::base_link</enable>
+      <enable>airship_vectored_independent_am_fin::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_0::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_1::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_2::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_3::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_drag::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_drag_0::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_drag_1::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_drag_2::base_link</enable>
+      <enable>airship_vectored_independent_am_fin_drag_3::base_link</enable>
+      <enable>airship_fixed_rigid::base_link</enable>
+      <enable>airship_fixed_rigid_0::base_link</enable>
+      <enable>airship_fixed_rigid_1::base_link</enable>
+      <enable>airship_fixed_rigid_2::base_link</enable>
+      <enable>airship_fixed_rigid_3::base_link</enable>
+      <enable>airship_fixed_drag::base_link</enable>
+      <enable>airship_fixed_drag_0::base_link</enable>
+      <enable>airship_fixed_drag_1::base_link</enable>
+      <enable>airship_fixed_drag_2::base_link</enable>
+      <enable>airship_fixed_drag_3::base_link</enable>
+      <enable>airship_fixed_am::base_link</enable>
+      <enable>airship_fixed_am_0::base_link</enable>
+      <enable>airship_fixed_am_1::base_link</enable>
+      <enable>airship_fixed_am_2::base_link</enable>
+      <enable>airship_fixed_am_3::base_link</enable>
+      <enable>airship_fixed_am_drag::base_link</enable>
+      <enable>airship_fixed_am_drag_0::base_link</enable>
+      <enable>airship_fixed_am_drag_1::base_link</enable>
+      <enable>airship_fixed_am_drag_2::base_link</enable>
+      <enable>airship_fixed_am_drag_3::base_link</enable>
+      <enable>airship_indoor_rigid::base_link</enable>
+      <enable>airship_indoor_rigid_0::base_link</enable>
+      <enable>airship_indoor_rigid_1::base_link</enable>
+      <enable>airship_indoor_rigid_2::base_link</enable>
+      <enable>airship_indoor_rigid_3::base_link</enable>
+      <enable>airship_indoor_drag::base_link</enable>
+      <enable>airship_indoor_drag_0::base_link</enable>
+      <enable>airship_indoor_drag_1::base_link</enable>
+      <enable>airship_indoor_drag_2::base_link</enable>
+      <enable>airship_indoor_drag_3::base_link</enable>
+      <enable>airship_indoor_fin::base_link</enable>
+      <enable>airship_indoor_fin_0::base_link</enable>
+      <enable>airship_indoor_fin_1::base_link</enable>
+      <enable>airship_indoor_fin_2::base_link</enable>
+      <enable>airship_indoor_fin_3::base_link</enable>
+      <enable>airship_indoor_am::base_link</enable>
+      <enable>airship_indoor_am_0::base_link</enable>
+      <enable>airship_indoor_am_1::base_link</enable>
+      <enable>airship_indoor_am_2::base_link</enable>
+      <enable>airship_indoor_am_3::base_link</enable>
+      <enable>airship_indoor_am_fin::base_link</enable>
+      <enable>airship_indoor_am_fin_0::base_link</enable>
+      <enable>airship_indoor_am_fin_1::base_link</enable>
+      <enable>airship_indoor_am_fin_2::base_link</enable>
+      <enable>airship_indoor_am_fin_3::base_link</enable>
+      <enable>airship_indoor_am_fin_drag::base_link</enable>
+      <enable>airship_indoor_am_fin_drag_0::base_link</enable>
+      <enable>airship_indoor_am_fin_drag_1::base_link</enable>
+      <enable>airship_indoor_am_fin_drag_2::base_link</enable>
+      <enable>airship_indoor_am_fin_drag_3::base_link</enable>
+      <enable>airship_aurora_rigid::base_link</enable>
+      <enable>airship_aurora_rigid_0::base_link</enable>
+      <enable>airship_aurora_rigid_1::base_link</enable>
+      <enable>airship_aurora_rigid_2::base_link</enable>
+      <enable>airship_aurora_rigid_3::base_link</enable>
+      <enable>airship_aurora_drag::base_link</enable>
+      <enable>airship_aurora_drag_0::base_link</enable>
+      <enable>airship_aurora_drag_1::base_link</enable>
+      <enable>airship_aurora_drag_2::base_link</enable>
+      <enable>airship_aurora_drag_3::base_link</enable>
+      <enable>airship_aurora_fin::base_link</enable>
+      <enable>airship_aurora_fin_0::base_link</enable>
+      <enable>airship_aurora_fin_1::base_link</enable>
+      <enable>airship_aurora_fin_2::base_link</enable>
+      <enable>airship_aurora_fin_3::base_link</enable>
+      <enable>airship_aurora_am::base_link</enable>
+      <enable>airship_aurora_am_0::base_link</enable>
+      <enable>airship_aurora_am_1::base_link</enable>
+      <enable>airship_aurora_am_2::base_link</enable>
+      <enable>airship_aurora_am_3::base_link</enable>
+      <enable>airship_aurora_am_fin::base_link</enable>
+      <enable>airship_aurora_am_fin_0::base_link</enable>
+      <enable>airship_aurora_am_fin_1::base_link</enable>
+      <enable>airship_aurora_am_fin_2::base_link</enable>
+      <enable>airship_aurora_am_fin_3::base_link</enable>
+      <enable>airship_aurora_am_fin_drag::base_link</enable>
+      <enable>airship_aurora_am_fin_drag_0::base_link</enable>
+      <enable>airship_aurora_am_fin_drag_1::base_link</enable>
+      <enable>airship_aurora_am_fin_drag_2::base_link</enable>
+      <enable>airship_aurora_am_fin_drag_3::base_link</enable>
+      <enable>airship_jaxa_rigid::base_link</enable>
+      <enable>airship_jaxa_rigid_0::base_link</enable>
+      <enable>airship_jaxa_rigid_1::base_link</enable>
+      <enable>airship_jaxa_rigid_2::base_link</enable>
+      <enable>airship_jaxa_rigid_3::base_link</enable>
+      <enable>airship_jaxa_drag::base_link</enable>
+      <enable>airship_jaxa_drag_0::base_link</enable>
+      <enable>airship_jaxa_drag_1::base_link</enable>
+      <enable>airship_jaxa_drag_2::base_link</enable>
+      <enable>airship_jaxa_drag_3::base_link</enable>
+      <enable>airship_jaxa_fin::base_link</enable>
+      <enable>airship_jaxa_fin_0::base_link</enable>
+      <enable>airship_jaxa_fin_1::base_link</enable>
+      <enable>airship_jaxa_fin_2::base_link</enable>
+      <enable>airship_jaxa_fin_3::base_link</enable>
+      <enable>airship_jaxa_am::base_link</enable>
+      <enable>airship_jaxa_am_0::base_link</enable>
+      <enable>airship_jaxa_am_1::base_link</enable>
+      <enable>airship_jaxa_am_2::base_link</enable>
+      <enable>airship_jaxa_am_3::base_link</enable>
+      <enable>airship_jaxa_am_fin::base_link</enable>
+      <enable>airship_jaxa_am_fin_0::base_link</enable>
+      <enable>airship_jaxa_am_fin_1::base_link</enable>
+      <enable>airship_jaxa_am_fin_2::base_link</enable>
+      <enable>airship_jaxa_am_fin_3::base_link</enable>
+      <enable>airship_jaxa_am_fin_drag::base_link</enable>
+      <enable>airship_jaxa_am_fin_drag_0::base_link</enable>
+      <enable>airship_jaxa_am_fin_drag_1::base_link</enable>
+      <enable>airship_jaxa_am_fin_drag_2::base_link</enable>
+      <enable>airship_jaxa_am_fin_drag_3::base_link</enable>
+      <enable>airship_mpi_rigid::base_link</enable>
+      <enable>airship_mpi_rigid_0::base_link</enable>
+      <enable>airship_mpi_rigid_1::base_link</enable>
+      <enable>airship_mpi_rigid_2::base_link</enable>
+      <enable>airship_mpi_rigid_3::base_link</enable>
+      <enable>airship_mpi_drag::base_link</enable>
+      <enable>airship_mpi_drag_0::base_link</enable>
+      <enable>airship_mpi_drag_1::base_link</enable>
+      <enable>airship_mpi_drag_2::base_link</enable>
+      <enable>airship_mpi_drag_3::base_link</enable>
+      <enable>airship_mpi_fin::base_link</enable>
+      <enable>airship_mpi_fin_0::base_link</enable>
+      <enable>airship_mpi_fin_1::base_link</enable>
+      <enable>airship_mpi_fin_2::base_link</enable>
+      <enable>airship_mpi_fin_3::base_link</enable>
+      <enable>airship_mpi_am::base_link</enable>
+      <enable>airship_mpi_am_0::base_link</enable>
+      <enable>airship_mpi_am_1::base_link</enable>
+      <enable>airship_mpi_am_2::base_link</enable>
+      <enable>airship_mpi_am_3::base_link</enable>
+      <enable>airship_mpi_am_fin::base_link</enable>
+      <enable>airship_mpi_am_fin_0::base_link</enable>
+      <enable>airship_mpi_am_fin_1::base_link</enable>
+      <enable>airship_mpi_am_fin_2::base_link</enable>
+      <enable>airship_mpi_am_fin_3::base_link</enable>
+      <enable>airship_mpi_am_fin_drag::base_link</enable>
+      <enable>airship_mpi_am_fin_drag_0::base_link</enable>
+      <enable>airship_mpi_am_fin_drag_1::base_link</enable>
+      <enable>airship_mpi_am_fin_drag_2::base_link</enable>
+      <enable>airship_mpi_am_fin_drag_3::base_link</enable>
+      <enable>cloudship_rigid::base_link</enable>
+      <enable>cloudship_rigid_0::base_link</enable>
+      <enable>cloudship_rigid_1::base_link</enable>
+      <enable>cloudship_rigid_2::base_link</enable>
+      <enable>cloudship_rigid_3::base_link</enable>
+      <enable>cloudship_drag::base_link</enable>
+      <enable>cloudship_drag_0::base_link</enable>
+      <enable>cloudship_drag_1::base_link</enable>
+      <enable>cloudship_drag_2::base_link</enable>
+      <enable>cloudship_drag_3::base_link</enable>
+      <enable>cloudship_fin::base_link</enable>
+      <enable>cloudship_fin_0::base_link</enable>
+      <enable>cloudship_fin_1::base_link</enable>
+      <enable>cloudship_fin_2::base_link</enable>
+      <enable>cloudship_fin_3::base_link</enable>
+      <enable>cloudship_am::base_link</enable>
+      <enable>cloudship_am_0::base_link</enable>
+      <enable>cloudship_am_1::base_link</enable>
+      <enable>cloudship_am_2::base_link</enable>
+      <enable>cloudship_am_3::base_link</enable>
+      <enable>cloudship_am_fin::base_link</enable>
+      <enable>cloudship_am_fin_0::base_link</enable>
+      <enable>cloudship_am_fin_1::base_link</enable>
+      <enable>cloudship_am_fin_2::base_link</enable>
+      <enable>cloudship_am_fin_3::base_link</enable>
+      <enable>cloudship_am_fin_drag::base_link</enable>
+      <enable>cloudship_am_fin_drag_0::base_link</enable>
+      <enable>cloudship_am_fin_drag_1::base_link</enable>
+      <enable>cloudship_am_fin_drag_2::base_link</enable>
+      <enable>cloudship_am_fin_drag_3::base_link</enable>
+    </plugin>
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <pose>0 0 -5 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>100000 100000 10</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>500 500</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 -0 0</pose>
+      </link>
+      <pose>0 0 0 0 -0 0</pose>
+      <self_collide>false</self_collide>
+    </model>
+    <!-- Visual-only aids for judging an airship pose by eye; both are
+         static and neither has collision, so a headless run is unaffected. -->
+    <include>
+      <uri>model://ground_markers</uri>
+    </include>
+    <include>
+      <uri>model://flight_grid</uri>
+    </include>
+    <light name="sunUTC" type="directional">
+      <pose>0 0 500 0 -0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1</intensity>
+      <direction>0.001 0.625 -0.78</direction>
+      <diffuse>0.904 0.904 0.904 1</diffuse>
+      <specular>0.271 0.271 0.271 1</specular>
+      <attenuation>
+        <range>2000</range>
+        <linear>0</linear>
+        <constant>1</constant>
+        <quadratic>0</quadratic>
+      </attenuation>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>47.397971057728974</latitude_deg>
+      <longitude_deg> 8.546163739800146</longitude_deg>
+      <elevation>0</elevation>
+    </spherical_coordinates>
+  </world>
+</sdf>

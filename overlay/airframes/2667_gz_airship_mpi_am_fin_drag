@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# @name MPI 5 m Outdoor Blimp (Complete)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_mpi_am_fin_drag}
+
+. ${R}etc/init.d-posix/airframes/2660_gz_airship_mpi_rigid
+
+# Yaw loop values from airship_gains.py (px4-airship-tools) for this hull
+# Hull drag damps yaw as the square of the rate: holding AS_YAWRATE_MAX in a
+# turn in place takes |nRabsR| r^2 = 0.566 N m, 0.481 of the pods' yaw authority
+# per rad/s, which the loop scales by the setpoint's share of that rate
+param set-default AS_YAWRATE_FF 0.481
+
+# Fin lift damps yaw with the forward speed: a held turn takes 4.74 more
+# normalized yaw torque per rad/s for each m/s over the pods' 4.5 N m (measured
+# in held turns in the simulator). Scheduled on the ground speed with no wind
+# bound, since the world has none, and capped where the pods can hold the turn;
+# the ramp ends where the cap meets 0.8 of the yaw rate that stalls the fins in
+# a turn (6.64 deg/s at 1.9 m/s) and starts at half that
+param set-default AS_SPD_SRC 2
+param set-default AS_SPD_WMAX 0
+param set-default AS_SPD_HI 1.9
+param set-default AS_YR_FF_SLP 4.74

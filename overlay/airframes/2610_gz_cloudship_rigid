@@ -1,0 +1,85 @@
+#!/bin/sh
+#
+# @name Cloudship (Rigid Hull)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+# @output Motor1 starboard thruster
+# @output Motor2 port thruster
+# @output Motor3 tail thruster
+# @output Servo1 thrust tilt
+#
+
+. ${R}etc/init.d/rc.airship_defaults
+
+# The same vehicle as 2507 on the flight side, in gz; the airship decades and
+# the ones-digit physics mask are explained above the 25xx entries of this
+# directory's CMakeLists.txt. This one is the rigid hull, buoyancy and
+# nothing else fluid, the plant to regress the allocator against.
+
+param set-default COM_PREARM_MODE 2
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=lta}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=cloudship_rigid}
+
+param set-default SIM_GZ_EN 1
+
+# Simulation only: allow arming without a GCS connection
+param set-default NAV_DLL_ACT 0
+
+# gz motors: 1 = starboard, 2 = port (0..1500 rad/s, 15.89 N each), 3 = tail.
+# The tail is reversible (CA_R_REV below), and the bridge maps its -1..1 command
+# onto MIN..MAX, which cannot be negative (MixingOutput holds the range in a
+# uint16_t), so as in uuv_bluerov2_heavy the sign lives in the model: 1100..1900
+# with DIS3 1500 as the neutral duty.
+param set-default SIM_GZ_EC_FUNC1 101
+param set-default SIM_GZ_EC_FUNC2 102
+param set-default SIM_GZ_EC_FUNC3 103
+param set-default SIM_GZ_EC_MIN1 0
+param set-default SIM_GZ_EC_MIN2 0
+param set-default SIM_GZ_EC_MIN3 1100
+param set-default SIM_GZ_EC_MAX1 1500
+param set-default SIM_GZ_EC_MAX2 1500
+param set-default SIM_GZ_EC_MAX3 1900
+param set-default SIM_GZ_EC_DIS3 1500
+
+# gz thrust is quadratic in the rotor speed command: linearize it so a
+# normalized torque demand is the torque the thrusters deliver at every level
+param set-default THR_MDL_FAC 1
+
+# One tilt servo for both thrusters. The angle range must equal
+# CA_AIRSHIP_TLMIN/TLMAX below: the allocator projects thrust with the CA
+# range and the gz servo bridge maps the servo output onto this one.
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_MINA1 -90
+param set-default SIM_GZ_SV_MAXA1 90
+
+# Collective thrust on one tilt, the tail taking the yaw the thrusters cannot.
+# The tilt range matches the flight airframe's: assumed, not measured; the
+# gazebo-classic model drives its rod to +-135 in the same direction.
+param set-default CA_AIRFRAME 16
+param set-default CA_AIRSHIP_GRP 0
+param set-default CA_AIRSHIP_TAIL 1
+param set-default CA_AIRSHIP_TLMIN -90
+param set-default CA_AIRSHIP_TLMAX 90
+param set-default CA_AIRSHIP_TLT_R 120
+
+param set-default CA_R_REV 4
+
+# No gains set: the AS_YAWRATE_* defaults were tuned on this plant, its complete
+# variant (2517) and an earlier 11 m generic hull. For scale, 4.48 N m of tail
+# yaw (2.3544 N on the 1.902 m lever to the ventral fin root, where the classic
+# model puts the thruster) against 5.80 kg m^2 is 0.77 rad/s^2 per unit of
+# command, 0.46 with the complete plant's 3.95 kg m^2 of added yaw inertia.
+
+# The yaw rate loop: full yaw stick commands this rate in Acro, Stabilized,
+# Altitude and Position; 0 keeps the stick as yaw torque in every mode
+param set-default AS_YAWRATE_MAX 15
+
+# Disable auto-disarm on landing: the airship land detector reports "landed"
+# as soon as Land is selected, which would disarm the vehicle in the air
+param set-default COM_DISARM_LAND -1

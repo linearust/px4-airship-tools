@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The vectored airship with its fins lifting. Same vehicle as
+  airship_aurora_rigid, which this merges: only the tail's
+  aerodynamics are added, four lift-drag plugins on the fin boxes
+  airship_aurora_base_rigid draws. On its own this is the fins' contribution isolated, for
+  measuring; the plant the fins exist for is airship_aurora_am_fin,
+  where they have the Munk moment to oppose.
+-->
+<sdf version="1.10">
+  <model name="airship_aurora_fin">
+    <include merge="true">
+      <uri>model://airship_aurora_rigid</uri>
+    </include>
+    <!-- The four fins as lifting surfaces, one lift-drag plugin each, on the
+         planform airship_aurora_base_rigid draws and its header sizes. The
+         plugin reads the velocity at <cp> (worldLinVel + worldAngVel x cp) and
+         applies the force there, so no arm terms are needed. Basis, per fin: a
+         1.20 m chord; the dorsal and side fins 1.54 m of exposed span, the
+         ventral 1.21 m. Each fin with its mirror image has AR_j = 2
+         span / chord (2.567 and 2.017), the flat-plate slope 2 pi
+         AR / (AR + 2) (3.531 and 3.155 per rad; Ananda, Sukumar and Selig
+         2015, a secant to about 10 deg), times the slender-body carryover
+         (1 + r/s)^2 with r the hull radius at the mid-chord station (0.7840)
+         and s the root plus the span (2.324 and 1.994; NACA Report 1307 eqs.
+         14 and 21): cla = 6.316 and 6.123 per rad on the exposed area. cp at
+         the quarter chord (x = -3.4328) on each fin's span centre. <upward> is
+         the lift direction, normal to the fin's plane. Drag is the plugin's
+         linear-in-alpha form, cda sized to the induced drag CL^2 / (pi AR e)
+         with e = 0.9 at the lower of 10 deg and the stall (the stall here),
+         since past the stall the plugin uses cda_stall. A fin stalls where its
+         own incidence, the body angle times the hull's upwash K_W(B) (1.288
+         and 1.343), reaches the plates' CLmax of 0.7, the top of the 0.55-0.7
+         the same data measured: alpha_stall 0.1539 and 0.1653 rad of body
+         angle. Past it cl falls to 0 and cd rises to a broadside plate's 1.2
+         at 90 deg. The plugin stalls on the geometric incidence alone and
+         applies nothing when the flow at cp comes from behind
+         (forward . v <= 0), so these fins are absent in reverse flight and
+         pure lateral drift. The fins' own added mass is not modelled. All of
+         it is an estimate with a stated basis, not a measurement. -->
+    <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+      <!-- fin_port -->
+      <link_name>base_link</link_name>
+      <air_density>1.225</air_density>
+      <cp>-3.4328 1.5540 2.0500</cp>
+      <forward>1 0 0</forward>
+      <upward>0 0 1</upward>
+      <area>1.848</area>
+      <a0>0</a0>
+      <cla>6.316</cla>
+      <cda>0.8458</cda>
+      <cma>0</cma>
+      <alpha_stall>0.1539</alpha_stall>
+      <cla_stall>-0.6859</cla_stall>
+      <cda_stall>0.7551</cda_stall>
+      <cma_stall>0</cma_stall>
+    </plugin>
+    <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+      <!-- fin_starboard -->
+      <link_name>base_link</link_name>
+      <air_density>1.225</air_density>
+      <cp>-3.4328 -1.5540 2.0500</cp>
+      <forward>1 0 0</forward>
+      <upward>0 0 1</upward>
+      <area>1.848</area>
+      <a0>0</a0>
+      <cla>6.316</cla>
+      <cda>0.8458</cda>
+      <cma>0</cma>
+      <alpha_stall>0.1539</alpha_stall>
+      <cla_stall>-0.6859</cla_stall>
+      <cda_stall>0.7551</cda_stall>
+      <cma_stall>0</cma_stall>
+    </plugin>
+    <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+      <!-- fin_top -->
+      <link_name>base_link</link_name>
+      <air_density>1.225</air_density>
+      <cp>-3.4328 0.0000 3.6040</cp>
+      <forward>1 0 0</forward>
+      <upward>0 1 0</upward>
+      <area>1.848</area>
+      <a0>0</a0>
+      <cla>6.316</cla>
+      <cda>0.8458</cda>
+      <cma>0</cma>
+      <alpha_stall>0.1539</alpha_stall>
+      <cla_stall>-0.6859</cla_stall>
+      <cda_stall>0.7551</cda_stall>
+      <cma_stall>0</cma_stall>
+    </plugin>
+    <plugin filename="gz-sim-lift-drag-system" name="gz::sim::systems::LiftDrag">
+      <!-- fin_bottom -->
+      <link_name>base_link</link_name>
+      <air_density>1.225</air_density>
+      <cp>-3.4328 0.0000 0.6610</cp>
+      <forward>1 0 0</forward>
+      <upward>0 1 0</upward>
+      <area>1.452</area>
+      <a0>0</a0>
+      <cla>6.123</cla>
+      <cda>1.0867</cda>
+      <cma>0</cma>
+      <alpha_stall>0.1653</alpha_stall>
+      <cla_stall>-0.7200</cla_stall>
+      <cda_stall>0.7260</cda_stall>
+      <cma_stall>0</cma_stall>
+    </plugin>
+  </model>
+</sdf>

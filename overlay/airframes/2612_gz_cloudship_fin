@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# @name Cloudship (Fins)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=cloudship_fin}
+
+. ${R}etc/init.d-posix/airframes/2610_gz_cloudship_rigid
+
+# Fin lift damps yaw with the forward speed: a held turn takes 12.74
+# normalized yaw torque per rad/s for each m/s, measured in this simulator (a
+# tail thruster's slope is measured, not computed: a few cm of tail or fin
+# position move it a lot). Scheduled on the ground speed with no wind bound,
+# since the world has none, and capped where the tail can hold the turn
+param set-default AS_SPD_SRC 2
+param set-default AS_SPD_WMAX 0
+param set-default AS_YR_FF_SLP 12.74

@@ -1,0 +1,87 @@
+#!/bin/sh
+#
+# @name Generic Airship (Rigid Hull)
+#
+# @type Airship
+# @class Airship
+#
+# @maintainer Hyunduk Shin <hyunduk@icarus-airship.com>
+#
+# @output Motor1 starboard thruster
+# @output Motor2 port thruster
+# @output Servo1 right elevator
+# @output Servo2 left elevator
+# @output Servo3 upper rudder
+# @output Servo4 lower rudder
+#
+
+. ${R}etc/init.d/rc.airship_defaults
+
+# The 2500 flight airframe in gz: two fixed forward thrusters and four fin flaps
+# on the generic hull, with no yaw thruster and no tilt, so the flaps are the
+# only attitude authority and the yaw stick stays rudder torque in every mode.
+# The ones-digit physics mask is explained above the 25xx entries of this
+# directory's CMakeLists.txt; this family has no fin bit, every member carries
+# the fins as actuators. The turn physics per member is in the docs' vehicle list.
+
+param set-default COM_PREARM_MODE 2
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=lta}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_fixed_rigid}
+
+param set-default SIM_GZ_EN 1
+
+# Simulation only: allow arming without a GCS connection
+param set-default NAV_DLL_ACT 0
+
+# gz motors: 1 = starboard, 2 = port; output 0..1 = rotor speed 0..300 rad/s
+param set-default SIM_GZ_EC_FUNC1 101
+param set-default SIM_GZ_EC_FUNC2 102
+param set-default SIM_GZ_EC_MIN1 0
+param set-default SIM_GZ_EC_MIN2 0
+param set-default SIM_GZ_EC_MAX1 300
+param set-default SIM_GZ_EC_MAX2 300
+
+# gz thrust is quadratic in the rotor speed command: linearize it so a
+# normalized thrust demand is the thrust the motors deliver at every level
+param set-default THR_MDL_FAC 1
+
+# Flap servos in the output order above; the gz joints stop at +-8 deg
+# and the bridge maps the +-1 surface command onto that same range
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_FUNC2 202
+param set-default SIM_GZ_SV_FUNC3 203
+param set-default SIM_GZ_SV_FUNC4 204
+param set-default SIM_GZ_SV_MINA1 -8
+param set-default SIM_GZ_SV_MAXA1 8
+param set-default SIM_GZ_SV_MINA2 -8
+param set-default SIM_GZ_SV_MAXA2 8
+param set-default SIM_GZ_SV_MINA3 -8
+param set-default SIM_GZ_SV_MAXA3 8
+param set-default SIM_GZ_SV_MINA4 -8
+param set-default SIM_GZ_SV_MAXA4 8
+
+# One collective thrust command with the pods fixed thrusting forward, as
+# 2500 declares it: the zero tilt range allocates no tilt servo
+param set-default CA_AIRFRAME 16
+param set-default CA_AIRSHIP_GRP 0
+param set-default CA_AIRSHIP_TLMIN 0
+param set-default CA_AIRSHIP_TLMAX 0
+
+# The surfaces' torque credit is a constant, with no airspeed scaling: at
+# rest the allocator still expects pitch and yaw from flaps that gz, like the
+# air, gives nothing for until the hull moves. Fly it forward first.
+param set-default CA_SV_CS_COUNT 4
+param set-default CA_SV_CS0_TYPE 3
+param set-default CA_SV_CS0_TRQ_P 0.5
+param set-default CA_SV_CS1_TYPE 3
+param set-default CA_SV_CS1_TRQ_P 0.5
+param set-default CA_SV_CS2_TYPE 4
+param set-default CA_SV_CS2_TRQ_Y 0.5
+param set-default CA_SV_CS3_TYPE 4
+param set-default CA_SV_CS3_TRQ_Y 0.5
+
+# Disable auto-disarm on landing: the airship land detector reports "landed"
+# as soon as Land is selected, which would disarm the vehicle in the air
+param set-default COM_DISARM_LAND -1

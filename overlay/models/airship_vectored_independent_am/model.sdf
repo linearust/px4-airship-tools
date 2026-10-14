@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The vectored airship with the hull's fluid added mass and nothing else: the
+  propulsion block of airship_vectored_independent_rigid, restated on airship_base_am
+  instead of airship_base_rigid, because <fluid_added_mass> lives in base_link's
+  <inertial>, which a plain merge include cannot change. The block is kept
+  identical to the bare model's. The engine folds the added mass
+  into the spatial inertia, Coriolis terms and all, so this plant carries the
+  Munk moment: a hull that slips sideways is turned further sideways, and
+  nothing here opposes it. It exists to measure that term on its own.
+-->
+<sdf version="1.10">
+  <model name="airship_vectored_independent_am">
+    <include merge="true">
+      <uri>model://airship_base_am</uri>
+    </include>
+    <link name="pod_starboard">
+      <pose>0 -0.5 0.25 0 0 0</pose>
+      <inertial>
+        <mass>0.25</mass>
+        <inertia>
+          <ixx>0.00025442</ixx>
+          <iyy>0.00025442</iyy>
+          <izz>0.00025442</izz>
+        </inertia>
+      </inertial>
+      <visual name="pod_starboard_visual">
+        <geometry>
+          <box>
+            <size>0.10 0.06 0.06</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="tilt_starboard_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>pod_starboard</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-3.141593</lower>
+          <upper>3.141593</upper>
+        </limit>
+        <dynamics>
+          <damping>0.0025442</damping>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="prop_starboard">
+      <pose degrees="true">0 -0.5 0.25 0 90 0</pose>
+      <inertial>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>0.000203536</ixx>
+          <iyy>0.000203536</iyy>
+          <izz>0.000203536</izz>
+        </inertia>
+      </inertial>
+      <visual name="prop_starboard_visual">
+        <geometry>
+          <box>
+            <size>0.02 0.5 0.06</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="prop_starboard_joint" type="revolute">
+      <parent>pod_starboard</parent>
+      <child>prop_starboard</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="pod_port">
+      <pose>0 0.5 0.25 0 0 0</pose>
+      <inertial>
+        <mass>0.25</mass>
+        <inertia>
+          <ixx>0.00025442</ixx>
+          <iyy>0.00025442</iyy>
+          <izz>0.00025442</izz>
+        </inertia>
+      </inertial>
+      <visual name="pod_port_visual">
+        <geometry>
+          <box>
+            <size>0.10 0.06 0.06</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="tilt_port_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>pod_port</child>
+      <axis>
+        <xyz>0 -1 0</xyz>
+        <limit>
+          <lower>-3.141593</lower>
+          <upper>3.141593</upper>
+        </limit>
+        <dynamics>
+          <damping>0.0025442</damping>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name="prop_port">
+      <pose degrees="true">0 0.5 0.25 0 90 0</pose>
+      <inertial>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>0.000203536</ixx>
+          <iyy>0.000203536</iyy>
+          <izz>0.000203536</izz>
+        </inertia>
+      </inertial>
+      <visual name="prop_port_visual">
+        <geometry>
+          <box>
+            <size>0.02 0.5 0.06</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+    <joint name="prop_port_joint" type="revolute">
+      <parent>pod_port</parent>
+      <child>prop_port</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <plugin filename="gz-sim-joint-position-controller-system"
+      name="gz::sim::systems::JointPositionController">
+      <joint_name>tilt_starboard_joint</joint_name>
+      <sub_topic>servo_0</sub_topic>
+      <p_gain>0.508841</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>0.025442</d_gain>
+    </plugin>
+    <plugin filename="gz-sim-joint-position-controller-system"
+      name="gz::sim::systems::JointPositionController">
+      <joint_name>tilt_port_joint</joint_name>
+      <sub_topic>servo_1</sub_topic>
+      <p_gain>0.508841</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>0.025442</d_gain>
+    </plugin>
+    <!-- x500's motor block with two numbers changed: maxRotVelocity 1000 ->
+         300 (the airframe's SIM_GZ_EC_MAX1/2) and motorConstant 8.54858e-06
+         -> 0.000111111, so 0.000111111 * 300^2 = 10 N per pod, 20 N on a
+         18.015 kg vehicle. momentConstant, rotorDragCoefficient and
+         rollingMomentCoefficient are still the quadrotor's. The reaction
+         couple is 0.16 N m about each prop's own thrust axis, so body roll at
+         zero tilt swinging into yaw as the pods tilt; the two oppose and
+         cancel at equal thrust, and the full-differential residual is 0.16 N
+         m against 130 N m/rad of roll stiffness, 0.07 deg. -->
+    <plugin filename="gz-sim-multicopter-motor-model-system"
+      name="gz::sim::systems::MulticopterMotorModel">
+      <jointName>prop_starboard_joint</jointName>
+      <linkName>prop_starboard</linkName>
+      <turningDirection>ccw</turningDirection>
+      <timeConstantUp>0.0125</timeConstantUp>
+      <timeConstantDown>0.025</timeConstantDown>
+      <maxRotVelocity>300.0</maxRotVelocity>
+      <motorConstant>0.000111111</motorConstant>
+      <momentConstant>0.016</momentConstant>
+      <commandSubTopic>command/motor_speed</commandSubTopic>
+      <motorNumber>0</motorNumber>
+      <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+      <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+      <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      <motorType>velocity</motorType>
+    </plugin>
+    <plugin filename="gz-sim-multicopter-motor-model-system"
+      name="gz::sim::systems::MulticopterMotorModel">
+      <jointName>prop_port_joint</jointName>
+      <linkName>prop_port</linkName>
+      <turningDirection>cw</turningDirection>
+      <timeConstantUp>0.0125</timeConstantUp>
+      <timeConstantDown>0.025</timeConstantDown>
+      <maxRotVelocity>300.0</maxRotVelocity>
+      <motorConstant>0.000111111</motorConstant>
+      <momentConstant>0.016</momentConstant>
+      <commandSubTopic>command/motor_speed</commandSubTopic>
+      <motorNumber>1</motorNumber>
+      <rotorDragCoefficient>8.06428e-05</rotorDragCoefficient>
+      <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+      <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      <motorType>velocity</motorType>
+    </plugin>
+  </model>
+</sdf>
