@@ -76,6 +76,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 import gate  # noqa: E402  (puts the bench tools on sys.path, no bytecode)
+import gz_model  # noqa: E402
 import controller as ctl  # noqa: E402
 import plant_registry  # noqa: E402
 import plants  # noqa: E402
@@ -194,7 +195,9 @@ class CloudshipAct:
 
     def __init__(self, model):
         import cloudship_actuation as ca
-        self.chain = ca.TailChain(model if model.startswith('cloudship_am') else 'cloudship')
+        # the rigid chain's airframe: the overlay's cloudship_rigid once the overlay has it (the tree's plain
+        # cloudship is the complete plant and sets no CA_AIRSHIP_GRP, an upstream-absent parameter)
+        self.chain = ca.TailChain(model if model.startswith('cloudship_am') else gz_model.bare('cloudship'))
         self.pods = ca.CloudshipPods(model)
         self.stage = None
         self.thrust = (0.0, 0.0, 0.0)

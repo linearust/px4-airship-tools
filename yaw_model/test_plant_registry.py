@@ -5,8 +5,8 @@
 
 Pins: every key resolves, by every name it has; the number aliases are
 bijective where defined and the entries sit on them; every record_gains.RUNS
-entry references a key; each key's tree number is the airframe file the tree
-holds today; the records' own SYS_AUTOSTART (records/gains.json, data) is
+entry references a key; each key's overlay number is the airframe file the
+overlay holds today (the tree, trimmed, holds the plain numbers alone); the records' own SYS_AUTOSTART (records/gains.json, data) is
 the registry's number of that day; plants.EXPECTED and closed_loop's tables
 are views of the registry; an unknown name is refused with a clear error.
 """
@@ -84,31 +84,39 @@ def test_aliases():
     numbers = {int(name.split('_')[0]) for name, _ in gz_model.airframe_files() if name.split('_')[1] == 'gz'}
 
     for plain, complete in reg.PLAIN_AFTER_TRIM.items():
-        members = [n for n in range(plain, plain + 8) if n in numbers]
+        # the tree holds the plain number alone; the family's members are in the overlay under their aliases
+        members = [n for n in range(plain, plain + 8) if reg.OVERLAY_NUMBER[n] in numbers]
         vehicle = gz_model.vehicle(ctl.airframe_model(plain))
-        tokens = {n: gz_model.family_tokens(ctl.airframe_model(n)) for n in members}
-        check('PLAIN_AFTER_TRIM %d -> %d: today\'s %d is the plain %s and %d the member with every token'
-              % (plain, complete, plain, vehicle, complete),
-              tokens.get(plain) == [] and complete in members
-              and all(gz_model.vehicle(ctl.airframe_model(n)) == vehicle for n in members)
+        tokens = {n: [t for t in gz_model.family_tokens(ctl.airframe_model(reg.OVERLAY_NUMBER[n])) if t != gz_model.RIGID]
+                  for n in members}
+        check('PLAIN_AFTER_TRIM %d -> %d: the tree\'s %d is the plain %s and nothing else of the decade, %d is in the overlay as %d, '
+              'the member with every token' % (plain, complete, plain, vehicle, complete, reg.OVERLAY_NUMBER[complete]),
+              plain in numbers and gz_model.family_tokens(ctl.airframe_model(plain)) == []
+              and not any(n in numbers for n in range(plain + 1, plain + 8)) and complete in members
+              and all(gz_model.vehicle(ctl.airframe_model(reg.OVERLAY_NUMBER[n])) == vehicle for n in members)
               and all(set(t) <= set(tokens[complete]) for t in tokens.values()),
-              '%s: %s' % (ctl.airframe_model(complete), ' '.join('%d %s' % (n, '_'.join(tokens[n]) or '-') for n in members)))
+              '%s: %s' % (ctl.airframe_model(reg.OVERLAY_NUMBER[complete]),
+                          ' '.join('%d %s' % (reg.OVERLAY_NUMBER[n], '_'.join(tokens[n]) or '-') for n in members)))
 
 
-def test_tree_today():
-    """The tree is untrimmed: each entry's tree number is the airframe file
-    that spawns its tree name, and that is the file the live lookup finds."""
+def test_overlay_today():
+    """The tree is trimmed (split step 6): each entry's plant is in the
+    overlay under its key, spawned by the airframe at its overlay number,
+    and that is the file the live lookup finds; the tree holds a decade's
+    number only for its plain plant."""
     files = dict(gz_model.airframe_files())
 
     for e in reg.ENTRIES:
-        file_name = '%d_gz_%s' % (e.number_tree, e.tree_name)
-        check('%s: airframe %s exists today and spawns %s' % (e.key, file_name, e.tree_name),
-              file_name in files and ctl.airframe_model(e.number_tree) == e.tree_name)
-        check('%s: the live lookup of its model today gives the same number (untrimmed tree)' % e.key,
-              e.model == e.tree_name and ctl.airframe_for_model(e.model) == e.number_tree,
+        file_name = '%d_gz_%s' % (e.number_overlay, e.key)
+        check('%s: airframe %s exists today and spawns %s' % (e.key, file_name, e.key),
+              file_name in files and ctl.airframe_model(e.number_overlay) == e.key)
+        check('%s: the live lookup of its model today gives its overlay number (trimmed tree)' % e.key,
+              e.model == e.key and ctl.airframe_for_model(e.model) == e.number_overlay,
               '%s %d' % (e.model, ctl.airframe_for_model(e.model)))
-        check('%s: its directory holds a model.sdf' % e.key,
-              os.path.isfile(os.path.join(ctl.PX4, e.directory, 'model.sdf')), e.directory)
+        check('%s: its model directory in the overlay holds a model.sdf' % e.key,
+              os.path.isfile(os.path.join(gz_model.model_dir(e.key), 'model.sdf')), gz_model.model_dir(e.key))
+        check('%s: the tree holds its records\' number only as the plain plant' % e.key,
+              ('%d_gz_%s' % (e.number_tree, e.tree_name) in files) == (e.number_tree in reg.PLAIN_AFTER_TRIM))
 
 
 def test_runs():
@@ -157,7 +165,7 @@ if __name__ == '__main__':
     test_resolve()
     test_unknown()
     test_aliases()
-    test_tree_today()
+    test_overlay_today()
     test_runs()
     test_views()
     print('\n%d failed' % len(FAILS) + (': ' + ', '.join(FAILS) if FAILS else ''))

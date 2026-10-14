@@ -122,7 +122,9 @@ sys.path.insert(0, TOOLS)
 import gz_model  # noqa: E402  (pure module: reads model.sdf files, no simulator)
 
 PX4 = gz_model.ROOT
-AIRFRAME = gz_model.airframe('cloudship')[1]     # 2510_gz_cloudship, found over the homes (overlay, tree)
+# the rigid chain's airframe over the homes: the overlay's 2610_gz_cloudship_rigid (the tree's 2510_gz_cloudship
+# before the trim; after it 2510 is the complete plant and sets no CA_AIRSHIP_GRP, an upstream-absent parameter)
+AIRFRAME = gz_model.airframe(gz_model.bare('cloudship'))[1]
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITL_OUT = os.path.join(TOOLS, 'sitl_out')
 
