@@ -9,7 +9,16 @@
    directories, 30 world entries, six airframes, the CMake entries and decade
    line, the docs entries; a second run changes nothing; variant_check.py on
    that copy passes every fact; the design meets its requirements.
-3. airship_gains.py: its anchor (REF_PLANT, the 10.97 m hull the gains were
+3. The split's two modes: --upstream into a scratch tree trimmed of a family
+   writes its plain plants (the body and the merge-include plant, the fixed
+   twin, the self-contained Cloudship) from the tree's members or from the
+   overlay's, twins of the complete members; --overlay writes each family
+   under the rigid naming a hundred above (the generic's fixed twin and the
+   copied Cloudship included), twice without a change. A scratch tree
+   trimmed as the split's procedure trims it, with the plain plants written
+   from a full overlay (five vehicles and the Cloudship), passes every fact
+   of variant_check.py.
+4. airship_gains.py: its anchor (REF_PLANT, the 10.97 m hull the gains were
    tuned on, P 0.7 and I 0.09) holds the numbers read from that hull; on the generic
    vehicle it gives the anchor's loop bandwidth N P / I and integral time
    P / I, and the slope seed over N; on the indoor vehicle it writes its three
@@ -32,6 +41,8 @@ from report import note, summary, verdict    # noqa: E402
 ROOT = gz_model.ROOT
 COPIED = gen.TREE_DIRS + ('ROMFS/px4fmu_common/init.d/airframes',)
 FILES = gen.TREE_FILES
+# the file every posix airship airframe sources, which resolving an airframe's defaults (the twin checks) reads
+SOURCED = ('ROMFS/px4fmu_common/init.d/rc.airship_defaults',)
 
 
 def scratch_tree():
@@ -40,11 +51,51 @@ def scratch_tree():
     for rel in COPIED:
         shutil.copytree(os.path.join(ROOT, rel), os.path.join(root, rel))
 
-    for rel in FILES:
+    for rel in FILES + SOURCED:
         os.makedirs(os.path.dirname(os.path.join(root, rel)), exist_ok=True)
         shutil.copy(os.path.join(ROOT, rel), os.path.join(root, rel))
 
     return root
+
+
+def trim(root):
+    """The split's trim (docs/upstream_split_design_20261012.md, section 7,
+    step (6)) on a scratch tree: every airship family's model directories,
+    the posix 25xx gz airframes (the classic Cloudship stays), their CMake
+    entries and the decade table, the lta world's buoyancy entries, and the
+    docs' Airship sections, index rows and simulation bullets. What
+    --upstream then writes back is what the tree carries after the split."""
+    models = os.path.join(root, gen.TREE_DIRS[0])
+
+    for d in os.listdir(models):
+        if d.startswith(('airship_', 'cloudship')):
+            shutil.rmtree(os.path.join(models, d))
+
+    airframes = os.path.join(root, gen.TREE_DIRS[1])
+
+    for f in os.listdir(airframes):
+        if re.match(r'25\d\d_gz_', f):
+            os.remove(os.path.join(airframes, f))
+
+    edits = ((os.path.join(airframes, 'CMakeLists.txt'), ((r'\n\t# Airship gz decades.*?(?=\n\t\d{4}_)', ''), (r'\t25\d\d_gz_[^\n]*\n', ''))),
+             (os.path.join(root, gen.TREE_FILES[0]), ((r' *<enable>(airship_|cloudship)[^\n]*\n', ''),)),
+             (os.path.join(root, gen.TREE_FILES[1]), ((r'^\| \[[^\n]*`make px4_sitl gz_(airship_|cloudship)[^\n]*\n', ''),)),
+             (os.path.join(root, gen.TREE_FILES[3]), ((r'^- \[[^\n]*vehicles\.md#[^\n]*\n', ''),)))
+
+    for path, subs in edits:
+        t = open(path).read()
+
+        for pattern, repl in subs:
+            t = re.sub(pattern, repl, t, flags=re.M | re.S)
+
+        open(path, 'w').write(t)
+
+    path = os.path.join(root, gen.TREE_FILES[2])
+    t = open(path).read()
+    start = t.index('\n## Airship\n') + 1
+    end = re.search(r'^## ', t[start + 1:], re.M)
+    end = start + 1 + end.start() if end else len(t)
+    open(path, 'w').write(t[:start] + re.sub(r'^### .*?(?=^### |\Z)', '', t[start:end], flags=re.M | re.S) + t[end:])
 
 
 def run(args, root):
@@ -169,6 +220,8 @@ def main():
             os.remove(os.path.join(scratch, gen.TREE_DIRS[1], f))
 
     written, _ = gen.write_upstream(vehicle, scratch, ROOT)
+    upstream_written = sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name),
+                               vehicle.family.fixed[0], '2500_gz_%s' % vehicle.family.fixed[0]])
     problems = gen.twin_check(vehicle, scratch, ROOT)
     # the second write through the CLI: nothing to write, the twin check OK
     import io, contextlib
@@ -182,9 +235,7 @@ def main():
     fixed = open(os.path.join(scratch, gen.TREE_DIRS[0], vehicle.family.fixed[0], 'model.sdf')).read()
     verdict('upstream 모양의 완전 플랜트 둘 (몸체 + 평범한 이름, merge include 두 단: 벡터링과 고정 쌍둥이) 은 트리의 완전 멤버와 원소 단위로 '
             '같고 에어프레임의 기본값이 같으며, 두 번째 쓰기 (CLI) 는 아무것도 바꾸지 않는다',
-            sorted(written) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name),
-                                       vehicle.family.fixed[0], '2500_gz_%s' % vehicle.family.fixed[0]])
-            and vehicle.decade == gen.GENERIC_DECADE and gen.MASK['am_fin_drag'] == 7
+            sorted(written) == upstream_written and vehicle.decade == gen.GENERIC_DECADE and gen.MASK['am_fin_drag'] == 7
             and not problems and not again and plain.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in plain
             and fixed.count('<include') == 1 and 'model://%s</uri>' % vehicle.family.base in fixed
             and '--' not in plain.split('<!--', 1)[1].split('-->', 1)[0],
@@ -249,8 +300,15 @@ def main():
             t_defaults = gz_model.airframe_defaults(v.family.am_fin_drag)
             t_bare = gz_model.airframe_defaults(v.family.bare)
 
-        if not (len(written) == 6 and entries == 5 and again == [] and entries_again == 0):
-            bad.append('%s: wrote %s, entries %d; again %s %d' % (name, written, entries, again, entries_again))
+        # the generic's overlay carries its fixed-thruster twin too (four airframes, four models' entries); every
+        # overlay model is enabled bare and _0.._3 in the lab world, which also keeps the tree's entries
+        world = open(os.path.join(overlay, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
+        fixed = len(v.family.fixed) * 2
+        enabled = all('<enable>%s%s::base_link' % (m, i) in world for m in ofam.members if not m.endswith(('_base_am', '_base_rigid'))
+                      for i in ('', '_0', '_3'))
+
+        if not (len(written) == 6 + fixed and enabled and again == [] and entries_again == 0):
+            bad.append('%s: wrote %s, entries %d, enabled %s; again %s %d' % (name, written, entries, enabled, again, entries_again))
 
         if not (o_merged == t_merged and o_defaults == t_defaults and o_bare == t_bare):
             bad.append('%s: not the tree\'s twin (models %s, complete defaults %s, bare defaults %s)'
@@ -293,23 +351,155 @@ def main():
     import xml.etree.ElementTree as ET
     same = all(gen.canonical(ET.parse(os.path.join(scratch, gen.TREE_DIRS[0], n, 'model.sdf')).getroot())
                == gen.canonical(ET.parse(os.path.join(scratch2, gen.TREE_DIRS[0], n, 'model.sdf')).getroot())
-               for n in (vehicle.family.base, vehicle.name))
-    verdict('오버레이를 MEMBERS_ROOT 로 한 --upstream 은 트리에서 만든 것과 원소 단위로 같은 몸체와 완전 플랜트를 쓰고 (고정 쌍둥이는 '
-            '오버레이에 에어프레임이 없어 건너뜀) 쌍둥이 검사를 통과한다',
-            sorted(from_overlay) == sorted([vehicle.family.base, vehicle.name, '%d_gz_%s' % (vehicle.decade, vehicle.name)])
-            and not problems2 and same, '; '.join(problems2) if problems2 else 'wrote %s' % ', '.join(from_overlay))
+               for n in (vehicle.family.base, vehicle.name, vehicle.family.fixed[0]))
+    verdict('오버레이를 MEMBERS_ROOT 로 한 --upstream 은 트리에서 만든 것과 원소 단위로 같은 몸체와 완전 플랜트 둘 (벡터링, 고정 쌍둥이) 을 '
+            '쓰고 쌍둥이 검사를 통과한다',
+            sorted(from_overlay) == upstream_written and not problems2 and same,
+            '; '.join(problems2) if problems2 else 'wrote %s' % ', '.join(from_overlay))
     shutil.rmtree(scratch2)
 
     decades = open(os.path.join(overlay, 'airframes', 'decades')).read().split()
     world = open(os.path.join(overlay, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
     docs = open(os.path.join(overlay, 'vehicles.md')).read()
+    fixed_bare = open(os.path.join(overlay, 'airframes', '2600_gz_airship_fixed_rigid')).read()
+    fixed_drag = open(os.path.join(overlay, 'airframes', '2601_gz_airship_fixed_drag')).read()
     verdict('오버레이: 두 가족이 rigid 이름과 +100 번호로 자체 완결되게 생성되고 (세계 lta_lab, decades, vehicles.md), 트리 가족과 '
-            'merged 모델·에어프레임 기본값이 같으며, 두 번째 생성은 아무것도 바꾸지 않는다',
-            not bad and decades == ['2620', 'airship_vectored_independent_rigid', '2630', 'airship_indoor_rigid']
+            'merged 모델·에어프레임 기본값이 같으며, 두 번째 생성은 아무것도 바꾸지 않는다; generic 의 고정 쌍둥이 (2600/2601/2604/2605, '
+            'airship_fixed_rigid) 가 트리의 2500 가족에서 복사된다',
+            not bad and decades == ['2600', 'airship_fixed_rigid', '2620', 'airship_vectored_independent_rigid', '2630', 'airship_indoor_rigid']
             and '<world name="%s">' % gen.OVERLAY_WORLD_NAME in world and 'airship_indoor_rigid_3::base_link' in world
-            and '`gz_airship_indoor_am_fin_drag` | 2637 |' in docs and docs.count('### ') == 12
-            and 'make px4_sitl' not in docs and '../frames_airship' not in docs,
+            and '`gz_airship_indoor_am_fin_drag` | 2637 |' in docs and '`gz_airship_fixed_am_drag` | 2605 |' in docs
+            and docs.count('### ') == 16 and '### Generic Airship (Rigid Hull)\n' in docs and '### Generic Airship (Hull Drag)\n' in docs
+            and 'make px4_sitl' not in docs and '../frames_airship' not in docs
+            and '# @name Generic Airship (Rigid Hull)\n' in fixed_bare and 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_fixed_rigid}' in fixed_bare
+            and 'param set-default SIM_GZ_SV_MINA4 -' in fixed_bare and 'airframes/2600_gz_airship_fixed_rigid\n' in fixed_drag
+            and 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=airship_fixed_drag}' in fixed_drag,
             '; '.join(bad) if bad else 'decades %s' % ' '.join(decades))
+
+    note('[cloudship]')
+    # the ported family, copied into the overlay under the rigid naming: the
+    # tree's six members with the bare renamed, airframes 2610-2617, the
+    # docs sections of the tree's vehicle list; a second copy changes nothing
+    before = snapshot(overlay)
+    _, written, entries = gen.generate_overlay(gen.CLOUDSHIP, overlay=overlay, template_root=ROOT)
+    middle = snapshot(overlay)
+    _, again, entries_again = gen.generate_overlay(gen.CLOUDSHIP, overlay=overlay, template_root=ROOT)
+    after = snapshot(overlay)
+    rigid = open(os.path.join(overlay, 'models', 'cloudship_rigid', 'model.sdf')).read()
+    drag = open(os.path.join(overlay, 'models', 'cloudship_drag', 'model.sdf')).read()
+    bare = open(os.path.join(overlay, 'airframes', '2610_gz_cloudship_rigid')).read()
+    fin = open(os.path.join(overlay, 'airframes', '2612_gz_cloudship_fin')).read()
+    docs = open(os.path.join(overlay, 'vehicles.md')).read()
+    decades = open(os.path.join(overlay, 'airframes', 'decades')).read().split()
+    world = open(os.path.join(overlay, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
+
+    with gen.at_root(overlay):
+        o_chain = gz_model.family('cloudship_am_fin_drag')
+        o_merged = gen.canonical(gz_model.merged('cloudship_am_fin_drag'))[3]
+        o_defaults = gz_model.airframe_defaults('cloudship_am_fin_drag')
+        o_bare = gz_model.airframe_defaults('cloudship_rigid')
+
+    with gen.at_root(ROOT):
+        t_merged = gen.canonical(gz_model.merged('cloudship_am_fin_drag'))[3]
+        t_defaults = gz_model.airframe_defaults('cloudship_am_fin_drag')
+        t_bare = gz_model.airframe_defaults('cloudship')
+
+    verdict('cloudship --overlay: 트리의 여섯 멤버가 bare 만 cloudship_rigid 로 (모델, 에어프레임 2610..2617, 월드, decades, 문서), 사슬과 '
+            'merged 모델·기본값은 트리와 같고, 두 번째 복사는 아무것도 바꾸지 않는다',
+            len(written) == 6 and entries == 5 and again == [] and entries_again == 0 and middle == after and before != middle
+            and '<model name="cloudship_rigid">' in rigid and 'models/cloudship/cloudship.sdf.jinja' in rigid and '2507_cloudship' in rigid
+            and 'wrap cloudship_rigid' in rigid and '<uri>model://cloudship_rigid</uri>' in drag
+            and '# @name Cloudship (Rigid Hull)\n' in bare and 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=cloudship_rigid}' in bare
+            and 'airframes/2610_gz_cloudship_rigid\n' in fin and 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=cloudship_fin}' in fin
+            and 'param set-default AS_YR_FF_SLP 12.74' in fin
+            and o_chain == ['cloudship_am', 'cloudship_am_fin', 'cloudship_am_fin_drag'] and o_merged == t_merged
+            and o_defaults == t_defaults and o_bare == t_bare
+            and decades == ['2600', 'airship_fixed_rigid', '2610', 'cloudship_rigid', '2620', 'airship_vectored_independent_rigid',
+                            '2630', 'airship_indoor_rigid']
+            and 'cloudship_rigid_3::base_link' in world and '`gz_cloudship_rigid` | 2610 |' in docs and '`gz_cloudship_am_fin_drag` | 2617 |' in docs
+            and '### Cloudship (Rigid Hull)\n' in docs and docs.count('### Cloudship') == 6 and 'GZ_TARGET=gz_cloudship_rigid ./gz_run.sh' in docs,
+            'wrote %s, entries %d; again %s; chain %s' % (written, entries, again, o_chain))
+    # the Cloudship's plain plant from the overlay into a tree trimmed of its
+    # family: self-contained (no include), the _am copy with the fin and
+    # drag blocks, the airframe the rigid bare's text with the complete
+    # member's block and no variant notes; the twin check holds, a second
+    # write (CLI, --plants honoured) changes nothing
+    scratch3 = scratch_tree()
+
+    for m in gen.CLOUDSHIP.family.members:
+        shutil.rmtree(os.path.join(scratch3, gen.TREE_DIRS[0], m))
+
+    for f in os.listdir(os.path.join(scratch3, gen.TREE_DIRS[1])):
+        if f[:4].isdigit() and 2510 <= int(f[:4]) <= 2517:
+            os.remove(os.path.join(scratch3, gen.TREE_DIRS[1], f))
+
+    written3, _ = gen.write_upstream(gen.CLOUDSHIP, scratch3, overlay)
+    problems3 = gen.twin_check(gen.CLOUDSHIP, scratch3, overlay)
+    out = io.StringIO()
+
+    with contextlib.redirect_stdout(out):
+        rc = gen.main(['cloudship', '--root', scratch3, '--upstream', overlay, '--plants', 'cloudship'])
+
+    again3 = [] if rc == 0 and 'wrote nothing' in out.getvalue() and 'twin check OK' in out.getvalue() else ['cli: %s' % out.getvalue()[-200:]]
+    plain = open(os.path.join(scratch3, gen.TREE_DIRS[0], 'cloudship', 'model.sdf')).read()
+    config = open(os.path.join(scratch3, gen.TREE_DIRS[0], 'cloudship', 'model.config')).read()
+    airframe = open(os.path.join(scratch3, gen.TREE_DIRS[1], '2510_gz_cloudship')).read()
+    verdict('cloudship --upstream (오버레이에서): 자체 완결 완전 플랜트 (include 없음, 부가 질량 + 핀 넷 + 항력) 와 2510 (rigid bare 의 본문 + '
+            '2617 의 블록, 변형 설명 없음, CA_AIRSHIP_GRP 없음) 을 쓰고 쌍둥이 검사를 통과하며, 두 번째 쓰기는 아무것도 바꾸지 않는다',
+            sorted(written3) == ['2510_gz_cloudship', 'cloudship'] and not problems3 and not again3
+            and '<include' not in plain and '<model name="cloudship">' in plain and plain.count('gz-sim-lift-drag-system') == 4
+            and plain.count('gz-sim-hydrodynamics-system') == 1 and '<fluid_added_mass>' in plain and 'Generated by px4-airship-tools' in plain
+            and '<name>cloudship</name>' in config and 'complete plant' in config
+            and '# @name Cloudship\n' in airframe and 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=cloudship}' in airframe
+            and 'param set-default AS_YAWRATE_FF 0.05' in airframe and 'CA_AIRSHIP_GRP' not in airframe
+            and 'physics mask' not in airframe and 'rigid hull' not in airframe and 'complete plant' in airframe,
+            '; '.join(problems3 + again3) if problems3 or again3 else 'wrote %s' % ', '.join(written3))
+    shutil.rmtree(scratch3)
+
+    note('[trimmed tree]')
+    # the split's end state: a scratch tree trimmed as the procedure trims
+    # it, the overlay carrying every family (the three literature vehicles
+    # added to the generic, indoor and Cloudship above), the plain plants
+    # written back from the overlay (--plants honoured on the way); every
+    # fact of variant_check holds, with the plain plants held to the
+    # overlay's complete members (fact 17)
+    for name in ('airship_aurora', 'airship_jaxa', 'airship_mpi'):
+        gen.generate_overlay(gen.load_vehicle('vehicles/%s.json' % name), overlay=overlay, template_root=ROOT)
+
+    trimmed = scratch_tree()
+    trim(trimmed)
+    only_fixed, _ = gen.write_upstream(vehicle, trimmed, overlay, plants=[vehicle.family.fixed[0]])
+    rest, _ = gen.write_upstream(vehicle, trimmed, overlay)
+    cloud, _ = gen.write_upstream(gen.CLOUDSHIP, trimmed, overlay)
+    problems = gen.twin_check(vehicle, trimmed, overlay) + gen.twin_check(gen.CLOUDSHIP, trimmed, overlay)
+    env = dict(os.environ, PX4_ROOT=trimmed, AIRSHIP_OVERLAY=overlay)
+    r = subprocess.run([sys.executable, os.path.join(HERE, 'variant_check.py')], capture_output=True, text=True, env=env)
+    lines = r.stdout.strip().splitlines()
+    models = sorted(d for d in os.listdir(os.path.join(trimmed, gen.TREE_DIRS[0])) if d.startswith(('airship_', 'cloudship')))
+    posix = sorted(f for f in os.listdir(os.path.join(trimmed, gen.TREE_DIRS[1])) if f.startswith('25'))
+    cmake = open(os.path.join(trimmed, gen.TREE_DIRS[1], 'CMakeLists.txt')).read()
+    world = open(os.path.join(trimmed, gen.TREE_FILES[0])).read()
+    index_md = open(os.path.join(trimmed, gen.TREE_FILES[1])).read()
+    vehicles_md = open(os.path.join(trimmed, gen.TREE_FILES[2])).read()
+    airship_md = open(os.path.join(trimmed, gen.TREE_FILES[3])).read()
+    sections = re.findall(r'^### (.*)$', vehicles_md[vehicles_md.index('\n## Airship\n'):], re.M)
+    verdict('트림된 트리 + 오버레이 전체: 평범한 플랜트 셋 (airship_fixed 2500, cloudship 2510, airship_vectored_independent 2520, 몸체 '
+            'airship_base) 과 classic 2519 만 남고 CMake 항목·월드 15 줄·문서 항목 셋이 번호 순이며, --plants 는 그것만 쓰고, '
+            'variant_check 가 모든 사실 (17) 을 통과한다 (모델 43 개: 오버레이 40 + 평범한 플랜트 3)',
+            sorted(only_fixed) == ['2500_gz_airship_fixed', 'airship_base', 'airship_fixed']
+            and sorted(rest) == ['2520_gz_airship_vectored_independent', 'airship_vectored_independent']
+            and sorted(cloud) == ['2510_gz_cloudship', 'cloudship'] and not problems
+            and models == ['airship_base', 'airship_fixed', 'airship_vectored_independent', 'cloudship']
+            and posix == ['2500_gz_airship_fixed', '2510_gz_cloudship', '2519_gazebo-classic_cloudship', '2520_gz_airship_vectored_independent']
+            and re.findall(r'\t(25\d\d_[^\n]*)', cmake) == posix and '# Airship gz decades' not in cmake
+            and world.count('<enable>') == 15 and all('<enable>%s_3::base_link' % m in world for m in models if m != 'airship_base')
+            and sections == ['Generic Airship', 'Cloudship', 'Generic Airship (Independent Vectoring)']
+            and [int(n) for n in re.findall(r'`make px4_sitl gz_(?:airship_|cloudship)[^`]*`\s*\|\s*(\d{4})', index_md)] == [2500, 2510, 2520]
+            and re.findall(r'^- \[([^\]]*)\]\(\.\./sim_gazebo_gz/vehicles\.md', airship_md, re.M) == sections
+            and r.returncode == 0 and lines and lines[-1] == '통과 17 / 실패 0' and '모델 43 개' in r.stdout,
+            (lines[-1] if lines else r.stderr[-300:]) + ' | ' + '; '.join(l.strip()[:120] for l in lines if l.strip().startswith('실패'))[:600]
+            + (' | ' + '; '.join(problems) if problems else ''))
+    shutil.rmtree(trimmed)
     shutil.rmtree(overlay)
     shutil.rmtree(scratch)
 

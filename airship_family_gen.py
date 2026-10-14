@@ -6,6 +6,7 @@ docs entries from one vehicle file.
     python3 airship_family_gen.py vehicles/airship_generic.json --check # regenerate the generic family in a
                                                                         # scratch copy and diff it against the tree
     python3 airship_family_gen.py vehicles/airship_indoor.json --overlay            # the family into the overlay
+    python3 airship_family_gen.py cloudship --overlay                               # the ported family, copied there
     python3 airship_family_gen.py vehicles/airship_generic.json --upstream overlay  # what upstream carries, into
                                                                                     # --root, from the overlay's members
 
@@ -44,6 +45,9 @@ ROLES = ('base', 'base_am', 'bare', 'drag', 'fin', 'am', 'am_fin', 'am_fin_drag'
 MEMBERS = (('bare', 0, ''), ('drag', 1, 'Hull Drag'), ('fin', 2, 'Fins'), ('am', 4, 'Added Mass'),
            ('am_fin', 6, 'Added Mass, Fins'), ('am_fin_drag', 7, 'Complete'))
 MASK = {role: mask for role, mask, _ in MEMBERS}
+# the fixed-thruster twin's members (the generic's airship_fixed): its fins are its flaps, so it has no fin bit
+FIXED_MEMBERS = (('bare', 0, ''), ('drag', 1, 'Hull Drag'), ('am', 4, 'Added Mass'), ('am_drag', 5, 'Complete'))
+RIGID_TITLE = 'Rigid Hull'  # the docs name of the overlay's bare member: '<title> (Rigid Hull)'
 MOMENT_CONSTANT = 0.016     # the x500 motor block's, which the wrappers keep
 GENERIC_DECADE = 2520       # vehicles/airship_generic.json's decade: the tree's template family and bare airframe
 
@@ -83,6 +87,8 @@ class Vehicle:
     def family(self):
         if self.name == A.GENERIC.bare:
             return A.GENERIC
+        if self.name == A.CLOUDSHIP.bare:
+            return A.CLOUDSHIP
         return A.vectored_family(self.name, self.body_title, self.surfaces)
 
     @property
@@ -90,21 +96,96 @@ class Vehicle:
         """The same family under the overlay's rigid naming."""
         if self.name == A.GENERIC.bare:
             return A.GENERIC_RIGID
+        if self.name == A.CLOUDSHIP.bare:
+            return A.CLOUDSHIP_RIGID
         return A.vectored_family(self.name, self.body_title, self.surfaces, rigid=True)
 
+    @property
+    def ported(self):
+        """A family the generator copies rather than designs: no hull, no
+        pods, no vehicle file (the Cloudship)."""
+        return self.hull is None
+
     def member_title(self, docs_name):
-        if not docs_name:
-            return self.title
-        if self.title.endswith(')'):
-            return self.title[:-1] + ', ' + docs_name + ')'
-        return '%s (%s)' % (self.title, docs_name)
+        return member_title(self.title, docs_name)
+
+
+def member_title(title, docs_name):
+    """A member's display name from its family's: 'Generic Airship (Independent
+    Vectoring)' + 'Hull Drag' -> 'Generic Airship (Independent Vectoring, Hull Drag)'."""
+    if not docs_name:
+        return title
+    if title.endswith(')'):
+        return title[:-1] + ', ' + docs_name + ')'
+    return '%s (%s)' % (title, docs_name)
+
+
+def without_rigid(title):
+    """The family's title from the overlay's bare member's: the Rigid Hull name dropped."""
+    return title.replace(', %s)' % RIGID_TITLE, ')').replace(' (%s)' % RIGID_TITLE, '')
+
+
+# The Cloudship has no vehicle file: it is the tree's hand-written family (a
+# port of the gazebo-classic model's measurements, no hull spec and no pods),
+# which the generator copies into the overlay (--overlay) and folds into its
+# plain plant (--upstream), never designs. Named on the command line in place
+# of a file.
+CLOUDSHIP = Vehicle(A.CLOUDSHIP.bare, 'Cloudship', 'Cloudship', 2510, None, None, None)
+PORTED = {CLOUDSHIP.name: CLOUDSHIP}
 
 
 def load_vehicle(path):
+    if path in PORTED:
+        return PORTED[path]
+
     with open(path) as handle:
         v = json.load(handle)
     return Vehicle(v['name'], v['title'], v['body_title'], int(v['decade']), g.HullSpec.from_dict(v['hull']),
                    Pods(**v['pods']), os.path.abspath(path), v.get('docs_note'), bool(v.get('surfaces', False)))
+
+
+@dataclasses.dataclass(frozen=True)
+class Chain:
+    """One family's members under one decade: the six of a vectored family
+    (MEMBERS) or the four of the fixed-thruster twin (FIXED_MEMBERS), each
+    role's model name, and the bare member's title, which names the others
+    ('Generic Airship' -> 'Generic Airship (Hull Drag)'; the overlay's bare,
+    under the rigid naming, is '... (Rigid Hull)')."""
+    names: dict         # role -> model name
+    members: tuple      # (role, mask, docs name), bare first
+    decade: int         # the bare member's airframe number
+    title: str          # the family's title: the bare member's posix @name and docs heading
+
+    @property
+    def rigid(self):
+        return self.names['bare'].endswith('_' + gz_model.RIGID)
+
+    @property
+    def models(self):
+        return [self.names[role] for role, _, _ in self.members]
+
+    def number(self, role):
+        return self.decade + {r: mask for r, mask, _ in self.members}[role]
+
+    def title_of(self, role):
+        docs_name = {r: d for r, _, d in self.members}[role]
+        return member_title(self.title, docs_name or (RIGID_TITLE if self.rigid else ''))
+
+    def airframe(self, airframes, role):
+        return airframe_path(airframes, self.number(role), self.names[role])
+
+
+def vectored_chain(fam, decade, title):
+    return Chain({role: getattr(fam, role) for role, _, _ in MEMBERS}, MEMBERS, decade, title)
+
+
+def fixed_chain(fam, decade, title):
+    """The fixed-thruster twin's chain of a family that has one, else None."""
+    if not fam.fixed:
+        return None
+
+    return Chain({'bare': fam.fixed[0], 'drag': fam.fixed_drag[0], 'am': fam.fixed[1], 'am_drag': fam.fixed_drag[1]},
+                 FIXED_MEMBERS, decade, title)
 
 
 def slug(title):
@@ -143,6 +224,9 @@ def copy_family(src_fam, dst_fam, src_root, dst_root):
     rename = renamer(src_fam, dst_fam)
 
     for src_name, dst_name in family_pairs(src_fam, dst_fam):
+        if src_name is None:
+            continue                                            # a self-contained family has no body
+
         src, dst = os.path.join(src_root, src_name), os.path.join(dst_root, dst_name)
 
         if os.path.abspath(src) == os.path.abspath(dst):
@@ -161,18 +245,31 @@ def family_pairs(src_fam, dst_fam):
     return pairs
 
 
+# References in a ported family's files that name something other than its
+# gz models and are kept as they are: the flight airframe and the
+# gazebo-classic model the Cloudship was measured from
+PORTED_REFERENCES = ('2507_cloudship', 'cloudship/cloudship.sdf.jinja')
+
+
 def renamer(src_fam, dst_fam):
     """text -> text with every source family name (and the body's title)
     replaced by the destination's, in one pass, longest name first: a chain
     of replacements would let a new name be hit by a later rule (the rigid
-    naming turns _base_am into _base and _base into _base_rigid)."""
-    pairs = family_pairs(src_fam, dst_fam)
-    pairs += [(src_fam.title, dst_fam.title), (src_fam.title.lower(), dst_fam.title.lower())]
-    # every source name is in the pattern, the unchanged ones mapped to
-    # themselves: a longer name must be consumed whole, or its prefix would
-    # be renamed inside it (<name>_am_fin would become <name>_rigid_am_fin)
-    mapping = dict(pairs)
+    naming turns _base_am into _base and _base into _base_rigid). The
+    title's pairs come first so that a model name that is the title's lower
+    case (the Cloudship's) is the model's pair."""
+    pairs = [(src_fam.title, dst_fam.title), (src_fam.title.lower(), dst_fam.title.lower())]
+    pairs += [(r, r) for r in PORTED_REFERENCES]
+    pairs += [(a, b) for a, b in family_pairs(src_fam, dst_fam) if a]
+    return replacer(dict(pairs))
 
+
+def replacer(mapping):
+    """text -> text with every key replaced by its value, in one pass,
+    longest key first. Every name is in the pattern, the unchanged ones
+    mapped to themselves: a longer name must be consumed whole, or its
+    prefix would be renamed inside it (<name>_am_fin would become
+    <name>_rigid_am_fin)."""
     if all(old == new for old, new in mapping.items()):
         return lambda t: t
 
@@ -362,9 +459,13 @@ def write_world(path, fam):
     return write_world_entries(path, [getattr(fam, role) for role, _, _ in MEMBERS])
 
 
+BUOYANCY = '<plugin filename="gz-sim-buoyancy-system"'
+
+
 def write_world_entries(path, names):
     """The buoyancy entries of these models, bare and _0.._3, after the last
-    one present; those already there are left."""
+    one present (at the end of the Buoyancy plugin when there is none);
+    those already there are left."""
     t = read(path)
     lines = []
 
@@ -376,7 +477,11 @@ def write_world_entries(path, names):
                 lines.append(line)
 
     if lines:
-        end = t.index('\n', t.rindex('</enable>')) + 1
+        if '</enable>' in t:
+            end = t.index('\n', t.rindex('</enable>')) + 1
+        else:
+            end = t.rindex('\n', 0, t.index('</plugin>', t.index(BUOYANCY))) + 1
+
         t = t[:end] + '\n'.join(lines) + '\n' + t[end:]
         write(path, t)
 
@@ -431,22 +536,18 @@ def write_airframes(vehicle, p, airframes, fam=None, decade=None, template=None,
         write(bare_path, t)
         written.append(os.path.basename(bare_path))
 
+    chain = vectored_chain(fam, decade, vehicle.title)
+
+    if members_from:
+        # this vehicle's own members elsewhere: their text, the bare include renamed (the bare, just written, is kept)
+        m_airframes, m_fam, m_decade = members_from
+        written += copy_airframes(vectored_chain(m_fam, m_decade, vehicle.title), chain, m_airframes, airframes)
+
     for role, mask, docs_name in MEMBERS[1:]:
         path = airframe_path(airframes, decade + mask, getattr(fam, role))
 
         if os.path.exists(path):
             continue
-
-        if members_from:
-            m_airframes, m_fam, m_decade = members_from
-            source = airframe_path(m_airframes, m_decade + mask, getattr(m_fam, role))
-
-            if os.path.exists(source):
-                # this vehicle's own member elsewhere: its text, the bare include renamed
-                text = read(source).replace(os.path.basename(airframe_path(m_airframes, m_decade, m_fam.bare)), os.path.basename(bare_path))
-                write(path, text)
-                written.append(os.path.basename(path))
-                continue
 
         write(path, '''#!/bin/sh
 #
@@ -462,6 +563,35 @@ PX4_SIM_MODEL=${PX4_SIM_MODEL:=%s}
 
 . ${R}etc/init.d-posix/airframes/%s
 ''' % (vehicle.member_title(docs_name), getattr(fam, role), os.path.basename(bare_path)))
+        written.append(os.path.basename(path))
+
+    return written
+
+
+def copy_airframes(src, dst, src_dir, dst_dir):
+    """The airframes of chain dst under dst_dir from chain src's under
+    src_dir, this family's own members elsewhere (the tree's, for the
+    overlay): the bare one's text with every source model name replaced by
+    the destination's and its @name set (the Rigid Hull title under the
+    rigid naming), a member's with the bare include's file name replaced,
+    gains and all. A destination that exists, or whose source does not, is
+    left; the files written are returned."""
+    names = replacer(dict({r: r for r in PORTED_REFERENCES}, **{src.names[role]: dst.names[role] for role in src.names}))
+    bare_src, bare_dst = (os.path.basename(c.airframe(d, 'bare')) for c, d in ((src, src_dir), (dst, dst_dir)))
+    written = []
+
+    for role, _, _ in dst.members:
+        path, source = dst.airframe(dst_dir, role), src.airframe(src_dir, role)
+
+        if os.path.exists(path) or not os.path.exists(source):
+            continue
+
+        if role == 'bare':
+            text = with_name(names(read(source)), dst.title_of('bare'))
+        else:
+            text = read(source).replace(bare_src, bare_dst)
+
+        write(path, text)
         written.append(os.path.basename(path))
 
     return written
@@ -544,16 +674,27 @@ def write_cmake(vehicle, airframes):
         t = t[:last.end()] + decade_line + '\n' + t[last.end():]
         changed = True
 
-    for role, mask, _ in MEMBERS:
-        entry = '\t%d_gz_%s' % (vehicle.decade + mask, getattr(fam, role))
+    if changed:
+        write(path, t)
+
+    return write_cmake_entries(path, [(vehicle.decade + mask, getattr(fam, role)) for role, mask, _ in MEMBERS]) or changed
+
+
+def write_cmake_entries(path, entries):
+    """The posix CMakeLists' entries for (number, model) airframes, each once, in number order."""
+    t = read(path)
+    changed = False
+
+    for number, model in entries:
+        entry = '\t%d_gz_%s' % (number, model)
 
         if entry + '\n' in t:
             continue
 
-        # before the first 25xx or later entry with a larger number, else after the last 25xx one
+        # before the first entry with a larger number, else after the last one with a smaller
         numbers = [(int(m.group(1)), m) for m in re.finditer(r'\t(\d{4})_[^\n]*\n', t)]
-        after = [m for n, m in numbers if n > vehicle.decade + mask]
-        at = after[0].start() if after else max(m.end() for n, m in numbers if n < vehicle.decade + mask)
+        after = [m for n, m in numbers if n > number]
+        at = after[0].start() if after else max(m.end() for n, m in numbers if n < number)
         t = t[:at] + entry + '\n' + t[at:]
         changed = True
 
@@ -563,10 +704,17 @@ def write_cmake(vehicle, airframes):
     return changed
 
 
-def docs_sections(vehicle, p, fam=None, rigid_title='', command='make px4_sitl gz_%s', page_link='../frames_airship/index.md'):
-    """One docs section per member: the heading, its sentence and how it is
-    run (`command` with the model name; the overlay's has no make target)."""
-    fam = fam or vehicle.family
+TREE_COMMAND = 'make px4_sitl gz_%s'
+OVERLAY_COMMAND = 'GZ_TARGET=gz_%s ./gz_run.sh <check>'
+TREE_PAGE = '../frames_airship/index.md'
+OVERLAY_PAGE = 'https://docs.px4.io/main/en/frames_airship/'
+
+
+def docs_sections(vehicle, p, chain=None, command=TREE_COMMAND, page_link=TREE_PAGE):
+    """One docs section per member of a vectored chain (the vehicle's own in
+    the tree by default): the heading, its sentence and how it is run
+    (`command` with the model name; the overlay's has no make target)."""
+    chain = chain or vectored_chain(vehicle.family, vehicle.decade, vehicle.title)
     a, b = p.a, p.b
     intro = {
         'bare': '[%s](%s): two independently tilting thrust pods on a %.2f x %.2f m hull, the rigid hull: '
@@ -585,9 +733,26 @@ def docs_sections(vehicle, p, fam=None, rigid_title='', command='make px4_sitl g
     if vehicle.docs_note:
         intro['bare'] += '\n' + vehicle.docs_note
 
-    for role, _, docs_name in MEMBERS:
-        out.append('### %s\n\n%s\n\n```sh\n%s\n```\n'
-                   % (vehicle.member_title(docs_name or rigid_title), intro[role], command % getattr(fam, role)))
+    for role, _, _ in chain.members:
+        out.append('### %s\n\n%s\n\n```sh\n%s\n```\n' % (chain.title_of(role), intro[role], command % chain.names[role]))
+
+    return out
+
+
+def copied_sections(docs, src, dst, command=OVERLAY_COMMAND, page_link=OVERLAY_PAGE):
+    """The sections of chain src in a vehicle list (the tree's, for a
+    hand-written family: the fixed twin's, the Cloudship's) as chain dst's:
+    each heading renamed, its make command replaced by `command` with the
+    model name, and the airship page's link by `page_link`. Every member's
+    section must be there."""
+    out = []
+
+    for role, _, _ in src.members:
+        m = re.search(r'^### %s\n(.*?)(?=^#{2,3} |\Z)' % re.escape(src.title_of(role)), docs, re.M | re.S)
+        assert m, 'the vehicle list has no section "%s"' % src.title_of(role)
+        body = m.group(1).replace('```sh\n%s\n```' % (TREE_COMMAND % src.names[role]), '```sh\n%s\n```' % (command % dst.names[role]))
+        body = body.replace('](%s)' % TREE_PAGE, '](%s)' % page_link)
+        out.append('### %s\n%s' % (dst.title_of(role), body.rstrip('\n') + '\n'))
 
     return out
 
@@ -652,8 +817,7 @@ def write_fixed_servos(vehicle, p, airframes, fam=None):
     """A family with a fixed-thruster twin (the generic one: airship_fixed):
     its bare posix airframe maps the bridge's +-1 onto the flap joints'
     +-travel, SIM_GZ_SV_MINA/MAXA1..4 and the comment that says so. An
-    airframes directory without the twin's airframe (the overlay, whose fixed
-    airframes are not generated yet) is left alone."""
+    airframes directory without the twin's airframe is left alone."""
     fam = fam or vehicle.family
     path = fixed_airframe(airframes, fam)
 
@@ -698,8 +862,7 @@ def homes(root):
 
 def fixed_airframe(airframes, fam):
     """The one posix airframe of a family's fixed-thruster twin under an
-    airframes dir, or None where there is none (a vectored-only family; the
-    overlay, whose fixed airframes are not generated yet)."""
+    airframes dir, or None where there is none (a vectored-only family)."""
     if not fam.fixed:
         return None
 
@@ -711,6 +874,13 @@ def fixed_airframe(airframes, fam):
 def with_name(text, title):
     """An airframe's text with its `# @name` line set to title."""
     return sub1(text, r'(# @name )[^\n]*', r'\g<1>%s' % title.replace('\\', '\\\\'))
+
+
+def airframe_name(path):
+    """An airframe file's `# @name`."""
+    m = re.search(r'^# @name ([^\n]*)', read(path), re.M)
+    assert m, '%s: no @name line' % path
+    return m.group(1).strip()
 
 
 # ---------------------------------------------------------------------------
@@ -784,67 +954,91 @@ class Plain:
     complete_mask: int      # the complete member's airframe is members_decade + mask
     decade: int             # the plain airframe's number upstream
     members_decade: int     # the members' decade under members_root (the overlay's is OVERLAY_SHIFT above)
-    what: str               # what the blocks add to the body, for the header
+    what: str               # what the plant is made of, for the header: '<body> merged with ...', or 'the vehicle with ...'
+    body: str = None        # a self-contained plant's body: the _am copy of the family, inlined (none: the family's base is merged)
 
 
 def plain_plants(vehicle, members_root):
-    """The plants upstream carries of this vehicle's family: the vectored one,
-    and the generic's fixed-thruster twin (its number read from its airframe),
-    built from the members under members_root: the overlay (rigid naming, a
-    decade OVERLAY_SHIFT above) or the tree."""
+    """The plants upstream carries of this vehicle's family: the vectored one
+    (a self-contained one for a ported family), and the generic's
+    fixed-thruster twin (its number read from its airframe), built from the
+    members under members_root: the overlay (rigid naming, a decade
+    OVERLAY_SHIFT above) or the tree."""
     overlay = is_overlay(members_root)
-    mfam = vehicle.overlay_family if overlay else vehicle.family
+    fam = vehicle.family
+    mfam = vehicle.overlay_family if overlay else fam
     shift = OVERLAY_SHIFT if overlay else 0
-    out = [Plain(vehicle.name, vehicle.title, (mfam.am, mfam.am_fin, mfam.am_fin_drag), mfam.bare, mfam.am_fin_drag,
-                 MASK['am_fin_drag'], vehicle.decade, vehicle.decade + shift,
-                 'the propulsion, the four fins as lifting surfaces and the hull\'s drag and rotational damping')]
+    fins_drag = 'the four fins as lifting surfaces and the hull\'s drag and rotational damping'
+
+    if fam.base is None:
+        # the Cloudship: its _am copy is the body, the fin and drag blocks go on it
+        out = [Plain(vehicle.name, vehicle.title, (mfam.am_fin, mfam.am_fin_drag), mfam.bare, mfam.am_fin_drag,
+                     MASK['am_fin_drag'], vehicle.decade, vehicle.decade + shift,
+                     'the vehicle with its hull\'s fluid added mass, %s' % fins_drag, body=mfam.am)]
+    else:
+        out = [Plain(vehicle.name, vehicle.title, (mfam.am, mfam.am_fin, mfam.am_fin_drag), mfam.bare, mfam.am_fin_drag,
+                     MASK['am_fin_drag'], vehicle.decade, vehicle.decade + shift,
+                     '%s merged with the propulsion, %s' % (fam.base, fins_drag))]
+
     path = fixed_airframe(homes(members_root)[1], mfam)
 
     if path is not None:
-        m = re.search(r'# @name ([^\n]*)', read(path))
-        assert m, '%s: no @name line' % path
         number = int(os.path.basename(path).split('_')[0])
-        # the fixed twin's complete member is fixed_am_drag
-        out.append(Plain(vehicle.family.fixed[0], m.group(1), (mfam.fixed[1], mfam.fixed_drag[1]), mfam.fixed[0], mfam.fixed_drag[1],
-                         MASK['am'] | MASK['drag'], number - shift, number,
-                         'the fixed thrusters, the four fins with their flaps and the hull\'s drag and rotational damping'))
+        # the fixed twin's complete member is fixed_am_drag; the overlay's bare carries the Rigid Hull title
+        out.append(Plain(fam.fixed[0], without_rigid(airframe_name(path)), (mfam.fixed[1], mfam.fixed_drag[1]), mfam.fixed[0],
+                         mfam.fixed_drag[1], MASK['am'] | MASK['drag'], number - shift, number,
+                         '%s merged with the fixed thrusters, the four fins with their flaps and the hull\'s drag and rotational '
+                         'damping' % fam.base))
 
     return out
 
 
 def upstream_models(vehicle, members_root):
     """{model name: model.sdf text} of the models upstream carries: the
-    added-mass body under the family's base name and each plain plant, built
-    from the members under members_root (the overlay, or today's tree)."""
+    added-mass body under the family's base name (a family that has one) and
+    each plain plant, built from the members under members_root (the
+    overlay, or today's tree). A self-contained plant is the family's _am
+    copy under the plain name with the fin and drag blocks appended."""
     fam = vehicle.family
     mfam = vehicle.overlay_family if is_overlay(members_root) else vehicle.family
     models = homes(members_root)[0]
     member = lambda name: read(os.path.join(models, name, 'model.sdf'))
-    source = os.path.relpath(vehicle.path, os.path.dirname(os.path.abspath(__file__)))
-    body = member(mfam.base_am)
-    body = body[body.index('<sdf '):]
-    body = sub1(body, r'<model name="%s">' % re.escape(mfam.base_am), '<model name="%s">' % fam.base)
-    body = BODY_HEADER % textwrap.fill("%s: the body the vehicle merges. The hull, the gondola, the tail and the sensors, with "
-                                       "the hull's fluid added mass on base_link. Generated by px4-airship-tools "
-                                       "(airship_family_gen.py, upstream mode) from %s." % (vehicle.body_title, source),
-                                       78, initial_indent='  ', subsequent_indent='  ') + body
-    out = {fam.base: body}
+    source = (os.path.relpath(vehicle.path, os.path.dirname(os.path.abspath(__file__))) if vehicle.path
+              else 'the %s family in its overlay' % mfam.bare)
+    generated = ('Generated by px4-airship-tools (airship_family_gen.py, upstream mode) from %s; the physics-variant members '
+                 'it was measured against live there.' % source)
+    fill = lambda text: textwrap.fill(text, 78, initial_indent='  ', subsequent_indent='  ')
+    out = {}
+
+    if fam.base:
+        body = member(mfam.base_am)
+        body = body[body.index('<sdf '):]
+        body = sub1(body, r'<model name="%s">' % re.escape(mfam.base_am), '<model name="%s">' % fam.base)
+        out[fam.base] = BODY_HEADER % fill("%s: the body the vehicle merges. The hull, the gondola, the tail and the sensors, with "
+                                           "the hull's fluid added mass on base_link. %s" % (vehicle.body_title, generated)) + body
 
     for plain in plain_plants(vehicle, members_root):
-        header = textwrap.fill("%s: the complete plant, %s merged with %s. Generated by px4-airship-tools "
-                               "(airship_family_gen.py, upstream mode) from %s; the physics-variant members it was measured "
-                               "against live there." % (plain.title, fam.base, plain.what, source), 78, initial_indent='  ',
-                               subsequent_indent='  ')
-        out[plain.name] = PLAIN_MODEL % (header, plain.name, fam.base, ''.join(own_blocks(member(role)) for role in plain.blocks))
+        header = fill('%s: the complete plant, %s. %s' % (plain.title, plain.what, generated))
+        blocks = ''.join(own_blocks(member(role)) for role in plain.blocks)
+
+        if plain.body is None:
+            out[plain.name] = PLAIN_MODEL % (header, plain.name, fam.base, blocks)
+            continue
+
+        body = member(plain.body)
+        body = body[body.index('<sdf '):]
+        body = sub1(body, r'<model name="%s">' % re.escape(plain.body), '<model name="%s">' % plain.name)
+        at = body.rindex('  </model>')
+        out[plain.name] = BODY_HEADER % header + body[:at] + blocks + body[at:]
 
     return out
 
 
 UPSTREAM_MARK = '# Yaw loop values for this hull'      # the marker's wording in an upstream airframe: no tool names
-# Parameters the upstream class and controller do not have (the fork's later
-# rounds: pod grouping, the forward-speed schedule): a line setting one is
-# dropped from an upstream airframe, with its paragraph when nothing else is set there
-UPSTREAM_ABSENT = ('CA_AIRSHIP_GRP', 'AS_SPD_SRC', 'AS_SPD_WMAX', 'AS_SPD_DP_TOL', 'AS_SPD_HI', 'AS_YR_FF_SLP')
+# A line setting a parameter the upstream class and controller do not have
+# (gz_model.UPSTREAM_ABSENT) is dropped from an upstream airframe, with its
+# paragraph when nothing else is set there
+UPSTREAM_ABSENT = gz_model.UPSTREAM_ABSENT
 OVERLAY_INCLUDES = ('model://ground_markers', 'model://flight_grid')   # lab-only models the upstream world does not include
 
 
@@ -867,24 +1061,57 @@ def without_absent(text):
     return '\n\n'.join(out)
 
 
+# A sentence of a bare member's comment that describes the variant family
+# (the physics mask, the decade table, "the rigid hull") says nothing true
+# of the plain plant and is dropped from its airframe
+VARIANT_WORDS = ('physics mask', 'CMakeLists', 'rigid hull', 'member', 'fin bit', 'variant')
+_INCLUDE = re.compile(r'^\. \$\{R\}etc/init\.d-posix/airframes/\S+\n', re.M)
+
+
+def without_variant_notes(text, what):
+    """`text` with every comment paragraph that mentions the variant family
+    cut down: its sentences (split at '. ' and '; ') that use a VARIANT_WORDS
+    word go, and one saying what the plain plant is comes after the rest,
+    refilled to the comment width."""
+    out = []
+
+    for para in text.split('\n\n'):
+        lines = para.split('\n')
+
+        if not all(l.startswith('#') for l in lines) or not any(w in para for w in VARIANT_WORDS):
+            out.append(para)
+            continue
+
+        words = ' '.join(l[1:].strip() for l in lines)
+        kept = [s.strip().rstrip('.;') for s in re.split(r'(?<=[.;]) ', words) if not any(w in s for w in VARIANT_WORDS)]
+        kept.append('This is the complete plant: %s' % what)
+        out.append(textwrap.fill('. '.join(kept) + '.', 80, initial_indent='# ', subsequent_indent='# '))
+
+    return '\n\n'.join(out)
+
+
 def upstream_airframe(plain, members_root):
     """The posix airframe of a plain plant: the bare member's text, named for
-    the vehicle and spawning the plain model, with the complete member's yaw
-    loop block after the bare one's (the resolved defaults of the chain).
-    The upstream class drives independent pods only, so the grouping
-    parameter is left out, and the gains marker names no tool."""
+    the vehicle and spawning the plain model, less its notes on the variant
+    family, with the complete member's block (what follows its include of
+    the bare one: the yaw loop values) after the bare one's, so the file
+    resolves to the chain's defaults. The upstream class drives independent
+    pods only, so the grouping parameter is left out, and the gains marker
+    names no tool."""
     airframes = homes(members_root)[1]
     bare = read(airframe_path(airframes, plain.members_decade, plain.bare))
     complete = read(airframe_path(airframes, plain.members_decade + plain.complete_mask, plain.complete))
     t = with_name(bare, plain.title)
     t = sub1(t, r'PX4_SIM_MODEL=\$\{PX4_SIM_MODEL:=%s\}' % re.escape(plain.bare), 'PX4_SIM_MODEL=${PX4_SIM_MODEL:=%s}' % plain.name)
-    t = t.replace(airship_gains.MARK_OPEN, UPSTREAM_MARK)
+    t = without_variant_notes(t, plain.what.split(' merged with ')[-1] if plain.body is None else plain.what)
+    include = _INCLUDE.search(complete)
+    assert include, '%s does not source its bare airframe' % plain.complete
+    block = complete[include.end():].strip('\n')
 
-    if airship_gains.MARK_OPEN in complete:
-        block = complete[complete.index(airship_gains.MARK_OPEN) + len(airship_gains.MARK_OPEN):].strip('\n')
+    if block:
         t = t.rstrip('\n') + '\n\n' + block + '\n'
 
-    return without_absent(t)
+    return without_absent(t.replace(airship_gains.MARK_OPEN, UPSTREAM_MARK))
 
 
 def model_config(name, author, description):
@@ -893,17 +1120,25 @@ def model_config(name, author, description):
             '%s  <description>%s</description>\n</model>\n' % (name, author, description))
 
 
+def members_world(members_root):
+    """The world the members under members_root fly in: the overlay's lab world or the tree's lta."""
+    if is_overlay(members_root):
+        return os.path.join(members_root, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
+
+    return os.path.join(members_root, TREE_FILES[0])
+
+
 def upstream_world(path, members_root, names):
     """The upstream world, made once from the members' world: its buoyancy
-    entries only for `names` (bare and _0.._3) and without the lab-only
-    includes (OVERLAY_INCLUDES)."""
+    entries only for `names` (bare and _0.._3), under the tree's world name,
+    and without the lab-only includes (OVERLAY_INCLUDES)."""
     if os.path.exists(path):
         return False
 
     keep = {'%s%s' % (n, i) for n in names for i in ('',) + tuple('_%d' % k for k in range(4))}
     out = []
 
-    for line in read(os.path.join(members_root, TREE_FILES[0])).split('\n'):
+    for line in read(members_world(members_root)).split('\n'):
         m = re.match(r'\s*<enable>([^:]+)::', line)
 
         if m and m.group(1) not in keep:
@@ -911,7 +1146,7 @@ def upstream_world(path, members_root, names):
 
         out.append(line)
 
-    t = '\n'.join(out)
+    t = sub1('\n'.join(out), r'<world name="[^"]*">', '<world name="%s">' % gz_model.WORLD)
 
     for uri in OVERLAY_INCLUDES:
         t = re.sub(r'\n *<include>\s*<uri>%s</uri>\s*</include>' % re.escape(uri), '', t)
@@ -920,15 +1155,86 @@ def upstream_world(path, members_root, names):
     return True
 
 
+_INDEX_ROW = re.compile(r'^\| \[([^\]]*)\][^\n]*\|\s*(\d{4})\s*\|\n', re.M)
+
+
+def upstream_docs(root, plain, title_link=TREE_PAGE):
+    """The docs entries of a plain plant, each once: its row in the
+    simulation index's table, its section in the vehicle list's Airship
+    section and its bullet in the airship page's simulation list, each in
+    number order among the rows, sections and bullets already there (the
+    table's numbers order the other two). Returns the files changed."""
+    changed = []
+    index_md = os.path.join(root, TREE_FILES[1])
+    t = read(index_md)
+    cells = [' [%s](../sim_gazebo_gz/vehicles.md#%s)' % (plain.title, slug(plain.title)), ' `%s`' % (TREE_COMMAND % plain.name),
+             ' %d' % plain.decade]
+
+    if cells[0].strip() not in t:
+        rows = [(m, int(m.group(2))) for m in _INDEX_ROW.finditer(t)]
+        widths = [len(c) for c in rows[0][0].group(0).rstrip('\n').split('|')[1:-1]]
+        row = '|' + '|'.join(c.ljust(w) for c, w in zip(cells, widths)) + '|\n'
+        later = [m for m, n in rows if n > plain.decade]
+        at = later[0].start() if later else rows[-1][0].end()
+        t = t[:at] + row + t[at:]
+        write(index_md, t)
+        changed.append(os.path.basename(index_md))
+
+    numbers = {m.group(1): int(m.group(2)) for m in _INDEX_ROW.finditer(t)}
+    later_titles = [title for title, n in numbers.items() if n > plain.decade]
+    vehicles_md = os.path.join(root, TREE_FILES[2])
+    t = read(vehicles_md)
+
+    if '### %s\n' % plain.title not in t:
+        section = ('### %s\n\n[%s](%s) in Gazebo: the complete plant, %s.\nThe physics-variant members it was measured against '
+                   'live in [px4-airship-tools](https://github.com/linearust/px4-airship-tools).\n\n```sh\n%s\n```\n'
+                   % (plain.title, plain.title, title_link, plain.what, TREE_COMMAND % plain.name))
+        start = t.index('\n## Airship\n') + 1
+        m = re.search(r'^## ', t[start + 1:], re.M)
+        end = start + 1 + m.start() if m else len(t)
+        heads = [(m.start(), m.group(1)) for m in re.finditer(r'^### (.*)$', t[start:end], re.M)]
+        later = [start + at for at, title in heads if title in later_titles]
+        at = later[0] if later else end
+        t = t[:at].rstrip('\n') + '\n\n' + section + '\n' + t[at:]
+        write(vehicles_md, t)
+        changed.append(os.path.basename(vehicles_md))
+
+    airship_md = os.path.join(root, TREE_FILES[3])
+    t = read(airship_md)
+    anchor = '../sim_gazebo_gz/vehicles.md#%s' % slug(plain.title)
+
+    if anchor + ')' not in t:
+        bullet = '- [%s](%s): %s\n' % (plain.title, anchor, plain.what)
+        start = t.index('\n## Simulation\n') + 1
+        bullets = [(start + m.start(), start + m.end(), m.group(1)) for m in re.finditer(r'^- \[([^\]]*)\].*\n', t[start:], re.M)]
+        # before the first later bullet, after the last one, or as a list after the section's first paragraph
+        later = [at for at, _, title in bullets if title in later_titles]
+
+        if later:
+            at = later[0]
+        elif bullets:
+            at = bullets[-1][1]
+        else:
+            at = t.index('\n\n', t.index('\n\n', start) + 2) + 2
+            bullet += '\n'
+
+        t = t[:at] + bullet + t[at:]
+        write(airship_md, t)
+        changed.append('frames_airship/index.md')
+
+    return changed
+
+
 def write_upstream(vehicle, root, members_root, plants=None):
     """What upstream carries of the family into root (a PX4 tree trimmed of
     the family): the body, each plain plant (those named in `plants`, all by
-    default), its model.config, its airframe and its world entries, from the
-    members under members_root (the overlay, or a tree that still carries
-    the members); the world itself is made from the members' when root has
-    none. Refused when root is members_root (the plain plant would overwrite
-    the members it is built from) or when root still carries the family's
-    variant members (the trim comes first). Returns (written, world entries added)."""
+    default), its model.config, its airframe, its world entries, its posix
+    CMakeLists entry and its docs entries, from the members under
+    members_root (the overlay, or a tree that still carries the members);
+    the world itself is made from the members' when root has none. Refused
+    when root is members_root (the plain plant would overwrite the members
+    it is built from) or when root still carries the family's variant
+    members (the trim comes first). Returns (written, world entries added)."""
     fam = vehicle.family
     mfam = vehicle.overlay_family if is_overlay(members_root) else vehicle.family
     member_models = homes(members_root)[0]
@@ -946,11 +1252,14 @@ def write_upstream(vehicle, root, members_root, plants=None):
     written = []
     models = os.path.join(root, TREE_DIRS[0])
 
-    plains = [p for p in plain_plants(vehicle, members_root) if plants is None or p.name in plants]
-    configs = {fam.base: (mfam.base_am, '%s: the body the vehicle merges, with the hull\'s fluid added mass. Not meant to '
-                                        'be spawned directly.' % vehicle.body_title)}
-    configs.update({p.name: (p.complete, '%s: the complete plant for PX4 SITL, %s merged with %s.' % (p.title, fam.base, p.what))
-                    for p in plains})
+    plains = sorted((p for p in plain_plants(vehicle, members_root) if plants is None or p.name in plants), key=lambda p: p.decade)
+    configs = {}
+
+    if fam.base:
+        configs[fam.base] = (mfam.base_am, '%s: the body the vehicle merges, with the hull\'s fluid added mass. Not meant to '
+                                           'be spawned directly.' % vehicle.body_title)
+
+    configs.update({p.name: (p.complete, '%s: the complete plant for PX4 SITL, %s.' % (p.title, p.what)) for p in plains})
 
     for name, text in upstream_models(vehicle, members_root).items():
         if name not in configs:
@@ -982,6 +1291,11 @@ def write_upstream(vehicle, root, members_root, plants=None):
 
     world = os.path.join(root, TREE_FILES[0])
     upstream_world(world, members_root, [plain.name for plain in plains])
+    write_cmake_entries(os.path.join(airframes, 'CMakeLists.txt'), [(plain.decade, plain.name) for plain in plains])
+
+    for plain in plains:
+        upstream_docs(root, plain)
+
     return written, write_world_entries(world, [plain.name for plain in plains])
 
 
@@ -1086,17 +1400,19 @@ every physics-variant member of each vehicle, under the overlay numbers. A membe
 '''
 
 
-def write_overlay_docs(path, vehicle, p, fam, decade):
-    """The overlay's vehicle list: a table row per member (the shape
-    variant_check reads) and the members' sections, each once."""
+def write_overlay_docs(path, chain, sections):
+    """The overlay's vehicle list: a table row per member of the chain (the
+    shape variant_check reads) and the members' sections (a list, or a
+    callable making it, read only when the sections are not there yet: the
+    copied ones come from a tree that may have been trimmed since), each once."""
     t = read(path) if os.path.exists(path) else OVERLAY_DOCS_HEAD
     rows = []
 
-    for role, mask, docs_name in MEMBERS:
-        title = vehicle.member_title(docs_name or 'Rigid Hull')
-        row = '| [%s](#%s) | `gz_%s` | %d |' % (title, slug(title), getattr(fam, role), decade + mask)
+    for role, _, _ in chain.members:
+        title, model = chain.title_of(role), chain.names[role]
+        row = '| [%s](#%s) | `gz_%s` | %d |' % (title, slug(title), model, chain.number(role))
 
-        if '`gz_%s`' % getattr(fam, role) not in t:
+        if '`gz_%s`' % model not in t:
             rows.append(row)
 
     if rows:
@@ -1108,11 +1424,8 @@ def write_overlay_docs(path, vehicle, p, fam, decade):
 
         t = t[:table_end] + '\n'.join(rows) + '\n' + t[table_end:]
 
-    sections = docs_sections(vehicle, p, fam, rigid_title='Rigid Hull', command='GZ_TARGET=gz_%s ./gz_run.sh <check>',
-                             page_link='https://docs.px4.io/main/en/frames_airship/')
-
-    if '### %s\n' % vehicle.member_title('Rigid Hull') not in t:
-        t = t.rstrip('\n') + '\n\n' + '\n'.join(sections)
+    if '### %s\n' % chain.title_of('bare') not in t:
+        t = t.rstrip('\n') + '\n\n' + '\n'.join(sections() if callable(sections) else sections)
 
     write(path, t)
     return bool(rows)
@@ -1121,13 +1434,19 @@ def write_overlay_docs(path, vehicle, p, fam, decade):
 def generate_overlay(vehicle, overlay=None, template_root=None, world_root=None):
     """The vehicle's whole family into the overlay, self-contained: models,
     airframes a hundred above the tree's decade, the lab world's entries, the
-    decade line and the docs. The family is copied from the template tree
-    (or the overlay's own generic rigid family once it is there); the lab
+    decade line and the docs, and the generic's fixed-thruster twin beside
+    its vectored family. The family is copied from the template tree (or the
+    overlay's own generic rigid family once it is there); the members'
+    airframes and the twin's hand-written files from that tree's; the lab
     world from the tree the overlay runs against, gz_model.ROOT (PX4_ROOT)
-    unless said otherwise."""
+    unless said otherwise. A ported vehicle is copied (copy_overlay)."""
     overlay = overlay or gz_model.OVERLAY
     template_root = template_root or gz_model.ROOT
     world_root = world_root or gz_model.ROOT
+    if vehicle.ported:
+        written, n = copy_overlay(vehicle, overlay, template_root, world_root)
+        return None, written, n
+
     fam = vehicle.overlay_family
     decade = vehicle.decade + OVERLAY_SHIFT
     (tfam, tmodels), bare_template = overlay_template(overlay, template_root)
@@ -1136,16 +1455,62 @@ def generate_overlay(vehicle, overlay=None, template_root=None, world_root=None)
     p = write_models(vehicle, models, fam=fam, template=(tfam, tmodels))
     # the vehicle's own members in the tree (before the trim) carry their gains
     # blocks: the overlay takes them as they are
-    members_from = (os.path.join(template_root, TREE_DIRS[1]), vehicle.family, vehicle.decade)
+    tree_airframes = os.path.join(template_root, TREE_DIRS[1])
+    members_from = (tree_airframes, vehicle.family, vehicle.decade)
     written = write_airframes(vehicle, p, airframes, fam=fam, decade=decade, template=bare_template, members_from=members_from)
     written += write_surface_airframes(vehicle, p, airframes, fam=fam, decade=decade)
-    written += write_fixed_servos(vehicle, p, airframes, fam=fam)
     world = os.path.join(overlay, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
     overlay_world(world, world_root)
-    n = write_world_entries(world, [getattr(fam, role) for role, _, _ in MEMBERS])
-    write_overlay_decades(os.path.join(airframes, 'decades'), decade, fam.bare)
-    write_overlay_docs(os.path.join(overlay, 'vehicles.md'), vehicle, p, fam, decade)
+    chain = vectored_chain(fam, decade, vehicle.title)
+    n = write_world_entries(world, chain.models)
+    decades = os.path.join(airframes, 'decades')
+    write_overlay_decades(decades, decade, fam.bare)
+    docs = os.path.join(overlay, 'vehicles.md')
+    write_overlay_docs(docs, chain, docs_sections(vehicle, p, chain, OVERLAY_COMMAND, OVERLAY_PAGE))
+    # the family's fixed-thruster twin (the generic's airship_fixed, 2500-2505
+    # in the tree): its hand-written airframes and docs sections copied under
+    # the rigid naming, a hundred above, and its flap servo range written
+    tree_fixed = fixed_airframe(tree_airframes, vehicle.family)
+
+    if tree_fixed is not None:
+        number, title = int(os.path.basename(tree_fixed).split('_')[0]), airframe_name(tree_fixed)
+        src, dst = fixed_chain(vehicle.family, number, title), fixed_chain(fam, number + OVERLAY_SHIFT, title)
+        written += copy_airframes(src, dst, tree_airframes, airframes)
+        written += write_fixed_servos(vehicle, p, airframes, fam=fam)
+        n += write_world_entries(world, dst.models)
+        write_overlay_decades(decades, dst.decade, dst.names['bare'])
+        write_overlay_docs(docs, dst, lambda: copied_sections(read(os.path.join(template_root, TREE_FILES[2])), src, dst))
+
     return p, written, n
+
+
+def copy_overlay(vehicle, overlay, template_root, world_root):
+    """A ported family (the Cloudship) into the overlay: the tree's members
+    copied under the rigid naming, a hundred above its decade. The models
+    (the bare renamed in every file, the rest keeping their names), the
+    airframes (the bare's @name the Rigid Hull one, a member's include
+    renamed, gains and all), the lab world's entries, the decade line and
+    the docs sections of the tree's vehicle list. Nothing is designed, and
+    what the overlay already has is left as it is: after the trim the
+    overlay is the family's only home and the tree has nothing to copy."""
+    fam, ofam = vehicle.family, vehicle.overlay_family
+    tree_models, tree_airframes = homes(template_root)
+    models, airframes = os.path.join(overlay, 'models'), os.path.join(overlay, 'airframes')
+    os.makedirs(airframes, exist_ok=True)
+
+    if not os.path.isfile(os.path.join(models, ofam.bare, 'model.sdf')):
+        copy_family(fam, ofam, tree_models, models)
+
+    src = vectored_chain(fam, vehicle.decade, vehicle.title)
+    dst = vectored_chain(ofam, vehicle.decade + OVERLAY_SHIFT, vehicle.title)
+    written = copy_airframes(src, dst, tree_airframes, airframes)
+    world = os.path.join(overlay, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
+    overlay_world(world, world_root)
+    n = write_world_entries(world, dst.models)
+    write_overlay_decades(os.path.join(airframes, 'decades'), dst.decade, dst.names['bare'])
+    write_overlay_docs(os.path.join(overlay, 'vehicles.md'), dst,
+                       lambda: copied_sections(read(os.path.join(template_root, TREE_FILES[2])), src, dst))
+    return written, n
 
 
 def generate(vehicle, root):
@@ -1190,7 +1555,8 @@ def check(vehicle):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
-    ap.add_argument('vehicle', help='the vehicle JSON file')
+    ap.add_argument('vehicle', help='the vehicle JSON file, or `cloudship`: the ported family, which --overlay copies from --root '
+                                    'and --upstream folds into its plain plant')
     ap.add_argument('--root', default=gz_model.ROOT, help='the PX4 tree to write into (default PX4_ROOT or ~/dev/PX4-Autopilot)')
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument('--check', action='store_true', help='generate into a scratch copy and diff against the tree instead of writing')
@@ -1205,6 +1571,9 @@ def main(argv=None):
     ap.add_argument('--plants', help='with --upstream: the plain plants to write, comma-separated (default all)')
     args = ap.parse_args(argv)
     vehicle = load_vehicle(args.vehicle)
+
+    if vehicle.ported and not (args.overlay or args.upstream):
+        ap.error('%s is not generated: its family is the tree\'s hand-written one (--overlay copies it, --upstream folds it)' % vehicle.name)
 
     if args.check:
         return check(vehicle)

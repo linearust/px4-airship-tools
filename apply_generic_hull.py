@@ -41,9 +41,11 @@ GLUE = '\u00a0'
 class Family:
     """The model directories one vehicle's family is written into, by role.
     The generic family also has the flapped 2500 twin (fixed) and its drag
-    members; a vectored-only family leaves those empty."""
+    members; a vectored-only family leaves those empty. A self-contained
+    family (the Cloudship: its bare model is its own body and its _am a full
+    copy of it) has no base and no base_am."""
     title: str              # 'Generic airship': how the header names the body
-    base: str
+    base: str               # None for a self-contained family
     base_am: str
     bare: str
     drag: str
@@ -70,9 +72,9 @@ class Family:
 
     @property
     def members(self):
-        """Every directory of the family, body first."""
-        return (self.base, self.base_am, self.bare, self.drag, self.fin, self.am, self.am_fin, self.am_fin_drag) \
-            + tuple(self.fixed) + tuple(self.fixed_drag)
+        """Every directory of the family, body first (none for a self-contained family)."""
+        return tuple(m for m in (self.base, self.base_am, self.bare, self.drag, self.fin, self.am, self.am_fin, self.am_fin_drag)
+                     + tuple(self.fixed) + tuple(self.fixed_drag) if m)
 
 
 GENERIC = Family('Generic airship', 'airship_base', 'airship_base_am', 'airship_vectored_independent',
@@ -89,6 +91,15 @@ GENERIC_RIGID = Family('Generic airship', 'airship_base_rigid', 'airship_base_am
                        'airship_vectored_independent_drag', 'airship_vectored_independent_fin', 'airship_vectored_independent_am',
                        'airship_vectored_independent_am_fin', 'airship_vectored_independent_am_fin_drag',
                        fixed=('airship_fixed_rigid', 'airship_fixed_am'), fixed_drag=('airship_fixed_drag', 'airship_fixed_am_drag'))
+
+
+# The Cloudship: a ported model, not a designed one (no hull spec, no pods;
+# its numbers are the gazebo-classic model's measurements), self-contained,
+# written by hand and only copied by the generator. The same two namings.
+CLOUDSHIP = Family('Cloudship', None, None, 'cloudship', 'cloudship_drag', 'cloudship_fin', 'cloudship_am', 'cloudship_am_fin',
+                   'cloudship_am_fin_drag')
+CLOUDSHIP_RIGID = Family('Cloudship', None, None, 'cloudship_' + gz_model.RIGID, 'cloudship_drag', 'cloudship_fin', 'cloudship_am',
+                         'cloudship_am_fin', 'cloudship_am_fin_drag')
 
 
 def vectored_family(name, title, surfaces=False, rigid=False):
@@ -575,12 +586,14 @@ def write_drag(p):
     save(p, rel, t)
 
 
-def write_cloudship(root=M):
+def write_cloudship(fam=CLOUDSHIP, root=M):
     """The Cloudship's fin stall on the family basis, from its own fin
-    visuals: the same plate slope and K_W(B), with the low-AR plates' CLmax."""
+    visuals: the same plate slope and K_W(B), with the low-AR plates' CLmax.
+    The family's bare model (cloudship_rigid in the overlay) draws the fins
+    its two _fin members get the stall for."""
     print('cloudship')
     p = types.SimpleNamespace(root=root)
-    link = gz_model.sdf('cloudship').find('link')
+    link = gz_model.sdf(fam.bare).find('link')
     z_axis = gz_model.pose(gz_model.named(link, 'collision', 'hull_collision'), 2)
     panels = [fb.panel([float(v) for v in vis.find('geometry/box/size').text.split()], gz_model.pose(vis, 1), gz_model.pose(vis, 2), z_axis)
               for vis in link.findall('visual') if vis.get('name', '').startswith('fin_')]
@@ -589,7 +602,7 @@ def write_cloudship(root=M):
     ar_c = fb.joined_ar(chord_c, span_c)
     kwb_c = fb.k_wb(root_c, root_c + span_c)
     as_c = fb.stall(ar_c, kwb_c, clmax=fb.CLMAX_LOW_AR_PLATE)
-    for rel in ('cloudship_fin/model.sdf', 'cloudship_am_fin/model.sdf'):
+    for rel in (m + '/model.sdf' for m in fam.fin_members):
         t = load(p, rel)
         # each plugin's post-stall slopes from its own cla and cda, the way
         # write_fins does, so one fin's numbers never land in another's block
