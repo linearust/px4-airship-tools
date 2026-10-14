@@ -181,7 +181,7 @@ def main():
             or ', '.join(k for k in after if before.get(k) != after[k])[:300] or '같음')
     decades_text = open(os.path.join(OVERLAY, 'airframes', 'decades')).read()
     decades = decades_text.split()
-    world = open(os.path.join(OVERLAY, 'worlds', gen.OVERLAY_WORLD_NAME + '.sdf')).read()
+    world = open(gz_model.overlay_world_sdf(OVERLAY)).read()
     docs = open(os.path.join(OVERLAY, 'vehicles.md')).read()
     models = sorted(os.listdir(os.path.join(OVERLAY, 'models')))
     airframes = sorted(f for f in os.listdir(os.path.join(OVERLAY, 'airframes')) if '_gz_' in f)
@@ -190,7 +190,7 @@ def main():
     verdict('오버레이: 일곱 가족이 rigid 이름과 +100 번호로 (decades 7 줄, 모델 50, 에어프레임 40, lta_lab 에 모델마다 bare 와 _0.._3 의 enable 200, '
             'vehicles.md 절 40 행 40, make 명령과 트리 링크 없음), generic 의 고정 쌍둥이 (2600/2601/2604/2605) 가 트리의 2500 가족에서 복사되어 있다',
             decades == DECADES and len(models) == 50 and all(os.path.isfile(os.path.join(OVERLAY, 'models', m, 'model.sdf')) for m in models)
-            and len(airframes) == 40 and '<world name="%s">' % gen.OVERLAY_WORLD_NAME in world and world.count('<enable>') == 200
+            and len(airframes) == 40 and '<world name="%s">' % gz_model.OVERLAY_WORLD_NAME in world and world.count('<enable>') == 200
             and all('<enable>%s%s::base_link' % (m, i) in world for m in models if not m.endswith(('_base_am', '_base_rigid'))
                     for i in ('', '_0', '_3'))
             and docs.count('### ') == 40 and len(re.findall(r'^\| \[', docs, re.M)) == 40

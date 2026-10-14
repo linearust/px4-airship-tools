@@ -44,8 +44,8 @@ SCRIPT="${1:-$TOOLS/sitl_check.py}"
 # same home this script spawned from.
 export AIRSHIP_OVERLAY="${AIRSHIP_OVERLAY:-$TOOLS/overlay}"
 OVERLAY="$AIRSHIP_OVERLAY"
-# The one world the generator writes the overlay members into
-# (airship_family_gen.OVERLAY_WORLD_NAME, gz_model.OVERLAY_WORLD)
+# The one world the generator writes the overlay members into: the literal
+# of gz_model.OVERLAY_WORLD_NAME, kept here because this is a shell script
 OVERLAY_WORLD=lta_lab
 LOG="$TOOLS/sitl_out/server.log"
 GZLOG="$TOOLS/sitl_out/gz.log"

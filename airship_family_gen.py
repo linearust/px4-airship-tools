@@ -964,7 +964,7 @@ def model_config(name, author, description):
 def members_world(members_root):
     """The world the members under members_root fly in: the overlay's lab world or the tree's lta."""
     if is_overlay(members_root):
-        return os.path.join(members_root, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
+        return gz_model.overlay_world_sdf(members_root)
 
     return os.path.join(members_root, TREE_FILES[0])
 
@@ -1186,7 +1186,6 @@ def twin_check(vehicle, upstream_root, members_root, plants=None):
 # ---------------------------------------------------------------------------
 
 OVERLAY_SHIFT = gz_model.OVERLAY_SHIFT      # the overlay decade of a vehicle: its JSON decade plus this
-OVERLAY_WORLD_NAME = 'lta_lab'
 
 
 def overlay_template(overlay):
@@ -1215,7 +1214,7 @@ def overlay_world(path, world_root):
         return False
 
     t = read(os.path.join(world_root, TREE_FILES[0]))
-    t = sub1(t, r'<world name="[^"]*">', '<world name="%s">' % OVERLAY_WORLD_NAME)
+    t = sub1(t, r'<world name="[^"]*">', '<world name="%s">' % gz_model.OVERLAY_WORLD_NAME)
     write(path, t)
     return True
 
@@ -1298,7 +1297,7 @@ def generate_overlay(vehicle, overlay=None, world_root=None):
     p = write_models(vehicle, models, fam=fam, template=(tfam, tmodels))
     written = write_airframes(vehicle, p, airframes, fam=fam, decade=decade, template=bare_template)
     written += write_surface_airframes(vehicle, p, airframes, fam=fam, decade=decade)
-    world = os.path.join(overlay, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
+    world = gz_model.overlay_world_sdf(overlay)
     overlay_world(world, world_root)
     chain = vectored_chain(fam, decade, vehicle.title)
     n = write_world_entries(world, chain.models)

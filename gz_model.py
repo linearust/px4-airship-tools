@@ -45,7 +45,15 @@ VEHICLES = os.path.join(HERE, 'vehicles')     # the vehicle files the generator 
 # `<decade> <bare model>[ reserved]` line each), the lab world the overlay
 # members are spawned in, and the vehicle list
 OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
-OVERLAY_WORLD = os.path.join(OVERLAY, 'worlds', 'lta_lab.sdf')
+OVERLAY_WORLD_NAME = 'lta_lab'      # the one world the overlay members are spawned in (gz_run.sh keeps the literal)
+
+
+def overlay_world_sdf(overlay):
+    """The lab world's path under an overlay directory: the committed one or a scratch copy."""
+    return os.path.join(overlay, 'worlds', OVERLAY_WORLD_NAME + '.sdf')
+
+
+OVERLAY_WORLD = overlay_world_sdf(OVERLAY)
 OVERLAY_DOCS = os.path.join(OVERLAY, 'vehicles.md')
 OVERLAY_SHIFT = 100         # an overlay family's decade is its vehicle's tree decade plus this: 25x0 -> 26x0
 # The airship parameters an airframe may set that a tree may lack: the fork's
