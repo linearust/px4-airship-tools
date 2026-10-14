@@ -207,6 +207,41 @@ worktree 에서 한다. 도구는 main 에 이 단계가 병합된 뒤.
    `UPSTREAM_ABSENT`); 요 모델 기록 파일. 그 다음이 (7) SITL 재기준선: 트리 2520 게이트 (= 오늘 2527 10/10), 2510 (= 2517 9/9), 2500 비행 검사; 오버레이 2627·2617·2637
    (전진 42/42) 는 `GZ_TARGET=gz_<model> ./gz_run.sh` 로.
 
+**(6)/(7) 끝남 (2026-10-14, 트림 worktree `~/dev/px4-trim` airship/trim 02541aa001 삭제 + b86228fb4e 생성, 서브모듈 airship/models-trim 002b01e 삭제 + 2628193
+생성, 도구 split/step6b 8900a8b..40f3aa7 + 이 문서; 전부 로컬, 푸시 안 함; 포크 체크아웃 27fd5f1ffd 과 px4-pr-airship 은 손대지 않음).**
+- 삭제: 서브모듈 모델 50 디렉터리 (101 파일, 10,099 줄) 와 enable 200; PX4 posix 25xx 40, CMake 55 줄 (항목 40 + decades 주석 14 + 빈 줄 1), vehicles.md 절 40 (366 줄),
+  index.md 행 40, frames_airship 불릿 7 + 가족 문장 ("Running an airframe against several of its plants" 문장도 레포 링크 한 줄에 접음), worlds.md 한 줄, 비행 2520 의 32-38,
+  AirshipYawScheduleTest.cpp:39 — 48 파일 −1614/+10. PX4 는 삭제 / 생성 두 커밋으로 각각 서브모듈의 제 커밋을 가리킨다; 삭제 상태는 시험의 `trim()` 으로 만들고 복원을
+  해시로 검증했다 (trim + `--upstream` 둘 = 트리, 바이트 동일).
+- 생성: 오버레이 모델 50 / 에어프레임 40 / decades 7 / lta_lab enable 200 / vehicles.md 절 40 행 40, 두 번째 실행 md5 동일; `--upstream` 둘이 모델 4 + posix 3 + CMake 3 + enable 15
+  + 문서 3/3/3 을 쓰고 twin check OK. 2500·2510 머리는 "This is the complete plant"; 문서 절 셋은 생성된 두 문장 + make 명령 그대로 (스크린샷 없음).
+- 검사: (a) 17/17, 모델 43; (b) 적힌 grep 은 비지 않는다 — 2507 (남기는 비행 Cloudship: airframe_reference.md, frames_airship:78, 할당기 시험 둘, 2510 머리의 "same vehicle as 2507")
+  과 무관한 upstream 숫자 (Arduino 2560, arXiv 2509.11481, VEHICLE_CMD 2501/2511, 2560×1440) 뿐, 그것을 빼면 빈다; (c) 15; (d) `make px4_sitl_default` rc 0, `make check_format`
+  통과 (생성기가 vehicles.md 끝에 빈 줄을 남겨 한 번 실패 → f9a5b4a); (e) `PX4_ROOT=$T ./run_tests.sh` 녹색: 생성기 17/17, variant_check 17/17, forward 196/0, registry 0 failed,
+  controller 0 failed + SKIP 10 (기록 ulog 는 포크의 build/log 에만 있어 worktree 와 CI 에는 없다), sitl_link.
+- 절차 밖의 변경: ① `CA_AIRSHIP_GRP` 를 `UPSTREAM_ABSENT` 에서 뺌 (83dedc7): 포크 펌웨어의 기본값이 0 (collective) 이라 GRP 없는 평범 2520 은 집단 틸트로 할당됐다 (전진 시험의
+  13 번째 기체가 그렇게 잡혔다); 비행 에어프레임처럼 평범 셋이 제 그룹을 적는다 (2500·2510 0, 2520 1), PX4 생성 커밋에 반영. ② forward_yaw_check 의 ALLOWED 를 토큰에서 merged
+  모델의 플랩 없는 lift-drag 핀으로 (S5 의 뜻; 토큰 규칙은 평범 완전 플랜트를 거부했고, 고정 가족의 플랩 핀은 방향타라 제외), 평범 cloudship 의 다리 표 항목 (0cad4fa).
+  ③ 시험 재지정은 세 경우를 넘었다: [upstream]/[cloudship]/[trimmed tree] 도 트리 가족을 템플릿·MEMBERS_ROOT 로 읽었고, test_plant_registry 의 PLAIN_AFTER_TRIM 검사,
+  cloudship_actuation.AIRFRAME 과 closed_loop 의 rigid 사슬 → `gz_model.bare('cloudship')` (2610), test_controller 는 그 경유 (7ae9ee8); 시험의 `trim()` 은 불릿 뒤 빈 줄도 먹는다.
+  ④ 평범 2520 의 다리: AS_SPD_HI 없음 → 펌웨어 기본 램프 2.5 → 1.90/4.00 m/s (2627 은 2.1 → 1.60/3.35).
+- (7) 재기준선 (`PX4_ROOT=$T GZ_TARGET=gz_<model> ./gz_run.sh ./<check>`, 한 번에 하나, timeout 1800):
+
+  | 대상 | 검사 | 경로 / 월드 | 결과 | 전 기준 |
+  |---|---|---|---|---|
+  | 2520 `airship_vectored_independent` | sitl_check | tree / lta | 통과 10 / 실패 0 | 2527 10/10 |
+  | 2520 `airship_vectored_independent` | forward_yaw_check | tree / lta | 통과 28 / 실패 0 | 2527 42/42 — 스케줄 꺼짐 (`AS_SPD_SRC 0`) 이라 다리마다 스케줄 판정이 없다 (14), 다리 1.90/4.00 |
+  | 2620 `_rigid` | sitl_check | overlay / lta_lab | 통과 10 / 실패 0 | 10/10 |
+  | 2621 `_drag` | sitl_check | overlay / lta_lab | 통과 10 / 실패 0 | 10/10 |
+  | 2510 `cloudship` | sitl_check | tree / lta | 통과 9 / 실패 0 | 2517 9/9 |
+  | 2612 `cloudship_fin` (POSE 0,0,80) | forward_yaw_check | overlay / lta_lab | 통과 43 / 실패 0 | 2512 43/43 |
+  | 2510 `cloudship` | cloudship_land_disarm_check | tree / lta | 통과 10 / 실패 0 | 10/10 |
+  | 2500 `airship_fixed` | airship_fixed_flight_check | tree / lta | 통과 12 / 실패 1 | 13/13 (10-07) |
+
+- 열린 것: 2500 비행 검사의 "할당기가 모터 둘과 조종면 넷을 잡았다" 는 `Configured actuators` 6 을 기대하는데 2f013b1a4a (10-13, 틸트 슬롯 둘을 모든 그룹에 선언, 고정
+  마운트는 구동 안 함) 뒤 8 이다 — 트림과 무관, 마지막 기록 13/13 은 그 커밋 전; 검사의 기대값은 사용자가 정한다. 평범 2520 은 속도 스케줄 없이 난다 (설계대로). 문서 절의
+  "airship_base merged with ..." 문구는 생성기의 것. 푸시는 gz-submodule-publish-order 대로 서브모듈 먼저, 사용자 검토 뒤.
+
 **(3) 의 원래 변경 목록 (참고).**
 - `apply_generic_hull.Family`/`vectored_family(name, title, surfaces, rigid=False)`: rigid 가족은 `bare = name + '_rigid'`, `base = name + '_base_rigid'`, `base_am` 그대로,
   나머지 그대로. `GENERIC` 도 두 판 (트리용 지금 것, 오버레이용 rigid). `copy_family` 의 renames 는 긴 이름부터 (이미 그렇다) — `_base_am` 이 `_base_rigid` 로 잘못 바뀌지 않게
