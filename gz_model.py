@@ -45,6 +45,7 @@ VEHICLES = os.path.join(HERE, 'vehicles')     # the vehicle files the generator 
 # `<decade> <bare model>[ reserved]` line each), the lab world the overlay
 # members are spawned in, and the vehicle list
 OVERLAY_DECADES = os.path.join(OVERLAY, 'airframes', 'decades')
+LAB_AIDS = ('ground_markers', 'flight_grid')    # visual aids the lab world includes: overlay models, not family members
 OVERLAY_WORLD_NAME = 'lta_lab'      # the one world the overlay members are spawned in (gz_run.sh keeps the literal)
 
 
